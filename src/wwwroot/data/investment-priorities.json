@@ -1,0 +1,107 @@
+[
+    {
+        "step": "emergency-fund",
+        "title": "Emergency Fund",
+        "number": 1,
+        "level": "high",
+        "summary": "Establish an [[Emergency fund|emergency fund]] to your satisfaction. If you have many other high financial priorities (like paying off high-interest debt), start with a smaller emergency fund, and grow it later over time, as those other priorities are satisfied.",
+        "priority": "Start building an [[emergency fund]]",
+        "returns": "N/A",
+        "description": "Have enough cash on hand to cover unplanned expenses. While the exact amount depends on your [[risk tolerance]], a common rule of thumb is to start with one month of expenses, and as you satisfy other financial priorities, grow it over time to around 3-12 months of expenses. (See: [[Emergency fund]].)"
+    },
+    {
+        "step": "retirement-funds-match",
+        "title": "Retirement Funds (Match)",
+        "diagramTitle": "Get the Maximum Match from an Employer Retirement Plan",
+        "number": 2,
+        "level": "high",
+        "summary": "Contribute to an [[Employer retirement plans overview|employer retirement plan]] (e.g. [[401(k)]] or [[403(b)|403b]]) enough to get the full [[Employer matching contributions|employer match]] (the match is like free money, your best possible investment).",
+        "priority": "Contribute to a [[Employer retirement plans overview|work-based retirement plan]] (eg. [[401(k)]] or [[403(b)]]) enough to get the full [[Employer matching contributions|employer match]]",
+        "returns": "50-100% immediately",
+        "description": "Not getting an employer match is like letting your employer keep part of your salary."
+    },
+    {
+        "step": "high-interest-debt",
+        "title": "High-Interest Debt",
+        "diagramTitle": "Pay Off High-Interest Debt (Credit Cards)",
+        "number": 3,
+        "level": "high",
+        "summary": "Pay off high-interest debt (a guaranteed high return, the next best thing to free money).",
+        "priority": "Pay off high-interest debt",
+        "returns": "8-30%",
+        "description": "Typically these include credit cards and other unsecured loans. Paying off a high-interest debt is a guaranteed high return on your investment, the next best thing to free money."
+    },
+    {
+        "step": "hsa",
+        "title": "HSA",
+        "diagramTitle": "Health Savings Account",
+        "number": 4,
+        "level": "medium",
+        "summary": "Contribute to a [[Health savings account|Health Savings Account]] (HSA) if a [[high deductible health plan]] is appropriate for your needs (you can think of HSA contributions as also getting a match, from the IRS).{{#tag:ref|If you are in a 25% tax bracket, it costs you $750 to put $1000 in your HSA, and once it is there, it won't be taxed at all as along as you spend it for medical care.<ref name='grabiner'/> This means the deductible also gets discounted by your tax rate: this should be taken into account when comparing deductibles with non-HSA plans. Note that health plans with a [[Flexible spending arrangement|Flexible Spending Arrangement]] (FSA) also offer tax deductions; however, the FSA is a ''use-it-or-lose-it'' plan, with balances normally zeroed out at the end of every year.|group=note}}",
+        "priority": "Contribute to a [[Health savings account|Health Savings Account]] (HSA) if a [[high deductible health plan]] is right for your needs",
+        "returns": "8-10%",
+        "description": "HSAs offer tax-free contributions, growth, and withdrawals when used for qualified medical expenses. You can view HSA contributions as being matched by the IRS.<ref name='grabiner'/> If you are in a 25% tax bracket, it costs you $750 to put $1000 in your HSA, and once it is there, it won't be taxed at all as long as you spend it for medical care, so this is as good as $1000 in a Roth IRA.<ref name='grabiner'/>\n\nAfter age 65, the HSA can also be used for non-medical expenses, with such withdrawals taxed at your regular tax rate. So if you are unlucky and are too healthy after 65, the HSA is still as good as a pre-tax retirement account.<ref name='grabiner'>{{Forum post|p=1962306 | title = Prioritizing investments- HSA goes where? | author = grabiner | date = February 16, 2014}}</ref> Unlike pre-tax retirement accounts, HSA contributions made through an employer are also [[payroll tax]]-deductible.\n\nUse of an HSA requires participation in an IRS qualified [[High deductible health plan| high deductible health plan]] (HDHP) at work. Look at your particular health care needs to decide if you may be better off with a traditional health care plan or an HDHP plus HSA. If the latter, then using the HSA as an investment account can be advantageous."
+    },
+    {
+        "step": "retirement-funds",
+        "title": "Retirement Funds",
+        "number": 5,
+        "level": "medium",
+        "summary": "Contribute the maximum to an IRA, [[Traditional IRA|traditional]] or [[Roth IRA|Roth]] (or [[Backdoor Roth IRA| backdoor Roth technique]]), depending on eligibility<ref group='note'> Investors should verify eligibility before making traditional IRA contributions: in particular, check the [https://www.irs.gov/retirement-plans/ira-deduction-limits tax-deduction limit]. For Roth IRAs, the [[backdoor Roth]] is a technique for making contributions when your income exceeds the [https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-ira-contribution-limits eligibility limit]. It is complicated in nature and may not be for everyone. Read the [[Backdoor Roth IRA#Cautions| Cautions]] section of the article before proceeding and ask in the forum if you are unsure.</ref> and personal circumstances. (See [[#Choosing between an employer retirement plan and an IRA | below]] for situations where you may prefer to swap steps 5 and 6.)",
+        "priority": "Contribute to available retirement accounts (eg. [[IRA]], [[401(k)]], [[403(b)]], [[457(b)]]) without a match",
+        "returns": "8%",
+        "description": "Retirement accounts offer either an immediate tax deduction and tax-deferred growth (traditional) or life-long tax-free growth (Roth), plus [[asset protection]] and [[estate planning]] benefits. These accounts have annual contribution limits which are lost if not used.\n\nInvestors may have to choose among [[IRA#Comparison_to_employer_accounts|IRA vs. employer plan]] and/or [[traditional vs. Roth]] accounts and should consult those articles for more details.\n\nDeductible IRA contributions are subject to income limits, but the income limit for contributing to a Roth IRA may be circumvented by the [[Backdoor Roth]] process. Employer plans may also offer [[mega-backdoor Roth]] contributions, but these should be made only after normal contributions."
+    },
+    {
+        "step": "employer-retirement-funds",
+        "title": "Employer Retirement Funds",
+        "number": 6,
+        "level": "medium",
+        "summary": "Contribute the remainder of the maximum employee contribution to the work-based plan.",
+        "priority": "Contribute to available retirement accounts (eg. [[IRA]], [[401(k)]], [[403(b)]], [[457(b)]]) without a match",
+        "returns": "8%",
+        "description": "Retirement accounts offer either an immediate tax deduction and tax-deferred growth (traditional) or life-long tax-free growth (Roth), plus [[asset protection]] and [[estate planning]] benefits. These accounts have annual contribution limits which are lost if not used.\n\nInvestors may have to choose among [[IRA#Comparison_to_employer_accounts|IRA vs. employer plan]] and/or [[traditional vs. Roth]] accounts and should consult those articles for more details.\n\nDeductible IRA contributions are subject to income limits, but the income limit for contributing to a Roth IRA may be circumvented by the [[Backdoor Roth]] process. Employer plans may also offer [[mega-backdoor Roth]] contributions, but these should be made only after normal contributions."
+    },
+    {
+        "step": "mega-backdoor-roth",
+        "title": "Mega Backdoor Roth",
+        "number": 7,
+        "level": "medium",
+        "summary": "If your plan supports it, employ the [[Mega-backdoor Roth|mega-backdoor Roth strategy]].<ref group='note'>This technique is only available through select employer plans; it is complicated in nature and may not be for everyone. Read the [[Mega-backdoor Roth#Determining if your plan supports the mega-backdoor Roth|Mega-backdoor Roth]] article to determine if your plan supports it, and ask in the forum if you are unsure.</ref>",
+        "priority": "Contribute to available retirement accounts (eg. [[IRA]], [[401(k)]], [[403(b)]], [[457(b)]]) without a match",
+        "returns": "8%",
+        "description": "Retirement accounts offer either an immediate tax deduction and tax-deferred growth (traditional) or life-long tax-free growth (Roth), plus [[asset protection]] and [[estate planning]] benefits. These accounts have annual contribution limits which are lost if not used.\n\nInvestors may have to choose among [[IRA#Comparison_to_employer_accounts|IRA vs. employer plan]] and/or [[traditional vs. Roth]] accounts and should consult those articles for more details.\n\nDeductible IRA contributions are subject to income limits, but the income limit for contributing to a Roth IRA may be circumvented by the [[Backdoor Roth]] process. Employer plans may also offer [[mega-backdoor Roth]] contributions, but these should be made only after normal contributions."
+    },
+    {
+        "step": "medium-interest-debt",
+        "title": "Medium-Interest Debt",
+        "diagramTitle": "Pay Off Medium-Interest Debt (Student Loans, Car Loans)",
+        "number": 8,
+        "level": "medium",
+        "summary": "Pay off medium-interest debt (eg. student loans, car loans, personal loans), especially if the interest is not tax-deductible.",
+        "priority": "Pay off medium-interest debt",
+        "returns": "3-8%",
+        "description": "Typically these include student loans, car loans, personal loans, and Home Equity Lines of Credit (HELOCs). The choice to pay off debt or invest is based mostly on the [[Marginal_tax_rate#After-tax value of investments|expected after-tax rate of return]]. When the returns are similar, secondary factors sway the decision; see: [[Paying down loans versus investing]]."
+    },
+    {
+        "step": "taxable-accounts",
+        "title": "Taxable Accounts",
+        "number": 9,
+        "level": "low",
+        "summary": "Invest inside a [[taxable account]].",
+        "priority": "Invest in a [[taxable account]]",
+        "returns": "0.5-7%",
+        "description": "As you consider all these steps, keep in mind that your [[Asset allocation|asset allocation]] (ratio of stocks to bonds), which sets your portfolio's level of [[Risk and return: an introduction#Asset allocation | acceptable risk]], ''is the single most influential decision you can make'' on your portfolio's performance. Your chosen asset allocation (% stocks / % bonds) may direct you to skip some of these steps."
+    },
+    {
+        "step": "low-interest-debt",
+        "title": "Low-Interest Debt",
+        "diagramTitle": "Pay Off Low-Interest Debt (Mortgage)",
+        "number": 10,
+        "level": "low",
+        "summary": "Pay off low-interest debt (eg. most mortgages, some car loans).",
+        "priority": "Pay off low-interest debt",
+        "returns": "1.5-3%",
+        "description": "Typically these include mortgages and other secured debt. Paying off low-interest debt on good terms should be a lower priority than most other funding options, but a higher priority than investing in low-return investments with no tax advantages."
+    }
+]

@@ -1,0 +1,119 @@
+﻿@page "/invest/{stepPath}"
+@inject HttpClient Http
+
+<PageTitle>
+invest/@stepPath
+</PageTitle>
+
+
+
+@if (priorities == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    @foreach (var priority in priorities) {
+        @if (priority.step == stepPath) {
+            <h2>@priority.number: @priority.title</h2>
+            <h4>@((MarkupString)markupize(priority.priority))</h4>
+
+            <p><b>Summary:</b> @((MarkupString)markupize(priority.summary))</p>
+            <p><b>Approximate Return:</b> @priority.returns</p>
+            <p><b>Details:</b> @((MarkupString)markupize(priority.description))</p>
+        }
+    }
+}
+
+@code {
+    public enum Mode {
+        normal = 0,
+        href,
+        text,
+    }
+    public string markupize(string? wikiText) {
+        if (wikiText == null) return "";
+        string returnVal = "<span>";
+        char lastChar = 'x';
+        var mode = Mode.normal;
+        string href = "";
+        string text = "";
+        foreach (var c in wikiText) {
+            switch (c) {
+                case '[':
+                    if (lastChar == '[') {
+                        mode = Mode.href;
+                    }
+                    break;
+                case ']':
+                    if (lastChar == ']') {
+                        if (text == "") { text = href; }
+                        returnVal += "<a href='https://www.bogleheads.org/wiki/" + href + "'>" + text + "</a>";
+                        href = "";
+                        text = "";
+                        mode = Mode.normal;
+                    }
+                    break;
+                case '|':
+                    if (mode == Mode.href) {
+                        mode = Mode.text;
+                    }
+                    break;
+            }
+
+            switch (mode) {
+                case Mode.href:
+                    switch (c) {
+                        case '[':
+                        case ']':
+                            break;
+                        default:
+                            href += c;
+                            break;
+                     }
+                    break;
+                case Mode.text:
+                    switch (c) {
+                        case '[':
+                        case ']':
+                        case '|':
+                            break;
+                        default:
+                            text += c;
+                            break;
+                     }
+                    break;
+                default:
+                      switch (c) {
+                        case '[':
+                        case ']':
+                            break;
+                        case '\n':
+                            returnVal += "<br/>";
+                            break;
+                        default:
+                            returnVal += c;
+                            break;
+                     }
+                    break;
+            }
+
+            lastChar = c;
+        }
+        returnVal += "</span>";
+
+        return returnVal;
+    }
+
+    public string foo = "<p>hello <b>worjjld</b> again</p>";
+
+    [Parameter]
+    public string? stepPath { get; set; }
+
+    private InvestementPriority[]? priorities;
+
+    protected override async Task OnInitializedAsync()
+    {
+        priorities = await Http.GetFromJsonAsync<InvestementPriority[]>("data/investment-priorities.json");
+    }
+}
