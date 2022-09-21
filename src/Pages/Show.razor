@@ -21,6 +21,17 @@ else
             <p><b>Summary:</b> @((MarkupString)markupize(priority.summary))</p>
             <p><b>Approximate Return:</b> @priority.returns</p>
             <p><b>Details:</b> @((MarkupString)markupize(priority.description))</p>
+            <p><b>Status:</b> 
+            <select>
+                <option>Unsure</option>
+                <option>n/a</option>
+                <option>Needed</option>
+                <option>Planned</option>
+                <option>Executing</option>
+                <option>Complete</option>
+            </select>
+
+</p>
         }
     }
 }
