@@ -32,7 +32,7 @@ To be most efficient in your savings, consider the Boglehead Investment Prioriti
                     @foreach (var priority in priorities) {
                         if (priority.level == "high") {
                             var href = "/invest/" + @priority.step;
-                            <div><span style='display:inline-block;text-align:right;width:35px'>@priority.number:</span>  <a href="@href" style="background:red" class="m-1 btn" >@priority.bestDiagramTitle</a></div>
+                            <div><a href="@href" style="background:red" class="m-1 btn" >@priority.number: @priority.bestDiagramTitle</a></div>
                         }
                     }
                 </td>
@@ -45,7 +45,7 @@ To be most efficient in your savings, consider the Boglehead Investment Prioriti
                     @foreach (var priority in priorities) {
                         if (priority.level == "medium") {
                             var href = "/invest/" + @priority.step;
-                            <div><span style='display:inline-block;text-align:right;width:35px'>@priority.number:</span>  <a href="@href" style="background:blue" class="m-1 btn" >@priority.bestDiagramTitle</a></div>
+                            <div><a href="@href" style="background:blue" class="m-1 btn" >@priority.number: @priority.bestDiagramTitle</a></div>
                         }
                     }
                 </td>
@@ -58,7 +58,7 @@ To be most efficient in your savings, consider the Boglehead Investment Prioriti
                     @foreach (var priority in priorities) {
                         if (priority.level == "low") {
                             var href = "/invest/" + @priority.step;
-                            <div><span style='display:inline-block;text-align:right;width:35px'>@priority.number:</span>  <a href="@href" style="background:green" class="m-1 btn" >@priority.bestDiagramTitle</a></div>
+                            <div><a href="@href" style="background:green" class="m-1 btn" >@priority.number: @priority.bestDiagramTitle</a></div>
                         }
                     }
                 </td>
