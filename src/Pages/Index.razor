@@ -27,12 +27,22 @@ To be most efficient in your savings, consider the Boglehead Investment Prioriti
     {
         <table>
             <tr>
-                <td style="width:150px">High Priority</td>
+                <td style="width:120px">High Priority</td>
                 <td>
                     @foreach (var priority in priorities) {
                         if (priority.level == "high") {
                             var href = "/invest/" + @priority.step;
-                            <div><a href="@href" style="background:red" class="m-1 btn" >@priority.number: @priority.bestDiagramTitle</a></div>
+                            <div>
+                                <a href="@href" style="background:red" class="m-1 btn" >@priority.number: @priority.bestDiagramTitle</a>
+                                <select>
+                                    <option>Unsure</option>
+                                    <option>n/a</option>
+                                    <option>Needed</option>
+                                    <option>Planned</option>
+                                    <option>Executing</option>
+                                    <option>Complete</option>
+                                </select>
+                            </div>
                         }
                     }
                 </td>
@@ -40,12 +50,22 @@ To be most efficient in your savings, consider the Boglehead Investment Prioriti
         </table>
         <table>
             <tr>
-                <td style="width:150px">Medium Priority</td>
+                <td style="width:120px">Medium Priority</td>
                 <td>
                     @foreach (var priority in priorities) {
                         if (priority.level == "medium") {
                             var href = "/invest/" + @priority.step;
-                            <div><a href="@href" style="background:blue" class="m-1 btn" >@priority.number: @priority.bestDiagramTitle</a></div>
+                            <div>
+                                <a href="@href" style="background:blue" class="m-1 btn" >@priority.number: @priority.bestDiagramTitle</a>
+                                <select>
+                                    <option>Unsure</option>
+                                    <option>n/a</option>
+                                    <option>Needed</option>
+                                    <option>Planned</option>
+                                    <option>Executing</option>
+                                    <option>Complete</option>
+                                </select>
+                            </div>
                         }
                     }
                 </td>
@@ -53,12 +73,22 @@ To be most efficient in your savings, consider the Boglehead Investment Prioriti
         </table>
         <table>
             <tr>
-                <td style="width:150px">Low Priority</td>
+                <td style="width:120px">Low Priority</td>
                 <td>
                     @foreach (var priority in priorities) {
                         if (priority.level == "low") {
                             var href = "/invest/" + @priority.step;
-                            <div><a href="@href" style="background:green" class="m-1 btn" >@priority.number: @priority.bestDiagramTitle</a></div>
+                            <div>
+                                <a href="@href" style="background:green" class="m-1 btn" >@priority.number: @priority.bestDiagramTitle</a>
+                                <select>
+                                    <option>Unsure</option>
+                                    <option>n/a</option>
+                                    <option>Needed</option>
+                                    <option>Planned</option>
+                                    <option>Executing</option>
+                                    <option>Complete</option>
+                                </select>
+                            </div>
                         }
                     }
                 </td>
