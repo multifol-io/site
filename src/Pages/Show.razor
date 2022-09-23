@@ -22,16 +22,49 @@ else
             <p><b>Approximate Return:</b> @priority.returns</p>
             <p><b>Details:</b> @((MarkupString)markupize(priority.description))</p>
             <p><b>Status:</b> 
-            <select>
-                <option>Unsure</option>
-                <option>n/a</option>
-                <option>Needed</option>
-                <option>Not in Plan</option>
-                <option>Planned</option>
-                <option>Executing</option>
-                <option>Complete</option>
-            </select>
-</p>
+                <select>
+                    <option>Unsure</option>
+                    <option>n/a</option>
+                    <option>Needed</option>
+                    <option>Not in Plan</option>
+                    <option>Planned</option>
+                    <option>Executing</option>
+                    <option>Complete</option>
+                </select>
+            </p>
+            <p><b>Worksheet:</b> </p>
+
+                @switch (priority.number) {
+                    case 1:
+                        <label>Annual Expenses:</label><input type='text' /><br />
+
+                        break;
+                    case 2:
+                        <label>50 or older?</label><input type='checkbox' /><br />
+                        <label>Percent Matched:</label><input type='text' /><br />
+                        <label>Limit:</label><input type='text' /><br />
+                        <label>Amount to get full match:</label><span id='fullMatch'></span><br/>
+                        <label>2022 401k Contribution:</label><input type='text'><br/>
+                        <label>2022 Match:</label><span id='match'></span><br/>
+
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    case 6:
+                        break;
+                    case 7:
+                        break;
+                    case 8:
+                        break;
+                    case 9:
+                        break;
+                    case 10:
+                        break;
+                }
         }
     }
 }
