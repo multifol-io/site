@@ -21,8 +21,99 @@ else
             <p><b>Summary:</b> @((MarkupString)markupize(priority.summary))</p>
             <p><b>Approximate Return:</b> @priority.returns</p>
             <p><b>Details:</b> @((MarkupString)markupize(priority.description))</p>
-            <p><b>Status:</b> 
+           
+            <p><b>Worksheet:</b> </p>
+
+                @switch (priority.number) {
+                    case 1:
+                        <label>Monthly Expenses:</label> <span>$</span><input type='text' value='5,000' /><br /><br />
+                        <div>
+                            <label>Planned size of emergency fund:</label><br/>
+                            <input type="radio" id="html" name="fav_language" value="HTML">
+                            <label for="html">None: $0</label><br>
+                            <input type="radio" id="css" name="fav_language" value="1">
+                            <label for="css" id=oneMonth>1 month: $5,000</label><br>
+                            <input type="radio" id="javascript" name="fav_language" value="3">
+                            <label for="javascript" id=threeMonth>3 months: $15,000</label><br>
+                            <input type="radio" id="javascript" name="fav_language" value="3">
+                            <label for="javascript">Other:</label> <input type=text />
+                        </div><br />
+                        <label>Current Size:</label> <span>$</span><input type='text' value="0" /><br /><br />
+                        <label>Savings Opportunity:</label> <span>$</span><span></span><br />
+
+                        break;
+                    case 2:
+                        <input type='checkbox' /> <label>Eligible for workplace retirement savings?</label><br /><br/>
+                        <fieldset disabled=true style='margin-left:20px'>
+                            <label>Percent Matched:</label><input type='text' /><br />
+                            <label>Limit:</label><input type='text' /><br />
+                        </fieldset><br/>
+                        <label>Savings Opportunity (Matched Retirement Savings):</label> <span>$</span><span></span><br />
+
+                        break;
+                    case 4:
+                        <label>Individual/Family:</label><select><option>choose...</option><option>Individual</option><option>Family</option></select><br />
+                        <label>Limit:</label><span id='hsaLimit'></span><br />
+                        <label>2022 Employer Contribution:</label><input type='text'><br/>
+                        <label>2022 Employee Contribution:</label><input type='text'><br/>
+                        <br/>
+                        <label>Savings Opportunity:</label> <span>$</span><span></span><br />
+                        break;
+                    case 5:
+                        <label>2022 Modified AGI (projected):</label> <input type='text' /><br />
+                        <label>Tax Filing Status:</label> <select><option>choose...</option><option>Single</option><option>Married filing jointly</option></select><br />
+                        <input type='checkbox' /> <label>50 or older?</label><br />
+                        <label>Deduction allowed on IRA:</label> <span id='iraDeduction'></span><br />
+                        <label>Roth IRA contribution allowed:</label> <span id='rothIRAContribution'></span><br />
+                        <br/>
+                        <label>Savings Opportunity:</label> <span>$</span><span></span><br />
+                        break;
+                    case 6:
+                        <input type='checkbox' /> <label>50 or older?</label><br />
+                        <label>2022 401k Contribution:</label><input type='text'><br/>
+                        break;
+                    case 7:
+                        <input type='checkbox' /> <label>Eligible for Mega Backdoor Roth?</label><br />
+                        <fieldset disabled=true>
+                            <label>Limit:</label><input type='text' /><br />
+                            <label>2022 Mega Backdoor Roth Contribution:</label><input type='text'><br/>
+                        </fieldset><br/>
+                        <label>Savings Opportunity:</label> <span>$</span><span></span><br />
+                        break;
+                    case 9:
+                        <label>Savings Opportunity:</label> <span>no limits</span><br />
+                        break;
+                    case 3:
+                    case 8:
+                    case 10:
+                        <div>
+                            <i>list of debts (all interest rates):</i><br>
+                            <table>
+                            <thead>
+                            <th><label>name</label></th>
+                            <th><label>interest rate</label></th>
+                            <th><label>category</label></th>
+                            <th><label>payoff date</label></th>
+                            <th><label>total $</label></th>
+                            </thead>
+                            <tr>
+                            <td><input type='text' /></td>
+                            <td><input type='text' /></td>
+                            <td><span></span></td>
+                            <td><input type='text' /></td>
+                            <td><input type='text' /></td>
+                            </tr>
+                            </table>
+                        </div>
+                        <br/>
+                        <label>Savings Opportunity (@priority.title):</label> <span>$</span><span>0</span><br />
+                        break;
+                }
+
+                <br/>
+                 <p><b>Status:</b> 
                 <select>
+                    <option>choose...</option>
                     <option>Unsure</option>
                     <option>n/a</option>
                     <option>Needed</option>
@@ -32,39 +123,6 @@ else
                     <option>Complete</option>
                 </select>
             </p>
-            <p><b>Worksheet:</b> </p>
-
-                @switch (priority.number) {
-                    case 1:
-                        <label>Annual Expenses:</label><input type='text' /><br />
-
-                        break;
-                    case 2:
-                        <label>50 or older?</label><input type='checkbox' /><br />
-                        <label>Percent Matched:</label><input type='text' /><br />
-                        <label>Limit:</label><input type='text' /><br />
-                        <label>Amount to get full match:</label><span id='fullMatch'></span><br/>
-                        <label>2022 401k Contribution:</label><input type='text'><br/>
-                        <label>2022 Match:</label><span id='match'></span><br/>
-
-                        break;
-                    case 3:
-                        break;
-                    case 4:
-                        break;
-                    case 5:
-                        break;
-                    case 6:
-                        break;
-                    case 7:
-                        break;
-                    case 8:
-                        break;
-                    case 9:
-                        break;
-                    case 10:
-                        break;
-                }
         }
     }
 }
