@@ -20,6 +20,7 @@ public class EmergencyFund {
 
         }
     }
+    
     public int SavingsOpportunity {
         get { return TargetEmergencyFund - CurrentBalance; }
     }

@@ -32,7 +32,7 @@ else
                             
                             <label>Monthly Expenses:</label> <span>$</span><input type=text @bind-Value="emergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /><br /><br />
                             <label>Planned size of emergency fund:</label><br/>
-                            <InputRadioGroup @bind-Value='emergencyFund.TargetMonths'>
+                            <InputRadioGroup @bind-Value=emergencyFund.TargetMonths>
                                 <InputRadio Value='0'/> None<br/>
                                 <InputRadio Value='1'/> 1 month: $@emergencyFund.MonthlyExpenses<br/>
                                 <InputRadio Value='3'/> 3 months: $@emergencyFund.ThreeMonths<br/>
@@ -46,17 +46,21 @@ else
                         </EditForm>
                         @code {
                             private EmergencyFund emergencyFund = new();
-             
                         }
                         break;
                     case 2:
-                        <input type='checkbox' /> <label>Eligible for workplace retirement savings?</label><br /><br/>
-                        <fieldset disabled=true style='margin-left:20px'>
-                            <label>Percent Matched:</label><input type='text' /><br />
-                            <label>Limit:</label><input type='text' /><br />
-                        </fieldset><br/>
-                        <label>Savings Opportunity (Matched Retirement Savings):</label> <span>$</span><span></span><br />
-
+                        <EditForm Model="retirementFunds">
+                            <InputCheckbox @bind-Value="retirementFunds.Eligible" /> <label>Eligible for workplace retirement savings?</label><br /><br/>
+                            <fieldset disabled=@retirementFunds.Disabled style='margin-left:20px'>
+                                <label>Percent Matched:</label> <input type='text' @bind-Value=retirementFunds.PercentMatched @bind-Value:event=oninput />%<br />
+                                <label>Limit:</label><input type='text' @bind-Value=retirementFunds.MatchLimit @bind-Value:event=oninput/><br />
+                                <label>Contribution Required to get maximum match:</label> $<span>@retirementFunds.ContributionRequired</span><br />
+                            </fieldset><br/>
+                            <label>Savings Opportunity:</label> <span>$</span>@retirementFunds.SavingsOpportunity<br />
+                        </EditForm>
+                        @code {
+                            private RetirementFunds retirementFunds = new();
+                        }
                         break;
                     case 4:
                         <label>Individual/Family:</label><select><option>choose...</option><option>Individual</option><option>Family</option></select><br />
