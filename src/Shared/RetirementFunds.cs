@@ -17,8 +17,10 @@ public class RetirementFunds {
         }
     }
 
-    public int SavingsOpportunity {
+    public int? SavingsOpportunity {
         get {
+            if (!Eligible) return null;
+
             return MatchLimit + ContributionRequired;
         }
     }

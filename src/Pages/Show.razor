@@ -50,7 +50,7 @@ else
                         break;
                     case 2:
                         <EditForm Model="retirementFunds">
-                            <InputCheckbox @bind-Value="retirementFunds.Eligible" /> <label>Eligible for workplace retirement savings?</label><br /><br/>
+                            <InputCheckbox @bind-Value="retirementFunds.Eligible" id='eligible'/> <label for='eligible'>Eligible for workplace retirement savings?</label><br /><br/>
                             <fieldset disabled=@retirementFunds.Disabled style='margin-left:20px'>
                                 <label>Percent Matched:</label> <input type='text' @bind-Value=retirementFunds.PercentMatched @bind-Value:event=oninput />%<br />
                                 <label>Limit:</label><input type='text' @bind-Value=retirementFunds.MatchLimit @bind-Value:event=oninput/><br />
@@ -63,12 +63,21 @@ else
                         }
                         break;
                     case 4:
-                        <label>Individual/Family:</label><select><option>choose...</option><option>Individual</option><option>Family</option></select><br />
-                        <label>Limit:</label><span id='hsaLimit'></span><br />
-                        <label>2022 Employer Contribution:</label><input type='text'><br/>
-                        <label>2022 Employee Contribution:</label><input type='text'><br/>
-                        <br/>
-                        <label>Savings Opportunity:</label> <span>$</span><span></span><br />
+                        <EditForm Model="hsa">
+                            <InputCheckbox @bind-Value="hsa.Eligible" id='eligible'/> <label for='eligible'>Have high deductible health plan?</label><br/><br/>
+                            <fieldset disabled=@hsa.Disabled style='margin-left:20px'>
+                                <label>Individual/Family:</label>   <select @bind=hsa.Family><option value=None>choose...</option><option value=EmployeeOnly>Employee only</option><option>Family</option></select><br />
+                                <label>Limit:</label> @hsa.Limit<br /><br/>
+
+                                <label>2022 Employer Contribution:</label><input type='text'><br/>
+                                <label>2022 Employee Contribution:</label><input type='text'><br/>
+                            </fieldset>
+                            <br/>
+                            <label>Savings Opportunity:</label> <span>$</span>@hsa.SavingsOpportunity<br />
+                        </EditForm>
+                        @code {
+                            private HealthSavingsAccount hsa = new();
+                        }
                         break;
                     case 5:
                         <label>2022 Modified AGI (projected):</label> <input type='text' /><br />
