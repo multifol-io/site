@@ -26,24 +26,26 @@ else
 
                 @switch (priority.number) {
                     case 1:
-                        <EditForm Model="@person">
+                        <EditForm Model="emergencyFund">
                             <DataAnnotationsValidator />
                             <ValidationSummary />
                             
-                            <label>Monthly Expenses:</label> <span>$</span><InputNumber @bind-Value="person.MonthlyExpenses"  /><br /><br />
+                            <label>Monthly Expenses:</label> <span>$</span><input type=text @bind-Value="emergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /><br /><br />
                             <label>Planned size of emergency fund:</label><br/>
-                            <InputRadioGroup @bind-Value='person.TargetMonths'>
+                            <InputRadioGroup @bind-Value='emergencyFund.TargetMonths'>
                                 <InputRadio Value='0'/> None<br/>
-                                <InputRadio Value='1'/> 1 month: $@person.MonthlyExpenses<br/>
-                                <InputRadio Value='3'/> 3 months: $@person.ThreeMonths<br/>
-                                <InputRadio Value='4'/> Other: $<InputNumber @bind-Value="person.EFOther"/><br/>
+                                <InputRadio Value='1'/> 1 month: $@emergencyFund.MonthlyExpenses<br/>
+                                <InputRadio Value='3'/> 3 months: $@emergencyFund.ThreeMonths<br/>
+                                <InputRadio Value='4'/> Other: <br/>
                             </InputRadioGroup>
+                            <div style="margin-left:20px">$<input type=text @bind-Value="emergencyFund.EFOther" @bind-Value:event="oninput"/></div>
                             <br />
-                            <label>Current Size:</label> <span>$</span><InputNumber @bind-Value="person.EmergencyFund" /><br /><br />
-                            <label>Savings Opportunity:</label> <span>$</span>@person.SavingsOpportunity<br />
+                            <br />
+                            <label>Current Size:</label> <span>$</span><input type=text @bind-Value="emergencyFund.CurrentBalance" @bind-Value:event="oninput"/><br /><br />
+                            <label>Savings Opportunity:</label> <span>$</span>@emergencyFund.SavingsOpportunity<br />
                         </EditForm>
                         @code {
-                            private Person person = new();
+                            private EmergencyFund emergencyFund = new();
              
                         }
                         break;

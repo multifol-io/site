@@ -1,20 +1,18 @@
 using System.ComponentModel.DataAnnotations;
-public class Person{
-    public string? TargetMonths {get;set;}
+public class EmergencyFund {
+    public int TargetMonths {get;set;} = 3;
     [Required]
     public int MonthlyExpenses { get; set;} = 6000;
-    public int EFOther { get; set;}
+    public int EFOther { get; set;} = 0;
     public int TargetEmergencyFund {
         get 
         {
             switch (TargetMonths) {
-                case "0":
-                    return 0;
-                case "1":
+                case 1:
                     return MonthlyExpenses;
-                case "3":
+                case 3:
                     return ThreeMonths;
-                case "Other":
+                case 4:
                     return EFOther;
                 default:
                     return 0;
@@ -23,19 +21,14 @@ public class Person{
         }
     }
     public int SavingsOpportunity {
-        get {
-            return TargetEmergencyFund - EmergencyFund;
-        }
-        set {
-            
-        }
+        get { return TargetEmergencyFund - CurrentBalance; }
     }
+
     [Required]
-    public int EmergencyFund { get; set; }
+    public int CurrentBalance { get; set; }
 
     public int ThreeMonths
     {
         get { return MonthlyExpenses * 3; }
     }
-    
 }
