@@ -26,21 +26,26 @@ else
 
                 @switch (priority.number) {
                     case 1:
-                        <label>Monthly Expenses:</label> <span>$</span><input type='text' value='5,000' /><br /><br />
-                        <div>
+                        <EditForm Model="@person">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+                            
+                            <label>Monthly Expenses:</label> <span>$</span><InputNumber @bind-Value="person.MonthlyExpenses"  /><br /><br />
                             <label>Planned size of emergency fund:</label><br/>
-                            <input type="radio" id="html" name="fav_language" value="HTML">
-                            <label for="html">None: $0</label><br>
-                            <input type="radio" id="css" name="fav_language" value="1">
-                            <label for="css" id=oneMonth>1 month: $5,000</label><br>
-                            <input type="radio" id="javascript" name="fav_language" value="3">
-                            <label for="javascript" id=threeMonth>3 months: $15,000</label><br>
-                            <input type="radio" id="javascript" name="fav_language" value="3">
-                            <label for="javascript">Other:</label> <input type=text />
-                        </div><br />
-                        <label>Current Size:</label> <span>$</span><input type='text' value="0" /><br /><br />
-                        <label>Savings Opportunity:</label> <span>$</span><span></span><br />
-
+                            <InputRadioGroup @bind-Value='person.TargetMonths'>
+                                <InputRadio Value='0'/> None<br/>
+                                <InputRadio Value='1'/> 1 month: $@person.MonthlyExpenses<br/>
+                                <InputRadio Value='3'/> 3 months: $@person.ThreeMonths<br/>
+                                <InputRadio Value='4'/> Other: $<InputNumber @bind-Value="person.EFOther"/><br/>
+                            </InputRadioGroup>
+                            <br />
+                            <label>Current Size:</label> <span>$</span><InputNumber @bind-Value="person.EmergencyFund" /><br /><br />
+                            <label>Savings Opportunity:</label> <span>$</span>@person.SavingsOpportunity<br />
+                        </EditForm>
+                        @code {
+                            private Person person = new();
+             
+                        }
                         break;
                     case 2:
                         <input type='checkbox' /> <label>Eligible for workplace retirement savings?</label><br /><br/>
@@ -75,8 +80,7 @@ else
                     case 7:
                         <input type='checkbox' /> <label>Eligible for Mega Backdoor Roth?</label><br />
                         <fieldset disabled=true>
-                            <label>Limit:</label><input type='text' /><br />
-                            <label>2022 Mega Backdoor Roth Contribution:</label><input type='text'><br/>
+                            <label>Limit:</label> <input type='text' /><br />
                         </fieldset><br/>
                         <label>Savings Opportunity:</label> <span>$</span><span></span><br />
                         break;
@@ -109,20 +113,6 @@ else
                         <label>Savings Opportunity (@priority.title):</label> <span>$</span><span>0</span><br />
                         break;
                 }
-
-                <br/>
-                 <p><b>Status:</b> 
-                <select>
-                    <option>choose...</option>
-                    <option>Unsure</option>
-                    <option>n/a</option>
-                    <option>Needed</option>
-                    <option>Not in Plan</option>
-                    <option>Planned</option>
-                    <option>Executing</option>
-                    <option>Complete</option>
-                </select>
-            </p>
         }
     }
 }
