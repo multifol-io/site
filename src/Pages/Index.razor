@@ -105,10 +105,10 @@ To be most efficient in your savings, consider the Boglehead Investment Prioriti
 
 @code {
 
-    private InvestementPriority[]? priorities;
+    private InvestmentPriority[]? priorities;
 
     protected override async Task OnInitializedAsync()
     {
-        priorities = await Http.GetFromJsonAsync<InvestementPriority[]>("data/investment-priorities.json");
+        priorities = await Http.GetFromJsonAsync<InvestmentPriority[]>("data/investment-priorities.json");
     }
 }

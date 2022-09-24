@@ -2,9 +2,9 @@ using System.ComponentModel.DataAnnotations;
 public class EmergencyFund {
     public int TargetMonths {get;set;} = 3;
     [Required]
-    public int MonthlyExpenses { get; set;} = 6000;
+    public int? MonthlyExpenses { get; set;}
     public int EFOther { get; set;} = 0;
-    public int TargetEmergencyFund {
+    public int? TargetEmergencyFund {
         get 
         {
             switch (TargetMonths) {
@@ -21,14 +21,14 @@ public class EmergencyFund {
         }
     }
     
-    public int SavingsOpportunity {
+    public int? SavingsOpportunity {
         get { return TargetEmergencyFund - CurrentBalance; }
     }
 
     [Required]
     public int CurrentBalance { get; set; }
 
-    public int ThreeMonths
+    public int? ThreeMonths
     {
         get { return MonthlyExpenses * 3; }
     }
