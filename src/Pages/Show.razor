@@ -34,10 +34,11 @@ saving/@stepPath
                     <label>Tax Filing Status:</label> <select @bind=taxFiling.TaxFilingStatus>
                                 <option value=None>choose...</option>
                                 <option>Single</option>
-                                <option value=MarriedFilingSeperately>Married filing seperately</option>
                                 <option value=MarriedFilingJointly>Married filing jointly</option>
+                                <option value=MarriedFilingSeperately>Married filing seperately</option>
+                                <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
                                 </select><br/>
-                    <label>2022 Adjusted Gross Income:</label> <input type='text' @bind-Value=taxFiling.AdjustedGrossIncome @bind-Value:event=oninput /><br/><br/>
+                    <label>2022 Adjusted Gross Income:</label> $<input type='text' @bind-Value=taxFiling.AdjustedGrossIncome @bind-Value:event=oninput /><br/><br/>
                 </EditForm>
                 <table>
                     <thead>
@@ -49,62 +50,60 @@ saving/@stepPath
 
                     @foreach (var priority in priorities) {
                         var href = "/saving/" + @priority.step;
-
                         <tr>
                             <td>@priority.level</td>
                             <td>
                                     <div>
                                         <a href="@href" style="background:blue" class="m-1 btn" >@priority.number: @priority.bestDiagramTitle</a>
-
                                     </div>
                             </td>
                             @switch (priority.number) {
                                 case 1: 
-                                   <td style=text-align:right>@taxFiling.EmergencyFund.SavingsOpportunity</td><td></td>
+                                   <td style=text-align:right>@taxFiling.EmergencyFund.AmountToSave</td><td></td>
                                    break;
                                 case 2: 
-                                   <td style=text-align:right>@taxFiling.People[0].EmployerPlan.SavingsOpportunity</td>
-                                   <td style=text-align:right>@taxFiling.People[1].EmployerPlan.SavingsOpportunity</td>
+                                   <td style=text-align:right>@taxFiling.People[0].EmployerPlan.AmountToSaveForMatch</td>
+                                   <td style=text-align:right>@taxFiling.People[1].EmployerPlan.AmountToSaveForMatch</td>
                                    break;
                                 case 4: 
-                                   <td style=text-align:right>@taxFiling.People[0].HealthSavingsAccount.SavingsOpportunity</td>
-                                   <td style=text-align:right>@taxFiling.People[1].HealthSavingsAccount.SavingsOpportunity</td>
+                                   <td style=text-align:right>@taxFiling.People[0].HealthSavingsAccount.AmountToSave</td>
+                                   <td style=text-align:right>@taxFiling.People[1].HealthSavingsAccount.AmountToSave</td>
                                    break;
                                 case 5:
                                     @if (taxFiling.AdjustedGrossIncome != null) {
                                         @if(taxFiling.PersonCount > 0) {
                                             <td style=text-align:right>
-                                                IRA: @taxFiling.People[0].IRA.SavingsOpportunity<br/>
-                                                @if(taxFiling.People[0].RothIRA.SavingsOpportunity > 0) {
+                                                IRA: @taxFiling.People[0].IRA.AmountToSave<br/>
+                                                @if(taxFiling.People[0].RothIRA.AmountToSave > 0) {
                                                     <span>or</span><br/>
-                                                    <span>Roth IRA: @taxFiling.People[0].RothIRA.SavingsOpportunity</span><br/>
+                                                    <span>Roth IRA: @taxFiling.People[0].RothIRA.AmountToSave</span><br/>
                                                 } else {
                                                     <span>or</span><br/>
-                                                    <span>IRA->Roth: @taxFiling.People[0].IRA.SavingsOpportunity</span>
+                                                    <span>IRA->Roth: @taxFiling.People[0].IRA.AmountToSave</span>
                                                 }
                                             </td>
                                         }
                                         @if(taxFiling.PersonCount > 1) {
                                             <td style=text-align:right>
-                                                IRA: @taxFiling.People[1].IRA.SavingsOpportunity<br/>
-                                                @if(taxFiling.People[1].RothIRA.SavingsOpportunity > 0) {
+                                                IRA: @taxFiling.People[1].IRA.AmountToSave<br/>
+                                                @if(taxFiling.People[1].RothIRA.AmountToSave > 0) {
                                                     <span>or</span><br/>
-                                                    <span>Roth IRA: @taxFiling.People[1].RothIRA.SavingsOpportunity</span><br/>
+                                                    <span>Roth IRA: @taxFiling.People[1].RothIRA.AmountToSave</span><br/>
                                                 } else {
                                                     <span>or</span><br/>
-                                                    <span>IRA->Roth: @taxFiling.People[1].IRA.SavingsOpportunity</span>
+                                                    <span>IRA->Roth: @taxFiling.People[1].IRA.AmountToSave</span>
                                                 }
                                             </td>
                                             }
                                         }
                                    break;
                                 case 6: 
-                                   <td style=text-align:right>@taxFiling.People[0].EmployerPlan.NonMatchedContributionAmount</td>
-                                   <td style=text-align:right>@taxFiling.People[1].EmployerPlan.NonMatchedContributionAmount</td>
+                                   <td style=text-align:right>@taxFiling.People[0].EmployerPlan.AmountToSaveForNonMatched</td>
+                                   <td style=text-align:right>@taxFiling.People[1].EmployerPlan.AmountToSaveForNonMatched</td>
                                    break;
                                 case 7: 
-                                   <td style=text-align:right>@taxFiling.People[0].EmployerPlan.MegaBackdoorRothAmount</td>
-                                   <td style=text-align:right>@taxFiling.People[1].EmployerPlan.MegaBackdoorRothAmount</td>
+                                   <td style=text-align:right>@taxFiling.People[0].EmployerPlan.AmountToSaveForBackdoorRoth</td>
+                                   <td style=text-align:right>@taxFiling.People[1].EmployerPlan.AmountToSaveForBackdoorRoth</td>
                                    break;
                                 case 9: 
                                     @if(taxFiling.PersonCount > 0) {<td style=text-align:right>unlimited</td> }
@@ -156,22 +155,22 @@ saving/@stepPath
                                     <br/>
                                     <br/>
                                     <label>Current Size:</label> <span>$</span><input type=text @bind-Value="taxFiling.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/><br/><br/>
-                                    <label>Savings Opportunity:</label> <span>$</span>@taxFiling.EmergencyFund.SavingsOpportunity<br/><br/>
+                                    <label>Amount to Save:</label> <span>$</span>@taxFiling.EmergencyFund.AmountToSave<br/><br/>
                                 </EditForm>
                                 break;
                             case 2:
                                 @for (int i = 0; i < taxFiling.PersonCount; i++) {
                                     var person = taxFiling.People[i];
+                                    var eligibleId = "eligible-" + i;
                                     <p><b>Person @(i+1):</b> </p>
 
                                     <EditForm Model="person">
-                                        <InputCheckbox @bind-Value=person.EmployerPlan.Eligible /> <label>Eligible for workplace retirement savings?</label><br/><br/>
+                                        <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id=@eligibleId /> <label for=@eligibleId>Eligible for workplace retirement savings?</label><br/><br/>
                                         <fieldset disabled=@person.EmployerPlan.NotEligible style='margin-left:20px'>
                                             <label>Percent Matched:</label> <input type='text' @bind-Value=person.EmployerPlan.PercentMatched @bind-Value:event=oninput />%<br/>
-                                            <label>Match Limit:</label> <input type='text' @bind-Value=person.EmployerPlan.MatchLimit @bind-Value:event=oninput/><br/>
-                                            <label>Contribution Required to get maximum match:</label> $<span>@person.EmployerPlan.ContributionRequired</span><br/>
+                                            <label>Match Limit:</label> $<input type='text' @bind-Value=person.EmployerPlan.MatchLimit @bind-Value:event=oninput/><br/>
+                                            <label>Contribution Required to get maximum match:</label> $<span>@person.EmployerPlan.AmountToSaveForMatch</span><br/>
                                         </fieldset><br/>
-                                        <label>Savings Opportunity:</label> <span>$</span>@person.EmployerPlan.SavingsOpportunity<br/><br/>
                                     </EditForm>
 
                                 }
@@ -183,10 +182,11 @@ saving/@stepPath
                             case 4:
                                 @for (int i = 0; i < taxFiling.PersonCount; i++) {
                                     var person = taxFiling.People[i];
+                                    var haveHDHPid = "eligible-" + i;
                                     <p><b>Person @(i+1):</b> </p>
 
                                     <EditForm Model="person">
-                                        <InputCheckbox @bind-Value=person.HealthSavingsAccount.Eligible id='eligible'/> <label for='eligible'>Have high deductible health plan?</label><br/><br/>
+                                        <InputCheckbox @bind-Value=person.HealthSavingsAccount.Eligible id='@haveHDHPid'/> <label for='@haveHDHPid'>Have high deductible health plan?</label><br/><br/>
                                         <fieldset disabled=@person.HealthSavingsAccount.NotEligible style='margin-left:20px'>
                                             <label>Individual/Family:</label>   <select @bind=person.HealthSavingsAccount.Family><option value=None>choose...</option><option value=EmployeeOnly>Employee only</option><option>Family</option></select><br/>
                                             <label>Contribution Limit:</label> @person.HealthSavingsAccount.Limit<br/><br/>
@@ -194,7 +194,7 @@ saving/@stepPath
                                             <label>2022 Employer Contribution:</label> <input type='text' @bind-Value=person.HealthSavingsAccount.EmployerContribution @bind-Value:event=oninput><br/>
                                         </fieldset>
                                         <br/>
-                                        <label>Savings Opportunity:</label> <span>$</span>@person.HealthSavingsAccount.SavingsOpportunity<br/><br/>
+                                        <label>Amount to Save:</label> <span>$</span>@person.HealthSavingsAccount.AmountToSave<br/><br/>
                                     </EditForm>
                                 }
 
@@ -204,17 +204,36 @@ saving/@stepPath
                                 }
                                 break;
                             case 5:
+                                <p><b>Tax Info:</b> </p>
+                                <EditForm Model="taxFiling">
+                                    <label>2022 Adjusted Gross Income:</label> $<input type='text' @bind-Value=taxFiling.AdjustedGrossIncome @bind-Value:event=oninput /><br/><br/>
+                                </EditForm>
+
                                 if (taxFiling.AdjustedGrossIncome != null) {
                                     @for (int i = 0; i < taxFiling.PersonCount; i++) {
                                         var person = taxFiling.People[i];
+                                        var eligibleId = "eligible-" + i;
+                                        var over50id = "over50-" + i;
                                         <p><b>Person @(i+1):</b> </p>
 
                                         <EditForm Model="person">
-                                            <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id='eligible'/> <label for='eligible'>Eligible for workplace retirement savings?</label><br/><br/>
-                                            <InputCheckbox id=over50 @bind-Value=person.FiftyOrOver /> <label for=over50>50 or older?</label><br/>
-                                            <label>IRA Contribution Allowed:</label> <span>@person.IRA.ContributionAllowed</span><br/>
-                                            <label>Deduction allowed on IRA:</label> <span>@person.IRA.DeductionAllowed</span><br/>
-                                            <label>Roth IRA Contribution Allowed:</label> <span>@person.RothIRA.ContributionAllowed</span><br/>
+                                            <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id='@eligibleId'/> <label for='@eligibleId'>Eligible for workplace retirement savings?</label><br/><br/>
+                                            <InputCheckbox id=@over50id @bind-Value=person.FiftyOrOver /> <label for=@over50id>50 or older?</label><br/><br/>
+                                            <table>
+                                                <tr>
+                                                    <td style="border:1px solid black">
+                                                        <label>IRA Contribution Allowed:</label> $<span>@person.IRA.AmountToSave</span><br/>
+                                                        <span>$@person.IRA.DeductionAllowed Tax Deductible</span><br/>
+                                                    </td>
+                                                    <td style=padding:2px>
+                                                        or
+                                                    </td>
+                                                    <td style="border:1px solid black">
+                                                        <label>Roth IRA Contribution Allowed:</label> $<span>@person.RothIRA.AmountToSave</span><br/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            
                                             <br/>
                                         </EditForm>
                                     }
@@ -228,16 +247,17 @@ saving/@stepPath
                             case 6:
                                 @for (int i = 0; i < taxFiling.PersonCount; i++) {
                                     var person = taxFiling.People[i];
+                                    var fiftyLabel = "over50-" + i;
                                     <p><b>Person @(i+1):</b> </p>
 
                                     <EditForm Model="person">
                                         <InputCheckbox @bind-Value=person.EmployerPlan.Eligible /> <label>Eligible for workplace retirement savings?</label><br/><br/>
 
-                                        <InputCheckbox id=over50 @bind-Value=person.FiftyOrOver /> <label for=over50>50 or older?</label><br/>
+                                        <InputCheckbox id=@fiftyLabel @bind-Value=person.FiftyOrOver /> <label for=@fiftyLabel>50 or older?</label><br/>
 
                                         <label>2022 401k Total Contribution Allowed:</label> <span>@person.EmployerPlan.ContributionAllowed</span><br/>
-                                        <label>minus Matched Contribution Allowed (step 2):</label> <span>@person.EmployerPlan.ContributionRequired</span><br/>
-                                        <label>Savings Opportunity:</label> <span>@person.EmployerPlan.NonMatchedContributionAmount</span><br/><br/>
+                                        <label>minus Matched Contribution Allowed (step 2):</label> <span>@person.EmployerPlan.AmountToSaveForMatch</span><br/>
+                                        <label>Amount to Save (unmatched):</label> <span>@person.EmployerPlan.AmountToSaveForNonMatched</span><br/><br/>
                                     </EditForm>
                                 }
 
@@ -255,9 +275,9 @@ saving/@stepPath
                                         <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id='eligible'/> <label for='eligible'>Eligible for workplace retirement savings?</label><br/><br/>
 
                                         <fieldset disabled=@person.EmployerPlan.NotEligible style='margin-left:20px'>
-                                            <label>2022 Mega Backdoor Roth Contribution Allowed:</label> <span>$</span><input type='text' @bind-Value=person.EmployerPlan.MegaBackdoorRothAmount @bind-Value:event=oninput/><br/><br/>
+                                            <label>2022 Employer Post Tax "Mega Backdoor Roth" Contribution Allowed:</label> <span>$</span><input type='text' @bind-Value=person.EmployerPlan.AmountToSaveForBackdoorRoth @bind-Value:event=oninput/><br/><br/>
                                         </fieldset>
-                                        <label>Savings Opportunity:</label> <span>$</span><span>@person.EmployerPlan.MegaBackdoorRothAmount</span><br/><br/>
+                                        <label>Amount to Save:</label> <span>$</span><span>@person.EmployerPlan.AmountToSaveForBackdoorRoth</span><br/><br/>
                                     </EditForm>
                                 }
 
@@ -267,7 +287,7 @@ saving/@stepPath
                                 }
                                 break;
                             case 9:
-                                <label>Savings Opportunity:</label> <span>no limits</span><br/>
+                                <label>Amount to Save:</label> <span>no limits</span><br/>
                                 break;
                             case 3:
                             case 8:
@@ -293,7 +313,7 @@ saving/@stepPath
                                     </table>
                                 </div>
                                 <br/>
-                                <label>Savings Opportunity (@priority.title):</label> <span>$</span><span>0</span><br/>
+                                <label>Amount to Pay-Off (@priority.title):</label> <span>$</span><span>0</span><br/>
                                 break;
                         }
                 }

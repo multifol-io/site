@@ -21,12 +21,14 @@ public class EmergencyFund {
         }
     }
     
-    public int? SavingsOpportunity {
+    public int? AmountToSave {
         get { return TargetEmergencyFund - CurrentBalance; }
     }
 
+    public bool Complete { get { return AmountToSave != null; } }
+
     [Required]
-    public int CurrentBalance { get; set; }
+    public int? CurrentBalance { get; set; }
 
     public int? ThreeMonths
     {

@@ -9,7 +9,9 @@ public class Person {
 
     public Person? Spouse { 
         get {
-            if (TaxFiling.TaxFilingStatus == TaxFilingStatus.MarriedFilingJointly || TaxFiling.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperately)
+            if (TaxFiling.TaxFilingStatus == TaxFilingStatus.MarriedFilingJointly 
+            || TaxFiling.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart 
+            || TaxFiling.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperately)
             {
                 switch (this.PersonIndex) {
                     case 0:

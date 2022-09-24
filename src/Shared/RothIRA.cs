@@ -47,7 +47,7 @@ public class RothIRA {
         return contributionAllowed * (high - income) / (high - low);
     }
 
-    public int? SavingsOpportunity {
+    public int? AmountToSave {
         get {
             return ContributionAllowed;
         }

@@ -11,7 +11,7 @@ public class EmployerPlan {
 
     public int? PercentMatched { get; set; }
     public int? MatchLimit { get; set; }
-    public int? ContributionRequired { 
+    public int? AmountToSaveForMatch { 
         get
         {
             double? contribution = null;
@@ -24,12 +24,14 @@ public class EmployerPlan {
             return (int?)contribution;
         }
     }
+    public bool CompleteMatched { get { return AmountToSaveForMatch != null; } }
+    public bool CompleteUnmatched { get { return AmountToSaveForNonMatched != null; } }
 
-    public int? NonMatchedContributionAmount {
-        get { return ContributionAllowed - (ContributionRequired ?? 0); }
+    public int? AmountToSaveForNonMatched {
+        get { return ContributionAllowed - (AmountToSaveForMatch ?? 0); }
     }
 
-    public int? MegaBackdoorRothAmount { get; set; }
+    public int? AmountToSaveForBackdoorRoth { get; set; }
 
     public int? ContributionAllowed { 
         get
@@ -42,14 +44,6 @@ public class EmployerPlan {
             {
                 return null;
             }
-        }
-    }
-
-    public int? SavingsOpportunity {
-        get {
-            if (!Eligible) return null;
-
-            return MatchLimit + ContributionRequired;
         }
     }
 }

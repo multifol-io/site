@@ -48,6 +48,7 @@ public class IRA {
                 } else {
                     return null;
                 }
+            case TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart:
             case TaxFilingStatus.MarriedFilingSeperately:
                 if (person.Spouse != null) {
                     if (person.Spouse.EmployerPlan.Eligible) {
@@ -85,7 +86,7 @@ public class IRA {
             return CalculateDeduction(person.TaxFiling.AdjustedGrossIncome, person.TaxFiling.TaxFilingStatus, person);
         }
     }
-    public int? SavingsOpportunity {
+    public int? AmountToSave {
         get {
             return ContributionAllowed;
         }

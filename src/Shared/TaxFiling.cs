@@ -29,6 +29,7 @@ public class TaxFiling {
             {
                 case TaxFilingStatus.Single:
                 case TaxFilingStatus.MarriedFilingSeperately:
+                case TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart:
                     PersonCount = 1;
                     break;
                 case TaxFilingStatus.MarriedFilingJointly:
