@@ -70,31 +70,33 @@ saving/@stepPath
                                    <td style=text-align:right>@taxFiling.People[0].HealthSavingsAccount.SavingsOpportunity</td>
                                    <td style=text-align:right>@taxFiling.People[1].HealthSavingsAccount.SavingsOpportunity</td>
                                    break;
-                                case 5: 
-                                    @if(taxFiling.PersonCount > 0) {
-                                        <td style=text-align:right>
-                                            IRA: @taxFiling.People[0].IRA.SavingsOpportunity<br/>
-                                            @if(taxFiling.People[0].RothIRA.SavingsOpportunity > 0) {
-                                                <span>or</span><br/>
-                                                <span>Roth IRA: @taxFiling.People[0].RothIRA.SavingsOpportunity</span><br/>
-                                            } else {
-                                                <span>or</span><br/>
-                                                <span>IRA->Roth: @taxFiling.People[0].IRA.SavingsOpportunity</span>
-                                            }
-                                        </td>
-                                    }
-                                   @if(taxFiling.PersonCount > 1) {
-                                    <td style=text-align:right>
-                                        IRA: @taxFiling.People[1].IRA.SavingsOpportunity<br/>
-                                        @if(taxFiling.People[1].RothIRA.SavingsOpportunity > 0) {
-                                            <span>or</span><br/>
-                                            <span>Roth IRA: @taxFiling.People[1].RothIRA.SavingsOpportunity</span><br/>
-                                        } else {
-                                            <span>or</span><br/>
-                                            <span>IRA->Roth: @taxFiling.People[1].IRA.SavingsOpportunity</span>
+                                case 5:
+                                    @if (taxFiling.AdjustedGrossIncome != null) {
+                                        @if(taxFiling.PersonCount > 0) {
+                                            <td style=text-align:right>
+                                                IRA: @taxFiling.People[0].IRA.SavingsOpportunity<br/>
+                                                @if(taxFiling.People[0].RothIRA.SavingsOpportunity > 0) {
+                                                    <span>or</span><br/>
+                                                    <span>Roth IRA: @taxFiling.People[0].RothIRA.SavingsOpportunity</span><br/>
+                                                } else {
+                                                    <span>or</span><br/>
+                                                    <span>IRA->Roth: @taxFiling.People[0].IRA.SavingsOpportunity</span>
+                                                }
+                                            </td>
                                         }
-                                    </td>
-                                   }
+                                        @if(taxFiling.PersonCount > 1) {
+                                            <td style=text-align:right>
+                                                IRA: @taxFiling.People[1].IRA.SavingsOpportunity<br/>
+                                                @if(taxFiling.People[1].RothIRA.SavingsOpportunity > 0) {
+                                                    <span>or</span><br/>
+                                                    <span>Roth IRA: @taxFiling.People[1].RothIRA.SavingsOpportunity</span><br/>
+                                                } else {
+                                                    <span>or</span><br/>
+                                                    <span>IRA->Roth: @taxFiling.People[1].IRA.SavingsOpportunity</span>
+                                                }
+                                            </td>
+                                            }
+                                        }
                                    break;
                                 case 6: 
                                    <td style=text-align:right>@taxFiling.People[0].EmployerPlan.NonMatchedContributionAmount</td>

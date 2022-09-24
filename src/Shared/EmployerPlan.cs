@@ -9,22 +9,24 @@ public class EmployerPlan {
     public bool Eligible { get; set; }
     public bool NotEligible {get {return !Eligible;}}
 
-    public int PercentMatched { get; set; }
-    public int MatchLimit { get; set; }
-    public int ContributionRequired { 
+    public int? PercentMatched { get; set; }
+    public int? MatchLimit { get; set; }
+    public int? ContributionRequired { 
         get
         {
-            double contribution = 0;
-            if (PercentMatched != 0) {
-                contribution = MatchLimit / (PercentMatched / 100.0);
+            double? contribution = null;
+            if (PercentMatched != null && MatchLimit != null && PercentMatched!= 0) {
+                var percent = (PercentMatched ?? 0) / 100.0;
+                var matchLimit = MatchLimit ?? 0;
+                contribution = matchLimit / percent;
             }
 
-            return (int)contribution;
+            return (int?)contribution;
         }
     }
 
     public int? NonMatchedContributionAmount {
-        get { return ContributionAllowed - ContributionRequired; }
+        get { return ContributionAllowed - (ContributionRequired ?? 0); }
     }
 
     public int? MegaBackdoorRothAmount { get; set; }
