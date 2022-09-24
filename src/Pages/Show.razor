@@ -7,130 +7,204 @@ invest/@stepPath
 
 
 
-@if (priorities == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    @foreach (var priority in priorities) {
-        @if (priority.step == stepPath) {
-            <h2>@priority.number: @priority.title</h2>
-            <h4>@((MarkupString)markupize(priority.priority))</h4>
+    @if (priorities == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        @if (stepPath == "tax-filing-info") {
+            <EditForm Model="taxFiling">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
 
-            <p><b>Summary:</b> @((MarkupString)markupize(priority.summary))</p>
-            <p><b>Approximate Return:</b> @priority.returns</p>
-            <p><b>Details:</b> @((MarkupString)markupize(priority.description))</p>
-           
-            <p><b>Worksheet:</b> </p>
+                <label>Tax Filing Status:</label> <select @bind=taxFiling.TaxFilingStatus>
+                            <option value=None>choose...</option>
+                            <option>Single</option>
+                            <option value=MarriedFilingSeperately>Married filing seperately</option>
+                            <option value=MarriedFilingJointly>Married filing jointly</option>
+                            </select><br/>
 
-                @switch (priority.number) {
-                    case 1:
-                        <EditForm Model="emergencyFund">
-                            <DataAnnotationsValidator />
-                            <ValidationSummary />
-                            
-                            <label>Monthly Expenses:</label> <span>$</span><input type=text @bind-Value="emergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /><br /><br />
-                            <label>Planned size of emergency fund:</label><br/>
-                            <InputRadioGroup @bind-Value=emergencyFund.TargetMonths>
-                                <InputRadio Value='0'/> None<br/>
-                                <InputRadio Value='1'/> 1 month: $@emergencyFund.MonthlyExpenses<br/>
-                                <InputRadio Value='3'/> 3 months: $@emergencyFund.ThreeMonths<br/>
-                                <InputRadio Value='4'/> Other: <br/>
-                            </InputRadioGroup>
-                            <div style="margin-left:20px">$<input type=text @bind-Value="emergencyFund.EFOther" @bind-Value:event="oninput"/></div>
-                            <br />
-                            <br />
-                            <label>Current Size:</label> <span>$</span><input type=text @bind-Value="emergencyFund.CurrentBalance" @bind-Value:event="oninput"/><br /><br />
-                            <label>Savings Opportunity:</label> <span>$</span>@emergencyFund.SavingsOpportunity<br />
-                        </EditForm>
-                        @code {
-                            private EmergencyFund emergencyFund = new();
-                        }
-                        break;
-                    case 2:
-                        <EditForm Model="retirementFunds">
-                            <InputCheckbox @bind-Value="retirementFunds.Eligible" id='eligible'/> <label for='eligible'>Eligible for workplace retirement savings?</label><br /><br/>
-                            <fieldset disabled=@retirementFunds.Disabled style='margin-left:20px'>
-                                <label>Percent Matched:</label> <input type='text' @bind-Value=retirementFunds.PercentMatched @bind-Value:event=oninput />%<br />
-                                <label>Limit:</label><input type='text' @bind-Value=retirementFunds.MatchLimit @bind-Value:event=oninput/><br />
-                                <label>Contribution Required to get maximum match:</label> $<span>@retirementFunds.ContributionRequired</span><br />
-                            </fieldset><br/>
-                            <label>Savings Opportunity:</label> <span>$</span>@retirementFunds.SavingsOpportunity<br />
-                        </EditForm>
-                        @code {
-                            private RetirementFunds retirementFunds = new();
-                        }
-                        break;
-                    case 4:
-                        <EditForm Model="hsa">
-                            <InputCheckbox @bind-Value="hsa.Eligible" id='eligible'/> <label for='eligible'>Have high deductible health plan?</label><br/><br/>
-                            <fieldset disabled=@hsa.Disabled style='margin-left:20px'>
-                                <label>Individual/Family:</label>   <select @bind=hsa.Family><option value=None>choose...</option><option value=EmployeeOnly>Employee only</option><option>Family</option></select><br />
-                                <label>Limit:</label> @hsa.Limit<br /><br/>
+                <label>2022 Modified AGI (projected):</label> <input type='text' @bind=taxFiling.ModifiedAGI /><br/>
+                
+            </EditForm>
+            @code {
+                private TaxFiling taxFiling = new();
+            }
+        }
+        else
+        {
+            @foreach (var priority in priorities) {
+                @if (priority.step == stepPath) {
+                    <h2>@priority.number: @priority.title</h2>
+                    <h4>@((MarkupString)markupize(priority.priority))</h4>
 
-                                <label>2022 Employer Contribution:</label><input type='text'><br/>
-                                <label>2022 Employee Contribution:</label><input type='text'><br/>
-                            </fieldset>
-                            <br/>
-                            <label>Savings Opportunity:</label> <span>$</span>@hsa.SavingsOpportunity<br />
-                        </EditForm>
-                        @code {
-                            private HealthSavingsAccount hsa = new();
+                    <p><b>Summary:</b> @((MarkupString)markupize(priority.summary))</p>
+                    <p><b>Approximate Return:</b> @priority.returns</p>
+                    <p><b>Details:</b> @((MarkupString)markupize(priority.description))</p>
+
+                        @switch (priority.number) {
+                            case 1:
+                                <p><b>Worksheet:</b> </p>
+
+                                <EditForm Model="taxFiling">
+                                    <DataAnnotationsValidator />
+                                    <ValidationSummary />
+                                    
+                                    <label>Monthly Expenses:</label> <span>$</span><input type=text @bind-Value="taxFiling.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /><br/><br/>
+                                    <label>Planned size of emergency fund:</label><br/>
+                                    <InputRadioGroup @bind-Value=taxFiling.EmergencyFund.TargetMonths>
+                                        <InputRadio Value='0'/> None<br/>
+                                        <InputRadio Value='1'/> 1 month: $@taxFiling.EmergencyFund.MonthlyExpenses<br/>
+                                        <InputRadio Value='3'/> 3 months: $@taxFiling.EmergencyFund.ThreeMonths<br/>
+                                        <InputRadio Value='4'/> Other: <br/>
+                                    </InputRadioGroup>
+                                    <div style="margin-left:20px">$<input type=text @bind-Value="taxFiling.EmergencyFund.EFOther" @bind-Value:event="oninput"/></div>
+                                    <br/>
+                                    <br/>
+                                    <label>Current Size:</label> <span>$</span><input type=text @bind-Value="taxFiling.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/><br/><br/>
+                                    <label>Savings Opportunity:</label> <span>$</span>@taxFiling.EmergencyFund.SavingsOpportunity<br/><br/>
+                                </EditForm>
+                                break;
+                            case 2:
+                                @for (int i = 0; i < taxFiling.PersonCount; i++) {
+                                    var person = taxFiling.People[i];
+                                    <p><b>Person @(i+1):</b> </p>
+
+                                    <EditForm Model="person">
+                                        <InputCheckbox @bind-Value=person.RetirementFunds.Eligible /> <label>Eligible for workplace retirement savings?</label><br/><br/>
+                                        <fieldset disabled=@person.RetirementFunds.Disabled style='margin-left:20px'>
+                                            <label>Percent Matched:</label> <input type='text' @bind-Value=person.RetirementFunds.PercentMatched @bind-Value:event=oninput />%<br/>
+                                            <label>Limit:</label><input type='text' @bind-Value=person.RetirementFunds.MatchLimit @bind-Value:event=oninput/><br/>
+                                            <label>Contribution Required to get maximum match:</label> $<span>@person.RetirementFunds.ContributionRequired</span><br/>
+                                        </fieldset><br/>
+                                        <label>Savings Opportunity:</label> <span>$</span>@person.RetirementFunds.SavingsOpportunity<br/><br/>
+                                    </EditForm>
+
+                                }
+
+                                if (taxFiling.PersonCount == 0) {
+                                    <p>One must fill out Tax Filing Info (in step 0) before they can fill out this worksheet</p>
+                                }
+                                break;
+                            case 4:
+                                @for (int i = 0; i < taxFiling.PersonCount; i++) {
+                                    var person = taxFiling.People[i];
+                                    <p><b>Person @(i+1):</b> </p>
+
+                                    <EditForm Model="person">
+                                        <InputCheckbox @bind-Value=person.HealthSavingsAccount.Eligible id='eligible'/> <label for='eligible'>Have high deductible health plan?</label><br/><br/>
+                                        <fieldset disabled=@person.HealthSavingsAccount.Disabled style='margin-left:20px'>
+                                            <label>Individual/Family:</label>   <select @bind=person.HealthSavingsAccount.Family><option value=None>choose...</option><option value=EmployeeOnly>Employee only</option><option>Family</option></select><br/>
+                                            <label>Limit:</label> @person.HealthSavingsAccount.Limit<br/><br/>
+
+                                            <label>2022 Employer Contribution:</label><input type='text'><br/>
+                                            <label>2022 Employee Contribution:</label><input type='text'><br/>
+                                        </fieldset>
+                                        <br/>
+                                        <label>Savings Opportunity:</label> <span>$</span>@person.HealthSavingsAccount.SavingsOpportunity<br/><br/>
+                                    </EditForm>
+                                }
+
+                                if (taxFiling.PersonCount == 0) {
+                                    <b style='background:yellow'>Warning:</b>
+                                    <p>One must fill out Tax Filing Info (in step 0) before they can fill out this worksheet</p>
+                                }
+                                break;
+                            case 5:
+                                if (taxFiling.ModifiedAGI != null) {
+                                    @for (int i = 0; i < taxFiling.PersonCount; i++) {
+                                        var person = taxFiling.People[i];
+                                        <p><b>Person @(i+1):</b> </p>
+
+                                        <EditForm Model="person">
+                                            <InputCheckbox @bind-Value=person.RetirementFunds.Eligible id='eligible'/> <label for='eligible'>Eligible for workplace retirement savings?</label><br/><br/>
+                                            <fieldset disabled=@person.RetirementFunds.Disabled style='margin-left:20px'>
+                                                <InputCheckbox id=over50 @bind-Value=person.FiftyOrOver /> <label for=over50>50 or older?</label><br/>
+                                                <label>Deduction allowed on IRA:</label> <span id='iraDeduction'></span><br/>
+                                                <label>Roth IRA contribution allowed:</label> <span id='rothIRAContribution'></span><br/>
+                                            </fieldset>
+                                            <br/>
+                                            <label>Savings Opportunity:</label> <span>$</span><span></span><br/><br/>
+                                        </EditForm>
+                                    }
+                                }
+
+                                if (taxFiling.PersonCount == 0 || taxFiling.ModifiedAGI == null) {
+                                    <b style='background:yellow'>Warning:</b>
+                                    <p>One must fill out Tax Filing Info (in step 0) before they can fill out this worksheet</p>
+                                }
+                                break;
+                            case 6:
+                                @for (int i = 0; i < taxFiling.PersonCount; i++) {
+                                    var person = taxFiling.People[i];
+                                    <p><b>Person @(i+1):</b> </p>
+
+                                    <EditForm Model="person">
+                                        <InputCheckbox id=over50 @bind-Value=person.FiftyOrOver /> <label for=over50>50 or older?</label><br/>
+
+                                        <label>2022 401k Contribution:</label><input type='text'><br/><br/>
+                                    </EditForm>
+                                }
+
+                                if (taxFiling.PersonCount == 0) {
+                                    <b style='background:yellow'>Warning:</b>
+                                    <p>One must fill out Tax Filing Info (in step 0) before they can fill out this worksheet</p>
+                                }
+                                break;
+                            case 7:
+                                @for (int i = 0; i < taxFiling.PersonCount; i++) {
+                                    var person = taxFiling.People[i];
+                                    <p><b>Person @(i+1):</b> </p>
+
+                                    <EditForm Model="person">
+                                        <input type='checkbox' /> <label>Eligible for Mega Backdoor Roth?</label><br/>
+                                        <fieldset disabled=true>
+                                            <label>Limit:</label> <input type='text' /><br/>
+                                        </fieldset><br/>
+                                        <label>Savings Opportunity:</label> <span>$</span><span></span><br/><br/>
+                                    </EditForm>
+                                }
+
+                                if (taxFiling.PersonCount == 0) {
+                                    <b style='background:yellow'>Warning:</b>
+                                    <p>One must fill out Tax Filing Info (in step 0) before they can fill out this worksheet</p>
+                                }
+                                break;
+                            case 9:
+                                <label>Savings Opportunity:</label> <span>no limits</span><br/>
+                                break;
+                            case 3:
+                            case 8:
+                            case 10:
+                                <p><b>Worksheet:</b> </p>
+                                <div>
+                                    <i>list of debts (all interest rates):</i><br>
+                                    <table>
+                                    <thead>
+                                    <th><label>name</label></th>
+                                    <th><label>interest rate</label></th>
+                                    <th><label>category</label></th>
+                                    <th><label>payoff date</label></th>
+                                    <th><label>total $</label></th>
+                                    </thead>
+                                    <tr>
+                                    <td><input type='text' /></td>
+                                    <td><input type='text' /></td>
+                                    <td><span></span></td>
+                                    <td><input type='text' /></td>
+                                    <td><input type='text' /></td>
+                                    </tr>
+                                    </table>
+                                </div>
+                                <br/>
+                                <label>Savings Opportunity (@priority.title):</label> <span>$</span><span>0</span><br/>
+                                break;
                         }
-                        break;
-                    case 5:
-                        <label>2022 Modified AGI (projected):</label> <input type='text' /><br />
-                        <label>Tax Filing Status:</label> <select><option>choose...</option><option>Single</option><option>Married filing jointly</option></select><br />
-                        <input type='checkbox' /> <label>50 or older?</label><br />
-                        <label>Deduction allowed on IRA:</label> <span id='iraDeduction'></span><br />
-                        <label>Roth IRA contribution allowed:</label> <span id='rothIRAContribution'></span><br />
-                        <br/>
-                        <label>Savings Opportunity:</label> <span>$</span><span></span><br />
-                        break;
-                    case 6:
-                        <input type='checkbox' /> <label>50 or older?</label><br />
-                        <label>2022 401k Contribution:</label><input type='text'><br/>
-                        break;
-                    case 7:
-                        <input type='checkbox' /> <label>Eligible for Mega Backdoor Roth?</label><br />
-                        <fieldset disabled=true>
-                            <label>Limit:</label> <input type='text' /><br />
-                        </fieldset><br/>
-                        <label>Savings Opportunity:</label> <span>$</span><span></span><br />
-                        break;
-                    case 9:
-                        <label>Savings Opportunity:</label> <span>no limits</span><br />
-                        break;
-                    case 3:
-                    case 8:
-                    case 10:
-                        <div>
-                            <i>list of debts (all interest rates):</i><br>
-                            <table>
-                            <thead>
-                            <th><label>name</label></th>
-                            <th><label>interest rate</label></th>
-                            <th><label>category</label></th>
-                            <th><label>payoff date</label></th>
-                            <th><label>total $</label></th>
-                            </thead>
-                            <tr>
-                            <td><input type='text' /></td>
-                            <td><input type='text' /></td>
-                            <td><span></span></td>
-                            <td><input type='text' /></td>
-                            <td><input type='text' /></td>
-                            </tr>
-                            </table>
-                        </div>
-                        <br/>
-                        <label>Savings Opportunity (@priority.title):</label> <span>$</span><span>0</span><br />
-                        break;
                 }
+            }
         }
     }
-}
 
 @code {
     public enum Mode {
