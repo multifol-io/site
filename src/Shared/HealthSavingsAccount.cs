@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 public class HealthSavingsAccount {
     public bool Eligible { get; set; }
-    public bool Disabled {get {return !Eligible;}}
+    public bool NotEligible {get {return !Eligible;}}
 
     public EmployeeFamily? Family { get; set; }
     

@@ -2,7 +2,7 @@
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/invest"><span class="oi oi-home" aria-hidden="true"></span> bogle.tools/invest</a>
+        <a class="navbar-brand" href="/saving"><span class="oi oi-home" aria-hidden="true"></span> bogle.tools/saving</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -19,13 +19,13 @@
         else
         {
             <div class="nav-item px-2">
-                <NavLink class="nav-link" href="/invest/tax-filing-info">
+                <NavLink class="nav-link" href="/saving/tax-filing-info">
                     0: Tax Filing Info
                 </NavLink>
             </div>
             
             foreach (var priority in priorities) {
-                var href = "/invest/" + @priority.step;
+                var href = "/saving/" + @priority.step;
                 <div class="nav-item px-2">
                     <NavLink class="nav-link" href="@href">
                         @priority.number: @priority.title

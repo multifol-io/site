@@ -9,8 +9,8 @@ public class TaxFiling {
         get {
             if (_people == null) {
                 _people = new List<Person>();
-                _people.Add(new Person());
-                _people.Add(new Person());
+                _people.Add(new Person(this, 0));
+                _people.Add(new Person(this, 1));
             }
 
             return _people;
@@ -42,7 +42,7 @@ public class TaxFiling {
         }
     }
 
-    public int? ModifiedAGI { get; set; }
+    public int? AdjustedGrossIncome { get; set; }
 
     public EmergencyFund EmergencyFund { get; set; } = new();
 }
