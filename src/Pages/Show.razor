@@ -1,11 +1,22 @@
-﻿@page "/invest/{stepPath}"
+﻿@page "/invest"
+@page "/invest/{stepPath}"
 @inject HttpClient Http
 
 <PageTitle>
 invest/@stepPath
 </PageTitle>
 
-
+<style>
+    .btn {
+        color: white;
+        padding: 10px 25px;
+        text-decoration: none;
+        display:inline-block;
+        text-align:center;
+        width:250px;
+        border-radius: 10px;
+    }
+</style>
 
     @if (priorities == null)
     {
@@ -13,7 +24,63 @@ invest/@stepPath
     }
     else
     {
-        @if (stepPath == "tax-filing-info") {
+        @if (stepPath == null) {
+            <h1>Overview</h1>
+
+            <p>To be most efficient in your savings, consider the Boglehead Investment Priorities<a href="https://www.bogleheads.org/wiki/Prioritizing_investments" class="oi oi-external-link m-2 aria-hidden="true"></a>. Choose each priority to see details.</p>
+
+            <div>
+                <table>
+                    <thead>
+                        <th style="padding-right:10px">Priority</th>
+                        <th>Item</th>
+                        @if(taxFiling.PersonCount > 0) {<th style="padding-right:10px">Person 1</th> }
+                        @if(taxFiling.PersonCount > 1) {<th style="padding-right:10px">Person 2</th> }
+                    </thead>
+                    <tr>
+                            <td></td>
+                            <td>
+                                    <div>
+                                        <a href="/invest/tax-filing-info" style="background:blue" class="m-1 btn" >0: Tax Filing Info</a>
+
+                                    </div>
+                            </td>
+                            <td></td>
+                            <td></td>
+                    </tr>
+                    @foreach (var priority in priorities) {
+                        var href = "/invest/" + @priority.step;
+
+                        <tr>
+                            <td>@priority.level</td>
+                            <td>
+                                    <div>
+                                        <a href="@href" style="background:blue" class="m-1 btn" >@priority.number: @priority.bestDiagramTitle</a>
+
+                                    </div>
+                            </td>
+                            @switch (priority.number) {
+                                case 1: 
+                                   <td>@taxFiling.EmergencyFund.SavingsOpportunity</td><td></td>
+                                   break;
+                                case 2: 
+                                   <td>@taxFiling.People[0].RetirementFunds.SavingsOpportunity</td>
+                                   <td>@taxFiling.People[1].RetirementFunds.SavingsOpportunity</td>
+                                   break;
+                                case 4: 
+                                   <td>@taxFiling.People[0].HealthSavingsAccount.SavingsOpportunity</td>
+                                   <td>@taxFiling.People[1].HealthSavingsAccount.SavingsOpportunity</td>
+                                   break;
+                                default:
+                                    <td>other</td><td></td>
+                                    break;
+                            }
+                        </tr>
+                    }
+                </table>
+            </div>
+        }
+        else if (stepPath == "tax-filing-info") {
             <EditForm Model="taxFiling">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
