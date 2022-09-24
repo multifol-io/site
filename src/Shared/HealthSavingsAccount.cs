@@ -24,6 +24,6 @@ public class HealthSavingsAccount {
 
     public int? EmployerContribution { get; set; }
 
-    public int? AmountToSave { get { return Limit; }
+    public int? AmountToSave { get { return Limit - (EmployerContribution ?? 0); }
     }
 }

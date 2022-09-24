@@ -62,12 +62,18 @@ saving/@stepPath
                                    <td style=text-align:right>@taxFiling.EmergencyFund.AmountToSave</td><td></td>
                                    break;
                                 case 2: 
-                                   <td style=text-align:right>@taxFiling.People[0].EmployerPlan.AmountToSaveForMatch</td>
-                                   <td style=text-align:right>@taxFiling.People[1].EmployerPlan.AmountToSaveForMatch</td>
+                                   <td style=text-align:right>@taxFiling.People[0].EmployerPlan.AmountToSaveForMatch<br/>
+                                        (+@taxFiling.People[0].EmployerPlan.MatchLimit employer)
+                                   </td>
+                                   <td style=text-align:right>@taxFiling.People[1].EmployerPlan.AmountToSaveForMatch<br/>
+                                        (+@taxFiling.People[1].EmployerPlan.MatchLimit employer)
+                                   </td>
                                    break;
                                 case 4: 
-                                   <td style=text-align:right>@taxFiling.People[0].HealthSavingsAccount.AmountToSave</td>
-                                   <td style=text-align:right>@taxFiling.People[1].HealthSavingsAccount.AmountToSave</td>
+                                   <td style=text-align:right>@taxFiling.People[0].HealthSavingsAccount.AmountToSave<br/>
+                                        (+@taxFiling.People[0].HealthSavingsAccount.EmployerContribution employer)</td>
+                                   <td style=text-align:right>@taxFiling.People[1].HealthSavingsAccount.AmountToSave<br/>
+                                        (+@taxFiling.People[1].HealthSavingsAccount.EmployerContribution employer)</td>
                                    break;
                                 case 5:
                                     @if (taxFiling.AdjustedGrossIncome != null) {
@@ -189,9 +195,9 @@ saving/@stepPath
                                         <InputCheckbox @bind-Value=person.HealthSavingsAccount.Eligible id='@haveHDHPid'/> <label for='@haveHDHPid'>Have high deductible health plan?</label><br/><br/>
                                         <fieldset disabled=@person.HealthSavingsAccount.NotEligible style='margin-left:20px'>
                                             <label>Individual/Family:</label>   <select @bind=person.HealthSavingsAccount.Family><option value=None>choose...</option><option value=EmployeeOnly>Employee only</option><option>Family</option></select><br/>
-                                            <label>Contribution Limit:</label> @person.HealthSavingsAccount.Limit<br/><br/>
+                                            <label>Contribution Limit:</label> $@person.HealthSavingsAccount.Limit<br/><br/>
 
-                                            <label>2022 Employer Contribution:</label> <input type='text' @bind-Value=person.HealthSavingsAccount.EmployerContribution @bind-Value:event=oninput><br/>
+                                            <label>2022 Employer Contribution:</label> $<input type='text' @bind-Value=person.HealthSavingsAccount.EmployerContribution @bind-Value:event=oninput><br/>
                                         </fieldset>
                                         <br/>
                                         <label>Amount to Save:</label> <span>$</span>@person.HealthSavingsAccount.AmountToSave<br/><br/>
