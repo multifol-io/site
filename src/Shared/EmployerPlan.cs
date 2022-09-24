@@ -26,7 +26,9 @@ public class EmployerPlan {
     public int? NonMatchedContributionAmount {
         get { return ContributionAllowed - ContributionRequired; }
     }
-    
+
+    public int? MegaBackdoorRothAmount { get; set; }
+
     public int? ContributionAllowed { 
         get
         {

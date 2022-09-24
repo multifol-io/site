@@ -25,11 +25,20 @@ saving/@stepPath
     else
     {
         @if (stepPath == null) {
-            <h1>Overview</h1>
+            <h3>bogle.tools/saving</h3>
 
-            <p>To be most efficient in your savings, consider the Boglehead Investment Priorities<a href="https://www.bogleheads.org/wiki/Prioritizing_investments" class="oi oi-external-link m-2 aria-hidden="true"></a>. Choose each priority to see details.</p>
+            <p>To save money efficiently, you should prioritize the most efficient techniques. This tool helps you apply the <a href="https://www.bogleheads.org/wiki/Prioritizing_investments">Bogleheads Prioritizing Investments wiki</a><span class="oi oi-external-link m-2 aria-hidden="true"></span>. Review each priority in order.</p>
 
             <div>
+                <EditForm Model="taxFiling">
+                    <label>Tax Filing Status:</label> <select @bind=taxFiling.TaxFilingStatus>
+                                <option value=None>choose...</option>
+                                <option>Single</option>
+                                <option value=MarriedFilingSeperately>Married filing seperately</option>
+                                <option value=MarriedFilingJointly>Married filing jointly</option>
+                                </select><br/>
+                    <label>2022 Adjusted Gross Income:</label> <input type='text' @bind-Value=taxFiling.AdjustedGrossIncome @bind-Value:event=oninput /><br/><br/>
+                </EditForm>
                 <table>
                     <thead>
                         <th style="padding-right:10px">Priority</th>
@@ -37,17 +46,7 @@ saving/@stepPath
                         @if(taxFiling.PersonCount > 0) {<th style="padding-right:10px">Person 1</th> }
                         @if(taxFiling.PersonCount > 1) {<th style="padding-right:10px">Person 2</th> }
                     </thead>
-                    <tr>
-                            <td></td>
-                            <td>
-                                    <div>
-                                        <a href="/saving/tax-filing-info" style="background:blue" class="m-1 btn" >0: Tax Filing Info</a>
 
-                                    </div>
-                            </td>
-                            <td></td>
-                            <td></td>
-                    </tr>
                     @foreach (var priority in priorities) {
                         var href = "/saving/" + @priority.step;
 
@@ -61,26 +60,56 @@ saving/@stepPath
                             </td>
                             @switch (priority.number) {
                                 case 1: 
-                                   <td>@taxFiling.EmergencyFund.SavingsOpportunity</td><td></td>
+                                   <td style=text-align:right>@taxFiling.EmergencyFund.SavingsOpportunity</td><td></td>
                                    break;
                                 case 2: 
-                                   <td>@taxFiling.People[0].EmployerPlan.SavingsOpportunity</td>
-                                   <td>@taxFiling.People[1].EmployerPlan.SavingsOpportunity</td>
+                                   <td style=text-align:right>@taxFiling.People[0].EmployerPlan.SavingsOpportunity</td>
+                                   <td style=text-align:right>@taxFiling.People[1].EmployerPlan.SavingsOpportunity</td>
                                    break;
                                 case 4: 
-                                   <td>@taxFiling.People[0].HealthSavingsAccount.SavingsOpportunity</td>
-                                   <td>@taxFiling.People[1].HealthSavingsAccount.SavingsOpportunity</td>
+                                   <td style=text-align:right>@taxFiling.People[0].HealthSavingsAccount.SavingsOpportunity</td>
+                                   <td style=text-align:right>@taxFiling.People[1].HealthSavingsAccount.SavingsOpportunity</td>
                                    break;
                                 case 5: 
-                                   <td>@taxFiling.People[0].IRA.SavingsOpportunity or @taxFiling.People[0].RothIRA.SavingsOpportunity</td>
-                                   <td>@taxFiling.People[1].IRA.SavingsOpportunity @if(taxFiling.PersonCount > 1) {<span>or</span>} @taxFiling.People[1].RothIRA.SavingsOpportunity</td>
+                                    @if(taxFiling.PersonCount > 0) {
+                                        <td style=text-align:right>
+                                            IRA: @taxFiling.People[0].IRA.SavingsOpportunity<br/>
+                                            @if(taxFiling.People[0].RothIRA.SavingsOpportunity > 0) {
+                                                <span>or</span><br/>
+                                                <span>Roth IRA: @taxFiling.People[0].RothIRA.SavingsOpportunity</span><br/>
+                                            } else {
+                                                <span>or</span><br/>
+                                                <span>IRA->Roth: @taxFiling.People[0].IRA.SavingsOpportunity</span>
+                                            }
+                                        </td>
+                                    }
+                                   @if(taxFiling.PersonCount > 1) {
+                                    <td style=text-align:right>
+                                        IRA: @taxFiling.People[1].IRA.SavingsOpportunity<br/>
+                                        @if(taxFiling.People[1].RothIRA.SavingsOpportunity > 0) {
+                                            <span>or</span><br/>
+                                            <span>Roth IRA: @taxFiling.People[1].RothIRA.SavingsOpportunity</span><br/>
+                                        } else {
+                                            <span>or</span><br/>
+                                            <span>IRA->Roth: @taxFiling.People[1].IRA.SavingsOpportunity</span>
+                                        }
+                                    </td>
+                                   }
                                    break;
                                 case 6: 
-                                   <td>@taxFiling.People[0].EmployerPlan.NonMatchedContributionAmount</td>
-                                   <td>@taxFiling.People[1].EmployerPlan.NonMatchedContributionAmount</td>
-                                   break;                                
+                                   <td style=text-align:right>@taxFiling.People[0].EmployerPlan.NonMatchedContributionAmount</td>
+                                   <td style=text-align:right>@taxFiling.People[1].EmployerPlan.NonMatchedContributionAmount</td>
+                                   break;
+                                case 7: 
+                                   <td style=text-align:right>@taxFiling.People[0].EmployerPlan.MegaBackdoorRothAmount</td>
+                                   <td style=text-align:right>@taxFiling.People[1].EmployerPlan.MegaBackdoorRothAmount</td>
+                                   break;
+                                case 9: 
+                                    @if(taxFiling.PersonCount > 0) {<td style=text-align:right>unlimited</td> }
+                                    @if(taxFiling.PersonCount > 1) {<td style=text-align:right>unlimited</td> }
+                                    break;                                                                   
                                 default:
-                                    <td>other</td><td></td>
+                                    <td style=text-align:right>not yet implemented</td><td></td>
                                     break;
                             }
                         </tr>
@@ -89,20 +118,7 @@ saving/@stepPath
             </div>
         }
         else if (stepPath == "tax-filing-info") {
-            <EditForm Model="taxFiling">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
 
-                <label>Tax Filing Status:</label> <select @bind=taxFiling.TaxFilingStatus>
-                            <option value=None>choose...</option>
-                            <option>Single</option>
-                            <option value=MarriedFilingSeperately>Married filing seperately</option>
-                            <option value=MarriedFilingJointly>Married filing jointly</option>
-                            </select><br/>
-
-                <label>2022 Adjusted Gross Income:</label> <input type='text' @bind=taxFiling.AdjustedGrossIncome /><br/>
-                
-            </EditForm>
             @code {
                 private TaxFiling taxFiling = new();
             }
@@ -150,7 +166,7 @@ saving/@stepPath
                                         <InputCheckbox @bind-Value=person.EmployerPlan.Eligible /> <label>Eligible for workplace retirement savings?</label><br/><br/>
                                         <fieldset disabled=@person.EmployerPlan.NotEligible style='margin-left:20px'>
                                             <label>Percent Matched:</label> <input type='text' @bind-Value=person.EmployerPlan.PercentMatched @bind-Value:event=oninput />%<br/>
-                                            <label>Limit:</label><input type='text' @bind-Value=person.EmployerPlan.MatchLimit @bind-Value:event=oninput/><br/>
+                                            <label>Match Limit:</label> <input type='text' @bind-Value=person.EmployerPlan.MatchLimit @bind-Value:event=oninput/><br/>
                                             <label>Contribution Required to get maximum match:</label> $<span>@person.EmployerPlan.ContributionRequired</span><br/>
                                         </fieldset><br/>
                                         <label>Savings Opportunity:</label> <span>$</span>@person.EmployerPlan.SavingsOpportunity<br/><br/>
@@ -171,10 +187,9 @@ saving/@stepPath
                                         <InputCheckbox @bind-Value=person.HealthSavingsAccount.Eligible id='eligible'/> <label for='eligible'>Have high deductible health plan?</label><br/><br/>
                                         <fieldset disabled=@person.HealthSavingsAccount.NotEligible style='margin-left:20px'>
                                             <label>Individual/Family:</label>   <select @bind=person.HealthSavingsAccount.Family><option value=None>choose...</option><option value=EmployeeOnly>Employee only</option><option>Family</option></select><br/>
-                                            <label>Limit:</label> @person.HealthSavingsAccount.Limit<br/><br/>
+                                            <label>Contribution Limit:</label> @person.HealthSavingsAccount.Limit<br/><br/>
 
-                                            <label>2022 Employer Contribution:</label><input type='text'><br/>
-                                            <label>2022 Employee Contribution:</label><input type='text'><br/>
+                                            <label>2022 Employer Contribution:</label> <input type='text'><br/>
                                         </fieldset>
                                         <br/>
                                         <label>Savings Opportunity:</label> <span>$</span>@person.HealthSavingsAccount.SavingsOpportunity<br/><br/>
@@ -235,11 +250,12 @@ saving/@stepPath
                                     <p><b>Person @(i+1):</b> </p>
 
                                     <EditForm Model="person">
-                                        <input type='checkbox' /> <label>Eligible for Mega Backdoor Roth?</label><br/>
-                                        <fieldset disabled=true>
-                                            <label>Limit:</label> <input type='text' /><br/>
-                                        </fieldset><br/>
-                                        <label>Savings Opportunity:</label> <span>$</span><span></span><br/><br/>
+                                        <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id='eligible'/> <label for='eligible'>Eligible for workplace retirement savings?</label><br/><br/>
+
+                                        <fieldset disabled=@person.EmployerPlan.NotEligible style='margin-left:20px'>
+                                            <label>2022 Mega Backdoor Roth Contribution Allowed:</label> <span>$</span><input type='text' @bind-Value=person.EmployerPlan.MegaBackdoorRothAmount @bind-Value:event=oninput/><br/><br/>
+                                        </fieldset>
+                                        <label>Savings Opportunity:</label> <span>$</span><span>@person.EmployerPlan.MegaBackdoorRothAmount</span><br/><br/>
                                     </EditForm>
                                 }
 

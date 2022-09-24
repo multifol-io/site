@@ -22,6 +22,8 @@ public class HealthSavingsAccount {
         }
     }
 
+    public int? EmployerContribution { get; set; }
+
     public int? SavingsOpportunity {
         get {
             return Limit;
