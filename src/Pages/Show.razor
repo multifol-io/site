@@ -189,7 +189,7 @@ saving/@stepPath
                                             <label>Individual/Family:</label>   <select @bind=person.HealthSavingsAccount.Family><option value=None>choose...</option><option value=EmployeeOnly>Employee only</option><option>Family</option></select><br/>
                                             <label>Contribution Limit:</label> @person.HealthSavingsAccount.Limit<br/><br/>
 
-                                            <label>2022 Employer Contribution:</label> <input type='text'><br/>
+                                            <label>2022 Employer Contribution:</label> <input type='text' @bind-Value=person.HealthSavingsAccount.EmployerContribution @bind-Value:event=oninput><br/>
                                         </fieldset>
                                         <br/>
                                         <label>Savings Opportunity:</label> <span>$</span>@person.HealthSavingsAccount.SavingsOpportunity<br/><br/>
