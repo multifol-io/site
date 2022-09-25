@@ -30,6 +30,13 @@ saving/@stepPath
         @if (stepPath == null) {
             <h3>bogle.tools/saving</h3>
 
+            var prevPriority = priorities[9];
+            var nextPriority = priorities[0];
+            string prevPage = "/saving/" + prevPriority?.step;
+            string nextPage = "/saving/" + nextPriority?.step;
+            <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
+            <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
+
             <p>To save money efficiently, you should prioritize the most efficient techniques. This tool helps you apply the <a href="https://www.bogleheads.org/wiki/Prioritizing_investments">Bogleheads Prioritizing Investments wiki</a><span class="oi oi-external-link m-2 aria-hidden="true"></span>. Review each priority in order.</p>
 
             <div>
@@ -40,8 +47,8 @@ saving/@stepPath
                     <thead>
                         <th style="padding-right:10px"></th>
                         <th></th>
-                        @if(taxFiling.PersonCount > 0) {<th style="padding-right:10px">Person 1</th> }
-                        @if(taxFiling.PersonCount > 1) {<th style="padding-right:10px">Person 2</th> }
+                        @if(taxFiling.PersonCount > 0) {<th style="padding-right:10px">$</th> }
+                        @if(taxFiling.PersonCount > 0) {<th style="padding-right:10px">Match</th> }
                     </thead>
 
                     @foreach (var priority in priorities) {
@@ -62,56 +69,62 @@ saving/@stepPath
                                 case 1: 
                                    <td style=text-align:right>@taxFiling.EmergencyFund.AmountToSave</td><td></td>
                                    break;
-                                case 2: 
-                                   <td style=text-align:right>@taxFiling.People[0].EmployerPlan.AmountToSaveForMatch<br/>
-                                        (+@taxFiling.People[0].EmployerPlan.MatchLimit employer)
+                                case 2:
+                                   <td style=text-align:right>
+                                        @taxFiling.People[0].EmployerPlan.AmountToSaveForMatch<br/>
+                                        @taxFiling.People[1].EmployerPlan.AmountToSaveForMatch<br/>
                                    </td>
-                                   <td style=text-align:right>@taxFiling.People[1].EmployerPlan.AmountToSaveForMatch<br/>
-                                        (+@taxFiling.People[1].EmployerPlan.MatchLimit employer)
+                                   <td style=text-align:right>
+                                        @taxFiling.People[0].EmployerPlan.MatchLimit<br/>
+                                        @taxFiling.People[1].EmployerPlan.MatchLimit
                                    </td>
                                    break;
                                 case 4: 
-                                   <td style=text-align:right>@taxFiling.People[0].HealthSavingsAccount.AmountToSave<br/>
-                                        (+@taxFiling.People[0].HealthSavingsAccount.EmployerContribution employer)</td>
-                                   <td style=text-align:right>@taxFiling.People[1].HealthSavingsAccount.AmountToSave<br/>
-                                        (+@taxFiling.People[1].HealthSavingsAccount.EmployerContribution employer)</td>
+                                    <td style=text-align:right>
+                                        @taxFiling.People[0].HealthSavingsAccount.AmountToSave<br/>
+                                        @taxFiling.People[1].HealthSavingsAccount.AmountToSave<br/>
+                                    </td>
+                                    <td style=text-align:right>
+                                        @taxFiling.People[0].HealthSavingsAccount.EmployerContribution<br/>
+                                        @taxFiling.People[1].HealthSavingsAccount.EmployerContribution
+                                    </td>
                                    break;
                                 case 5:
                                     @if (taxFiling.AdjustedGrossIncome != null) {
+                                        <td style=text-align:right>
                                         @if(taxFiling.PersonCount > 0) {
-                                            <td style=text-align:right>
-                                                @switch (taxFiling.People[0].IRAChoice) {
-                                                    case "traditional":
-                                                        <span>IRA: @taxFiling.People[0].IRA.AmountToSave</span>
-                                                        break;
-                                                    case "roth":
-                                                        <span>Roth IRA: @taxFiling.People[0].RothIRA.AmountToSave</span>
-                                                        break;
-                                                    default:
-                                                        break;
-                                                }
-                                            </td>
-                                        }
-                                        @if(taxFiling.PersonCount > 1) {
-                                            <td style=text-align:right>
-                                                @switch (taxFiling.People[1].IRAChoice) {
-                                                    case "traditional":
-                                                        <span>IRA: @taxFiling.People[1].IRA.AmountToSave</span>
-                                                        break;
-                                                    case "roth":
-                                                        <span>Roth IRA: @taxFiling.People[1].RothIRA.AmountToSave</span>
-                                                        break;
-                                                    default:
-                                                        break;
-                                                }
-                                            </td>
+                                            @switch (taxFiling.People[0].IRAChoice) {
+                                                case "traditional":
+                                                    <span>IRA: @taxFiling.People[0].IRA.AmountToSave</span><br/>
+                                                    break;
+                                                case "roth":
+                                                    <span>Roth: @taxFiling.People[0].RothIRA.AmountToSave</span><br/>
+                                                    break;
+                                                default:
+                                                    break;
                                             }
                                         }
+                                        @if(taxFiling.PersonCount > 1) {
+                                            @switch (taxFiling.People[1].IRAChoice) {
+                                                case "traditional":
+                                                    <span>IRA: @taxFiling.People[1].IRA.AmountToSave</span><br/>
+                                                    break;
+                                                case "roth":
+                                                    <span>Roth: @taxFiling.People[1].RothIRA.AmountToSave</span><br/>
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        }
+                                        </td>
+                                    }
                                    break;
                                 case 6: 
-                                   <td style=text-align:right>@taxFiling.People[0].EmployerPlan.AmountToSaveForNonMatched</td>
-                                   <td style=text-align:right>@taxFiling.People[1].EmployerPlan.AmountToSaveForNonMatched</td>
-                                   break;
+                                    <td style=text-align:right>
+                                        @taxFiling.People[0].EmployerPlan.AmountToSaveForNonMatched<br/>
+                                        @taxFiling.People[1].EmployerPlan.AmountToSaveForNonMatched
+                                    </td>
+                                    break;
                                 case 7: 
                                    <td style=text-align:right>@taxFiling.People[0].EmployerPlan.AmountToSaveForBackdoorRoth</td>
                                    <td style=text-align:right>@taxFiling.People[1].EmployerPlan.AmountToSaveForBackdoorRoth</td>
@@ -128,6 +141,9 @@ saving/@stepPath
                     }
                 </table>
             </div>
+            
+            <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
+            <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
         }
         else if (stepPath == "tax-filing-info") {
 
@@ -139,7 +155,15 @@ saving/@stepPath
         {
             @foreach (var priority in priorities) {
                 @if (priority.step == stepPath) {
+                    var prevPriority = priority.number >= 1 + 1 ? priorities[priority.number - 2] : null;
+                    var nextPriority = priority.number <= 10 - 1 ? priorities[priority.number] : null;
+                    string prevPage = "/saving/" + prevPriority?.step;
+                    string nextPage = "/saving/" + nextPriority?.step;
+
                     <h2>@priority.number: @priority.title</h2>
+                    <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
+                    <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
+                    
                     <h4>@((MarkupString)markupize(priority.priority))</h4>
 
                     <p><b>Summary:</b> @((MarkupString)markupize(priority.summary))</p>
@@ -348,6 +372,9 @@ saving/@stepPath
                         }
                     <p><b>Approximate Return:</b> @priority.returns</p>
                     <p><b>Details:</b> @((MarkupString)markupize(priority.description))</p>
+
+                    <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
+                    <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
                 }
             }
         }

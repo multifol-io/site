@@ -38,7 +38,7 @@ public class EmployerPlan {
         {
             if (Eligible)
             {
-                return 20500 + (person.FiftyOrOver ? 6000 : 0);
+                return 20500 + (person.FiftyOrOver ? 6500 : 0);
             }
             else
             {
