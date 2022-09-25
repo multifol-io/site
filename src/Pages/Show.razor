@@ -33,7 +33,11 @@ saving/@stepPath
             string prevPage = "/saving/" + prevPriority?.step;
             string nextPage = "/saving/" + nextPriority?.step;
             
-            <h3><a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>bogle.tools/saving<a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a></h3>
+            <h2 style="max-width:350px">
+                <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
+                Saving Summary
+                <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
+            </h2>
 
             <p>To save money efficiently, you should prioritize the most efficient techniques. This tool helps you apply the <a href="https://www.bogleheads.org/wiki/Prioritizing_investments">Bogleheads Prioritizing Investments wiki</a><span class="oi oi-external-link m-2 aria-hidden="true"></span>. Review each priority in order.</p>
 
@@ -43,7 +47,6 @@ saving/@stepPath
                 </EditForm>
                 <table>
                     <thead>
-                        <th style="padding-right:10px"></th>
                         <th></th>
                         @if(taxFiling.PersonCount > 0) {<th style="padding-right:10px">$</th> }
                         @if(taxFiling.PersonCount > 0) {<th style="padding-right:10px">Match</th> }
@@ -52,11 +55,6 @@ saving/@stepPath
                     @foreach (var priority in priorities) {
                         var href = "/saving/" + @priority.step;
                         <tr>
-                            @if(priority.number == 1 || priority.number == 4 || priority.number==9){
-                                var rowspan = (priority.number == 1 ? 3 : (priority.number == 4 ? 5 : (priority.number == 9 ? 2 : 0)));
-                                <td rowspan="@rowspan" style=writing-mode:vertical-lr><div style=text-align:center;background:green;color:white;margin:4px>@priority.level Priority</div></td>
-                            } else
-                            { }
 
                             <td>
                                 <div>
@@ -158,7 +156,7 @@ saving/@stepPath
                     string prevPage = "/saving/" + prevPriority?.step;
                     string nextPage = "/saving/" + nextPriority?.step;
 
-                    <h2>
+                    <h2 style="max-width:350px">
                         <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
                         @priority.number: @priority.title
                         <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
