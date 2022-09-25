@@ -13,7 +13,7 @@ saving/@stepPath
         text-decoration: none;
         display:inline-block;
         text-align:center;
-        width:250px;
+        width:175px;
         border-radius: 10px;
     }
     .dollar,.percent {
@@ -28,14 +28,12 @@ saving/@stepPath
     else
     {
         @if (stepPath == null) {
-            <h3>bogle.tools/saving</h3>
-
             var prevPriority = priorities[9];
             var nextPriority = priorities[0];
             string prevPage = "/saving/" + prevPriority?.step;
             string nextPage = "/saving/" + nextPriority?.step;
-            <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-            <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
+            
+            <h3><a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>bogle.tools/saving<a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a></h3>
 
             <p>To save money efficiently, you should prioritize the most efficient techniques. This tool helps you apply the <a href="https://www.bogleheads.org/wiki/Prioritizing_investments">Bogleheads Prioritizing Investments wiki</a><span class="oi oi-external-link m-2 aria-hidden="true"></span>. Review each priority in order.</p>
 
@@ -61,9 +59,9 @@ saving/@stepPath
                             { }
 
                             <td>
-                                    <div>
-                                        <a href="@href" style="background:blue" class="m-1 btn" >@priority.number: @priority.bestDiagramTitle</a>
-                                    </div>
+                                <div>
+                                    <a href="@href" style="background:blue" class="m-1 btn" >@priority.number: @priority.bestDiagramTitle</a>
+                                </div>
                             </td>
                             @switch (priority.number) {
                                 case 1: 
@@ -143,7 +141,7 @@ saving/@stepPath
             </div>
             
             <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-            <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
+            <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
         }
         else if (stepPath == "tax-filing-info") {
 
@@ -160,10 +158,12 @@ saving/@stepPath
                     string prevPage = "/saving/" + prevPriority?.step;
                     string nextPage = "/saving/" + nextPriority?.step;
 
-                    <h2>@priority.number: @priority.title</h2>
-                    <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-                    <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
-                    
+                    <h2>
+                        <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
+                        @priority.number: @priority.title
+                        <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
+                    </h2>
+
                     <h4>@((MarkupString)markupize(priority.priority))</h4>
 
                     <p><b>Summary:</b> @((MarkupString)markupize(priority.summary))</p>
@@ -374,7 +374,7 @@ saving/@stepPath
                     <p><b>Details:</b> @((MarkupString)markupize(priority.description))</p>
 
                     <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-                    <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
+                    <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
                 }
             }
         }
