@@ -46,4 +46,16 @@ public class TaxFiling {
     public int? AdjustedGrossIncome { get; set; }
 
     public EmergencyFund EmergencyFund { get; set; } = new();
+
+    private List<Debt>? _debts;
+    public List<Debt> Debts
+    {
+        get {
+            if (_debts == null) {
+                _debts = new List<Debt>();
+            }
+
+            return _debts;
+        }
+    }
 }

@@ -349,25 +349,39 @@ saving/@stepPath
                                 <p><b>Worksheet:</b> </p>
                                 <div>
                                     <i>list of debts (all interest rates):</i><br>
-                                    <table>
-                                    <thead>
-                                    <th><label>name</label></th>
-                                    <th><label>interest rate</label></th>
-                                    <th><label>category</label></th>
-                                    <th><label>payoff date</label></th>
-                                    <th><label>total $</label></th>
-                                    </thead>
-                                    <tr>
-                                    <td><input type=text class=dollar /></td>
-                                    <td><input type=text class=dollar /></td>
-                                    <td><span></span></td>
-                                    <td><input type=text class=dollar /></td>
-                                    <td><input type=text class=dollar /></td>
-                                    </tr>
-                                    </table>
+                                    <EditForm Model="taxFiling">
+                                        <table>
+                                            <thead>
+                                            <th><label>name</label></th>
+                                            <th><label>interest %</label></th>
+                                            <th><label>category</label></th>
+                                            <th><label>total $</label></th>
+                                            <th><label>payoff date</label></th>
+                                            <th><label></label></th>
+                                            </thead>
+                                            @foreach (var debt in taxFiling.Debts) {
+                                                var thisDebt = debt;
+                                                <tr>
+                                                <td><input type=text class=dollar @bind-Value=debt.Name @bind-Value:event=oninput /></td>
+                                                <td><input type=text class=dollar @bind-Value=debt.Rate @bind-Value:event=oninput /></td>
+                                                <td><span>@debt.Category</span></td>
+                                                <td><input type=text class=dollar @bind-Value=debt.Total @bind-Value:event=oninput /></td>
+                                                <td><input type=text class=dollar @bind-Value=debt.PayoffDate @bind-Value:event=oninput /></td>
+                                                <td><button @onclick=@(() => taxFiling.Debts.Remove(thisDebt))><span class="oi oi-delete" aria-hidden="true"></span></button></td>
+                                                </tr>
+                                            }
+                                        </table>
+                                        <button @onclick=addDebt>Add</button>
+                                    </EditForm>
+                                    @code{
+                                        void addDebt()
+                                        {
+                                            taxFiling.Debts.Add(new Debt() { Name = "new", Rate = 3.0, Total = 5000 });
+                                        }
+                                    }
                                 </div>
                                 <br/>
-                                <label>Amount to Pay-Off (@priority.title):</label> <span>$</span><span>0</span><br/>
+                                <label>Amount to Pay-Off (@priority.title):</label> <span>$</span><span>0</span><br/><br/>
                                 break;
                         }
                     <p><b>Approximate Return:</b> @priority.returns</p>
