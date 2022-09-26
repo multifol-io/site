@@ -263,6 +263,8 @@ saving/@stepPath
                                         var person = taxFiling.People[i];
                                         var eligibleId = "eligible-" + i;
                                         var over50id = "over50-" + i;
+                                        var tId = "traditional-" + i;
+                                        var rId = "roth-" + i;
                                         var traditional = "traditional";
                                         var roth = "roth";
                                         <p><b>Person @(i+1):</b> </p>
@@ -273,8 +275,8 @@ saving/@stepPath
 
                                             <label><i>Choice of Contributions:</i></label><br/>
                                             <InputRadioGroup @bind-Value="person.IRAChoice">
-                                                <InputRadio Value="traditional" /> <label><label>IRA:</label> $<span>@person.IRA.AmountToSave</span> <span>($@person.IRA.DeductionAllowed Tax Deductible)</span><br/></label><br/>
-                                                <InputRadio Value="roth" /> <label><label>Roth IRA:</label> $<span>@person.RothIRA.AmountToSave</span><br/></label>
+                                                <InputRadio Value="traditional" id=@tId /> <label for=@tId>IRA: $<span>@person.IRA.AmountToSave</span> <span>($@person.IRA.DeductionAllowed Tax Deductible)</span><br/></label><br/>
+                                                <InputRadio Value="roth" id=@rId/> <label for=@rId>Roth IRA: $<span>@person.RothIRA.AmountToSave</span><br/></label>
                                             </InputRadioGroup><br/>
                                         </EditForm><br/>
                                     }
