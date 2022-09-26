@@ -29,7 +29,7 @@ public class Person {
         }
     }
 
-    public string IRAChoice { get; set; }
+    public string? IRAChoice { get; set; }
     public int PersonIndex { private set; get; }
     public TaxFiling TaxFiling { private set; get; }
 
