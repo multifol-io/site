@@ -58,4 +58,37 @@ public class TaxFiling {
             return _debts;
         }
     }
+
+    private int? GetDebts(string category) {
+            int? total = null;
+            foreach (var debt in Debts) {
+                if (debt.Category == category) {
+                    if (total == null) {
+                        total = debt.Total;
+                    } else {
+                        total += debt.Total;
+                    }
+                }
+            }
+
+            return total;
+    }
+
+    public int? HighDebts {
+        get {
+            return GetDebts("High");
+        }
+    }
+
+    public int? MediumDebts {
+        get {
+            return GetDebts("Medium");
+        }
+    }
+
+    public int? LowDebts {
+        get {
+            return GetDebts("Low");
+        }
+    }
 }

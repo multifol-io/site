@@ -3,7 +3,7 @@ public class Debt {
 
     public string? Name { get; set; }
     public double? Rate { get; set; }
-    public double? Total { get; set; }
+    public int? Total { get; set; }
     public DateOnly? PayoffDate { get; set; }
     public string? Category 
     {

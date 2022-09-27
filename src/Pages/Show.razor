@@ -68,17 +68,22 @@ saving/@stepPath
                                 case 2:
                                    <td style=text-align:right>
                                         @taxFiling.People[0].EmployerPlan.AmountToSaveForMatch<br/>
-                                        @taxFiling.People[1].EmployerPlan.AmountToSaveForMatch<br/>
+                                        @taxFiling.People[1].EmployerPlan.AmountToSaveForMatch
                                    </td>
                                    <td style=text-align:right>
                                         @taxFiling.People[0].EmployerPlan.MatchLimit<br/>
                                         @taxFiling.People[1].EmployerPlan.MatchLimit
                                    </td>
                                    break;
+                                case 3:
+                                    <td style=text-align:right>
+                                        @taxFiling.HighDebts
+                                    </td>
+                                    break;
                                 case 4: 
                                     <td style=text-align:right>
                                         @taxFiling.People[0].HealthSavingsAccount.AmountToSave<br/>
-                                        @taxFiling.People[1].HealthSavingsAccount.AmountToSave<br/>
+                                        @taxFiling.People[1].HealthSavingsAccount.AmountToSave
                                     </td>
                                     <td style=text-align:right>
                                         @taxFiling.People[0].HealthSavingsAccount.EmployerContribution<br/>
@@ -125,10 +130,22 @@ saving/@stepPath
                                    <td style=text-align:right>@taxFiling.People[0].EmployerPlan.AmountToSaveForBackdoorRoth</td>
                                    <td style=text-align:right>@taxFiling.People[1].EmployerPlan.AmountToSaveForBackdoorRoth</td>
                                    break;
+                                case 8:
+                                    <td style=text-align:right>
+                                        @taxFiling.MediumDebts
+                                    </td>
+                                    break;
                                 case 9: 
-                                    @if(taxFiling.PersonCount > 0) {<td style=text-align:right>unlimited</td> }
-                                    @if(taxFiling.PersonCount > 1) {<td style=text-align:right>unlimited</td> }
+                                    <td style=text-align:right>
+                                        @if(taxFiling.PersonCount > 0) {<span>no limits</span> }
+                                        @if(taxFiling.PersonCount > 1) {<br/><span>no limits</span> }
+                                    </td>
                                     break;                                                                   
+                                case 10:
+                                    <td style=text-align:right>
+                                        @taxFiling.LowDebts
+                                    </td>
+                                    break;
                                 default:
                                     <td style=text-align:right>NYI</td><td></td>
                                     break;
@@ -341,7 +358,7 @@ saving/@stepPath
 
                                 break;
                             case 9:
-                                <label>Amount to Save:</label> <span>no limits</span><br/>
+                                <label style=margin-left:25px>Amount to Save:</label> <span>no limits</span><br/><br/>
                                 break;
                             case 3:
                             case 8:
@@ -360,28 +377,45 @@ saving/@stepPath
                                             <th><label></label></th>
                                             </thead>
                                             @foreach (var debt in taxFiling.Debts) {
-                                                var thisDebt = debt;
+                                                var myDebt = debt;
                                                 <tr>
                                                 <td><input type=text class=dollar @bind-Value=debt.Name @bind-Value:event=oninput /></td>
                                                 <td><input type=text class=dollar @bind-Value=debt.Rate @bind-Value:event=oninput /></td>
                                                 <td><span>@debt.Category</span></td>
                                                 <td><input type=text class=dollar @bind-Value=debt.Total @bind-Value:event=oninput /></td>
                                                 <td><input type=text class=dollar @bind-Value=debt.PayoffDate @bind-Value:event=oninput /></td>
-                                                <td><button @onclick=@(() => taxFiling.Debts.Remove(thisDebt))><span class="oi oi-delete" aria-hidden="true"></span></button></td>
+                                                <td><button @onclick=@(() => taxFiling.Debts.Remove(myDebt))>@myDebt.Name<span class="oi oi-delete" aria-hidden="true"></span></button></td>
                                                 </tr>
                                             }
                                         </table>
                                         <button @onclick=addDebt>Add</button>
-                                    </EditForm>
-                                    @code{
-                                        void addDebt()
-                                        {
-                                            taxFiling.Debts.Add(new Debt() { Name = "new", Rate = 3.0, Total = 5000 });
+
+                                        <br/>
+                                        <label>Amount to Pay-Off (@priority.title):</label> <span>$</span>
+                                        @switch (priority.number) {
+                                            case 3:
+                                                @taxFiling.HighDebts;
+                                                break;
+                                            case 8:
+                                                @taxFiling.MediumDebts;
+                                                break;
+                                            case 10:
+                                                @taxFiling.LowDebts;
+                                                break;
+                                            default:
+                                                break;
                                         }
-                                    }
+                                        <br/><br/>
+                                    </EditForm>
                                 </div>
-                                <br/>
-                                <label>Amount to Pay-Off (@priority.title):</label> <span>$</span><span>0</span><br/><br/>
+
+                                @code{
+                                    void addDebt()
+                                    {
+                                        taxFiling.Debts.Add(new Debt() { Name = "new", Rate = 3.0, Total = 5000 });
+                                    }
+                                }
+                            
                                 break;
                         }
                     <p><b>Approximate Return:</b> @priority.returns</p>
