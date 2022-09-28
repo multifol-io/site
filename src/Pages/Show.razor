@@ -71,8 +71,8 @@ saving/@stepPath
                                         @taxFiling.People[1].EmployerPlan.AmountToSaveForMatch
                                    </td>
                                    <td style=text-align:right>
-                                        @taxFiling.People[0].EmployerPlan.MatchLimit<br/>
-                                        @taxFiling.People[1].EmployerPlan.MatchLimit
+                                        @taxFiling.People[0].EmployerPlan.MatchAmount<br/>
+                                        @taxFiling.People[1].EmployerPlan.MatchAmount
                                    </td>
                                    break;
                                 case 3:
@@ -224,9 +224,14 @@ saving/@stepPath
                                     <EditForm Model="person" style=margin-left:25px>
                                         <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id=@eligibleId /> <label for=@eligibleId>Eligible for workplace retirement savings?</label><br/><br/>
                                         <fieldset disabled=@person.EmployerPlan.NotEligible style='margin-left:20px'>
-                                            <label>Percent Matched:</label> <input type=text class=dollar @bind-Value=person.EmployerPlan.PercentMatched @bind-Value:event=oninput />%<br/>
-                                            <label>Match Limit:</label> $<input type=text class=dollar @bind-Value=person.EmployerPlan.MatchLimit @bind-Value:event=oninput/><br/>
+                                            <label>Annual Salary:</label> $<input type=text class=percent @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
+                                            <label>Match:</label> <input type=text class=percent @bind-Value=person.EmployerPlan.MatchA @bind-Value:event=oninput />%
+                                            <label margin-left:30px>Match Limit:</label> <input type=text class=percent @bind-Value=person.EmployerPlan.MatchALimit @bind-Value:event=oninput/>%<br/>
+                                            <label>Match B:</label> <input type=text class=percent @bind-Value=person.EmployerPlan.MatchB @bind-Value:event=oninput />%
+                                            <label margin-left:30px>Match B Limit:</label> <input type=text class=percent @bind-Value=person.EmployerPlan.MatchBLimit @bind-Value:event=oninput/>%<br/>
+                                            <label>Max Match:</label> $<input type=text class=percent @bind-Value=person.EmployerPlan.MaxMatch @bind-Value:event=oninput/><br/>
                                             <label>Contribution required to get maximum match:</label> $<span>@person.EmployerPlan.AmountToSaveForMatch</span><br/>
+                                            <label>Matched Amount:</label> $<span>@person.EmployerPlan.MatchAmount</span><br/>
                                         </fieldset>
                                     </EditForm><br/>
                                 }
