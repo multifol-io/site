@@ -1,5 +1,3 @@
-<!-- Investment Priorities wiki text from: https://www.bogleheads.org/wiki/Prioritizing_investments -->
-
 {{US|reason=irrelevant}}
 
 Investors are faced with a variety of choices on ''where'' to invest their money (e.g., a [[taxable account]], a [[401(k)]], or an [[Traditional IRA |IRA]]). Knowing which accounts to invest in first will maximize return with a minimum of [[Principles_of_Tax-Efficient_Fund_Placement|taxes]]. '''Prioritizing investments''' guides investors on the appropriate order of placing their investments into these accounts.
