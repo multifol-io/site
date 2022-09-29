@@ -19,12 +19,15 @@ public class EmployerPlan {
         get
         {
             double? contribution = null;
-            if (MatchALimit != null) {
-                double percentA = (MatchALimit ?? 100) / 100.0;
-                if (percentA > 0) contribution = percentA * AnnualSalary;
+            if (MatchA != null) {
+                double matchALimit = (MatchALimit ?? 100) / 100.0;
+                double matchBLimit = (MatchBLimit ?? 100) / 100.0;
+
+                if (MatchA > 0 && matchALimit == 1.0) contribution = (MaxMatch ?? 0.0) / (MatchA / 100.0);
+                if (MatchA > 0 && matchALimit < 1.0) contribution = AnnualSalary * matchALimit * (MatchA / 100.0);
                 if (MatchB != null) {
-                    double percentB = (MatchBLimit ?? 100) / 100.0;
-                    if (percentB > 0) contribution = percentB * AnnualSalary;
+                    if (MatchB > 0 && matchBLimit == 1.0) contribution += MaxMatch / (MatchB / 100.0);
+                    if (MatchB > 0 && matchBLimit < 1.0) contribution += AnnualSalary * (matchBLimit-matchALimit);
                 }
             }
 
@@ -46,6 +49,8 @@ public class EmployerPlan {
                 var matchBLimit = (MatchBLimit ?? 100.0) / 100.0;
                 match += percentB * AnnualSalary * (matchBLimit - matchALimit);
             }
+
+            if (match > MaxMatch) match = MaxMatch;
 
             return (int?)match;
         }
