@@ -13,9 +13,9 @@ public class HealthSavingsAccount {
             {
                 
                 case EmployeeFamily.Family:
-                    return 7300;
+                    return FinancialFigures.USA_IRS_HSA_FamilyContributionLimit;
                 case EmployeeFamily.EmployeeOnly:
-                    return 3500;
+                    return FinancialFigures.USA_IRS_HSA_IndividualContributionLimit;
                 default:
                     return null;
             }

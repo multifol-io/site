@@ -69,7 +69,8 @@ public class EmployerPlan {
         {
             if (Eligible)
             {
-                return 20500 + (person.FiftyOrOver ? 6500 : 0);
+                return FinancialFigures.USA_IRS_401K_ContributionLimit 
+                    + (person.FiftyOrOver ? FinancialFigures.USA_IRS_401K_CatchUpContributionLimit : 0);
             }
             else
             {

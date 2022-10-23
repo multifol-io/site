@@ -12,7 +12,8 @@ public class IRA {
         {
             if (person.TaxFiling.PersonCount > person.PersonIndex && person.TaxFiling.AdjustedGrossIncome != null)
             {
-                return 6000 + (person.FiftyOrOver ? 1000 : 0);
+                return FinancialFigures.USA_IRS_IRA_ContributionLimit 
+                    + (person.FiftyOrOver ? FinancialFigures.USA_IRS_IRA_CatchUpContributionLimit : 0);
             }
             else
             {
