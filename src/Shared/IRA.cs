@@ -27,7 +27,9 @@ public class IRA {
         switch (taxFilingStatus) {
             case TaxFilingStatus.Single:
                 if (person.EmployerPlan.Eligible) {
-                    return ApplyRange(68000, 78000, person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
+                    return ApplyRange(FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_Single_Start,
+                                      FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_Single_End,
+                                      person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
                 } else {
                     return ContributionAllowed;
                 }
@@ -35,13 +37,19 @@ public class IRA {
                 if (person.Spouse != null) {
                     if (person.Spouse.EmployerPlan.Eligible) {
                         if (person.EmployerPlan.Eligible) {
-                            return ApplyRange(109000, 129000, person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
+                            return ApplyRange(FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledJointlyActive_Start,
+                                      FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledJointlyActive_End,
+                                      person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
                         } else {
-                            return ApplyRange(204000, 214000, person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
+                            return ApplyRange(FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledJointlyInactive_Start,
+                                      FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledJointlyInactive_End,
+                                      person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
                         }
                     } else {
                         if (person.EmployerPlan.Eligible) {
-                            return ApplyRange(109000, 129000, person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
+                            return ApplyRange(FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledJointlyActive_Start,
+                                      FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledJointlyActive_End,
+                                      person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
                         } else {
                             return ContributionAllowed;
                         }
@@ -54,13 +62,19 @@ public class IRA {
                 if (person.Spouse != null) {
                     if (person.Spouse.EmployerPlan.Eligible) {
                         if (person.EmployerPlan.Eligible) {
-                            return ApplyRange(0, 10000, person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
+                            return ApplyRange(FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledSeperately_Start,
+                                      FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledSeperately_End,
+                                      person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);                    
                         } else {
-                            return ApplyRange(0, 10000, person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
+                            return ApplyRange(FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledSeperately_Start,
+                                      FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledSeperately_End,
+                                      person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);           
                         }
                     } else {
                         if (person.EmployerPlan.Eligible) {
-                            return ApplyRange(0, 10000, person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
+                            return ApplyRange(FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledSeperately_Start,
+                                      FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledSeperately_End,
+                                      person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
                         } else {
                             return ContributionAllowed;
                         }

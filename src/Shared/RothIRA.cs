@@ -30,11 +30,17 @@ public class RothIRA {
         switch (taxFilingStatus) {
             case TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart: 
             case TaxFilingStatus.Single:
-                return ApplyRange(129000, 144000, person.TaxFiling.AdjustedGrossIncome, MaximumContributionByAge);
+                return ApplyRange(FinancialFigures.USA_IRS_RothIRA_ContributionPhaseOutRange_Single_Start,
+                                  FinancialFigures.USA_IRS_RothIRA_ContributionPhaseOutRange_Single_End,
+                                  person.TaxFiling.AdjustedGrossIncome, MaximumContributionByAge);
             case TaxFilingStatus.MarriedFilingJointly:
-                return ApplyRange(204000, 214000, person.TaxFiling.AdjustedGrossIncome, MaximumContributionByAge);
+                return ApplyRange(FinancialFigures.USA_IRS_RothIRA_ContributionPhaseOutRange_MarriedFiledJointly_Start,
+                                  FinancialFigures.USA_IRS_RothIRA_ContributionPhaseOutRange_MarriedFiledJointly_End,
+                                  person.TaxFiling.AdjustedGrossIncome, MaximumContributionByAge);
             case TaxFilingStatus.MarriedFilingSeperately: 
-                return ApplyRange(0,10000,person.TaxFiling.AdjustedGrossIncome, MaximumContributionByAge);
+                return ApplyRange(FinancialFigures.USA_IRS_RothIRA_ContributionPhaseOutRange_MarriedFiledSeperately_Start,
+                                  FinancialFigures.USA_IRS_RothIRA_ContributionPhaseOutRange_MarriedFiledSeperately_End,
+                                  person.TaxFiling.AdjustedGrossIncome, MaximumContributionByAge);
             case TaxFilingStatus.None:
             default:
                 return null;
