@@ -1,5 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 public class TaxFiling {
+    public TaxFiling(IRS.Retirement irs_retirement) {
+        this.IRSRetirement = irs_retirement;
+    }
+
+    public IRS.Retirement IRSRetirement; 
 
     [Required]
     public int PersonCount { get; set; }

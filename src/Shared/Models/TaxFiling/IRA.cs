@@ -3,17 +3,21 @@ public class IRA {
     public IRA(Person person)
     {
         this.person = person;
+        if (this.person.TaxFiling?.IRSRetirement?.IRA != null) {
+            this.iraVariables = this.person.TaxFiling.IRSRetirement.IRA;
+        }
     }
 
     private Person person;
+    private IRS.IRA? iraVariables;
 
     public int? ContributionAllowed { 
         get
         {
             if (person.TaxFiling.PersonCount > person.PersonIndex && person.TaxFiling.AdjustedGrossIncome != null)
             {
-                return FinancialFigures.USA_IRS_IRA_ContributionLimit 
-                    + (person.FiftyOrOver ? FinancialFigures.USA_IRS_IRA_CatchUpContributionLimit : 0);
+                return iraVariables.ContributionLimit
+                    + (person.FiftyOrOver ? iraVariables.CatchUpContributionLimit : 0);
             }
             else
             {
@@ -27,8 +31,8 @@ public class IRA {
         switch (taxFilingStatus) {
             case TaxFilingStatus.Single:
                 if (person.EmployerPlan.Eligible) {
-                    return ApplyRange(FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_Single_Start,
-                                      FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_Single_End,
+                    return ApplyRange(iraVariables.DeductabilityPhaseOutRange.Single.Start,
+                                      iraVariables.DeductabilityPhaseOutRange.Single.End,
                                       person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
                 } else {
                     return ContributionAllowed;
@@ -37,18 +41,18 @@ public class IRA {
                 if (person.Spouse != null) {
                     if (person.Spouse.EmployerPlan.Eligible) {
                         if (person.EmployerPlan.Eligible) {
-                            return ApplyRange(FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledJointlyActive_Start,
-                                      FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledJointlyActive_End,
+                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFiledJointly.Start,
+                                      iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFiledJointly.End,
                                       person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
                         } else {
-                            return ApplyRange(FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledJointlyInactive_Start,
-                                      FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledJointlyInactive_End,
+                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.InactiveParticipant_MarriedFiledJointly.Start,
+                                      iraVariables.DeductabilityPhaseOutRange.InactiveParticipant_MarriedFiledJointly.End,
                                       person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
                         }
                     } else {
                         if (person.EmployerPlan.Eligible) {
-                            return ApplyRange(FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledJointlyActive_Start,
-                                      FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledJointlyActive_End,
+                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFiledJointly.Start,
+                                      iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFiledJointly.End,
                                       person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
                         } else {
                             return ContributionAllowed;
@@ -62,18 +66,18 @@ public class IRA {
                 if (person.Spouse != null) {
                     if (person.Spouse.EmployerPlan.Eligible) {
                         if (person.EmployerPlan.Eligible) {
-                            return ApplyRange(FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledSeperately_Start,
-                                      FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledSeperately_End,
-                                      person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);                    
+                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.MarriedFiledSeparately.Start,
+                                      iraVariables.DeductabilityPhaseOutRange.MarriedFiledSeparately.End,
+                                      person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);                   
                         } else {
-                            return ApplyRange(FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledSeperately_Start,
-                                      FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledSeperately_End,
+                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.MarriedFiledSeparately.Start,
+                                      iraVariables.DeductabilityPhaseOutRange.MarriedFiledSeparately.End,
                                       person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);           
                         }
                     } else {
                         if (person.EmployerPlan.Eligible) {
-                            return ApplyRange(FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledSeperately_Start,
-                                      FinancialFigures.USA_IRS_IRA_DeductabilityPhaseOutRange_MarriedFiledSeperately_End,
+                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.MarriedFiledSeparately.Start,
+                                      iraVariables.DeductabilityPhaseOutRange.MarriedFiledSeparately.End,
                                       person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
                         } else {
                             return ContributionAllowed;

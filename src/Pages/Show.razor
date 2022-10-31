@@ -21,7 +21,7 @@ saving/@stepPath
     }
 </style>
 
-    @if (priorities == null)
+    @if (priorities == null || taxFiling == null)
     {
         <p><em>Loading...</em></p>
     }
@@ -160,9 +160,6 @@ saving/@stepPath
         }
         else if (stepPath == "tax-filing-info") {
 
-            @code {
-                private TaxFiling taxFiling = new();
-            }
         }
         else
         {
@@ -417,7 +414,7 @@ saving/@stepPath
                                 @code{
                                     void addDebt()
                                     {
-                                        taxFiling.Debts.Add(new Debt() { Name = "new", Rate = 3.0, Total = 5000 });
+                                        taxFiling?.Debts.Add(new Debt() { Name = "new", Rate = 3.0, Total = 5000 });
                                     }
                                 }
                             
@@ -478,7 +475,7 @@ saving/@stepPath
                         default:
                             href += c;
                             break;
-                     }
+                    }
                     break;
                 case Mode.text:
                     switch (c) {
@@ -489,10 +486,10 @@ saving/@stepPath
                         default:
                             text += c;
                             break;
-                     }
+                    }
                     break;
                 default:
-                      switch (c) {
+                    switch (c) {
                         case '[':
                         case ']':
                             break;
@@ -502,7 +499,7 @@ saving/@stepPath
                         default:
                             returnVal += c;
                             break;
-                     }
+                    }
                     break;
             }
 
@@ -513,15 +510,21 @@ saving/@stepPath
         return returnVal;
     }
 
-    public string foo = "<p>hello <b>worjjld</b> again</p>";
-
     [Parameter]
     public string? stepPath { get; set; }
 
     private InvestmentPriority[]? priorities;
+    private static Retirement? irs_retirement;
+    private TaxFiling? taxFiling;
 
     protected override async Task OnInitializedAsync()
     {
         priorities = await Http.GetFromJsonAsync<InvestmentPriority[]>("data/investment-priorities.json");
+        var irsRetirementStream = await Http.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/irs/irs.retirement.2023.json");
+        irs_retirement = JsonSerializer.Deserialize<IRS.Retirement>(irsRetirementStream);
+
+        if (irs_retirement != null) {
+            taxFiling = new TaxFiling(irs_retirement);
+        }
     }
 }

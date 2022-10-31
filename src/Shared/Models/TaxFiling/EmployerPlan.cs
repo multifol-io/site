@@ -2,9 +2,11 @@ using System.ComponentModel.DataAnnotations;
 public class EmployerPlan {
     public EmployerPlan(Person person) {
         this.person = person;
+        this.Employer401k = this.person.TaxFiling.IRSRetirement.Employer401k;
     }
 
     private Person person;
+    private IRS.Employer401k? Employer401k;
 
     public bool Eligible { get; set; }
     public bool NotEligible {get {return !Eligible;}}
@@ -69,8 +71,8 @@ public class EmployerPlan {
         {
             if (Eligible)
             {
-                return FinancialFigures.USA_IRS_401K_ContributionLimit 
-                    + (person.FiftyOrOver ? FinancialFigures.USA_IRS_401K_CatchUpContributionLimit : 0);
+                return Employer401k.ContributionLimit
+                    + (person.FiftyOrOver ? Employer401k.CatchUpContributionLimit : 0);
             }
             else
             {

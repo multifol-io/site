@@ -1,5 +1,17 @@
 using System.ComponentModel.DataAnnotations;
 public class HealthSavingsAccount {
+    public HealthSavingsAccount(Person person)
+    {
+        this.person = person;
+    }
+
+    public IRS.HSA HSAVariables {
+        get {
+            return this.person.TaxFiling.IRSRetirement.HSA;
+        }
+    }
+
+    private Person person;
     public bool Eligible { get; set; }
     public bool NotEligible {get {return !Eligible;}}
 
@@ -13,9 +25,9 @@ public class HealthSavingsAccount {
             {
                 
                 case EmployeeFamily.Family:
-                    return FinancialFigures.USA_IRS_HSA_FamilyContributionLimit;
+                    return HSAVariables.ContributionLimit.Family;
                 case EmployeeFamily.EmployeeOnly:
-                    return FinancialFigures.USA_IRS_HSA_IndividualContributionLimit;
+                    return HSAVariables.ContributionLimit.SelfOnly;
                 default:
                     return null;
             }
