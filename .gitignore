@@ -1,3 +1,4 @@
 /src/obj
 /src/bin
 .vs
+.csproj.user
