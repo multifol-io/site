@@ -3,20 +3,19 @@ public class IRA {
     public IRA(Person person)
     {
         this.person = person;
-        this.iraVariables = this.person.TaxFiling.IRSRetirement.IRA;
+        if (this.person.TaxFiling?.IRSRetirement?.IRA != null) {
+            this.iraVariables = this.person.TaxFiling.IRSRetirement.IRA;
+        }
     }
 
     private Person person;
-    private IRS.IRA iraVariables;
+    private IRS.IRA? iraVariables;
 
     public int? ContributionAllowed { 
         get
         {
             if (person.TaxFiling.PersonCount > person.PersonIndex && person.TaxFiling.AdjustedGrossIncome != null)
             {
-                 return iraVariables.ContributionLimit
-                    + (person.FiftyOrOver ? iraVariables.CatchUpContributionLimit : 0);
-            
                 return iraVariables.ContributionLimit
                     + (person.FiftyOrOver ? iraVariables.CatchUpContributionLimit : 0);
             }

@@ -21,7 +21,7 @@ saving/@stepPath
     }
 </style>
 
-    @if (priorities == null)
+    @if (priorities == null || taxFiling == null)
     {
         <p><em>Loading...</em></p>
     }
@@ -414,7 +414,7 @@ saving/@stepPath
                                 @code{
                                     void addDebt()
                                     {
-                                        taxFiling.Debts.Add(new Debt() { Name = "new", Rate = 3.0, Total = 5000 });
+                                        taxFiling?.Debts.Add(new Debt() { Name = "new", Rate = 3.0, Total = 5000 });
                                     }
                                 }
                             
@@ -520,7 +520,7 @@ saving/@stepPath
     protected override async Task OnInitializedAsync()
     {
         priorities = await Http.GetFromJsonAsync<InvestmentPriority[]>("data/investment-priorities.json");
-        var irsRetirementStream = await Http.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-figures/main/data/usa/irs/irs.retirement.2023.json");
+        var irsRetirementStream = await Http.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/irs/irs.retirement.2023.json");
         irs_retirement = JsonSerializer.Deserialize<IRS.Retirement>(irsRetirementStream);
 
         if (irs_retirement != null) {
