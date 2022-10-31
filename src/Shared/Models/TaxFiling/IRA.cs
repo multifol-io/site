@@ -41,21 +41,18 @@ public class IRA {
                 if (person.Spouse != null) {
                     if (person.Spouse.EmployerPlan.Eligible) {
                         if (person.EmployerPlan.Eligible) {
-                            // TODO: need MFJActive
-                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.MarriedFiledJointly.Start,
-                                      iraVariables.DeductabilityPhaseOutRange.MarriedFiledJointly.End,
+                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFiledJointly.Start,
+                                      iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFiledJointly.End,
                                       person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
                         } else {
-                            // TODO: need MFJInactive
-                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.MarriedFiledJointly.Start,
-                                      iraVariables.DeductabilityPhaseOutRange.MarriedFiledJointly.End,
+                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.InactiveParticipant_MarriedFiledJointly.Start,
+                                      iraVariables.DeductabilityPhaseOutRange.InactiveParticipant_MarriedFiledJointly.End,
                                       person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
                         }
                     } else {
                         if (person.EmployerPlan.Eligible) {
-                            // TODO: need MFJActive
-                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.MarriedFiledJointly.Start,
-                                      iraVariables.DeductabilityPhaseOutRange.MarriedFiledJointly.End,
+                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFiledJointly.Start,
+                                      iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFiledJointly.End,
                                       person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
                         } else {
                             return ContributionAllowed;

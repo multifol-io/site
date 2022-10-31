@@ -9,12 +9,6 @@ namespace IRS
         public int CatchUpContributionLimit { get; set; }
     }
 
-    public class ActiveParticipant
-    {
-        public int Start { get; set; }
-        public int End { get; set; }
-    }
-
     public class ContributionLimit
     {
         public int Family { get; set; }
@@ -32,7 +26,8 @@ namespace IRS
     public class DeductabilityPhaseOutRange
     {
         public Single? Single { get; set; }
-        public MarriedFiledJointly? MarriedFiledJointly { get; set; }
+        public ActiveParticipant_MarriedFiledJointly? ActiveParticipant_MarriedFiledJointly { get; set; }
+        public InactiveParticipant_MarriedFiledJointly? InactiveParticipant_MarriedFiledJointly { get; set; }
         public MarriedFiledSeparately? MarriedFiledSeparately { get; set; }
     }
 
@@ -40,12 +35,6 @@ namespace IRS
     {
         public ContributionLimit? ContributionLimit { get; set; }
         public int CatchUpAge { get; set; }
-    }
-
-    public class InactiveParticipant
-    {
-        public int Start { get; set; }
-        public int End { get; set; }
     }
 
     public class IRA
@@ -58,8 +47,16 @@ namespace IRS
 
     public class MarriedFiledJointly
     {
-        public ActiveParticipant? ActiveParticipant { get; set; }
-        public InactiveParticipant? InactiveParticipant { get; set; }
+        public int Start { get; set; }
+        public int End { get; set; }
+    }
+    public class ActiveParticipant_MarriedFiledJointly
+    {
+        public int Start { get; set; }
+        public int End { get; set; }
+    }
+    public class InactiveParticipant_MarriedFiledJointly
+    {
         public int Start { get; set; }
         public int End { get; set; }
     }
