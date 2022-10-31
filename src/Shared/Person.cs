@@ -1,10 +1,11 @@
 public class Person {
     public Person(TaxFiling taxFiling, int personIndex) {
+        this.TaxFiling = taxFiling;
         this.EmployerPlan = new EmployerPlan(this);
         this.IRA = new IRA(this);
         this.RothIRA = new RothIRA(this);
+        this.HealthSavingsAccount = new HealthSavingsAccount(this);
         this.PersonIndex = personIndex;
-        this.TaxFiling = taxFiling;
     }
 
     public Person? Spouse { 
@@ -36,7 +37,7 @@ public class Person {
     public bool FiftyOrOver { get; set; }
 
     public EmployerPlan EmployerPlan { get; set; }
-    public HealthSavingsAccount HealthSavingsAccount { get; set; } = new();
+    public HealthSavingsAccount HealthSavingsAccount { get; set; }
     public IRA IRA { get; set; }
     public RothIRA RothIRA { get; set; }
 }

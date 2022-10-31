@@ -1,4 +1,6 @@
-public class FinancialFigures
+using System.Text.Json.Nodes;
+
+public class FinancialFiguresj
 {
     public static int USA_IRS_IRA_ContributionLimit = 6500;
     public static int USA_IRS_IRA_CatchUpContributionLimit = 1000;
