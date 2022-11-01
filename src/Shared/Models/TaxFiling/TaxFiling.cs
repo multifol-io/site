@@ -4,8 +4,8 @@ public class TaxFiling {
         this.IRSRetirement = irs_retirement;
     }
 
-    public IRS.Retirement IRSRetirement; 
-
+    public IRS.Retirement IRSRetirement { get; private set; }
+    
     [Required]
     public int PersonCount { get; set; }
     

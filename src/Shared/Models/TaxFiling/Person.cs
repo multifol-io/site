@@ -8,6 +8,25 @@ public class Person {
         this.PersonIndex = personIndex;
     }
 
+    public Employer.Employer _employer;
+    public Employer.Employer Employer { 
+        get { return _employer; }
+        set { 
+            _employer = value;
+            
+            if (_employer.RetirementSavings.HSA != null) {
+                HealthSavingsAccount.EmployerContribution = _employer.RetirementSavings.HSA.EmployerContribution;
+            }
+
+            if (_employer.RetirementSavings.Employer401k != null) {
+                EmployerPlan.Eligible = _employer.RetirementSavings.Employer401k.Offered;
+                EmployerPlan.MatchA = _employer.RetirementSavings.Employer401k.MatchRules.MatchPercentage;
+                EmployerPlan.MaxMatch = _employer.RetirementSavings.Employer401k.MatchLimit;
+                EmployerPlan.AmountToSaveForBackdoorRoth = _employer.RetirementSavings.MegaBackdoorRoth.ContributionLimit;
+            }
+        }
+    }
+
     public Person? Spouse { 
         get {
             if (TaxFiling.TaxFilingStatus == TaxFilingStatus.MarriedFilingJointly 
