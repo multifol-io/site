@@ -226,9 +226,11 @@ saving/@stepPath
                                     <p><b>Person @(i+1):</b> </p>
 
                                     <EditForm Model="person" style=margin-left:25px>
+                                        <label>Employer:</label> <input type=text @bind-Value=person.EmployerPlan.Employer @bind-Value:event=oninput /><br/>
+                                        <label>Annual Salary:</label> $<input type=text class=percent @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
+                                        <br/>
                                         <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id=@eligibleId /> <label style="display:inline" for=@eligibleId>Eligible for workplace retirement savings?</label><br/><br/>
                                         <fieldset disabled=@person.EmployerPlan.NotEligible style='margin-left:20px'>
-                                            <label>Annual Salary:</label> $<input type=text class=percent @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
                                             <label>Match:</label> <input type=text class=percent @bind-Value=person.EmployerPlan.MatchA @bind-Value:event=oninput />%
                                             <label margin-left:30px>Match Limit:</label> <input type=text class=percent @bind-Value=person.EmployerPlan.MatchALimit @bind-Value:event=oninput/>%<br/>
                                             <label>Match B:</label> <input type=text class=percent @bind-Value=person.EmployerPlan.MatchB @bind-Value:event=oninput />%

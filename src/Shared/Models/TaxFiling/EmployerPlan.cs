@@ -8,6 +8,8 @@ public class EmployerPlan {
     private Person person;
     private IRS.Employer401k? Employer401k;
 
+    public string Employer { get; set; }
+
     public bool Eligible { get; set; }
     public bool NotEligible {get {return !Eligible;}}
 
