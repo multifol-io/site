@@ -14,15 +14,23 @@ public class Person {
         set { 
             _employer = value;
             
-            if (_employer.RetirementSavings.HSA != null) {
-                HealthSavingsAccount.EmployerContribution = _employer.RetirementSavings.HSA.EmployerContribution;
-            }
+            if (_employer != null) {
+                if (_employer.RetirementSavings.HSA != null) {
+                    HealthSavingsAccount.EmployerContribution = _employer.RetirementSavings.HSA.EmployerContribution;
+                }
 
-            if (_employer.RetirementSavings.Employer401k != null) {
-                EmployerPlan.Eligible = _employer.RetirementSavings.Employer401k.Offered;
-                EmployerPlan.MatchA = _employer.RetirementSavings.Employer401k.MatchRules.MatchPercentage;
-                EmployerPlan.MaxMatch = _employer.RetirementSavings.Employer401k.MatchLimit;
-                EmployerPlan.AmountToSaveForBackdoorRoth = _employer.RetirementSavings.MegaBackdoorRoth.ContributionLimit;
+                if (_employer.RetirementSavings.Employer401k != null) {
+                    EmployerPlan.Eligible = _employer.RetirementSavings.Employer401k.Offered;
+                    EmployerPlan.MatchA = _employer.RetirementSavings.Employer401k.MatchRules.MatchPercentage;
+                    EmployerPlan.MaxMatch = _employer.RetirementSavings.Employer401k.MatchLimit;
+                    EmployerPlan.AmountToSaveForBackdoorRoth = _employer.RetirementSavings.MegaBackdoorRoth.ContributionLimit;
+                }
+            } else {
+                HealthSavingsAccount.EmployerContribution = null;
+                EmployerPlan.Eligible = false;
+                EmployerPlan.MatchA = null;
+                EmployerPlan.MaxMatch = null;
+                EmployerPlan.AmountToSaveForBackdoorRoth = null;
             }
         }
     }

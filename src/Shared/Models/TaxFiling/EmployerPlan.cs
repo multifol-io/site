@@ -1,5 +1,10 @@
 using System.ComponentModel.DataAnnotations;
-public class EmployerPlan {
+using System.Text.Json;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Net.Http;
+
+public class EmployerPlan : INotifyPropertyChanged {
     public EmployerPlan(Person person) {
         this.person = person;
         this.Employer401k = this.person.TaxFiling.IRSRetirement.Employer401k;
@@ -8,9 +13,34 @@ public class EmployerPlan {
     private Person person;
     private IRS.Employer401k? Employer401k;
 
-    public string Employer { get; set; }
+    private async Task GetEmployerDataAsync(string employer) {
+        HttpClient Http = new();
+        var lEmployer = employer.ToLowerInvariant();
+        var year = person.TaxFiling.Year;
+    
+        var employerStream = await Http.GetStreamAsync(
+            "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/employers/" 
+            + lEmployer + "/" + lEmployer + ".retirement." + year + ".json");
+        var employerData = JsonSerializer.Deserialize<Employer.Employer>(employerStream);
 
-    public bool Eligible { get; set; }
+        person.Employer = employerData;
+    }
+
+    private string _employer;
+    public string Employer { 
+        get{ return _employer; }
+        set{
+            _employer = value;
+            GetEmployerDataAsync(_employer);
+        }
+    }
+
+    private bool _eligible;
+    public bool Eligible {
+        get => _eligible;
+        set => SetProperty(ref _eligible, value);
+    }
+
     public bool NotEligible {get {return !Eligible;}}
 
     public int? AnnualSalary { get; set; }
@@ -81,5 +111,26 @@ public class EmployerPlan {
                 return null;
             }
         }
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new 
+                         PropertyChangedEventArgs(propertyName));
+    }
+
+    bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string 
+                                                     propertyName = null)
+    {
+        if (Equals(storage, value))
+        {
+            return false;
+        }
+
+        storage = value;
+        OnPropertyChanged(propertyName);
+        return true;
     }
 }

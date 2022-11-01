@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 public class TaxFiling {
-    public TaxFiling(IRS.Retirement irs_retirement) {
+    public TaxFiling(IRS.Retirement irs_retirement, int year) {
         this.IRSRetirement = irs_retirement;
+        this.Year = year;
     }
 
     public IRS.Retirement IRSRetirement { get; private set; }
@@ -9,6 +10,8 @@ public class TaxFiling {
     [Required]
     public int PersonCount { get; set; }
     
+    public int Year { get; private set; }
+
     private List<Person>? _people;
     public List<Person> People {
         get {

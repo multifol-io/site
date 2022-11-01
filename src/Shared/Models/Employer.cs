@@ -24,7 +24,6 @@ namespace Employer {
 
     public class RetirementSavings
     {
-        public int Year { get; set; }
         public Employer401k Employer401k { get; set; }
         public HSA HSA { get; set; }
         public MegaBackdoorRoth MegaBackdoorRoth { get; set; }
@@ -39,6 +38,7 @@ namespace Employer {
         public List<string> note { get; set; }
         public List<object> source { get; set; }
         public string Company { get; set; }
+        public int Year { get; set; }
         public RetirementSavings RetirementSavings { get; set; }
     }
 }
