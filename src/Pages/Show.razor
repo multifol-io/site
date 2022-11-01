@@ -229,6 +229,7 @@ saving/@stepPath
                                         <label>Employer:</label> <input type=text @bind-Value=person.EmployerPlan.Employer @bind-Value:event=oninput /><br/>
                                         <label>Annual Salary:</label> $<input type=text class=percent @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
                                         <br/>
+                                        @if (person.EmployerPlan.AnnualSalary != null) {
                                         <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id=@eligibleId /> <label style="display:inline" for=@eligibleId>Eligible for workplace retirement savings?</label><br/><br/>
                                         <fieldset disabled=@person.EmployerPlan.NotEligible style='margin-left:20px'>
                                             <label>Match:</label> <input type=text class=percent @bind-Value=person.EmployerPlan.MatchA @bind-Value:event=oninput />%
@@ -239,6 +240,7 @@ saving/@stepPath
                                             <label>Contribution required to get maximum match:</label> $<span>@person.EmployerPlan.AmountToSaveForMatch</span><br/>
                                             <label>Matched Amount:</label> $<span>@person.EmployerPlan.MatchAmount</span><br/>
                                         </fieldset>
+                                        }
                                     </EditForm><br/>
                                 }
 
@@ -525,8 +527,6 @@ saving/@stepPath
     private InvestmentPriority[]? priorities;
     private static Retirement? irs_retirement_year1;
     private static Retirement? irs_retirement_year2;
-    private static Employer.Employer? employer_year1;
-    private static Employer.Employer? employer_year2;
     private TaxFilings? taxFilings;
 
     protected override async Task OnInitializedAsync()
@@ -538,20 +538,9 @@ saving/@stepPath
         irs_retirement_year1 = JsonSerializer.Deserialize<IRS.Retirement>(retirementYear1);
         irs_retirement_year2 = JsonSerializer.Deserialize<IRS.Retirement>(retirementYear2);
 
-        var employerYear1Stream = await Http.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/employers/microsoft/microsoft.retirement.2022.json");
-        var employerYear2Stream = await Http.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/employers/microsoft/microsoft.retirement.2023.json");
-        employer_year1 = JsonSerializer.Deserialize<Employer.Employer>(employerYear1Stream);
-        employer_year2 = JsonSerializer.Deserialize<Employer.Employer>(employerYear2Stream);
-
         if (irs_retirement_year1 != null && irs_retirement_year2 != null) {
             taxFilings = new(irs_retirement_year1, irs_retirement_year2);
             taxFilings.CurrentYear = 1;
-
-            // TODO: don't hard code that person 0 works for microsoft
-            if (employer_year1 != null && employer_year2 != null) {
-                taxFilings.Years[0].People[0].Employer = employer_year1;
-                taxFilings.Years[1].People[0].Employer = employer_year2;
-            }
         }
     }
 }
