@@ -15,7 +15,7 @@ public class EmployerPlan : INotifyPropertyChanged {
 
     private async Task GetEmployerDataAsync(string employer) {
         HttpClient Http = new();
-        var lEmployer = employer.ToLowerInvariant();
+        var lEmployer = employer.ToLowerInvariant().Trim();
         var year = person.TaxFiling.Year;
     
         var employerStream = await Http.GetStreamAsync(
