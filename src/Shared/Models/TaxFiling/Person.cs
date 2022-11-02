@@ -21,7 +21,17 @@ public class Person {
 
                 if (_employer.RetirementSavings.Employer401k != null) {
                     EmployerPlan.Eligible = _employer.RetirementSavings.Employer401k.Offered;
-                    EmployerPlan.MatchA = _employer.RetirementSavings.Employer401k.MatchRules.MatchPercentage;
+                    EmployerPlan.MatchA = _employer.RetirementSavings.Employer401k.MatchRules[0].MatchPercentage;
+                    if (_employer.RetirementSavings.Employer401k.MatchRules[0].ForNextPercent != null) {
+                        EmployerPlan.MatchALimit = _employer.RetirementSavings.Employer401k.MatchRules[0].ForNextPercent;
+                    }
+                    if (_employer.RetirementSavings.Employer401k.MatchRules.Count == 2) {
+                        EmployerPlan.MatchA = _employer.RetirementSavings.Employer401k.MatchRules[1].MatchPercentage;
+                        if (_employer.RetirementSavings.Employer401k.MatchRules[1].ForNextPercent != null) {
+                            EmployerPlan.MatchALimit = _employer.RetirementSavings.Employer401k.MatchRules[1].ForNextPercent;
+                        }
+                    }
+
                     EmployerPlan.MaxMatch = _employer.RetirementSavings.Employer401k.MatchLimit;
                     EmployerPlan.AmountToSaveForBackdoorRoth = _employer.RetirementSavings.MegaBackdoorRoth.ContributionLimit;
                 }
