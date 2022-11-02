@@ -4,7 +4,7 @@ namespace Employer {
     {
         public bool Offered { get; set; }
         public List<MatchRule> MatchRules { get; set; }
-        public int MatchLimit { get; set; }
+        public int? MatchLimit { get; set; }
     }
 
     public class HSA
