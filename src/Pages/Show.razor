@@ -16,8 +16,11 @@ saving/@stepPath
         width:175px;
         border-radius: 10px;
     }
-    .dollar,.percent {
+    .dollar {
         width: 100px;
+    }
+    .percent {
+        width: 50px;
     }
 </style>
 
@@ -134,8 +137,10 @@ saving/@stepPath
                                     </td>
                                     break;
                                 case 7: 
-                                   <td style=text-align:right>@taxFilings.Active.People[0].EmployerPlan.AmountToSaveForBackdoorRoth</td>
-                                   <td style=text-align:right>@taxFilings.Active.People[1].EmployerPlan.AmountToSaveForBackdoorRoth</td>
+                                   <td style=text-align:right>
+                                        @taxFilings.Active.People[0].EmployerPlan.AmountToSaveForBackdoorRoth<br/>
+                                        @taxFilings.Active.People[1].EmployerPlan.AmountToSaveForBackdoorRoth
+                                   </td>
                                    break;
                                 case 8:
                                     <td style=text-align:right>
@@ -227,16 +232,16 @@ saving/@stepPath
 
                                     <EditForm Model="person" style=margin-left:25px>
                                         <label>Employer:</label> <input type=text @bind-Value=person.EmployerPlan.Employer @bind-Value:event=oninput /><br/>
-                                        <label>Annual Salary:</label> $<input type=text class=percent @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
+                                        <label>Annual Salary:</label> $<input type=text class=dollar @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
                                         <br/>
                                         @if (person.EmployerPlan.AnnualSalary != null) {
                                         <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id=@eligibleId /> <label style="display:inline" for=@eligibleId>Eligible for workplace retirement savings?</label><br/><br/>
                                         <fieldset disabled=@person.EmployerPlan.NotEligible style='margin-left:20px'>
                                             <label>Match:</label> <input type=text class=percent @bind-Value=person.EmployerPlan.MatchA @bind-Value:event=oninput />%
-                                            <label margin-left:30px>Match Limit:</label> <input type=text class=percent @bind-Value=person.EmployerPlan.MatchALimit @bind-Value:event=oninput/>%<br/>
+                                            <label margin-left:30px>for first</label> <input type=text class=percent @bind-Value=person.EmployerPlan.MatchALimit @bind-Value:event=oninput/>%<br/>
                                             <label>Match B:</label> <input type=text class=percent @bind-Value=person.EmployerPlan.MatchB @bind-Value:event=oninput />%
-                                            <label margin-left:30px>Match B Limit:</label> <input type=text class=percent @bind-Value=person.EmployerPlan.MatchBLimit @bind-Value:event=oninput/>%<br/>
-                                            <label>Max Match:</label> $<input type=text class=percent @bind-Value=person.EmployerPlan.MaxMatch @bind-Value:event=oninput/><br/>
+                                            <label margin-left:30px>for next</label> <input type=text class=percent @bind-Value=person.EmployerPlan.MatchBLimit @bind-Value:event=oninput/>%<br/>
+                                            <label>Max Match:</label> $<input type=text class=dollar @bind-Value=person.EmployerPlan.MaxMatch @bind-Value:event=oninput/><br/>
                                             <label>Contribution required to get maximum match:</label> $<span>@person.EmployerPlan.AmountToSaveForMatch</span><br/>
                                             <label>Matched Amount:</label> $<span>@person.EmployerPlan.MatchAmount</span><br/>
                                         </fieldset>

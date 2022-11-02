@@ -15,7 +15,7 @@ namespace Employer {
     public class MatchRule
     {
         public int MatchPercentage { get; set; }
-        public int ForNextPercent { get; set; }
+        public int? ForNextPercent { get; set; }
     }
 
     public class MegaBackdoorRoth
