@@ -42,20 +42,24 @@ saving/@stepPath
                 <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
             </h2>
 
-            <p>To save money efficiently, you should prioritize the most efficient techniques. This tool helps you apply the <a target=_blank href="https://www.bogleheads.org/wiki/Prioritizing_investments">Bogleheads Prioritizing Investments wiki</a><span class="oi oi-external-link m-2 aria-hidden="true"></span>. Review and complete pages 1-10.</p>
+            <p>To save money efficiently, you should prioritize the most efficient techniques. This tool helps you apply the <a target=_blank href="https://www.bogleheads.org/wiki/Prioritizing_investments">Bogleheads Prioritizing Investments wiki</a><span class="oi oi-external-link m-2 aria-hidden="true"></span>. Review and complete steps 1-10.</p>
 
             <div>
-                <EditForm Model="taxFilings.Active">
+                <p ><b>Prerequisities:</b></p>
+                <EditForm Model="taxFilings.Active" style=margin-left:25px>
                     <label>Target Year:</label> <select @bind=taxFilings.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
                     <label>Estimated Adjusted Gross Income:</label> $<input type=text class=dollar @bind-Value=taxFilings.Active.AdjustedGrossIncome @bind-Value:event=oninput /><br/><br/>
                 </EditForm>
+                
+                <p ><b>Steps:</b></p>
+
                 <table>
                     <thead>
                         <th></th>
                         @if(taxFilings.Active.PersonCount > 0) {<th style="padding-right:10px">$</th> }
                         @if(taxFilings.Active.PersonCount > 0) {<th style="padding-right:10px">Match</th> }
                     </thead>
-
+  
                     @foreach (var priority in priorities) {
                         var href = "/saving/" + @priority.step;
                         <tr>
@@ -194,6 +198,10 @@ saving/@stepPath
 
                         @switch (priority.number) {
                             case 1:
+                                <p ><b>Prerequisities:</b></p>
+                                <label style=margin-left:25px>Target Year:</label> <select @bind=taxFilings.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
+                                <br />
+
                                 <p><b>Worksheet:</b> </p>
 
                                 <EditForm Model="taxFilings.Active" style=margin-left:25px>
@@ -217,6 +225,8 @@ saving/@stepPath
                             case 2:
                                 <p><b>Prerequisities:</b> </p>
                                 <EditForm Model="taxFilings.Active" style=margin-left:25px>
+                                    <label>Target Year:</label> <select @bind=taxFilings.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
+
                                     <label>Tax Filing Status:</label> <select @bind=taxFilings.Active.TaxFilingStatus>
                                                 <option value=None>choose...</option>
                                                 <option>Single</option>
@@ -253,6 +263,8 @@ saving/@stepPath
                             case 4:
                                 <p><b>Prerequisities:</b> </p>
                                 <EditForm Model="taxFilings.Active" style=margin-left:25px>
+                                    <label>Target Year:</label> <select @bind=taxFilings.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
+                                    
                                     <label>Tax Filing Status:</label> <select @bind=taxFilings.Active.TaxFilingStatus>
                                                 <option value=None>choose...</option>
                                                 <option>Single</option>
@@ -283,6 +295,8 @@ saving/@stepPath
                             case 5:
                                 <p><b>Prerequisities:</b> </p>
                                 <EditForm Model="taxFilings.Active" style=margin-left:25px>
+                                    <label>Target Year:</label> <select @bind=taxFilings.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
+
                                     <label>Tax Filing Status:</label> <select @bind=taxFilings.Active.TaxFilingStatus>
                                         <option value=None>choose...</option>
                                         <option>Single</option>
@@ -322,6 +336,8 @@ saving/@stepPath
                                 <p><b>Prerequisities:</b> </p>
 
                                 <EditForm Model="taxFilings.Active" style=margin-left:25px>
+                                    <label>Target Year:</label> <select @bind=taxFilings.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
+
                                     <label>Tax Filing Status:</label> <select @bind=taxFilings.Active.TaxFilingStatus>
                                                 <option value=None>choose...</option>
                                                 <option>Single</option>
@@ -351,6 +367,8 @@ saving/@stepPath
                             case 7:
                                 <p><b>Prerequisities:</b> </p>
                                 <EditForm Model="taxFilings.Active" style=margin-left:25px>
+                                    <label>Target Year:</label> <select @bind=taxFilings.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
+
                                     <label>Tax Filing Status:</label> <select @bind=taxFilings.Active.TaxFilingStatus>
                                         <option value=None>choose...</option>
                                         <option>Single</option>
