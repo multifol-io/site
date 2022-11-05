@@ -3,6 +3,8 @@ using System.Text.Json;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Net.Http;
+using Azure.Storage.Blobs;
+using Microsoft.JSInterop;
 
 public class EmployerPlan : INotifyPropertyChanged {
     public EmployerPlan(Person person) {
@@ -18,12 +20,35 @@ public class EmployerPlan : INotifyPropertyChanged {
         var lEmployer = employer.ToLowerInvariant().Trim();
         var year = person.TaxFiling.Year;
     
+        if (lEmployer == "test") {
+            string connectionString = "BlobEndpoint=http://employer-data.bogle.tools/;QueueEndpoint=https://employer-data.bogle.tools/;FileEndpoint=https://employer-data.bogle.tools/;TableEndpoint=https://employer-data.bogle.tools/;SharedAccessSignature=sv=2021-06-08&ss=b&srt=co&sp=w&se=2022-11-13T01:53:53Z&st=2022-11-05T17:53:53Z&spr=https,http&sig=xJwOQe6Asphn6TGqA%2BE6F5S3RkszcXwmFwEECKOg5wE%3D";
+            string containerName = "submissions";
+            string blobName = Guid.NewGuid().ToString();
+                
+            BlobContainerClient container = new BlobContainerClient(connectionString, containerName);
+            BlobClient blob = container.GetBlobClient(blobName);
+
+            using (var stream = GenerateStreamFromString("a,b \n c,d\nemployer:" + lEmployer))
+            {
+                await blob.UploadAsync(stream);
+            }
+        }
+
         var employerStream = await Http.GetStreamAsync(
             "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/employers/" 
             + lEmployer + "/" + lEmployer + ".retirement." + year + ".json");
         var employerData = JsonSerializer.Deserialize<Employer.Employer>(employerStream);
-
         person.Employer = employerData;
+    }
+
+    public static Stream GenerateStreamFromString(string s)
+    {
+        var stream = new MemoryStream();
+        var writer = new StreamWriter(stream);
+        writer.Write(s);
+        writer.Flush();
+        stream.Position = 0;
+        return stream;
     }
 
     private string _employer;
