@@ -1,10 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Net.Http;
 using Azure.Storage.Blobs;
 using Microsoft.JSInterop;
+using System.Text;
 
 public class EmployerPlan : INotifyPropertyChanged {
     public EmployerPlan(Person person) {
@@ -16,25 +18,36 @@ public class EmployerPlan : INotifyPropertyChanged {
     private IRS.Employer401k? Employer401k;
 
     private async Task GetEmployerDataAsync(string employer) {
-        HttpClient Http = new();
+        HttpClient httpClient = new();
         var lEmployer = employer.ToLowerInvariant().Trim();
         var year = person.TaxFiling.Year;
     
         if (lEmployer == "test") {
-            string connectionString = "BlobEndpoint=http://employer-data.bogle.tools/;QueueEndpoint=https://employer-data.bogle.tools/;FileEndpoint=https://employer-data.bogle.tools/;TableEndpoint=https://employer-data.bogle.tools/;SharedAccessSignature=sv=2021-06-08&ss=b&srt=co&sp=w&se=2022-11-13T01:53:53Z&st=2022-11-05T17:53:53Z&spr=https,http&sig=xJwOQe6Asphn6TGqA%2BE6F5S3RkszcXwmFwEECKOg5wE%3D";
-            string containerName = "submissions";
-            string blobName = Guid.NewGuid().ToString();
-                
-            BlobContainerClient container = new BlobContainerClient(connectionString, containerName);
-            BlobClient blob = container.GetBlobClient(blobName);
-
-            using (var stream = GenerateStreamFromString("a,b \n c,d\nemployer:" + lEmployer))
+            var requestUri = "https://api.saving.bogle.tools/api/UploadEmployerInfo?code=8VyPqHmGuPDZq6G2tmbJ7g0vN9BqIQhSGmRA-jBBEInkAzFuUvlxuA==";
+            
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, requestUri))
             {
-                await blob.UploadAsync(stream);
+                var body = new Employer.Employer()
+                {
+                    Company = lEmployer
+                };
+
+                string jsonString = JsonSerializer.Serialize(body);
+                request.Content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage responseMsg = await httpClient.SendAsync(request).ConfigureAwait(false);
+
+                if (responseMsg == null)
+                {
+                    throw new InvalidOperationException(
+                        string.Format(
+                            "The response message was null when executing operation {0}.",
+                            request.Method));
+                }
             }
         }
 
-        var employerStream = await Http.GetStreamAsync(
+        var employerStream = await httpClient.GetStreamAsync(
             "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/employers/" 
             + lEmployer + "/" + lEmployer + ".retirement." + year + ".json");
         var employerData = JsonSerializer.Deserialize<Employer.Employer>(employerStream);
