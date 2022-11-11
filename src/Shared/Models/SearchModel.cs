@@ -12,12 +12,15 @@ public class SearchModel {
                     return "bogleheads.org/forum";
                 case 3: 
                     return "bogleheads.org/wiki";
+                case 4:
+                    return "bogleheads.org/blog";
                 default:
                     return "bogleheads.org";
             }
         }
     }
-    public string UrlPattern { get; set; } = "/search?q=[terms]   [site]";
+
+    public string UrlPattern { get; set; } = "/web?q=[terms]   [site]";
     public string CalculatedUrl { 
         get {
             string url = "";
