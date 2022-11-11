@@ -1,5 +1,5 @@
-@page "/search"
-@page "/search/{engine}"
+@page "/search/"
+@page "/search/{engine}/"
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 
@@ -42,11 +42,11 @@ bogle.tools/search/@engine
         prompt = "Switch to use:";
     }
     @prompt
-    <a href="search/bing/">Bing.com</a> | 
-    <a href="search/brave/">Brave.com</a> | 
-    <a href="search/duckduckgo/">DuckDuckGo.com</a> | 
-    <a href="search/google/">Google.com</a> |
-    <a href="search/other/">Other</a>
+    <a href="search/bing">Bing.com</a> | 
+    <a href="search/brave">Brave.com</a> | 
+    <a href="search/duckduckgo">DuckDuckGo.com</a> | 
+    <a href="search/google">Google.com</a> |
+    <a href="search/other">Other</a>
 </p>
 
 @if (engine == "other") {
