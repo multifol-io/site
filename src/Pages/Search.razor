@@ -1,0 +1,84 @@
+@page "/search"
+@page "/search/{engine}"
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<PageTitle>
+bogle.tools/search/@engine
+</PageTitle>
+
+
+@if (engine != null) {
+    search.Engine = engine;
+    string engineDomain = "";
+    <br/>
+    <EditForm Model='search' style="font-size:18pt">
+        <label>
+            @if (engine == "other") {
+                engineDomain = search.Domain + " search:";
+            } else {
+                engineDomain = engine + ".com search:";
+            }
+            @engineDomain
+        </label>
+        <input type=text style="width:500px" @onkeydown=@Enter placeholder='terms to find' @bind-Value='@search.Terms' @bind-Value:event="oninput" />
+        <input type=button onclick='@doSearch' value="Go" />
+        <br/>
+        <label style="font-size:12pt">Search Bogleheads.org: </label> 
+        <select style="font-size:12pt" @bind="@search.Location">
+            <option value=1>Entire site</option>
+            <option value=2>Forums only</option>
+            <option value=3>Wiki only</option>
+        </select>
+    </EditForm>
+}
+
+<br/>
+
+<p style="font-size:10pt">
+    @if (engine == null) {
+        prompt = "Choose search engine to use:";
+    } else {
+        prompt = "Switch to use:";
+    }
+    @prompt
+    <a href="search/bing/">Bing.com</a> | 
+    <a href="search/brave/">Brave.com</a> | 
+    <a href="search/duckduckgo/">DuckDuckGo.com</a> | 
+    <a href="search/google/">Google.com</a> |
+    <a href="search/other/">Other</a>
+</p>
+
+@if (engine == "other") {
+    <EditForm Model='search' style="margin:25px">
+        <label>Provide Details about Search Engine to use:</label><br/>
+        <label>Other Search Domain Name:</label> <input type=text placeholder="search engine name" @bind-Value='@search.Domain' @bind-Value:event="oninput" /><br/>
+        <label>Url Pattern after domain:</label> <input style="width:500px" type=text @bind-Value='@search.UrlPattern' @bind-Value:event="oninput" /><br/>
+    </EditForm><br/>
+}
+
+@code {
+    string prompt = "";
+
+    public void Enter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            doSearch();
+        }
+    }
+
+    public async Task doSearch()
+    {
+        var fullUrl = search.CalculatedUrl;
+        await JSRuntime.InvokeAsync<object>("open", fullUrl ,"_blank");
+    }
+
+    [Parameter]
+    public string? engine { get; set; }
+    public SearchModel search { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        search = new();
+    }
+}

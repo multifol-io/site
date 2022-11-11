@@ -1,11 +1,6 @@
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Net.Http;
-using Azure.Storage.Blobs;
-using Microsoft.JSInterop;
 using System.Text;
 
 public class EmployerPlan : INotifyPropertyChanged {
@@ -52,16 +47,6 @@ public class EmployerPlan : INotifyPropertyChanged {
             + lEmployer + "/" + lEmployer + ".retirement." + year + ".json");
         var employerData = JsonSerializer.Deserialize<Employer.Employer>(employerStream);
         person.Employer = employerData;
-    }
-
-    public static Stream GenerateStreamFromString(string s)
-    {
-        var stream = new MemoryStream();
-        var writer = new StreamWriter(stream);
-        writer.Write(s);
-        writer.Flush();
-        stream.Position = 0;
-        return stream;
     }
 
     private string _employer;
