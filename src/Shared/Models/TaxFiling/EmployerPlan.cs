@@ -104,7 +104,7 @@ public class EmployerPlan : INotifyPropertyChanged {
                 var percentB = (MatchB ?? 0) / 100.0;
                 var matchALimit = (MatchALimit ?? 100.0) / 100.0;
                 var matchBLimit = (MatchBLimit ?? 100.0) / 100.0;
-                match += percentB * AnnualSalary * (matchBLimit - matchALimit);
+                match += percentB * AnnualSalary * matchBLimit;
             }
 
             if (match > MaxMatch) match = MaxMatch;
