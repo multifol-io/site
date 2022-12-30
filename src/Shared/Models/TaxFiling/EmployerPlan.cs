@@ -43,7 +43,7 @@ public class EmployerPlan : INotifyPropertyChanged {
         }
 
         var employerStream = await httpClient.GetStreamAsync(
-            "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/employers/" 
+            "https://raw.githubusercontent.com/bogle-tools/financial-variables/employerContributionLevels/data/usa/employers/" 
             + lEmployer + "/" + lEmployer + ".retirement." + year + ".json");
         var employerData = JsonSerializer.Deserialize<Employer.Employer>(employerStream);
         person.Employer = employerData;

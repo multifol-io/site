@@ -1,5 +1,4 @@
 namespace Employer {
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Employer>(myJsonResponse);
     public class Employer401k
     {
         public bool Offered { get; set; }
@@ -9,7 +8,7 @@ namespace Employer {
 
     public class HSA
     {
-        public int EmployerContribution { get; set; }
+        public Dictionary<string,int> EmployerContribution { get; set; } = new Dictionary<string, int>();
     }
 
     public class MatchRule

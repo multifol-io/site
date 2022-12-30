@@ -35,7 +35,23 @@ public class HealthSavingsAccount {
     }
 
     public int? EmployerContribution { get; set; }
+    public EmployerContributionLevels EmployerContributionsLevels { get; set; }
 
-    public int? AmountToSave { get { return Limit - (EmployerContribution ?? 0); }
+    public int? AmountToSave { 
+        get { return Limit - (EmployerContribution ?? 0); }
+    }
+
+    public class EmployerContributionLevels {
+        private Dictionary<string, int> levels;
+        public Dictionary<string, int> Levels {
+            get {
+                if (levels == null) {
+                    levels = new Dictionary<string, int>();
+                }
+
+                return levels;
+            }
+        }
     }
 }
+
