@@ -253,7 +253,7 @@ saving/@stepPath
                                             <label margin-left:30px>for next</label> <input type=text class=percent @bind-Value=person.EmployerPlan.MatchBLimit @bind-Value:event=oninput/>%<br/>
                                             <label>Max Match:</label> $<input type=text class=dollar @bind-Value=person.EmployerPlan.MaxMatch @bind-Value:event=oninput/><br/>
                                             <label>Contribution required to get maximum match:</label> $<span>@person.EmployerPlan.AmountToSaveForMatch</span><br/>
-                                            <label>Matched Amount:</label> $<span>@person.EmployerPlan.MatchAmount</span><br/>
+                                            <label>Match Amount:</label> $<span>@person.EmployerPlan.MatchAmount</span><br/>
                                         </fieldset>
                                         }
                                     </EditForm><br/>
@@ -283,6 +283,15 @@ saving/@stepPath
                                         <fieldset disabled=@person.HealthSavingsAccount.NotEligible style='margin-left:20px'>
                                             <label>Individual/Family:</label>   <select @bind=person.HealthSavingsAccount.Family><option value=None>choose...</option><option value=EmployeeOnly>Employee only</option><option>Family</option></select><br/>
                                             <label>Contribution Limit:</label> $@person.HealthSavingsAccount.Limit<br/><br/>
+
+                                            @* @if (person.Employer != null) {
+                                                <p>@person.Employer.Company</p>
+                                                <label>Employer Contribution Levels:</label> <select>
+                                                foreach(var entry in person.Employer.RetirementSavings.HSA.EmployerContribution) {
+                                                    <option value="{entry.Value}">{entry.Key}</option>
+                                                }
+                                                </select><br/>
+                                            } *@
 
                                             <label>@person.TaxFiling.Year Employer Contribution:</label> $<input type=text class=dollar @bind-Value=person.HealthSavingsAccount.EmployerContribution @bind-Value:event=oninput><br/>
                                         </fieldset>

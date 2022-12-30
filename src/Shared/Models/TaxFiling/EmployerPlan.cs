@@ -84,7 +84,7 @@ public class EmployerPlan : INotifyPropertyChanged {
                 if (MatchA > 0 && matchALimit < 1.0) contribution = AnnualSalary * matchALimit;
                 if (MatchB != null) {
                     if (MatchB > 0 && matchBLimit == 1.0) contribution += MaxMatch / (MatchB / 100.0);
-                    if (MatchB > 0 && matchBLimit < 1.0) contribution += AnnualSalary * (matchBLimit-matchALimit);
+                    if (MatchB > 0 && matchBLimit < 1.0) contribution += AnnualSalary * matchBLimit;
                 }
             }
 
