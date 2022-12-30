@@ -241,7 +241,7 @@ saving/@stepPath
                                     <p><b>Person @(i+1):</b> </p>
 
                                     <EditForm Model="person" style=margin-left:25px>
-                                        <label>Employer:</label> <input type=text @bind-Value=person.EmployerPlan.Employer @bind-Value:event=oninput /><br/>
+                                        <label>Employer:</label> <input type=text @bind-Value=person.EmployerPlan.Employer @bind-Value:event=oninput /> (optional and private)<br/>
                                         <label>Annual Salary:</label> $<input type=text class=dollar @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
                                         <br/>
                                         @if (person.EmployerPlan.AnnualSalary != null) {
