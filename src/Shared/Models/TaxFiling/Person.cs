@@ -16,7 +16,7 @@ public class Person {
             
             if (_employer != null) {
                 if (_employer.RetirementSavings.HSA != null) {
-                   // HealthSavingsAccount.EmployerContribution = _employer.RetirementSavings.HSA.EmployerContribution;
+                    HealthSavingsAccount.EmployerContribution = _employer.RetirementSavings.HSA.EmployerContribution;
                 }
 
                 if (_employer.RetirementSavings.Employer401k != null) {
