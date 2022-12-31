@@ -245,7 +245,7 @@ saving/@stepPath
                                         <label>Annual Salary:</label> $<input type=text class=dollar @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
                                         <br/>
                                         @if (person.EmployerPlan.AnnualSalary != null) {
-                                        <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id=@eligibleId /> <label style="display:inline" for=@eligibleId>Eligible for workplace retirement savings?</label><br/><br/>
+                                        <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id=@eligibleId /> <label style="display:inline" for=@eligibleId>Eligible for workplace retirement savings</label><br/><br/>
                                         <fieldset disabled=@person.EmployerPlan.NotEligible style='margin-left:20px'>
                                             <label>Match:</label> <input type=text class=percent @bind-Value=person.EmployerPlan.MatchA @bind-Value:event=oninput />%
                                             <label margin-left:30px>for first</label> <input type=text class=percent @bind-Value=person.EmployerPlan.MatchALimit @bind-Value:event=oninput/>%<br/>
@@ -279,7 +279,7 @@ saving/@stepPath
                                     <p><b>Person @(i+1):</b> </p>
 
                                     <EditForm Model="person" style=margin-left:25px>
-                                        <InputCheckbox @bind-Value=person.HealthSavingsAccount.Eligible id='@haveHDHPid'/> <label for='@haveHDHPid' style="display:inline">Have high deductible health plan?</label><br/><br/>
+                                        <InputCheckbox @bind-Value=person.HealthSavingsAccount.Eligible id='@haveHDHPid'/> <label for='@haveHDHPid' style="display:inline">Have high deductible health plan</label><br/><br/>
                                         <fieldset disabled=@person.HealthSavingsAccount.NotEligible style='margin-left:20px'>
                                             <label>Individual/Family:</label>   <select @bind=person.HealthSavingsAccount.Family><option value=None>choose...</option><option value=EmployeeOnly>Employee only</option><option>Family</option></select><br/>
                                             <label>Contribution Limit:</label> $@person.HealthSavingsAccount.Limit<br/><br/>
@@ -328,8 +328,8 @@ saving/@stepPath
                                         <p><b>Person @(i+1):</b> </p>
 
                                         <EditForm Model="person" style=margin-left:25px>
-                                            <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id='@eligibleId'/> <label for='@eligibleId'>Eligible for workplace retirement savings?</label><br/><br/>
-                                            <InputCheckbox id=@over50id @bind-Value=person.FiftyOrOver /> <label for=@over50id>50 or older?</label><br/><br/>
+                                            <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id='@eligibleId'/> <label for='@eligibleId'>Eligible for workplace retirement savings</label><br/><br/>
+                                            <InputCheckbox id=@over50id @bind-Value=person.FiftyOrOver /> <label for=@over50id>50 or older</label><br/><br/>
 
                                             <label><i>Choice of Contributions:</i></label><br/>
                                             <InputRadioGroup @bind-Value="person.IRAChoice">
@@ -362,9 +362,9 @@ saving/@stepPath
                                     <p><b>Person @(i+1):</b> </p>
 
                                     <EditForm Model="person" style=margin-left:25px>
-                                        <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id=@eligibleId /> <label for=@eligibleId>Eligible for workplace retirement savings?</label><br/><br/>
+                                        <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id=@eligibleId /> <label for=@eligibleId>Eligible for workplace retirement savings</label><br/><br/>
 
-                                        <InputCheckbox id=@fiftyLabel @bind-Value=person.FiftyOrOver /> <label for=@fiftyLabel>50 or older?</label><br/><br/>
+                                        <InputCheckbox id=@fiftyLabel @bind-Value=person.FiftyOrOver /> <label for=@fiftyLabel>50 or older</label><br/><br/>
 
                                         <label>@person.TaxFiling.Year 401k Total Contribution Allowed:</label> $<span>@person.EmployerPlan.ContributionAllowed</span><br/>
                                         <label>minus Matched Contribution Allowed (step 2):</label> $<span>@person.EmployerPlan.AmountToSaveForMatch</span><br/>
@@ -392,7 +392,7 @@ saving/@stepPath
                                     <p><b>Person @(i+1):</b> </p>
 
                                     <EditForm Model="person" style=margin-left:25px>
-                                        <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id='eligible'/> <label for='eligible'>Eligible for workplace retirement savings?</label><br/><br/>
+                                        <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id='eligible'/> <label for='eligible'>Eligible for workplace retirement savings</label><br/><br/>
 
                                         <fieldset disabled=@person.EmployerPlan.NotEligible style='margin-left:20px'>
                                             <label>@person.TaxFiling.Year Employer Post Tax "Mega Backdoor Roth" Contribution Allowed:</label> <span>$</span><input type=text class=dollar @bind-Value=person.EmployerPlan.AmountToSaveForBackdoorRoth @bind-Value:event=oninput/><br/><br/>
