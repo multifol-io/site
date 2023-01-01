@@ -496,7 +496,14 @@ saving/@stepPath
                 case ']':
                     if (lastChar == ']') {
                         if (text == "") { text = href; }
-                        returnVal += "<a target=_blank href='https://www.bogleheads.org/wiki/" + href + "'>" + text + "</a>";
+                        if (href.StartsWith("https://"))
+                        {
+                            returnVal += "<a target=_blank href='" + href + "'>" + text + "</a>";
+                        } 
+                        else
+                        {
+                            returnVal += "<a target=_blank href='https://www.bogleheads.org/wiki/" + href + "'>" + text + "</a>";
+                        }
                         href = "";
                         text = "";
                         mode = Mode.normal;
