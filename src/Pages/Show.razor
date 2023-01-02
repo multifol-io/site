@@ -333,8 +333,13 @@ saving/@stepPath
 
                                             <label><i>Choice of Contributions:</i></label><br/>
                                             <InputRadioGroup @bind-Value="person.IRAChoice">
-                                                <InputRadio Value="traditional" id=@tId /> <label for=@tId>IRA: $<span>@person.IRA.AmountToSave</span> <span>($@person.IRA.DeductionAllowed Tax Deductible)</span><br/></label><br/>
-                                                <InputRadio Value="roth" id=@rId/> <label for=@rId>Roth IRA: $<span>@person.RothIRA.AmountToSave</span><br/></label>
+                                                @if (@person.IRA.DeductionAllowed > 0) {
+                                                    <InputRadio Value="traditional" id=@tId /> <label for=@tId>IRA: $<span>@person.IRA.AmountToSave</span> <span>($@person.IRA.DeductionAllowed Tax Deductible)</span><br/></label><br/>
+                                                    <InputRadio Value="roth" id=@rId/> <label for=@rId>Roth IRA: $<span>@person.RothIRA.AmountToSave</span><br/></label>
+                                                } else {
+                                                    <InputRadio Value="roth" id=@rId/> <label for=@rId>Roth IRA: $<span>@person.RothIRA.AmountToSave</span><br/></label>
+                                                    <InputRadio Value="traditional" id=@tId /> <label for=@tId>IRA: $<span>@person.IRA.AmountToSave</span> <span>($@person.IRA.DeductionAllowed Tax Deductible)</span><br/></label><br/>
+                                                }
                                             </InputRadioGroup><br/>
                                         </EditForm><br/>
                                     }
