@@ -92,6 +92,7 @@ public class Person {
     public TaxFiling TaxFiling { private set; get; }
 
     public bool FiftyOrOver { get; set; }
+    public bool FiftyFiveOrOver { get; set; }
 
     public EmployerPlan EmployerPlan { get; set; }
     public HealthSavingsAccount HealthSavingsAccount { get; set; }
