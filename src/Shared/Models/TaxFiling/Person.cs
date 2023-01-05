@@ -67,7 +67,27 @@ public class Person {
         }
     }
 
-    public string? IRAChoice { get; set; }
+    public IRAType IRATypeRecommendation { 
+        get
+        {
+            if (this.IRA.DeductionAllowed > 0) {
+                if (!this.IRA.HasExistingBalance) {
+                    return IRAType.DeductibleIRAThenBackdoorRoth;
+                } else {
+                    return IRAType.DeductibleIRA;
+                }
+            } else if (this.RothIRA.AmountToSave > 0) {
+                    return IRAType.Roth;
+            } else {
+                if (!this.IRA.HasExistingBalance) {
+                    return IRAType.NondeductibleIRAThenBackdoorRoth;
+                } else {
+                    return IRAType.NondeductibleIRA;
+                }
+            }
+        }
+    }
+
     public int PersonIndex { private set; get; }
     public TaxFiling TaxFiling { private set; get; }
 
