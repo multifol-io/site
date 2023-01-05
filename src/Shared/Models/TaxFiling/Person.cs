@@ -89,6 +89,28 @@ public class Person {
     }
 
     public int PersonIndex { private set; get; }
+    
+    public Person OtherPerson { 
+        get {
+            int personIndex = PersonIndex;
+            switch (personIndex) {
+                case 0:
+                    if (TaxFiling.PersonCount > 1)
+                    {
+                        return TaxFiling.People[1];
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                case 1:
+                    return TaxFiling.People[0];
+                default:
+                    return null;
+            }
+        }
+    }
+
     public TaxFiling TaxFiling { private set; get; }
 
     public bool FiftyOrOver { get; set; }
