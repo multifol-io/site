@@ -11,6 +11,8 @@ public class IRA {
     private Person person;
     private IRS.IRA? iraVariables;
 
+    public bool HasExistingBalance { get; set; }
+
     public int? ContributionAllowed { 
         get
         {

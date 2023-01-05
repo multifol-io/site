@@ -56,8 +56,11 @@ saving/@stepPath
                 <table>
                     <thead>
                         <th></th>
-                        @if(taxFilings.Active.PersonCount > 0) {<th style="padding-right:10px">$</th> }
-                        @if(taxFilings.Active.PersonCount > 0) {<th style="padding-right:10px">Match</th> }
+                        @if(taxFilings.Active.PersonCount > 0) {<th style="padding-right:10px;text-align:center">$</th> }
+                        @if(taxFilings.Active.PersonCount > 0) {<th style="padding-right:10px;text-align:center">Match</th> }
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
                     </thead>
   
                     @foreach (var priority in priorities) {
@@ -71,29 +74,29 @@ saving/@stepPath
                             </td>
                             @switch (priority.number) {
                                 case 1: 
-                                   <td style=text-align:right>@taxFilings.Active.EmergencyFund.AmountToSave</td><td></td>
+                                   <td style=text-align:center>@taxFilings.Active.EmergencyFund.AmountToSave</td><td></td>
                                    break;
                                 case 2:
-                                   <td style=text-align:right>
+                                   <td style=text-align:center>
                                         @taxFilings.Active.People[0].EmployerPlan.AmountToSaveForMatch<br/>
                                         @taxFilings.Active.People[1].EmployerPlan.AmountToSaveForMatch
                                    </td>
-                                   <td style=text-align:right>
+                                   <td style=text-align:center>
                                         @taxFilings.Active.People[0].EmployerPlan.MatchAmount<br/>
                                         @taxFilings.Active.People[1].EmployerPlan.MatchAmount
                                    </td>
                                    break;
                                 case 3:
-                                    <td style=text-align:right>
+                                    <td style=text-align:center>
                                         @taxFilings.Active.HighDebts
                                     </td>
                                     break;
                                 case 4: 
-                                    <td style=text-align:right>
+                                    <td style=text-align:center>
                                         @taxFilings.Active.People[0].HealthSavingsAccount.AmountToSave<br/>
                                         @taxFilings.Active.People[1].HealthSavingsAccount.AmountToSave
                                     </td>
-                                    <td style=text-align:right>
+                                    <td style=text-align:center>
                                         @if(taxFilings.Active.People[0].HealthSavingsAccount.Eligible) {
                                             @taxFilings.Active.People[0].HealthSavingsAccount.EmployerContribution
                                         }
@@ -105,65 +108,47 @@ saving/@stepPath
                                     </td>
                                    break;
                                 case 5:
+                                    <td style=text-align:left colspan="5">
                                     @if (taxFilings.Active.AdjustedGrossIncome != null) {
-                                        <td style=text-align:right>
-                                        @if(taxFilings.Active.PersonCount > 0) {
-                                            @switch (taxFilings.Active.People[0].IRAChoice) {
-                                                case "traditional":
-                                                    <span>IRA: @taxFilings.Active.People[0].IRA.AmountToSave</span><br/>
-                                                    break;
-                                                case "roth":
-                                                    <span>Roth: @taxFilings.Active.People[0].RothIRA.AmountToSave</span><br/>
-                                                    break;
-                                                default:
-                                                    break;
-                                            }
+                                        if (taxFilings.Active.PersonCount > 0) {
+                                            <span>@((MarkupString)GetRecommendedIRAMarkup(taxFilings.Active.People[0]))</span><br/>
                                         }
-                                        @if(taxFilings.Active.PersonCount > 1) {
-                                            @switch (taxFilings.Active.People[1].IRAChoice) {
-                                                case "traditional":
-                                                    <span>IRA: @taxFilings.Active.People[1].IRA.AmountToSave</span><br/>
-                                                    break;
-                                                case "roth":
-                                                    <span>Roth: @taxFilings.Active.People[1].RothIRA.AmountToSave</span><br/>
-                                                    break;
-                                                default:
-                                                    break;
-                                            }
+                                        if(taxFilings.Active.PersonCount > 1) {
+                                            <span>Person2: @((MarkupString)GetRecommendedIRAMarkup(taxFilings.Active.People[1]))</span>
                                         }
-                                        </td>
                                     }
-                                   break;
+                                    </td>
+                                    break;
                                 case 6: 
-                                    <td style=text-align:right>
+                                    <td style=text-align:center>
                                         @taxFilings.Active.People[0].EmployerPlan.AmountToSaveForNonMatched<br/>
                                         @taxFilings.Active.People[1].EmployerPlan.AmountToSaveForNonMatched
                                     </td>
                                     break;
                                 case 7: 
-                                   <td style=text-align:right>
+                                   <td style=text-align:center>
                                         @taxFilings.Active.People[0].EmployerPlan.AmountToSaveForBackdoorRoth<br/>
                                         @taxFilings.Active.People[1].EmployerPlan.AmountToSaveForBackdoorRoth
                                    </td>
                                    break;
                                 case 8:
-                                    <td style=text-align:right>
+                                    <td style=text-align:center>
                                         @taxFilings.Active.MediumDebts
                                     </td>
                                     break;
                                 case 9: 
-                                    <td style=text-align:right>
+                                    <td style=text-align:center>
                                         @if(taxFilings.Active.PersonCount > 0) {<span>no limits</span> }
                                         @if(taxFilings.Active.PersonCount > 1) {<br/><span>no limits</span> }
                                     </td>
                                     break;                                                                   
                                 case 10:
-                                    <td style=text-align:right>
+                                    <td style=text-align:center>
                                         @taxFilings.Active.LowDebts
                                     </td>
                                     break;
                                 default:
-                                    <td style=text-align:right>NYI</td><td></td>
+                                    <td style=text-align:center>NYI</td><td></td>
                                     break;
                             }
                         </tr>
@@ -321,6 +306,7 @@ saving/@stepPath
                                         var person = taxFilings.Active.People[i];
                                         var eligibleId = "eligible-" + i;
                                         var over50id = "over50-" + i;
+                                        var existingIRABalance = "existingIRABalance-" + i;
                                         var tId = "traditional-" + i;
                                         var rId = "roth-" + i;
                                         var traditional = "traditional";
@@ -330,12 +316,30 @@ saving/@stepPath
                                         <EditForm Model="person" style=margin-left:25px>
                                             <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id='@eligibleId'/> <label for='@eligibleId'>Eligible for workplace retirement savings</label><br/><br/>
                                             <InputCheckbox id=@over50id @bind-Value=person.FiftyOrOver /> <label for=@over50id>50 or older</label><br/><br/>
+                                            <InputCheckbox id=@existingIRABalance @bind-Value=person.IRA.HasExistingBalance /> <label for=@existingIRABalance>Has IRA with > $0</label><br/><br/>
 
-                                            <label><i>Choice of Contributions:</i></label><br/>
-                                            <InputRadioGroup @bind-Value="person.IRAChoice">
-                                                <InputRadio Value="traditional" id=@tId /> <label for=@tId>IRA: $<span>@person.IRA.AmountToSave</span> <span>($@person.IRA.DeductionAllowed Tax Deductible)</span><br/></label><br/>
-                                                <InputRadio Value="roth" id=@rId/> <label for=@rId>Roth IRA: $<span>@person.RothIRA.AmountToSave</span><br/></label>
-                                            </InputRadioGroup><br/>
+                                            <label><i>Recommended Option:</i></label><br/>
+                                            @switch(@person.IRATypeRecommendation) {
+                                                case IRAType.DeductibleIRAThenBackdoorRoth:
+                                                    <label for=@tId>- Contribute to IRA: $<span>@person.IRA.AmountToSave</span> <span>($@person.IRA.DeductionAllowed Tax Deductible)</span><br/></label><br/>
+                                                    <span>- then <a href="https://www.bogleheads.org/wiki/Backdoor_Roth_IRA" target="blank">backdoor roth</a> next day (IRA $ -> Roth $)</span><br/><br/>
+                                                    break;
+                                                case IRAType.DeductibleIRA:
+                                                    <label for=@tId>- Contribute to IRA: $<span>@person.IRA.AmountToSave</span> <span>($@person.IRA.DeductionAllowed Tax Deductible)</span><br/></label><br/>
+                                                    <span>- if IRA balance was 0, could <a href="https://www.bogleheads.org/wiki/Backdoor_Roth_IRA" target="blank">backdoor roth</a> next day (IRA $ -> Roth $)</span><br/><br/>
+                                                    break;
+                                                case IRAType.Roth:
+                                                    <label for=@rId>- Contribute to Roth IRA: $<span>@person.RothIRA.AmountToSave</span></label><br/>
+                                                    break;
+                                                case IRAType.NondeductibleIRAThenBackdoorRoth:
+                                                    <label for=@tId>- Contribute to IRA: $<span>@person.IRA.AmountToSave</span> <span>($@person.IRA.DeductionAllowed Tax Deductible)</span><br/></label><br/>
+                                                    <span>- then <a href="https://www.bogleheads.org/wiki/Backdoor_Roth_IRA" target="blank">backdoor roth</a> next day (IRA $ -> Roth $)</span><br/><br/>
+                                                    break;
+                                                case IRAType.NondeductibleIRA:
+                                                    <label for=@tId>- Contribute to IRA: $<span>@person.IRA.AmountToSave</span> <span>($@person.IRA.DeductionAllowed Tax Deductible)</span><br/></label><br/>
+                                                    <span>- if IRA balance was 0, could <a href="https://www.bogleheads.org/wiki/Backdoor_Roth_IRA" target="blank">backdoor roth</a> next day (IRA $ -> Roth $)</span><br/><br/>
+                                                    break;
+                                            }
                                         </EditForm><br/>
                                     }
                                 }
@@ -479,6 +483,24 @@ saving/@stepPath
         href,
         text,
     }
+
+    public string GetRecommendedIRAMarkup(Person person) {
+        switch(person.IRATypeRecommendation) {
+            case IRAType.DeductibleIRAThenBackdoorRoth:
+                return "<span>IRA: $" + person.IRA.AmountToSave + " ($" + person.IRA.DeductionAllowed + " Deductible), then backdoor roth</span>";
+            case IRAType.DeductibleIRA:
+                return "<span>IRA: $" + person.IRA.AmountToSave + " ($" + person.IRA.DeductionAllowed + " Deductible)</span>";
+            case IRAType.Roth:
+                return "<span>Roth IRA: $" + person.RothIRA.AmountToSave + "</span>";
+            case IRAType.NondeductibleIRAThenBackdoorRoth:
+                return "<span>IRA: $" + person.IRA.AmountToSave + " ($" + person.IRA.DeductionAllowed + " Deductible), then backdoor roth</span>";
+            case IRAType.NondeductibleIRA:
+                return "<span>IRA: $" + person.IRA.AmountToSave + " ($" + person.IRA.DeductionAllowed + " Deductible)</span>";
+            default:
+                return "<p>do nothing</p>";
+        }
+    }
+
     public string markupize(string? wikiText) {
         if (wikiText == null) return "";
         string returnVal = "<span>";
