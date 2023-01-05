@@ -326,7 +326,7 @@ saving/@stepPath
                                                     break;
                                                 case IRAType.DeductibleIRA:
                                                     <label for=@tId>- Contribute to IRA: $<span>@person.IRA.AmountToSave</span> <span>($@person.IRA.DeductionAllowed Tax Deductible)</span><br/></label><br/>
-                                                    <span>- if IRA balance was 0, could <a href="https://www.bogleheads.org/wiki/Backdoor_Roth_IRA" target="blank">backdoor roth</a> next day (IRA $ -> Roth $)</span><br/><br/>
+                                                    <span>- if IRA balance was 0 before the contribution, could <a href="https://www.bogleheads.org/wiki/Backdoor_Roth_IRA" target="blank">backdoor roth</a> next day (IRA $ -> Roth $)</span><br/><br/>
                                                     break;
                                                 case IRAType.Roth:
                                                     <label for=@rId>- Contribute to Roth IRA: $<span>@person.RothIRA.AmountToSave</span></label><br/>
@@ -337,7 +337,7 @@ saving/@stepPath
                                                     break;
                                                 case IRAType.NondeductibleIRA:
                                                     <label for=@tId>- Contribute to IRA: $<span>@person.IRA.AmountToSave</span> <span>($@person.IRA.DeductionAllowed Tax Deductible)</span><br/></label><br/>
-                                                    <span>- if IRA balance was 0, could <a href="https://www.bogleheads.org/wiki/Backdoor_Roth_IRA" target="blank">backdoor roth</a> next day (IRA $ -> Roth $)</span><br/><br/>
+                                                    <span>- if IRA balance was 0 before the contribution, could <a href="https://www.bogleheads.org/wiki/Backdoor_Roth_IRA" target="blank">backdoor roth</a> next day (IRA $ -> Roth $)</span><br/><br/>
                                                     break;
                                             }
                                         </EditForm><br/>
