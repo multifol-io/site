@@ -265,10 +265,10 @@ saving/@stepPath
                                     <p><b>Person @(i+1):</b> </p>
 
                                     <EditForm Model="person" style=margin-left:25px>
+                                        <InputCheckbox id=@over55id @bind-Value=person.FiftyFiveOrOver /> <label for=@over55id>55 or older</label><br/><br/>
                                         <InputCheckbox @bind-Value=person.HealthSavingsAccount.Eligible id='@haveHDHPid'/> <label for='@haveHDHPid' style="display:inline">Have high deductible health plan</label><br/><br/>
                                         <fieldset disabled=@person.HealthSavingsAccount.NotEligible style='margin-left:20px'>
                                             <label>Individual/Family:</label>   <select @bind=person.HealthSavingsAccount.Family><option value=None>choose...</option><option value=EmployeeOnly>Employee only</option><option>Family</option></select><br/>
-                                            <InputCheckbox id=@over55id @bind-Value=person.FiftyFiveOrOver /> <label for=@over55id>55 or older</label><br/><br/>
 
                                             <label>Contribution Limit:</label> $@person.HealthSavingsAccount.Limit<br/><br/>
 

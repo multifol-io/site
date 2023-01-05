@@ -19,9 +19,9 @@ public class HealthSavingsAccount {
     
     public int? Limit { 
         get {
-            if (!Eligible) return null;
+            if (!Eligible && person.OtherPerson != null && !person.OtherPerson.HealthSavingsAccount.Eligible) return null;
             
-            int contributionLimit;
+            int contributionLimit = 0;
 
             switch (Family)
             {
@@ -32,7 +32,7 @@ public class HealthSavingsAccount {
                     contributionLimit = HSAVariables.ContributionLimit.SelfOnly;
                     break;
                 default:
-                    return null;
+                    break;
             }
 
             if (person.FiftyFiveOrOver) {
