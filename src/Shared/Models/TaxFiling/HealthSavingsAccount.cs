@@ -21,16 +21,25 @@ public class HealthSavingsAccount {
         get {
             if (!Eligible) return null;
             
+            int contributionLimit;
+
             switch (Family)
             {
-                
                 case EmployeeFamily.Family:
-                    return HSAVariables.ContributionLimit.Family;
+                    contributionLimit = HSAVariables.ContributionLimit.Family;
+                    break;
                 case EmployeeFamily.EmployeeOnly:
-                    return HSAVariables.ContributionLimit.SelfOnly;
+                    contributionLimit = HSAVariables.ContributionLimit.SelfOnly;
+                    break;
                 default:
                     return null;
             }
+
+            if (person.FiftyFiveOrOver) {
+                contributionLimit += HSAVariables.ContributionLimit.CatchUp;
+            }
+
+            return contributionLimit;
         }
     }
 
