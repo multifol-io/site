@@ -21,7 +21,7 @@ public class HealthSavingsAccount {
         get {
             if (!Eligible && person.OtherPerson != null && !person.OtherPerson.HealthSavingsAccount.Eligible) return null;
             
-            int contributionLimit = 0;
+            int? contributionLimit = null;
 
             switch (Family)
             {
@@ -36,7 +36,11 @@ public class HealthSavingsAccount {
             }
 
             if (person.FiftyFiveOrOver) {
-                contributionLimit += HSAVariables.ContributionLimit.CatchUp;
+                if (contributionLimit == null) {
+                    contributionLimit = HSAVariables.ContributionLimit.CatchUp;
+                } else {
+                    contributionLimit += HSAVariables.ContributionLimit.CatchUp;
+                }
             }
 
             return contributionLimit;
