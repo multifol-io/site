@@ -79,7 +79,9 @@ saving/@stepPath
                                 case 2:
                                    <td style=text-align:center>
                                         @taxFilings.Active.People[0].EmployerPlan.AmountToSaveForMatch<br/>
-                                        @taxFilings.Active.People[1].EmployerPlan.AmountToSaveForMatch
+                                        @if(taxFilings.Active.PersonCount > 1) {
+                                            <span>Person2: @taxFilings.Active.People[1].EmployerPlan.AmountToSaveForMatch</span>
+                                        }
                                    </td>
                                    <td style=text-align:center>
                                         @taxFilings.Active.People[0].EmployerPlan.MatchAmount<br/>
@@ -94,7 +96,9 @@ saving/@stepPath
                                 case 4: 
                                     <td style=text-align:center>
                                         @taxFilings.Active.People[0].HealthSavingsAccount.AmountToSave<br/>
-                                        @taxFilings.Active.People[1].HealthSavingsAccount.AmountToSave
+                                        @if(taxFilings.Active.PersonCount > 1) {
+                                            <span>Person2: @taxFilings.Active.People[1].HealthSavingsAccount.AmountToSave</span>
+                                        }
                                     </td>
                                     <td style=text-align:center>
                                         @if(taxFilings.Active.People[0].HealthSavingsAccount.Eligible) {
@@ -122,13 +126,17 @@ saving/@stepPath
                                 case 6: 
                                     <td style=text-align:center>
                                         @taxFilings.Active.People[0].EmployerPlan.AmountToSaveForNonMatched<br/>
-                                        @taxFilings.Active.People[1].EmployerPlan.AmountToSaveForNonMatched
+                                        @if(taxFilings.Active.PersonCount > 1) {
+                                            <span>Person2: @taxFilings.Active.People[1].EmployerPlan.AmountToSaveForNonMatched</span>
+                                        }
                                     </td>
                                     break;
                                 case 7: 
                                    <td style=text-align:center>
                                         @taxFilings.Active.People[0].EmployerPlan.AmountToSaveForBackdoorRoth<br/>
-                                        @taxFilings.Active.People[1].EmployerPlan.AmountToSaveForBackdoorRoth
+                                        @if(taxFilings.Active.PersonCount > 1) {
+                                            <span>Person2: @taxFilings.Active.People[1].EmployerPlan.AmountToSaveForBackdoorRoth</span>
+                                        }
                                    </td>
                                    break;
                                 case 8:
@@ -139,7 +147,7 @@ saving/@stepPath
                                 case 9: 
                                     <td style=text-align:center>
                                         @if(taxFilings.Active.PersonCount > 0) {<span>no limits</span> }
-                                        @if(taxFilings.Active.PersonCount > 1) {<br/><span>no limits</span> }
+                                        @if(taxFilings.Active.PersonCount > 1) {<br/><span>Person2: no limits</span> }
                                     </td>
                                     break;                                                                   
                                 case 10:
@@ -318,7 +326,7 @@ saving/@stepPath
 
                                         <EditForm Model="person" style=margin-left:25px>
                                             <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id='@eligibleId'/> <label for='@eligibleId'>Eligible for workplace retirement savings</label><br/><br/>
-                                            f<InputCheckbox id=@over50id @bind-Value=person.FiftyOrOver /> <label for=@over50id>50 or older</label><br/><br/>
+                                            <InputCheckbox id=@over50id @bind-Value=person.FiftyOrOver /> <label for=@over50id>50 or older</label><br/><br/>
                                             <InputCheckbox id=@existingIRABalance @bind-Value=person.IRA.HasExistingBalance /> <label for=@existingIRABalance>Has IRA with > $0</label><br/><br/>
 
                                             <label><i>Recommended Option:</i></label><br/>
