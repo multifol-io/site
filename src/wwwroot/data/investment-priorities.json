@@ -51,22 +51,22 @@
         "summary": "Contribute the maximum to an IRA, [[Traditional IRA|traditional]] or [[Roth IRA|Roth]] (or [[Backdoor Roth IRA| backdoor Roth technique]]), depending on eligibility<ref group='note'> Investors should verify eligibility before making traditional IRA contributions: in particular, check the [[https://www.irs.gov/retirement-plans/ira-deduction-limits|tax-deduction limit]].\n\nFor Roth IRAs, the [[backdoor Roth]] is a technique for making contributions when your income exceeds the [[https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-ira-contribution-limits|eligibility limit]]. It is complicated in nature and may not be for everyone. Read the [[Backdoor Roth IRA#Cautions| Cautions]] section of the article before proceeding and ask in the forum if you are unsure.</ref> and personal circumstances.",
         "priority": "Contribute to available retirement accounts (eg. [[IRA]], [[Roth IRA]])",
         "returns": "8%",
-        "description": "Retirement accounts offer either an immediate tax deduction and tax-deferred growth (traditional) or life-long tax-free growth (Roth), plus [[asset protection]] and [[estate planning]] benefits. These accounts have annual contribution limits which are lost if not used.\n\nInvestors may have to choose among [[IRA#Comparison_to_employer_accounts|IRA vs. employer plan]] and/or [[traditional vs. Roth]] accounts and should consult those articles for more details.\n\nDeductible IRA contributions are subject to income limits, but the income limit for contributing to a Roth IRA may be circumvented by the [[Backdoor Roth]] process. Employer plans may also offer [[mega-backdoor Roth]] contributions, but these should be made only after normal contributions.\n\nNote: choosing between an employer retirement plan and Gov't Retirement plans (IRA, Roth):\nIf the company plan offers good, low-cost funds, it may be preferable to contribute to the company plan ''before'' contributing to an IRA (swapping steps 5 and 6); see: [[IRA#Comparison to employer accounts|Comparison between IRAs and employer plans]].\n\nAlso, an investor's [[Marginal tax rate|marginal tax rate]] may influence the decision: those subject to higher marginal tax rates should consider higher contributions to a tax-deferred plan (e.g. traditional 401(k) or IRA) rather than a post-tax plan (e.g. Roth 401(k) or IRA); see [[Traditional versus Roth]] for more guidance.\n\nIf you prefer traditional to Roth, and traditional contributions to the employer's plan are needed to reduce your [[Modified_Adjusted_Gross_Income#MAGI_for_traditional_IRA_purposes|Modified Adjusted Gross Income (MAGI) for traditional IRA purposes]] enough to allow a full or partial IRA deduction (see [https://www.irs.gov/retirement-plans/ira-deduction-limits IRA Deduction Limits]), consider swapping steps 5 and 6."
+        "description": "Retirement accounts offer either an immediate tax deduction and tax-deferred growth (traditional) or life-long tax-free growth (Roth), plus [[asset protection]] and [[estate planning]] benefits. These accounts have annual contribution limits which are lost if not used.\n\nInvestors may have to choose among [[IRA#Comparison_to_employer_accounts|IRA vs. employer plan]] and/or [[traditional vs. Roth]] accounts and should consult those articles for more details.\n\nDeductible IRA contributions are subject to income limits, but the income limit for contributing to a Roth IRA may be circumvented by the [[Backdoor Roth]] process. Employer plans may also offer [[mega-backdoor Roth]] contributions, but these should be made only after normal contributions.\n\nChoosing the order of employer retirement plan and IRA/Roth IRA:\nIf the company plan offers good, low-cost funds, it may be preferable to contribute to the company plan ''before'' contributing to an IRA; see: [[IRA#Comparison to employer accounts|Comparison between IRAs and employer plans]].\n\nAlso, an investor's [[Marginal tax rate|marginal tax rate]] may influence the decision: those subject to higher marginal tax rates should consider higher contributions to a tax-deferred plan (e.g. traditional 401(k) or IRA) rather than a post-tax plan (e.g. Roth 401(k) or IRA); see [[Traditional versus Roth]] for more guidance.\n\nIf you prefer traditional to Roth, and traditional contributions to the employer's plan are needed to reduce your [[Modified_Adjusted_Gross_Income#MAGI_for_traditional_IRA_purposes|Modified Adjusted Gross Income (MAGI) for traditional IRA purposes]] enough to allow a full or partial IRA deduction (see [https://www.irs.gov/retirement-plans/ira-deduction-limits IRA Deduction Limits]), consider finishing employer retirement plan contributions first."
     },
     {
         "step": "employer-retirement-funds",
         "title": "Employer Retirement Funds",
-        "number": 6,
+        "number": 5,
         "level": "Medium",
         "summary": "Contribute the remainder of the maximum employee contribution to the work-based plan.",
         "priority": "Contribute to available retirement accounts through your employer (eg. [[401(k)]], [[403(b)]], [[457(b)]]) without a match",
         "returns": "8%",
-        "description": "Retirement accounts offer either an immediate tax deduction and tax-deferred growth (traditional) or life-long tax-free growth (Roth), plus [[asset protection]] and [[estate planning]] benefits. These accounts have annual contribution limits which are lost if not used.\n\nInvestors may have to choose among [[IRA#Comparison_to_employer_accounts|IRA vs. employer plan]] and/or [[traditional vs. Roth]] accounts and should consult those articles for more details.\n\nDeductible IRA contributions are subject to income limits, but the income limit for contributing to a Roth IRA may be circumvented by the [[Backdoor Roth]] process. Employer plans may also offer [[mega-backdoor Roth]] contributions, but these should be made only after normal contributions."
+        "description": "Retirement accounts offer either an immediate tax deduction and tax-deferred growth (traditional) or life-long tax-free growth (Roth), plus [[asset protection]] and [[estate planning]] benefits. These accounts have annual contribution limits which are lost if not used.\n\nInvestors may have to choose among [[IRA#Comparison_to_employer_accounts|IRA vs. employer plan]] and/or [[traditional vs. Roth]] accounts and should consult those articles for more details.\n\nDeductible IRA contributions are subject to income limits, but the income limit for contributing to a Roth IRA may be circumvented by the [[Backdoor Roth]] process. Employer plans may also offer [[mega-backdoor Roth]] contributions, but these should be made only after normal contributions.\n\nChoosing the order of employer retirement plan and IRA/Roth IRA:\nIf the company plan offers good, low-cost funds, it may be preferable to contribute to the company plan ''before'' contributing to an IRA; see: [[IRA#Comparison to employer accounts|Comparison between IRAs and employer plans]].\n\nAlso, an investor's [[Marginal tax rate|marginal tax rate]] may influence the decision: those subject to higher marginal tax rates should consider higher contributions to a tax-deferred plan (e.g. traditional 401(k) or IRA) rather than a post-tax plan (e.g. Roth 401(k) or IRA); see [[Traditional versus Roth]] for more guidance.\n\nIf you prefer traditional to Roth, and traditional contributions to the employer's plan are needed to reduce your [[Modified_Adjusted_Gross_Income#MAGI_for_traditional_IRA_purposes|Modified Adjusted Gross Income (MAGI) for traditional IRA purposes]] enough to allow a full or partial IRA deduction (see [https://www.irs.gov/retirement-plans/ira-deduction-limits IRA Deduction Limits]), consider finishing employer retirement plan contributions first"
     },
     {
         "step": "mega-backdoor-roth",
         "title": "Mega Backdoor Roth",
-        "number": 7,
+        "number": 6,
         "level": "Medium",
         "summary": "If your plan supports it, employ the [[Mega-backdoor Roth|mega-backdoor Roth strategy]].<ref group='note'>This technique is only available through select employer plans; it is complicated in nature and may not be for everyone. Read the [[Mega-backdoor Roth#Determining if your plan supports the mega-backdoor Roth|Mega-backdoor Roth]] article to determine if your plan supports it, and ask in the forum if you are unsure.</ref>",
         "priority": "Contribute to available employer After Tax retirement account (eg. [[Mega-backdoor Roth]])",
@@ -77,7 +77,7 @@
         "step": "medium-interest-debt",
         "title": "Medium-Interest Debt",
         "diagramTitle": "Pay Off Medium-Interest Debt (Student Loans, Car Loans)",
-        "number": 8,
+        "number": 7,
         "level": "Medium",
         "summary": "Pay off medium-interest debt (eg. student loans, car loans, personal loans), especially if the interest is not tax-deductible.",
         "priority": "Pay off medium-interest debt",
@@ -87,7 +87,7 @@
     {
         "step": "taxable-accounts",
         "title": "Taxable Accounts",
-        "number": 9,
+        "number": 8,
         "level": "Low",
         "summary": "Invest inside a [[taxable account]].",
         "priority": "Invest in a [[taxable account]]",
@@ -98,7 +98,7 @@
         "step": "low-interest-debt",
         "title": "Low-Interest Debt",
         "diagramTitle": "Pay Off Low-Interest Debt (Mortgage)",
-        "number": 10,
+        "number": 9,
         "level": "Low",
         "summary": "Pay off low-interest debt (eg. most mortgages, some car loans).",
         "priority": "Pay off low-interest debt",
