@@ -1,3 +1,5 @@
+using IRS;
+
 namespace Employer {
     // Root myDeserializedClass = JsonConvert.DeserializeObject<Employer>(myJsonResponse);
     public class Employer401k
@@ -30,23 +32,10 @@ namespace Employer {
         public MegaBackdoorRoth MegaBackdoorRoth { get; set; }
     }
 
-    public class Employer
+    public class Employer : DataDocument
     {
-        public string name { get; set; }
-        public string repository { get; set; }
-        public string path { get; set; }
-        public string version { get; set; }
-        public List<string> notes { get; set; }
-        public List<Source> sources { get; set; }
         public string Company { get; set; }
         public int Year { get; set; }
         public RetirementSavings RetirementSavings { get; set; }
-    }
-
-    public class Source
-    {
-        public string date { get; set; }
-        public string url { get; set; }
-        public string title { get; set; }
     }
 }

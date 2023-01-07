@@ -19,16 +19,16 @@ namespace IRS
     public class ContributionPhaseOutRange
     {
         public Single? Single { get; set; }
-        public MarriedFiledJointly? MarriedFiledJointly { get; set; }
-        public MarriedFiledSeparately? MarriedFiledSeparately { get; set; }
+        public MarriedFilingJointly? MarriedFilingJointly { get; set; }
+        public MarriedFilingSeparately? MarriedFilingSeparately { get; set; }
     }
 
     public class DeductabilityPhaseOutRange
     {
         public Single? Single { get; set; }
-        public ActiveParticipant_MarriedFiledJointly? ActiveParticipant_MarriedFiledJointly { get; set; }
-        public InactiveParticipant_MarriedFiledJointly? InactiveParticipant_MarriedFiledJointly { get; set; }
-        public MarriedFiledSeparately? MarriedFiledSeparately { get; set; }
+        public ActiveParticipant_MarriedFilingJointly? ActiveParticipant_MarriedFilingJointly { get; set; }
+        public InactiveParticipant_MarriedFilingJointly? InactiveParticipant_MarriedFilingJointly { get; set; }
+        public MarriedFilingSeparately? MarriedFilingSeparately { get; set; }
     }
 
     public class HSA
@@ -45,36 +45,31 @@ namespace IRS
         public DeductabilityPhaseOutRange? DeductabilityPhaseOutRange { get; set; }
     }
 
-    public class MarriedFiledJointly
+    public class MarriedFilingJointly
     {
         public int Start { get; set; }
         public int End { get; set; }
     }
-    public class ActiveParticipant_MarriedFiledJointly
+    public class ActiveParticipant_MarriedFilingJointly
     {
         public int Start { get; set; }
         public int End { get; set; }
     }
-    public class InactiveParticipant_MarriedFiledJointly
-    {
-        public int Start { get; set; }
-        public int End { get; set; }
-    }
-
-    public class MarriedFiledSeparately
+    public class InactiveParticipant_MarriedFilingJointly
     {
         public int Start { get; set; }
         public int End { get; set; }
     }
 
-    public class Retirement
+    public class MarriedFilingSeparately
     {
-        public string? name { get; set; }
-        public string? repository { get; set; }
-        public string? path { get; set; }
-        public string? version { get; set; }
-        public string? note { get; set; }
-        public List<Source>? source { get; set; }
+        public int Start { get; set; }
+        public int End { get; set; }
+    }
+
+    public class RetirementData : DataDocument
+    {
+
         public HSA? HSA { get; set; }
         public IRA? IRA { get; set; }
         public RothIRA? RothIRA { get; set; }
@@ -94,13 +89,4 @@ namespace IRS
         public int Start { get; set; }
         public int End { get; set; }
     }
-
-    public class Source
-    {
-        public string? date { get; set; }
-        public string? title { get; set; }
-        public string? url { get; set; }
-    }
-
-
 }

@@ -113,6 +113,7 @@ public class Person {
 
     public FamilyYear FamilyYear { private set; get; }
 
+    public int? Age { get; set; }
     public bool FiftyOrOver { get; set; }
     public bool FiftyFiveOrOver { get; set; }
 

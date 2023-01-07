@@ -1,6 +1,7 @@
 @page "/portfolio"
 @page "/portfolio/{stepPath}"
 @inject HttpClient Http
+@inject IFamilyYears familyYears
 
 <PageTitle>
 portfolio/@stepPath
@@ -58,12 +59,26 @@ portfolio/@stepPath
                     <select @bind=familyYears.Active.TaxFilingStatus>
                         <option value=None>choose...</option>
                         <option>Single</option>
+                        <option value=HeadOfHousehold>Head of Household</option>
                         <option value=MarriedFilingJointly>Married filing jointly</option>
                         <option value=MarriedFilingSeperately>Married filing seperately</option>
                         <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
                     </select><br/><br/>
 
-                    <label>Adjusted Gross Income:</label> $<input type=text class=dollar @bind-Value=familyYears.Active.AdjustedGrossIncome @bind-Value:event=oninput /><br/><br/>
+                    <span>TaxStatus: </span>@familyYears.Active.TaxFilingStatus.ToString() <br/>
+                    @foreach (var taxFiler in familyYears.Active.TaxRateData.TaxData.TaxFilers)
+                    {
+                        if (taxFiler.TaxFilingStatus == familyYears.Active.TaxFilingStatus.ToString())
+                        {
+                            <span>TaxFilingStatus:</span> @taxFiler.TaxFilingStatus <br/>
+                            @foreach (var taxBracket in taxFiler.TaxBrackets)
+                            {
+                                <span>@taxBracket.Rate</span> @taxBracket.StartAmount <br/>    
+                            }
+                        } else {
+                            <span>TaxFilingStatus:</span> @taxFiler.TaxFilingStatus <br/>
+                        }
+                    }
 
                 </EditForm>
                 <br/>
@@ -91,23 +106,19 @@ portfolio/@stepPath
                             </td>
                             @switch (step.number) {
                                 case 1: 
-                                   <td style=text-align:center>@familyYears.Active.EmergencyFund.AmountToSave</td><td></td>
+                                        @familyYears.Active.People[0].Age<br/>
+                                        @if(familyYears.Active.PersonCount > 1) {
+                                            <span>@familyYears.Active.People[1].Age</span>
+                                        }
                                    break;
                                 case 2:
                                    <td style=text-align:center>
-                                        @familyYears.Active.People[0].EmployerPlan.AmountToSaveForMatch<br/>
-                                        @if(familyYears.Active.PersonCount > 1) {
-                                            <span>@familyYears.Active.People[1].EmployerPlan.AmountToSaveForMatch</span>
-                                        }
-                                   </td>
-                                   <td style=text-align:center>
-                                        @familyYears.Active.People[0].EmployerPlan.MatchAmount<br/>
-                                        @familyYears.Active.People[1].EmployerPlan.MatchAmount
+                                        @familyYears.Active.EmergencyFund.CurrentMonths months
                                    </td>
                                    break;
                                 case 3:
                                     <td style=text-align:center>
-                                        @familyYears.Active.HighDebts
+                                        @familyYears.Active.Debts.Count debts
                                     </td>
                                     break;
                                 default:
@@ -146,12 +157,28 @@ portfolio/@stepPath
 
                         @switch (step.number) {
                             case 1:
+                                <p ><b>Prerequisities:</b></p>
+                                <label>Tax Filing Status:</label>
+                                <select @bind=familyYears.Active.TaxFilingStatus>
+                                    <option value=None>choose...</option>
+                                    <option>Single</option>
+                                    <option value=HeadOfHousehold>Head of Household</option>
+                                    <option value=MarriedFilingJointly>Married filing jointly</option>
+                                    <option value=MarriedFilingSeperately>Married filing seperately</option>
+                                    <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                                </select><br/><br/>
+                                
+                                <p><b>Worksheet:</b> </p>
+                                @for (int i = 0; i < familyYears.Active.PersonCount; i++) {
+                                    var person = familyYears.Active.People[i];
+                                    <p><b>Person @(i+1):</b> </p>
+
+                                    <EditForm Model="person" style=margin-left:25px>
+                                        <label>Age:</label> <input type=text @bind-Value=person.Age @bind-Value:event=oninput /><br/>
+                                    </EditForm><br/>
+                                }
                                 break;
                             case 2:
-                                <p ><b>Prerequisities:</b></p>
-                                <label style=margin-left:25px>Target Year:</label> <select @bind=familyYears.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
-                                <br />
-
                                 <p><b>Worksheet:</b> </p>
 
                                 <EditForm Model="familyYears.Active" style=margin-left:25px>
@@ -159,17 +186,8 @@ portfolio/@stepPath
                                     <ValidationSummary />
                                     
                                     <label>Monthly Expenses:</label> <span>$</span><input class=dollar type=text @bind-Value="familyYears.Active.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /><br/><br/>
-                                    <label>Planned size of emergency fund:</label><br/>
-                                    <InputRadioGroup @bind-Value=familyYears.Active.EmergencyFund.TargetMonths>
-                                        <InputRadio Value='0'/> None<br/>
-                                        <InputRadio Value='1'/> 1 month: $@familyYears.Active.EmergencyFund.MonthlyExpenses<br/>
-                                        <InputRadio Value='3'/> 3 months: $@familyYears.Active.EmergencyFund.ThreeMonths<br/>
-                                        <InputRadio Value='4'/> Other: <br/>
-                                    </InputRadioGroup>
-                                    <div style="margin-left:20px">$<input type=text class=dollar @bind-Value="familyYears.Active.EmergencyFund.EFOther" @bind-Value:event="oninput"/></div>
-                                    <br/>
-                                    <label>Current Size:</label> <span>$</span><input class=dollar type=text @bind-Value="familyYears.Active.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/><br/><br/>
-                                    <label>Amount to Save:</label> <span>$</span>@familyYears.Active.EmergencyFund.AmountToSave<br/>
+                                    <label>Current Emergency Fund:</label> <span>$</span><input class=dollar type=text @bind-Value="familyYears.Active.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/><br/><br/>
+                                    <label>Months:</label> @familyYears.Active.EmergencyFund.CurrentMonths<br/>
                                 </EditForm><br/>
                                 break;
                             case 3:
@@ -336,23 +354,10 @@ portfolio/@stepPath
     public string? stepPath { get; set; }
 
     private Step[]? steps;
-    private static Retirement? irs_retirement_year1;
-    private static Retirement? irs_retirement_year2;
-    private FamilyYears? familyYears;
     private const string folderName = "/portfolio/";
 
     protected override async Task OnInitializedAsync()
     {
         steps = await Http.GetFromJsonAsync<Step[]>("data/portfolio-steps.json");
-
-        var taxRatesYear1 = await Http.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/irs/irs.tax-rates.2022.json");
-        var taxRatesYear2 = await Http.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/irs/irs.tax-rates.2023.json");
-        irs_retirement_year1 = JsonSerializer.Deserialize<IRS.Retirement>(taxRatesYear1);
-        irs_retirement_year2 = JsonSerializer.Deserialize<IRS.Retirement>(taxRatesYear2);
-
-        if (irs_retirement_year1 != null && irs_retirement_year2 != null) {
-            familyYears = new(irs_retirement_year1, irs_retirement_year2);
-            familyYears.CurrentYear = 1;
-        }
     }
 }

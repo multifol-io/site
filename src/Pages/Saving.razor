@@ -1,6 +1,7 @@
 ﻿@page "/saving"
 @page "/saving/{stepPath}"
 @inject HttpClient Http
+@inject IFamilyYears familyYears
 
 <PageTitle>
 saving/@stepPath
@@ -221,12 +222,13 @@ saving/@stepPath
                                     <label>Target Year:</label> <select @bind=familyYears.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
 
                                     <label>Tax Filing Status:</label> <select @bind=familyYears.Active.TaxFilingStatus>
-                                                <option value=None>choose...</option>
-                                                <option>Single</option>
-                                                <option value=MarriedFilingJointly>Married filing jointly</option>
-                                                <option value=MarriedFilingSeperately>Married filing seperately</option>
-                                                <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
-                                                </select><br/>
+                                        <option value=None>choose...</option>
+                                        <option>Single</option>
+                                        <option value=HeadOfHousehold>Head of Household</option>
+                                        <option value=MarriedFilingJointly>Married filing jointly</option>
+                                        <option value=MarriedFilingSeperately>Married filing seperately</option>
+                                        <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                                        </select><br/>
                                 </EditForm><br/>
                                 @for (int i = 0; i < familyYears.Active.PersonCount; i++) {
                                     var person = familyYears.Active.People[i];
@@ -261,6 +263,7 @@ saving/@stepPath
                                     <label>Tax Filing Status:</label> <select @bind=familyYears.Active.TaxFilingStatus>
                                                 <option value=None>choose...</option>
                                                 <option>Single</option>
+                                                <option value=HeadOfHousehold>Head of Household</option>
                                                 <option value=MarriedFilingJointly>Married filing jointly</option>
                                                 <option value=MarriedFilingSeperately>Married filing seperately</option>
                                                 <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
@@ -305,6 +308,7 @@ saving/@stepPath
                                     <label>Tax Filing Status:</label> <select @bind=familyYears.Active.TaxFilingStatus>
                                         <option value=None>choose...</option>
                                         <option>Single</option>
+                                        <option value=HeadOfHousehold>Head of Household</option>
                                         <option value=MarriedFilingJointly>Married filing jointly</option>
                                         <option value=MarriedFilingSeperately>Married filing seperately</option>
                                         <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
@@ -365,6 +369,7 @@ saving/@stepPath
                                     <label>Tax Filing Status:</label> <select @bind=familyYears.Active.TaxFilingStatus>
                                                 <option value=None>choose...</option>
                                                 <option>Single</option>
+                                                <option value=HeadOfHousehold>Head of Household</option>
                                                 <option value=MarriedFilingJointly>Married filing jointly</option>
                                                 <option value=MarriedFilingSeperately>Married filing seperately</option>
                                                 <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
@@ -396,6 +401,7 @@ saving/@stepPath
                                     <label>Tax Filing Status:</label> <select @bind=familyYears.Active.TaxFilingStatus>
                                         <option value=None>choose...</option>
                                         <option>Single</option>
+                                        <option value=HeadOfHousehold>Head of Household</option>
                                         <option value=MarriedFilingJointly>Married filing jointly</option>
                                         <option value=MarriedFilingSeperately>Married filing seperately</option>
                                         <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
@@ -597,24 +603,12 @@ saving/@stepPath
     public string? stepPath { get; set; }
 
     private Step[]? steps;
-    private static Retirement? irs_retirement_year1;
-    private static Retirement? irs_retirement_year2;
-    private FamilyYears? familyYears;
+
     private const string folderName = "/saving/";
 
 
     protected override async Task OnInitializedAsync()
     {
         steps = await Http.GetFromJsonAsync<Step[]>("data/saving-steps.json");
-
-        var retirementYear1 = await Http.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/irs/irs.retirement.2022.json");
-        var retirementYear2 = await Http.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/irs/irs.retirement.2023.json");
-        irs_retirement_year1 = JsonSerializer.Deserialize<IRS.Retirement>(retirementYear1);
-        irs_retirement_year2 = JsonSerializer.Deserialize<IRS.Retirement>(retirementYear2);
-
-        if (irs_retirement_year1 != null && irs_retirement_year2 != null) {
-            familyYears = new(irs_retirement_year1, irs_retirement_year2);
-            familyYears.CurrentYear = 1;
-        }
     }
 }

@@ -1,11 +1,14 @@
+using IRS;
 using System.ComponentModel.DataAnnotations;
 public class FamilyYear {
-    public FamilyYear(IRS.Retirement irs_retirement, int year) {
-        this.IRSRetirement = irs_retirement;
+    public FamilyYear(RetirementData retirementData, TaxRateData taxRateData, int year) {
+        this.RetirementData = retirementData;
+        this.TaxRateData = taxRateData;
         this.Year = year;
     }
 
-    public IRS.Retirement IRSRetirement { get; private set; }
+    public RetirementData RetirementData { get; private set; }
+    public TaxRateData TaxRateData { get; private set; }
     
     [Required]
     public int PersonCount { get; set; }

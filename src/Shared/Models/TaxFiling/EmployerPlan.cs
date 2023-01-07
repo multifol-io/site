@@ -6,7 +6,7 @@ using System.Text;
 public class EmployerPlan : INotifyPropertyChanged {
     public EmployerPlan(Person person) {
         this.person = person;
-        this.Employer401k = this.person.FamilyYear.IRSRetirement.Employer401k;
+        this.Employer401k = this.person.FamilyYear.RetirementData.Employer401k;
     }
 
     private Person person;

@@ -3,7 +3,7 @@ public class RothIRA {
     public RothIRA(Person person)
     {
         this.person = person;
-        this.rothIraVariables = this.person.FamilyYear.IRSRetirement.RothIRA;
+        this.rothIraVariables = this.person.FamilyYear.RetirementData.RothIRA;
     }
 
     private Person person;
@@ -36,12 +36,12 @@ public class RothIRA {
                                   rothIraVariables.ContributionPhaseOutRange.Single.End,
                                   person.FamilyYear.AdjustedGrossIncome, MaximumContributionByAge);
             case TaxFilingStatus.MarriedFilingJointly:
-                return ApplyRange(rothIraVariables.ContributionPhaseOutRange.MarriedFiledJointly.Start,
-                                  rothIraVariables.ContributionPhaseOutRange.MarriedFiledJointly.End,
+                return ApplyRange(rothIraVariables.ContributionPhaseOutRange.MarriedFilingJointly.Start,
+                                  rothIraVariables.ContributionPhaseOutRange.MarriedFilingJointly.End,
                                   person.FamilyYear.AdjustedGrossIncome, MaximumContributionByAge);
             case TaxFilingStatus.MarriedFilingSeperately: 
-                return ApplyRange(rothIraVariables.ContributionPhaseOutRange.MarriedFiledSeparately.Start,
-                                  rothIraVariables.ContributionPhaseOutRange.MarriedFiledSeparately.End,
+                return ApplyRange(rothIraVariables.ContributionPhaseOutRange.MarriedFilingSeparately.Start,
+                                  rothIraVariables.ContributionPhaseOutRange.MarriedFilingSeparately.End,
                                   person.FamilyYear.AdjustedGrossIncome, MaximumContributionByAge);
             case TaxFilingStatus.None:
             default:

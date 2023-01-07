@@ -3,8 +3,8 @@ public class IRA {
     public IRA(Person person)
     {
         this.person = person;
-        if (this.person.FamilyYear?.IRSRetirement?.IRA != null) {
-            this.iraVariables = this.person.FamilyYear.IRSRetirement.IRA;
+        if (this.person.FamilyYear?.RetirementData?.IRA != null) {
+            this.iraVariables = this.person.FamilyYear.RetirementData.IRA;
         }
     }
 
@@ -43,18 +43,18 @@ public class IRA {
                 if (person.Spouse != null) {
                     if (person.Spouse.EmployerPlan.Eligible) {
                         if (person.EmployerPlan.Eligible) {
-                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFiledJointly.Start,
-                                      iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFiledJointly.End,
+                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFilingJointly.Start,
+                                      iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFilingJointly.End,
                                       person.FamilyYear.AdjustedGrossIncome, ContributionAllowed);
                         } else {
-                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.InactiveParticipant_MarriedFiledJointly.Start,
-                                      iraVariables.DeductabilityPhaseOutRange.InactiveParticipant_MarriedFiledJointly.End,
+                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.InactiveParticipant_MarriedFilingJointly.Start,
+                                      iraVariables.DeductabilityPhaseOutRange.InactiveParticipant_MarriedFilingJointly.End,
                                       person.FamilyYear.AdjustedGrossIncome, ContributionAllowed);
                         }
                     } else {
                         if (person.EmployerPlan.Eligible) {
-                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFiledJointly.Start,
-                                      iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFiledJointly.End,
+                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFilingJointly.Start,
+                                      iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFilingJointly.End,
                                       person.FamilyYear.AdjustedGrossIncome, ContributionAllowed);
                         } else {
                             return ContributionAllowed;
@@ -68,18 +68,18 @@ public class IRA {
                 if (person.Spouse != null) {
                     if (person.Spouse.EmployerPlan.Eligible) {
                         if (person.EmployerPlan.Eligible) {
-                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.MarriedFiledSeparately.Start,
-                                      iraVariables.DeductabilityPhaseOutRange.MarriedFiledSeparately.End,
+                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.MarriedFilingSeparately.Start,
+                                      iraVariables.DeductabilityPhaseOutRange.MarriedFilingSeparately.End,
                                       person.FamilyYear.AdjustedGrossIncome, ContributionAllowed);                   
                         } else {
-                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.MarriedFiledSeparately.Start,
-                                      iraVariables.DeductabilityPhaseOutRange.MarriedFiledSeparately.End,
+                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.MarriedFilingSeparately.Start,
+                                      iraVariables.DeductabilityPhaseOutRange.MarriedFilingSeparately.End,
                                       person.FamilyYear.AdjustedGrossIncome, ContributionAllowed);           
                         }
                     } else {
                         if (person.EmployerPlan.Eligible) {
-                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.MarriedFiledSeparately.Start,
-                                      iraVariables.DeductabilityPhaseOutRange.MarriedFiledSeparately.End,
+                            return ApplyRange(iraVariables.DeductabilityPhaseOutRange.MarriedFilingSeparately.Start,
+                                      iraVariables.DeductabilityPhaseOutRange.MarriedFilingSeparately.End,
                                       person.FamilyYear.AdjustedGrossIncome, ContributionAllowed);
                         } else {
                             return ContributionAllowed;
