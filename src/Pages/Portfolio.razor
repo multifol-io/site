@@ -38,7 +38,7 @@ saving/@stepPath
             
             <h2 style="max-width:350px">
                 <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-                Saving Summary
+                Annual Saving
                 <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
             </h2>
 
@@ -596,14 +596,14 @@ saving/@stepPath
     [Parameter]
     public string? stepPath { get; set; }
 
-    private InvestmentPriority[]? priorities;
+    private Step[]? priorities;
     private static Retirement? irs_retirement_year1;
     private static Retirement? irs_retirement_year2;
     private TaxFilings? taxFilings;
 
     protected override async Task OnInitializedAsync()
     {
-        priorities = await Http.GetFromJsonAsync<InvestmentPriority[]>("data/investment-priorities.json");
+        priorities = await Http.GetFromJsonAsync<Step[]>("data/saving-steps.json");
 
         var retirementYear1 = await Http.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/irs/irs.retirement.2022.json");
         var retirementYear2 = await Http.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/irs/irs.retirement.2023.json");

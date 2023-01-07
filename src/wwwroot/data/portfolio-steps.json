@@ -1,0 +1,33 @@
+[
+    {
+        "step": "ages",
+        "title": "Ages",
+        "number": 1,
+        "level": "High",
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
+        "step": "emergency-fund",
+        "title": "Emergency Fund",
+        "number": 2,
+        "level": "High",
+        "summary": "Establish an [[Emergency fund|emergency fund]] to your satisfaction. If you have many other high financial priorities (like paying off high-interest debt), start with a smaller emergency fund, and grow it later over time, as those other priorities are satisfied.",
+        "priority": "Start building an [[emergency fund]]",
+        "returns": "N/A",
+        "description": "Have enough cash on hand to cover unplanned expenses. While the exact amount depends on your [[risk tolerance]], a common rule of thumb is to start with one month of expenses, and as you satisfy other financial priorities, grow it over time to around 3-12 months of expenses. (See: [[Emergency fund]].)"
+    },
+    {
+        "step": "debts",
+        "title": "Debts",
+        "diagramTitle": "Debts",
+        "number": 3,
+        "level": "High",
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    }
+]
