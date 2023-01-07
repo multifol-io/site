@@ -10,11 +10,11 @@ portfolio/@stepPath
 <style>
     .btn {
         color: white;
-        padding: 10px 25px;
+        padding: 10px 10px;
         text-decoration: none;
         display:inline-block;
         text-align:center;
-        width:175px;
+        width:60px;
         border-radius: 10px;
     }
     .dollar {
@@ -46,52 +46,13 @@ portfolio/@stepPath
             <p>Getting all your information in one place to help others give you feedback is the idea behind Bogleheads.org's <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Asking Portfolio Questions</a><span class="oi oi-external-link m-2 aria-hidden="true"></span>. Review and complete all the steps.</p>
 
             <div>
-                <p ><b>Prerequisities:</b></p>
-                <EditForm Model="familyYears.Active" style=margin-left:25px>
-                    <label>State of Residence:</label>
-                    <select @bind=familyYears.Active.StateOfResidence>
-                        <option value=None>choose...</option>
-                        <option>Washington</option>
-                        <option>Wyoming</option>
-                    </select><br/><br/>
-
-                    <label>Tax Filing Status:</label>
-                    <select @bind=familyYears.Active.TaxFilingStatus>
-                        <option value=None>choose...</option>
-                        <option>Single</option>
-                        <option value=HeadOfHousehold>Head of Household</option>
-                        <option value=MarriedFilingJointly>Married filing jointly</option>
-                        <option value=MarriedFilingSeperately>Married filing seperately</option>
-                        <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
-                    </select><br/><br/>
-
-                    <span>TaxStatus: </span>@familyYears.Active.TaxFilingStatus.ToString() <br/>
-                    @foreach (var taxFiler in familyYears.Active.TaxRateData.TaxData.TaxFilers)
-                    {
-                        if (taxFiler.TaxFilingStatus == familyYears.Active.TaxFilingStatus.ToString())
-                        {
-                            <span>TaxFilingStatus:</span> @taxFiler.TaxFilingStatus <br/>
-                            @foreach (var taxBracket in taxFiler.TaxBrackets)
-                            {
-                                <span>@taxBracket.Rate</span> @taxBracket.StartAmount <br/>    
-                            }
-                        } else {
-                            <span>TaxFilingStatus:</span> @taxFiler.TaxFilingStatus <br/>
-                        }
-                    }
-
-                </EditForm>
-                <br/>
+                
                 
                 <p ><b>Steps:</b></p>
 
                 <table>
                     <thead>
-                        <th></th>
-                        @if(familyYears.Active.PersonCount > 0) {<th style="padding-right:10px;text-align:center">$</th> }
-                        @if(familyYears.Active.PersonCount > 0) {<th style="padding-right:10px;text-align:center">Match</th> }
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
+                        <th>✏️ Edit</th>
                         <th>&nbsp;</th>
                     </thead>
   
@@ -101,24 +62,57 @@ portfolio/@stepPath
 
                             <td>
                                 <div>
-                                    <a href="@href" style="background:blue" class="m-1 btn" >@step.number: @step.bestDiagramTitle</a>
+                                    <a href="@href" style="background:blue" class="m-1 btn" >✏️</a>
                                 </div>
                             </td>
-                            @switch (step.number) {
-                                case 1: 
-                                        @familyYears.Active.People[0].Age<br/>
-                                        @if(familyYears.Active.PersonCount > 1) {
-                                            <span>@familyYears.Active.People[1].Age</span>
+                            @switch (step.step) {
+                                case "age": 
+                                    <td>
+                                        <b>Age:</b> @familyYears.Active.People[0].Age
+                                        @if(familyYears.Active.PersonCount > 1 && familyYears.Active.People[1].Age != null) {
+                                            <span>&nbsp;and @familyYears.Active.People[1].Age</span>
                                         }
+                                    </td>
                                    break;
-                                case 2:
-                                   <td style=text-align:center>
-                                        @familyYears.Active.EmergencyFund.CurrentMonths months
+                                case "emergency-fund":
+                                   <td style=text-align:left>
+                                        <b>Emergency funds:</b>
+                                        @if (familyYears.Active.EmergencyFund.CurrentMonths != null) {
+                                            <span>&nbsp;@familyYears.Active.EmergencyFund.CurrentMonths months</span>
+                                        }
                                    </td>
                                    break;
-                                case 3:
-                                    <td style=text-align:center>
-                                        @familyYears.Active.Debts.Count debts
+                                case "debts":
+                                    <td style=text-align:left>
+                                        <b>Debt:</b> 
+                                        @if (familyYears.Active.Debts.Count == 0) { <span>&nbsp;no debts</span> } 
+                                        else if (familyYears.Active.Debts.Count == 1) { <span>&nbsp;@familyYears.Active.Debts.Count debt</span> }
+                                        else { <span>&nbsp;@familyYears.Active.Debts.Count debts</span> }
+                                    </td>
+                                    break;
+                                case "tax-status":
+                                    <td>
+                                        <span>
+                                            <b>Tax Filing Status:</b> 
+                                            @if (familyYears.Active.TaxFilingStatus != TaxFilingStatus.None) { <span>&nbsp;@familyYears.Active.TaxFilingStatus</span> }
+                                            <br/>
+                                            <b>Tax Rate:</b> 
+                                            @if (familyYears.Active.MarginalTaxBracket != null) { <span>&nbsp;@familyYears.Active.MarginalTaxBracket</span> }
+                                            <br/>
+                                            <b>State of Residence:</b>
+                                            @if (familyYears.Active.MarginalTaxBracket != null) { <span>&nbsp;@familyYears.Active.StateOfResidence</span> }
+                                        </span>
+                                    </td>
+                                    break;
+                                case "asset-allocation":
+                                    <td>
+                                        <b>Desired Asset allocation:</b>
+                                        @if (familyYears.Active.Stocks != null && familyYears.Active.Bonds != null) {
+                                        <span>&nbsp;@familyYears.Active.Stocks% stocks / @familyYears.Active.Bonds% bonds</span><br/>
+                                        }
+                                        @if (familyYears.Active.International != null) {
+                                            <span>Desired International allocation: @familyYears.Active.International%</span><br/>
+                                        }
                                     </td>
                                     break;
                                 default:
@@ -155,30 +149,8 @@ portfolio/@stepPath
 
                     <p><b>Summary:</b> @((MarkupString)markupize(step.summary))</p>
 
-                        @switch (step.number) {
-                            case 1:
-                                <p ><b>Prerequisities:</b></p>
-                                <label>Tax Filing Status:</label>
-                                <select @bind=familyYears.Active.TaxFilingStatus>
-                                    <option value=None>choose...</option>
-                                    <option>Single</option>
-                                    <option value=HeadOfHousehold>Head of Household</option>
-                                    <option value=MarriedFilingJointly>Married filing jointly</option>
-                                    <option value=MarriedFilingSeperately>Married filing seperately</option>
-                                    <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
-                                </select><br/><br/>
-                                
-                                <p><b>Worksheet:</b> </p>
-                                @for (int i = 0; i < familyYears.Active.PersonCount; i++) {
-                                    var person = familyYears.Active.People[i];
-                                    <p><b>Person @(i+1):</b> </p>
-
-                                    <EditForm Model="person" style=margin-left:25px>
-                                        <label>Age:</label> <input type=text @bind-Value=person.Age @bind-Value:event=oninput /><br/>
-                                    </EditForm><br/>
-                                }
-                                break;
-                            case 2:
+                        @switch (step.step) {
+                            case "emergency-fund":
                                 <p><b>Worksheet:</b> </p>
 
                                 <EditForm Model="familyYears.Active" style=margin-left:25px>
@@ -190,7 +162,7 @@ portfolio/@stepPath
                                     <label>Months:</label> @familyYears.Active.EmergencyFund.CurrentMonths<br/>
                                 </EditForm><br/>
                                 break;
-                            case 3:
+                            case "debts":
                                 <p><b>Worksheet:</b> </p>
                                 <div>
                                     <i>list of debts (all interest rates):</i><br>
@@ -234,6 +206,94 @@ portfolio/@stepPath
                                     }
                                 }
                             
+                                break;
+                            case "tax-status":
+                                <p ><b>Prerequisities:</b></p>
+                                <EditForm Model="familyYears.Active" style=margin-left:25px>
+                                    <label>Tax Filing Status:</label>
+                                    <select @bind=familyYears.Active.TaxFilingStatus>
+                                        <option value=None>choose...</option>
+                                        <option>Single</option>
+                                        <option value=HeadOfHousehold>Head of Household</option>
+                                        <option value=MarriedFilingJointly>Married filing jointly</option>
+                                        <option value=MarriedFilingSeperately>Married filing seperately</option>
+                                        <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                                    </select><br/>
+                                    @foreach (var taxFiler in familyYears.Active.TaxRateData.TaxData.TaxFilers)
+                                    {
+                                        bool isMatch = false;
+                                        switch (familyYears.Active.TaxFilingStatus.ToString())
+                                        {
+                                            case "MarriedFilingSeperatelyAndLivingApart":
+                                                isMatch = taxFiler.TaxFilingStatus == "MarriedFilingSeperately";
+                                                break;
+                                            default:
+                                                isMatch = taxFiler.TaxFilingStatus == familyYears.Active.TaxFilingStatus.ToString();
+                                                break;
+                                        }
+                                        if (isMatch)
+                                        {
+                                            string lastBracket = null;
+                                            int? lastStartAmount = null;
+
+                                            <br/>
+                                            <InputRadioGroup @bind-Value=familyYears.Active.MarginalTaxBracket>
+                                                <label>Marginal Tax Rate:</label><br/>
+                                                <table>
+                                                    <tr><th></th><th>Starting at</th><th>Up until</th></tr>
+                                                @foreach (var taxBracket in taxFiler.TaxBrackets)
+                                                {
+                                                    if (lastBracket != null) {
+                                                        <tr><td><InputRadio Value='@lastBracket'/>@lastBracket</td><td>@lastStartAmount</td><td>@(taxBracket.StartAmount-1)</td></tr>
+                                                    }
+                                                    lastBracket = taxBracket.Rate;
+                                                    lastStartAmount = taxBracket.StartAmount;
+                                                }
+                                                    <tr><td><InputRadio Value='@lastBracket'/>@lastBracket</td><td>@lastStartAmount</td><td>and up</td></tr>
+                                                </table>
+                                            </InputRadioGroup>
+                                        }
+                                    }
+
+                                    <br/><label>State of Residence:</label>
+                                    <select @bind=familyYears.Active.StateOfResidence>
+                                        <option value=None>choose...</option>
+                                        <option>Washington</option>
+                                        <option>Wyoming</option>
+                                    </select><br/><br/>
+                                </EditForm>
+                                <br/>
+                                break;
+                            case "age":
+                                <p ><b>Prerequisities:</b></p>
+                                <label>Tax Filing Status:</label>
+                                <select @bind=familyYears.Active.TaxFilingStatus>
+                                    <option value=None>choose...</option>
+                                    <option>Single</option>
+                                    <option value=HeadOfHousehold>Head of Household</option>
+                                    <option value=MarriedFilingJointly>Married filing jointly</option>
+                                    <option value=MarriedFilingSeperately>Married filing seperately</option>
+                                    <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                                </select><br/><br/>
+                                
+                                <p><b>Worksheet:</b> </p>
+                                @for (int i = 0; i < familyYears.Active.PersonCount; i++) {
+                                    var person = familyYears.Active.People[i];
+                                    <p><b>Person @(i+1):</b> </p>
+
+                                    <EditForm Model="person" style=margin-left:25px>
+                                        <label>Age:</label> <input type=text @bind-Value=person.Age @bind-Value:event=oninput /><br/>
+                                    </EditForm><br/>
+                                }
+                                break;
+                            case "asset-allocation":
+                                <p><b>Worksheet:</b> </p>
+
+                                <EditForm Model="familyYears.Active" style=margin-left:25px>
+                                    <label>Stock:</label> <input type=text @bind-Value=familyYears.Active.Stocks @bind-Value:event=oninput />%<br/>
+                                    <label>Bond:</label> <input type=text @bind-Value=familyYears.Active.Bonds @bind-Value:event=oninput />%<br/>
+                                    <label>International:</label> <input type=text @bind-Value=familyYears.Active.International @bind-Value:event=oninput />%<br/>
+                                </EditForm><br/>
                                 break;
                         }
                     <p><b>Details:</b> @((MarkupString)markupize(step.description))</p>

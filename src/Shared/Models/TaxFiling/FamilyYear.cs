@@ -57,7 +57,7 @@ public class FamilyYear {
     }
 
     public int? AdjustedGrossIncome { get; set; }
-
+    public string? MarginalTaxBracket { get; set; }
     public EmergencyFund EmergencyFund { get; set; } = new();
 
     private List<Debt>? _debts;
@@ -71,6 +71,10 @@ public class FamilyYear {
             return _debts;
         }
     }
+
+    public double? Stocks { get; set; }
+    public double? Bonds { get; set; }
+    public int? International { get; set; }
 
     private int? GetDebts(string category) {
             int? total = null;
