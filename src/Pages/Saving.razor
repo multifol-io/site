@@ -24,17 +24,17 @@ saving/@stepPath
     }
 </style>
 
-    @if (priorities == null || taxFilings == null)
+    @if (steps == null || familyYears == null)
     {
         <p><em>Loading...</em></p>
     }
     else
     {
         @if (stepPath == null) {
-            var prevPriority = priorities[9];
-            var nextPriority = priorities[0];
-            string prevPage = "/saving/" + prevPriority?.step;
-            string nextPage = "/saving/" + nextPriority?.step;
+            var prevStep = steps[steps.Length - 1];
+            var nextStep = steps[0];
+            string prevPage = folderName + prevStep?.step;
+            string nextPage = folderName + nextStep?.step;
             
             <h2 style="max-width:350px">
                 <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
@@ -42,13 +42,13 @@ saving/@stepPath
                 <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
             </h2>
 
-            <p>To save money efficiently, you should prioritize the most efficient techniques. This tool helps you apply the <a target=_blank href="https://www.bogleheads.org/wiki/Prioritizing_investments">Bogleheads Prioritizing Investments wiki</a><span class="oi oi-external-link m-2 aria-hidden="true"></span>. Review and complete steps 1-10.</p>
+            <p>To save money efficiently, you should prioritize the most efficient techniques. This tool helps you apply the <a target=_blank href="https://www.bogleheads.org/wiki/Prioritizing_investments">Bogleheads Prioritizing Investments wiki</a><span class="oi oi-external-link m-2 aria-hidden="true"></span>. Review and complete the steps that apply to you.</p>
 
             <div>
                 <p ><b>Prerequisities:</b></p>
-                <EditForm Model="taxFilings.Active" style=margin-left:25px>
-                    <label>Target Year:</label> <select @bind=taxFilings.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
-                    <label>Estimated Adjusted Gross Income:</label> $<input type=text class=dollar @bind-Value=taxFilings.Active.AdjustedGrossIncome @bind-Value:event=oninput /><br/><br/>
+                <EditForm Model="familyYears.Active" style=margin-left:25px>
+                    <label>Target Year:</label> <select @bind=familyYears.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
+                    <label>Estimated Adjusted Gross Income:</label> $<input type=text class=dollar @bind-Value=familyYears.Active.AdjustedGrossIncome @bind-Value:event=oninput /><br/><br/>
                 </EditForm>
                 
                 <p ><b>Steps:</b></p>
@@ -56,103 +56,103 @@ saving/@stepPath
                 <table>
                     <thead>
                         <th></th>
-                        @if(taxFilings.Active.PersonCount > 0) {<th style="padding-right:10px;text-align:center">$</th> }
-                        @if(taxFilings.Active.PersonCount > 0) {<th style="padding-right:10px;text-align:center">Match</th> }
+                        @if(familyYears.Active.PersonCount > 0) {<th style="padding-right:10px;text-align:center">$</th> }
+                        @if(familyYears.Active.PersonCount > 0) {<th style="padding-right:10px;text-align:center">Match</th> }
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
                     </thead>
   
-                    @foreach (var priority in priorities) {
-                        var href = "/saving/" + @priority.step;
+                    @foreach (var step in steps) {
+                        var href = folderName + @step.step;
                         <tr>
 
                             <td>
                                 <div>
-                                    <a href="@href" style="background:blue" class="m-1 btn" >@priority.number: @priority.bestDiagramTitle</a>
+                                    <a href="@href" style="background:blue" class="m-1 btn" >@step.number: @step.bestDiagramTitle</a>
                                 </div>
                             </td>
-                            @switch (priority.number) {
+                            @switch (step.number) {
                                 case 1: 
-                                   <td style=text-align:center>@taxFilings.Active.EmergencyFund.AmountToSave</td><td></td>
+                                   <td style=text-align:center>@familyYears.Active.EmergencyFund.AmountToSave</td><td></td>
                                    break;
                                 case 2:
                                    <td style=text-align:center>
-                                        @taxFilings.Active.People[0].EmployerPlan.AmountToSaveForMatch<br/>
-                                        @if(taxFilings.Active.PersonCount > 1) {
-                                            <span>Person2: @taxFilings.Active.People[1].EmployerPlan.AmountToSaveForMatch</span>
+                                        @familyYears.Active.People[0].EmployerPlan.AmountToSaveForMatch<br/>
+                                        @if(familyYears.Active.PersonCount > 1) {
+                                            <span>Person2: @familyYears.Active.People[1].EmployerPlan.AmountToSaveForMatch</span>
                                         }
                                    </td>
                                    <td style=text-align:center>
-                                        @taxFilings.Active.People[0].EmployerPlan.MatchAmount<br/>
-                                        @taxFilings.Active.People[1].EmployerPlan.MatchAmount
+                                        @familyYears.Active.People[0].EmployerPlan.MatchAmount<br/>
+                                        @familyYears.Active.People[1].EmployerPlan.MatchAmount
                                    </td>
                                    break;
                                 case 3:
                                     <td style=text-align:center>
-                                        @taxFilings.Active.HighDebts
+                                        @familyYears.Active.HighDebts
                                     </td>
                                     break;
                                 case 4: 
                                     <td style=text-align:center>
-                                        @taxFilings.Active.People[0].HealthSavingsAccount.AmountToSave<br/>
-                                        @if(taxFilings.Active.PersonCount > 1) {
-                                            <span>Person2: @taxFilings.Active.People[1].HealthSavingsAccount.AmountToSave</span>
+                                        @familyYears.Active.People[0].HealthSavingsAccount.AmountToSave<br/>
+                                        @if(familyYears.Active.PersonCount > 1) {
+                                            <span>Person2: @familyYears.Active.People[1].HealthSavingsAccount.AmountToSave</span>
                                         }
                                     </td>
                                     <td style=text-align:center>
-                                        @if(taxFilings.Active.People[0].HealthSavingsAccount.Eligible) {
-                                            @taxFilings.Active.People[0].HealthSavingsAccount.EmployerContribution
+                                        @if(familyYears.Active.People[0].HealthSavingsAccount.Eligible) {
+                                            @familyYears.Active.People[0].HealthSavingsAccount.EmployerContribution
                                         }
                                         <br/>
-                                        @if(taxFilings.Active.People[1].HealthSavingsAccount.Eligible) {
-                                            @taxFilings.Active.People[1].HealthSavingsAccount.EmployerContribution
+                                        @if(familyYears.Active.People[1].HealthSavingsAccount.Eligible) {
+                                            @familyYears.Active.People[1].HealthSavingsAccount.EmployerContribution
                                         }
                                         
                                     </td>
                                    break;
                                 case 5:
                                     <td style=text-align:left colspan="5">
-                                    @if (taxFilings.Active.AdjustedGrossIncome != null) {
-                                        if (taxFilings.Active.PersonCount > 0) {
-                                            <span>@((MarkupString)GetRecommendedIRAMarkup(taxFilings.Active.People[0]))</span><br/>
+                                    @if (familyYears.Active.AdjustedGrossIncome != null) {
+                                        if (familyYears.Active.PersonCount > 0) {
+                                            <span>@((MarkupString)GetRecommendedIRAMarkup(familyYears.Active.People[0]))</span><br/>
                                         }
-                                        if(taxFilings.Active.PersonCount > 1) {
-                                            <span>Person2: @((MarkupString)GetRecommendedIRAMarkup(taxFilings.Active.People[1]))</span>
+                                        if(familyYears.Active.PersonCount > 1) {
+                                            <span>Person2: @((MarkupString)GetRecommendedIRAMarkup(familyYears.Active.People[1]))</span>
                                         }
                                     }
                                     </td>
                                     break;
                                 case 6: 
                                     <td style=text-align:center>
-                                        @taxFilings.Active.People[0].EmployerPlan.AmountToSaveForNonMatched<br/>
-                                        @if(taxFilings.Active.PersonCount > 1) {
-                                            <span>Person2: @taxFilings.Active.People[1].EmployerPlan.AmountToSaveForNonMatched</span>
+                                        @familyYears.Active.People[0].EmployerPlan.AmountToSaveForNonMatched<br/>
+                                        @if(familyYears.Active.PersonCount > 1) {
+                                            <span>Person2: @familyYears.Active.People[1].EmployerPlan.AmountToSaveForNonMatched</span>
                                         }
                                     </td>
                                     break;
                                 case 7: 
                                    <td style=text-align:center>
-                                        @taxFilings.Active.People[0].EmployerPlan.AmountToSaveForBackdoorRoth<br/>
-                                        @if(taxFilings.Active.PersonCount > 1) {
-                                            <span>Person2: @taxFilings.Active.People[1].EmployerPlan.AmountToSaveForBackdoorRoth</span>
+                                        @familyYears.Active.People[0].EmployerPlan.AmountToSaveForBackdoorRoth<br/>
+                                        @if(familyYears.Active.PersonCount > 1) {
+                                            <span>Person2: @familyYears.Active.People[1].EmployerPlan.AmountToSaveForBackdoorRoth</span>
                                         }
                                    </td>
                                    break;
                                 case 8:
                                     <td style=text-align:center>
-                                        @taxFilings.Active.MediumDebts
+                                        @familyYears.Active.MediumDebts
                                     </td>
                                     break;
                                 case 9: 
                                     <td style=text-align:center>
-                                        @if(taxFilings.Active.PersonCount > 0) {<span>no limits</span> }
-                                        @if(taxFilings.Active.PersonCount > 1) {<br/><span>Person2: no limits</span> }
+                                        @if(familyYears.Active.PersonCount > 0) {<span>no limits</span> }
+                                        @if(familyYears.Active.PersonCount > 1) {<br/><span>Person2: no limits</span> }
                                     </td>
                                     break;                                                                   
                                 case 10:
                                     <td style=text-align:center>
-                                        @taxFilings.Active.LowDebts
+                                        @familyYears.Active.LowDebts
                                     </td>
                                     break;
                                 default:
@@ -172,55 +172,55 @@ saving/@stepPath
         }
         else
         {
-            @foreach (var priority in priorities) {
-                @if (priority.step == stepPath) {
-                    var prevPriority = priority.number >= 1 + 1 ? priorities[priority.number - 2] : null;
-                    var nextPriority = priority.number <= 10 - 1 ? priorities[priority.number] : null;
-                    string prevPage = "/saving/" + prevPriority?.step;
-                    string nextPage = "/saving/" + nextPriority?.step;
+            @foreach (var step in steps) {
+                @if (step.step == stepPath) {
+                    var prevStep = step.number >= 1 + 1 ? steps[step.number - 2] : null;
+                    var nextStep = step.number <= 10 - 1 ? steps[step.number] : null;
+                    string prevPage = folderName + prevStep?.step;
+                    string nextPage = folderName + nextStep?.step;
 
                     <h2 style="max-width:350px">
                         <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-                        @priority.number: @priority.title
+                        @step.number: @step.title
                         <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
                     </h2>
 
-                    <h4>@((MarkupString)markupize(priority.priority))</h4>
+                    <h4>@((MarkupString)markupize(step.priority))</h4>
 
-                    <p><b>Summary:</b> @((MarkupString)markupize(priority.summary))</p>
+                    <p><b>Summary:</b> @((MarkupString)markupize(step.summary))</p>
 
-                        @switch (priority.number) {
+                        @switch (step.number) {
                             case 1:
                                 <p ><b>Prerequisities:</b></p>
-                                <label style=margin-left:25px>Target Year:</label> <select @bind=taxFilings.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
+                                <label style=margin-left:25px>Target Year:</label> <select @bind=familyYears.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
                                 <br />
 
                                 <p><b>Worksheet:</b> </p>
 
-                                <EditForm Model="taxFilings.Active" style=margin-left:25px>
+                                <EditForm Model="familyYears.Active" style=margin-left:25px>
                                     <DataAnnotationsValidator />
                                     <ValidationSummary />
                                     
-                                    <label>Monthly Expenses:</label> <span>$</span><input class=dollar type=text @bind-Value="taxFilings.Active.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /><br/><br/>
+                                    <label>Monthly Expenses:</label> <span>$</span><input class=dollar type=text @bind-Value="familyYears.Active.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /><br/><br/>
                                     <label>Planned size of emergency fund:</label><br/>
-                                    <InputRadioGroup @bind-Value=taxFilings.Active.EmergencyFund.TargetMonths>
+                                    <InputRadioGroup @bind-Value=familyYears.Active.EmergencyFund.TargetMonths>
                                         <InputRadio Value='0'/> None<br/>
-                                        <InputRadio Value='1'/> 1 month: $@taxFilings.Active.EmergencyFund.MonthlyExpenses<br/>
-                                        <InputRadio Value='3'/> 3 months: $@taxFilings.Active.EmergencyFund.ThreeMonths<br/>
+                                        <InputRadio Value='1'/> 1 month: $@familyYears.Active.EmergencyFund.MonthlyExpenses<br/>
+                                        <InputRadio Value='3'/> 3 months: $@familyYears.Active.EmergencyFund.ThreeMonths<br/>
                                         <InputRadio Value='4'/> Other: <br/>
                                     </InputRadioGroup>
-                                    <div style="margin-left:20px">$<input type=text class=dollar @bind-Value="taxFilings.Active.EmergencyFund.EFOther" @bind-Value:event="oninput"/></div>
+                                    <div style="margin-left:20px">$<input type=text class=dollar @bind-Value="familyYears.Active.EmergencyFund.EFOther" @bind-Value:event="oninput"/></div>
                                     <br/>
-                                    <label>Current Size:</label> <span>$</span><input class=dollar type=text @bind-Value="taxFilings.Active.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/><br/><br/>
-                                    <label>Amount to Save:</label> <span>$</span>@taxFilings.Active.EmergencyFund.AmountToSave<br/>
+                                    <label>Current Size:</label> <span>$</span><input class=dollar type=text @bind-Value="familyYears.Active.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/><br/><br/>
+                                    <label>Amount to Save:</label> <span>$</span>@familyYears.Active.EmergencyFund.AmountToSave<br/>
                                 </EditForm><br/>
                                 break;
                             case 2:
                                 <p><b>Prerequisities:</b> </p>
-                                <EditForm Model="taxFilings.Active" style=margin-left:25px>
-                                    <label>Target Year:</label> <select @bind=taxFilings.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
+                                <EditForm Model="familyYears.Active" style=margin-left:25px>
+                                    <label>Target Year:</label> <select @bind=familyYears.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
 
-                                    <label>Tax Filing Status:</label> <select @bind=taxFilings.Active.TaxFilingStatus>
+                                    <label>Tax Filing Status:</label> <select @bind=familyYears.Active.TaxFilingStatus>
                                                 <option value=None>choose...</option>
                                                 <option>Single</option>
                                                 <option value=MarriedFilingJointly>Married filing jointly</option>
@@ -228,8 +228,8 @@ saving/@stepPath
                                                 <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
                                                 </select><br/>
                                 </EditForm><br/>
-                                @for (int i = 0; i < taxFilings.Active.PersonCount; i++) {
-                                    var person = taxFilings.Active.People[i];
+                                @for (int i = 0; i < familyYears.Active.PersonCount; i++) {
+                                    var person = familyYears.Active.People[i];
                                     var eligibleId = "eligible-" + i;
                                     <p><b>Person @(i+1):</b> </p>
 
@@ -255,10 +255,10 @@ saving/@stepPath
                                 break;
                             case 4:
                                 <p><b>Prerequisities:</b> </p>
-                                <EditForm Model="taxFilings.Active" style=margin-left:25px>
-                                    <label>Target Year:</label> <select @bind=taxFilings.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
+                                <EditForm Model="familyYears.Active" style=margin-left:25px>
+                                    <label>Target Year:</label> <select @bind=familyYears.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
                                     
-                                    <label>Tax Filing Status:</label> <select @bind=taxFilings.Active.TaxFilingStatus>
+                                    <label>Tax Filing Status:</label> <select @bind=familyYears.Active.TaxFilingStatus>
                                                 <option value=None>choose...</option>
                                                 <option>Single</option>
                                                 <option value=MarriedFilingJointly>Married filing jointly</option>
@@ -266,8 +266,8 @@ saving/@stepPath
                                                 <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
                                                 </select><br/>
                                 </EditForm><br/>
-                                @for (int i = 0; i < taxFilings.Active.PersonCount; i++) {
-                                    var person = taxFilings.Active.People[i];
+                                @for (int i = 0; i < familyYears.Active.PersonCount; i++) {
+                                    var person = familyYears.Active.People[i];
                                     var haveHDHPid = "eligible-" + i;
                                     var over55id = "over55-" + i;
                                     <p><b>Person @(i+1):</b> </p>
@@ -289,7 +289,7 @@ saving/@stepPath
                                                 </select><br/>
                                             } *@
 
-                                            <label>@person.TaxFiling.Year Employer Contribution:</label> $<input type=text class=dollar @bind-Value=person.HealthSavingsAccount.EmployerContribution @bind-Value:event=oninput><br/>
+                                            <label>@person.FamilyYear.Year Employer Contribution:</label> $<input type=text class=dollar @bind-Value=person.HealthSavingsAccount.EmployerContribution @bind-Value:event=oninput><br/>
                                         </fieldset>
                                         <br/>
                                         <label>Amount to Save:</label> <span>$</span>@person.HealthSavingsAccount.AmountToSave<br/>
@@ -299,22 +299,22 @@ saving/@stepPath
                                 break;
                             case 5:
                                 <p><b>Prerequisities:</b> </p>
-                                <EditForm Model="taxFilings.Active" style=margin-left:25px>
-                                    <label>Target Year:</label> <select @bind=taxFilings.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
+                                <EditForm Model="familyYears.Active" style=margin-left:25px>
+                                    <label>Target Year:</label> <select @bind=familyYears.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
 
-                                    <label>Tax Filing Status:</label> <select @bind=taxFilings.Active.TaxFilingStatus>
+                                    <label>Tax Filing Status:</label> <select @bind=familyYears.Active.TaxFilingStatus>
                                         <option value=None>choose...</option>
                                         <option>Single</option>
                                         <option value=MarriedFilingJointly>Married filing jointly</option>
                                         <option value=MarriedFilingSeperately>Married filing seperately</option>
                                         <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
                                         </select><br/>
-                                    <label>@taxFilings.Active.Year Adjusted Gross Income:</label> $<input type=text class=dollar @bind-Value=taxFilings.Active.AdjustedGrossIncome @bind-Value:event=oninput /><br/>
+                                    <label>@familyYears.Active.Year Adjusted Gross Income:</label> $<input type=text class=dollar @bind-Value=familyYears.Active.AdjustedGrossIncome @bind-Value:event=oninput /><br/>
                                 </EditForm><br/>
 
-                                if (taxFilings.Active.AdjustedGrossIncome != null) {
-                                    @for (int i = 0; i < taxFilings.Active.PersonCount; i++) {
-                                        var person = taxFilings.Active.People[i];
+                                if (familyYears.Active.AdjustedGrossIncome != null) {
+                                    @for (int i = 0; i < familyYears.Active.PersonCount; i++) {
+                                        var person = familyYears.Active.People[i];
                                         var eligibleId = "eligible-" + i;
                                         var over50id = "over50-" + i;
                                         var existingIRABalance = "existingIRABalance-" + i;
@@ -359,10 +359,10 @@ saving/@stepPath
                             case 6:
                                 <p><b>Prerequisities:</b> </p>
 
-                                <EditForm Model="taxFilings.Active" style=margin-left:25px>
-                                    <label>Target Year:</label> <select @bind=taxFilings.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
+                                <EditForm Model="familyYears.Active" style=margin-left:25px>
+                                    <label>Target Year:</label> <select @bind=familyYears.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
 
-                                    <label>Tax Filing Status:</label> <select @bind=taxFilings.Active.TaxFilingStatus>
+                                    <label>Tax Filing Status:</label> <select @bind=familyYears.Active.TaxFilingStatus>
                                                 <option value=None>choose...</option>
                                                 <option>Single</option>
                                                 <option value=MarriedFilingJointly>Married filing jointly</option>
@@ -370,8 +370,8 @@ saving/@stepPath
                                                 <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
                                                 </select><br/>
                                 </EditForm><br/>
-                                @for (int i = 0; i < taxFilings.Active.PersonCount; i++) {
-                                    var person = taxFilings.Active.People[i];
+                                @for (int i = 0; i < familyYears.Active.PersonCount; i++) {
+                                    var person = familyYears.Active.People[i];
                                     var eligibleId = "eligible-" + i;
                                     var fiftyLabel = "over50-" + i;
                                     <p><b>Person @(i+1):</b> </p>
@@ -381,7 +381,7 @@ saving/@stepPath
 
                                         <InputCheckbox id=@fiftyLabel @bind-Value=person.FiftyOrOver /> <label for=@fiftyLabel>50 or older</label><br/><br/>
 
-                                        <label>@person.TaxFiling.Year 401k Total Contribution Allowed:</label> $<span>@person.EmployerPlan.ContributionAllowed</span><br/>
+                                        <label>@person.FamilyYear.Year 401k Total Contribution Allowed:</label> $<span>@person.EmployerPlan.ContributionAllowed</span><br/>
                                         <label>minus Matched Contribution Allowed (step 2):</label> $<span>@person.EmployerPlan.AmountToSaveForMatch</span><br/>
                                         <label>Amount to Save (unmatched):</label> $<span>@person.EmployerPlan.AmountToSaveForNonMatched</span><br/>
                                     </EditForm><br/>
@@ -390,10 +390,10 @@ saving/@stepPath
                                 break;
                             case 7:
                                 <p><b>Prerequisities:</b> </p>
-                                <EditForm Model="taxFilings.Active" style=margin-left:25px>
-                                    <label>Target Year:</label> <select @bind=taxFilings.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
+                                <EditForm Model="familyYears.Active" style=margin-left:25px>
+                                    <label>Target Year:</label> <select @bind=familyYears.CurrentYear><option value=0>2022</option><option value=1>2023</option></select><br/>
 
-                                    <label>Tax Filing Status:</label> <select @bind=taxFilings.Active.TaxFilingStatus>
+                                    <label>Tax Filing Status:</label> <select @bind=familyYears.Active.TaxFilingStatus>
                                         <option value=None>choose...</option>
                                         <option>Single</option>
                                         <option value=MarriedFilingJointly>Married filing jointly</option>
@@ -402,15 +402,15 @@ saving/@stepPath
                                         </select><br/>
                                 </EditForm><br/>
 
-                                @for (int i = 0; i < taxFilings.Active.PersonCount; i++) {
-                                    var person = taxFilings.Active.People[i];
+                                @for (int i = 0; i < familyYears.Active.PersonCount; i++) {
+                                    var person = familyYears.Active.People[i];
                                     <p><b>Person @(i+1):</b> </p>
 
                                     <EditForm Model="person" style=margin-left:25px>
                                         <InputCheckbox @bind-Value=person.EmployerPlan.Eligible id='eligible'/> <label for='eligible'>Eligible for workplace retirement savings</label><br/><br/>
 
                                         <fieldset disabled=@person.EmployerPlan.NotEligible style='margin-left:20px'>
-                                            <label>@person.TaxFiling.Year Employer Post Tax "Mega Backdoor Roth" Contribution Allowed:</label> <span>$</span><input type=text class=dollar @bind-Value=person.EmployerPlan.AmountToSaveForBackdoorRoth @bind-Value:event=oninput/><br/><br/>
+                                            <label>@person.FamilyYear.Year Employer Post Tax "Mega Backdoor Roth" Contribution Allowed:</label> <span>$</span><input type=text class=dollar @bind-Value=person.EmployerPlan.AmountToSaveForBackdoorRoth @bind-Value:event=oninput/><br/><br/>
                                         </fieldset>
                                         <label>Amount to Save:</label> <span>$</span><span>@person.EmployerPlan.AmountToSaveForBackdoorRoth</span><br/>
                                     </EditForm><br/>
@@ -426,7 +426,7 @@ saving/@stepPath
                                 <p><b>Worksheet:</b> </p>
                                 <div>
                                     <i>list of debts (all interest rates):</i><br>
-                                    <EditForm Model="taxFilings.Active">
+                                    <EditForm Model="familyYears.Active">
                                         <table>
                                             <thead>
                                             <th><label>name</label></th>
@@ -436,7 +436,7 @@ saving/@stepPath
                                             <th><label>payoff date</label></th>
                                             <th><label></label></th>
                                             </thead>
-                                            @foreach (var debt in taxFilings.Active.Debts) {
+                                            @foreach (var debt in familyYears.Active.Debts) {
                                                 var myDebt = debt;
                                                 <tr>
                                                 <td><input type=text class=dollar @bind-Value=debt.Name @bind-Value:event=oninput /></td>
@@ -444,23 +444,23 @@ saving/@stepPath
                                                 <td><span>@debt.Category</span></td>
                                                 <td><input type=text class=dollar @bind-Value=debt.Total @bind-Value:event=oninput /></td>
                                                 <td><input type=text class=dollar @bind-Value=debt.PayoffDate @bind-Value:event=oninput /></td>
-                                                <td><button @onclick=@(() => taxFilings.Active.Debts.Remove(myDebt))>@myDebt.Name<span class="oi oi-delete" aria-hidden="true"></span></button></td>
+                                                <td><button @onclick=@(() => familyYears.Active.Debts.Remove(myDebt))>@myDebt.Name<span class="oi oi-delete" aria-hidden="true"></span></button></td>
                                                 </tr>
                                             }
                                         </table>
                                         <button @onclick=addDebt>Add</button>
 
                                         <br/><br/>
-                                        <label>Amount to Pay-Off (@priority.title):</label> <span>$</span>
-                                        @switch (priority.number) {
+                                        <label>Amount to Pay-Off (@step.title):</label> <span>$</span>
+                                        @switch (step.number) {
                                             case 3:
-                                                @taxFilings.Active.HighDebts;
+                                                @familyYears.Active.HighDebts;
                                                 break;
                                             case 8:
-                                                @taxFilings.Active.MediumDebts;
+                                                @familyYears.Active.MediumDebts;
                                                 break;
                                             case 10:
-                                                @taxFilings.Active.LowDebts;
+                                                @familyYears.Active.LowDebts;
                                                 break;
                                             default:
                                                 break;
@@ -472,14 +472,14 @@ saving/@stepPath
                                 @code{
                                     void addDebt()
                                     {
-                                        taxFilings.Active?.Debts.Add(new Debt() { Name = "new", Rate = 3.0, Total = 5000 });
+                                        familyYears.Active?.Debts.Add(new Debt() { Name = "new", Rate = 3.0, Total = 5000 });
                                     }
                                 }
                             
                                 break;
                         }
-                    <p><b>Approximate Return:</b> @priority.returns</p>
-                    <p><b>Details:</b> @((MarkupString)markupize(priority.description))</p>
+                    <p><b>Approximate Return:</b> @step.returns</p>
+                    <p><b>Details:</b> @((MarkupString)markupize(step.description))</p>
 
                     <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
                     <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
@@ -596,14 +596,16 @@ saving/@stepPath
     [Parameter]
     public string? stepPath { get; set; }
 
-    private Step[]? priorities;
+    private Step[]? steps;
     private static Retirement? irs_retirement_year1;
     private static Retirement? irs_retirement_year2;
-    private TaxFilings? taxFilings;
+    private FamilyYears? familyYears;
+    private const string folderName = "/saving/";
+
 
     protected override async Task OnInitializedAsync()
     {
-        priorities = await Http.GetFromJsonAsync<Step[]>("data/saving-steps.json");
+        steps = await Http.GetFromJsonAsync<Step[]>("data/saving-steps.json");
 
         var retirementYear1 = await Http.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/irs/irs.retirement.2022.json");
         var retirementYear2 = await Http.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/irs/irs.retirement.2023.json");
@@ -611,8 +613,8 @@ saving/@stepPath
         irs_retirement_year2 = JsonSerializer.Deserialize<IRS.Retirement>(retirementYear2);
 
         if (irs_retirement_year1 != null && irs_retirement_year2 != null) {
-            taxFilings = new(irs_retirement_year1, irs_retirement_year2);
-            taxFilings.CurrentYear = 1;
+            familyYears = new(irs_retirement_year1, irs_retirement_year2);
+            familyYears.CurrentYear = 1;
         }
     }
 }

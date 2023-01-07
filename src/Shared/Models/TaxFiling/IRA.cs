@@ -3,8 +3,8 @@ public class IRA {
     public IRA(Person person)
     {
         this.person = person;
-        if (this.person.TaxFiling?.IRSRetirement?.IRA != null) {
-            this.iraVariables = this.person.TaxFiling.IRSRetirement.IRA;
+        if (this.person.FamilyYear?.IRSRetirement?.IRA != null) {
+            this.iraVariables = this.person.FamilyYear.IRSRetirement.IRA;
         }
     }
 
@@ -16,7 +16,7 @@ public class IRA {
     public int? ContributionAllowed { 
         get
         {
-            if (person.TaxFiling.PersonCount > person.PersonIndex && person.TaxFiling.AdjustedGrossIncome != null)
+            if (person.FamilyYear.PersonCount > person.PersonIndex && person.FamilyYear.AdjustedGrossIncome != null)
             {
                 return iraVariables.ContributionLimit
                     + (person.FiftyOrOver ? iraVariables.CatchUpContributionLimit : 0);
@@ -35,7 +35,7 @@ public class IRA {
                 if (person.EmployerPlan.Eligible) {
                     return ApplyRange(iraVariables.DeductabilityPhaseOutRange.Single.Start,
                                       iraVariables.DeductabilityPhaseOutRange.Single.End,
-                                      person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
+                                      person.FamilyYear.AdjustedGrossIncome, ContributionAllowed);
                 } else {
                     return ContributionAllowed;
                 }
@@ -45,17 +45,17 @@ public class IRA {
                         if (person.EmployerPlan.Eligible) {
                             return ApplyRange(iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFiledJointly.Start,
                                       iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFiledJointly.End,
-                                      person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
+                                      person.FamilyYear.AdjustedGrossIncome, ContributionAllowed);
                         } else {
                             return ApplyRange(iraVariables.DeductabilityPhaseOutRange.InactiveParticipant_MarriedFiledJointly.Start,
                                       iraVariables.DeductabilityPhaseOutRange.InactiveParticipant_MarriedFiledJointly.End,
-                                      person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
+                                      person.FamilyYear.AdjustedGrossIncome, ContributionAllowed);
                         }
                     } else {
                         if (person.EmployerPlan.Eligible) {
                             return ApplyRange(iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFiledJointly.Start,
                                       iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFiledJointly.End,
-                                      person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
+                                      person.FamilyYear.AdjustedGrossIncome, ContributionAllowed);
                         } else {
                             return ContributionAllowed;
                         }
@@ -70,17 +70,17 @@ public class IRA {
                         if (person.EmployerPlan.Eligible) {
                             return ApplyRange(iraVariables.DeductabilityPhaseOutRange.MarriedFiledSeparately.Start,
                                       iraVariables.DeductabilityPhaseOutRange.MarriedFiledSeparately.End,
-                                      person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);                   
+                                      person.FamilyYear.AdjustedGrossIncome, ContributionAllowed);                   
                         } else {
                             return ApplyRange(iraVariables.DeductabilityPhaseOutRange.MarriedFiledSeparately.Start,
                                       iraVariables.DeductabilityPhaseOutRange.MarriedFiledSeparately.End,
-                                      person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);           
+                                      person.FamilyYear.AdjustedGrossIncome, ContributionAllowed);           
                         }
                     } else {
                         if (person.EmployerPlan.Eligible) {
                             return ApplyRange(iraVariables.DeductabilityPhaseOutRange.MarriedFiledSeparately.Start,
                                       iraVariables.DeductabilityPhaseOutRange.MarriedFiledSeparately.End,
-                                      person.TaxFiling.AdjustedGrossIncome, ContributionAllowed);
+                                      person.FamilyYear.AdjustedGrossIncome, ContributionAllowed);
                         } else {
                             return ContributionAllowed;
                         }
@@ -104,7 +104,7 @@ public class IRA {
     public int? DeductionAllowed { 
         get
         {
-            return CalculateDeduction(person.TaxFiling.AdjustedGrossIncome, person.TaxFiling.TaxFilingStatus, person);
+            return CalculateDeduction(person.FamilyYear.AdjustedGrossIncome, person.FamilyYear.TaxFilingStatus, person);
         }
     }
     public int? AmountToSave {

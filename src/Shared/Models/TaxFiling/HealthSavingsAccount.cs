@@ -7,7 +7,7 @@ public class HealthSavingsAccount {
 
     public IRS.HSA HSAVariables {
         get {
-            return this.person.TaxFiling.IRSRetirement.HSA;
+            return this.person.FamilyYear.IRSRetirement.HSA;
         }
     }
 

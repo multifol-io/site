@@ -6,7 +6,7 @@ using System.Text;
 public class EmployerPlan : INotifyPropertyChanged {
     public EmployerPlan(Person person) {
         this.person = person;
-        this.Employer401k = this.person.TaxFiling.IRSRetirement.Employer401k;
+        this.Employer401k = this.person.FamilyYear.IRSRetirement.Employer401k;
     }
 
     private Person person;
@@ -15,7 +15,7 @@ public class EmployerPlan : INotifyPropertyChanged {
     private async Task GetEmployerDataAsync(string employer) {
         HttpClient httpClient = new();
         var lEmployer = employer.ToLowerInvariant().Trim();
-        var year = person.TaxFiling.Year;
+        var year = person.FamilyYear.Year;
     
         if (lEmployer == "test") {
             var requestUri = "https://api.saving.bogle.tools/api/UploadEmployerInfo?code=8VyPqHmGuPDZq6G2tmbJ7g0vN9BqIQhSGmRA-jBBEInkAzFuUvlxuA==";
