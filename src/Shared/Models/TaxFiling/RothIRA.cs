@@ -36,12 +36,12 @@ public class RothIRA {
                                   rothIraVariables.ContributionPhaseOutRange.Single.End,
                                   person.TaxFiling.AdjustedGrossIncome, MaximumContributionByAge);
             case TaxFilingStatus.MarriedFilingJointly:
-                return ApplyRange(rothIraVariables.ContributionPhaseOutRange.MarriedFiledJointly.Start,
-                                  rothIraVariables.ContributionPhaseOutRange.MarriedFiledJointly.End,
+                return ApplyRange(rothIraVariables.ContributionPhaseOutRange.MarriedFilingJointly.Start,
+                                  rothIraVariables.ContributionPhaseOutRange.MarriedFilingJointly.End,
                                   person.TaxFiling.AdjustedGrossIncome, MaximumContributionByAge);
             case TaxFilingStatus.MarriedFilingSeperately: 
-                return ApplyRange(rothIraVariables.ContributionPhaseOutRange.MarriedFiledSeparately.Start,
-                                  rothIraVariables.ContributionPhaseOutRange.MarriedFiledSeparately.End,
+                return ApplyRange(rothIraVariables.ContributionPhaseOutRange.MarriedFilingSeparately.Start,
+                                  rothIraVariables.ContributionPhaseOutRange.MarriedFilingSeparately.End,
                                   person.TaxFiling.AdjustedGrossIncome, MaximumContributionByAge);
             case TaxFilingStatus.None:
             default:
