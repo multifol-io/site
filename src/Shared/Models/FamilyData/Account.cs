@@ -28,4 +28,11 @@ public class Account
             return _Investments;
         }
     }
+    public void UpdatePercentages(double totalValue)
+    {
+        foreach (var investment in Investments)
+        {
+            investment.Percentage = investment.Value / totalValue * 100;
+        }
+    }
 }

@@ -36,6 +36,7 @@ portfolio/@stepPath
             var nextStep = steps[0];
             string prevPage = folderName + prevStep?.step;
             string nextPage = folderName + nextStep?.step;
+            familyYears.Active.UpdatePercentages();
             
             <h2 style="max-width:350px">
                 <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
@@ -125,14 +126,14 @@ portfolio/@stepPath
                                     break;
                                 case "retirement-assets":
                                     <td>
-                                        <b>Portfolio Size:</b>&nbsp;@formatMoney(familyYears.Active.Value)<br/>
+                                        <b>Portfolio Size:</b>&nbsp;@estimatePortfolio(familyYears.Active)<br/>
 
                                         <u><b>Current Retirement Assets:</b></u><br/>
 
                                         @foreach (var account in familyYears.Active.Accounts) {
-                                            <br/><b>&nbsp;&nbsp;@if (account.Identifier != null) {<span>@account.Identifier </span>}@account.AccountType @if (account.Custodian != null) { <span> at @account.Custodian</span> } (@formatMoney(account.Value))</b><br/>
+                                            <br/><b>&nbsp;&nbsp;@if (account.Identifier != null) {<span>@account.Identifier&nbsp;</span>}@account.AccountType @if (account.Custodian != null) { <span> at @account.Custodian</span> } (@formatPercent(account.Percentage))</b><br/>
                                             @foreach (var investment in account.Investments) {
-                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;xx% @investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span><br/>
+                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;@formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span><br/>
                                             }
                                         }
                                     </td>
@@ -342,7 +343,8 @@ portfolio/@stepPath
                             case "retirement-assets":
                                 <b>Portfolio Size:</b><span>&nbsp;@formatMoney(familyYears.Active.Value)</span><br/>
 
-                                <u><b>Current Retirement Assets:</b></u><br/>
+                                <u><b>Current Retirement Assets:</b></u><br/><br/>
+
                                 @code{
                                     void editAccount(MouseEventArgs e, int index)
                                     {
@@ -351,20 +353,28 @@ portfolio/@stepPath
                                 }
                                 int accountIndex = 0;
                                 @foreach (var account in familyYears.Active.Accounts) {
-                                    int buffer = accountIndex++;
-                                    <br/><b>&nbsp;&nbsp;<input type=text @bind-Value=account.Identifier @bind-Value:event=oninput /><input type=text @bind-Value=account.AccountType @bind-Value:event=oninput /> <span> at <input type=text @bind-Value=account.Custodian @bind-Value:event=oninput /></span> (@formatMoney(account.Value))</b><button @onclick='@(e=>addInvestment(e,buffer))'>Add Investment</button><br/>
+                                    int accBuffer = accountIndex++;
+                                    <br/><b>&nbsp;&nbsp;<input type=text @bind-Value=account.Identifier @bind-Value:event=oninput placeholder='pronoun/identifier' /><input type=text @bind-Value=account.AccountType @bind-Value:event=oninput placeholder='account type'/> <span> at <input type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' /></span> Total: @formatMoney(account.Value)</b><br/>
+                                    int investmentIndex = 0;
                                     @foreach (var investment in account.Investments) {
-                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text @bind-Value=investment.Name @bind-Value:event=oninput /> (<input type=text @bind-Value=investment.Ticker @bind-Value:event=oninput />) (<input type=text @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput />%)</span><br/>
-                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text @bind-Value=investment.Shares @bind-Value:event=oninput /> ✖️ $<input type=text @bind-Value=investment.Price @bind-Value:event=oninput /> 🟰 $<input type=text @bind-Value=investment.Value @bind-Value:event=oninput /></span><br/>
+                                        int invBuffer = investmentIndex++;
+                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text @bind-Value=investment.Name @bind-Value:event=oninput placeholder='investment fullname' /> (<input type=text @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/>) (<input type=text @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput placeholder='expense ratio'/>%)</span><br/>
+                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text @bind-Value=investment.Shares @bind-Value:event=oninput placeholder='shares'/> ✖️ $<input type=text @bind-Value=investment.Price @bind-Value:event=oninput placeholder='price'/> 🟰 $<input type=text @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/></span><br/>
+                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button @onclick='@(e=>deleteInvestment(e,accBuffer,invBuffer))'>Delete Investment</button></span><br/>
                                         <br/>
-                                        @code{
-                                            void addInvestment(MouseEventArgs e, int index)
-                                            {
-                                                var newInvestment = new Investment();
-                                                familyYears.Active.Accounts[index].Investments.Add(newInvestment);
-                                            }
+                                    }
+                                    @code{
+                                        void addInvestment(MouseEventArgs e, int accountIndex)
+                                        {
+                                            var newInvestment = new Investment();
+                                            familyYears.Active.Accounts[accountIndex].Investments.Add(newInvestment);
+                                        }
+                                        void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
+                                        {
+                                            familyYears.Active.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
                                         }
                                     }
+                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button @onclick='@(e=>addInvestment(e,accBuffer))'>Add Investment</button></span><br/>
                                 }
                                 
                                 <br/><span>&nbsp;&nbsp;&nbsp;&nbsp;<button @onclick=newAccount>New Account</button></span>
@@ -440,6 +450,40 @@ portfolio/@stepPath
     {
         return String.Format("${0:#,0.#}", amount);
     }
+    public string formatPercent(double? amount)
+    {
+        return String.Format("{0:#,0.#}%", amount);
+    }
+
+    public string estimatePortfolio(FamilyYear familyYear) 
+    {
+        if (familyYear.Value >= 10000000) {
+            return "8 digits";
+        } else if (familyYear.Value >= 6666666) {
+            return "high 7 digits";
+        } else if (familyYear.Value >= 3333333) {
+            return "mid 7 digits";
+        } else if (familyYear.Value >= 1000000) {
+            return "low 7 digits";
+        } else if (familyYear.Value >= 666666) {
+            return "high 6 digits";
+        } else if (familyYear.Value >= 333333) {
+            return "mid 6 digits";
+        } else if (familyYear.Value >= 100000) {
+            return "low 6 digits";
+        } else if (familyYear.Value >= 66666) {
+            return "high 5 digits";
+        } else if (familyYear.Value >= 33333) {
+            return "mid 5 digits";
+        } else if (familyYear.Value >= 10000) {
+            return "low 5 digits";
+        } else if (familyYear.Value >= 1000) {
+            return "4 digits";
+        } else {
+            return "less than $1,000";
+        }
+    }
+
     public string markupize(string? wikiText) {
         if (wikiText == null) return "";
         string returnVal = "<span>";
