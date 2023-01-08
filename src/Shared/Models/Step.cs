@@ -1,4 +1,4 @@
-    public class InvestmentPriority
+    public class Step
     {
         public string? step { get; set; }
         public string? title { get; set; }

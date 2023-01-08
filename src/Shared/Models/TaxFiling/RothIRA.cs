@@ -3,7 +3,7 @@ public class RothIRA {
     public RothIRA(Person person)
     {
         this.person = person;
-        this.rothIraVariables = this.person.TaxFiling.IRSRetirement.RothIRA;
+        this.rothIraVariables = this.person.FamilyYear.RetirementData.RothIRA;
     }
 
     private Person person;
@@ -19,8 +19,8 @@ public class RothIRA {
 
     public int? ContributionAllowed {
         get { 
-            if (person.TaxFiling.PersonCount > person.PersonIndex && person.TaxFiling.AdjustedGrossIncome != null) {
-                return CalculateAllowedContribution(person.TaxFiling.AdjustedGrossIncome, person.TaxFiling.TaxFilingStatus, person);
+            if (person.FamilyYear.PersonCount > person.PersonIndex && person.FamilyYear.AdjustedGrossIncome != null) {
+                return CalculateAllowedContribution(person.FamilyYear.AdjustedGrossIncome, person.FamilyYear.TaxFilingStatus, person);
             } else {
                 return null;
             }
@@ -34,15 +34,15 @@ public class RothIRA {
             case TaxFilingStatus.Single:
                 return ApplyRange(rothIraVariables.ContributionPhaseOutRange.Single.Start,
                                   rothIraVariables.ContributionPhaseOutRange.Single.End,
-                                  person.TaxFiling.AdjustedGrossIncome, MaximumContributionByAge);
+                                  person.FamilyYear.AdjustedGrossIncome, MaximumContributionByAge);
             case TaxFilingStatus.MarriedFilingJointly:
                 return ApplyRange(rothIraVariables.ContributionPhaseOutRange.MarriedFilingJointly.Start,
                                   rothIraVariables.ContributionPhaseOutRange.MarriedFilingJointly.End,
-                                  person.TaxFiling.AdjustedGrossIncome, MaximumContributionByAge);
+                                  person.FamilyYear.AdjustedGrossIncome, MaximumContributionByAge);
             case TaxFilingStatus.MarriedFilingSeperately: 
                 return ApplyRange(rothIraVariables.ContributionPhaseOutRange.MarriedFilingSeparately.Start,
                                   rothIraVariables.ContributionPhaseOutRange.MarriedFilingSeparately.End,
-                                  person.TaxFiling.AdjustedGrossIncome, MaximumContributionByAge);
+                                  person.FamilyYear.AdjustedGrossIncome, MaximumContributionByAge);
             case TaxFilingStatus.None:
             default:
                 return null;

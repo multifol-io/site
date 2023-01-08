@@ -1,4 +1,6 @@
 ﻿@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
@@ -12,26 +14,22 @@
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
 
-        @if (priorities == null)
-        {
-            <p><em>Loading...</em></p>
-        }
-        else
-        {
-            <div class="nav-item px-2">
-                <NavLink class="nav-link" href="/saving">
-                    Saving Summary
-                </NavLink>
-            </div>
-            foreach (var priority in priorities) {
-                var href = "/saving/" + @priority.step;
-                <div class="nav-item px-2">
-                    <NavLink class="nav-link" href="@href">
-                        @priority.number: @priority.title
-                    </NavLink>
-                </div>
-            }
-        }
+        <div class="nav-item px-2">
+            <NavLink class="nav-link" href="/saving">
+                Annual Saving
+            </NavLink>
+        </div>
+        <div class="nav-item px-2">
+            <NavLink class="nav-link" href="/search">
+                Bogleheads Search
+            </NavLink>
+        </div>
+        <div class="nav-item px-2">
+            <a class="nav-link" href="https://rrelyea.github.io/3fund" target="_blank">
+                3Fund Performance
+            </a>
+        </div>
+        
     </nav>
 </div>
 
@@ -43,12 +41,5 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
-    }
-
-    private InvestmentPriority[]? priorities;
-
-    protected override async Task OnInitializedAsync()
-    {
-        priorities = await Http.GetFromJsonAsync<InvestmentPriority[]>("data/investment-priorities.json");
     }
 }

@@ -1,0 +1,48 @@
+[
+    {
+        "step": "emergency-fund",
+        "title": "Emergency Fund",
+        "number": 1,
+        "summary": "Three to six months of expenses (indicate if you have this, but it is generally not part of your asset allocation)",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
+        "step": "debts",
+        "title": "Debts",
+        "diagramTitle": "Debts",
+        "number": 2,
+        "summary": "Indicate if you have any debt (credit card, school loans, car loans, mortgage) and the interest rate you are paying on each loan.",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
+        "step": "tax-status",
+        "title": "Tax Status",
+        "number": 3,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
+        "step": "age",
+        "title": "Age",
+        "number": 4,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
+        "step": "asset-allocation",
+        "title": "Asset Allocation",
+        "number": 5,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    }
+]

@@ -1,14 +1,19 @@
+using IRS;
 using System.ComponentModel.DataAnnotations;
-public class TaxFiling {
-    public TaxFiling(IRS.Retirement irs_retirement, int year) {
-        this.IRSRetirement = irs_retirement;
+public class FamilyYear {
+    public FamilyYear(RetirementData retirementData, TaxRateData taxRateData, int year) {
+        this.RetirementData = retirementData;
+        this.TaxRateData = taxRateData;
         this.Year = year;
     }
 
-    public IRS.Retirement IRSRetirement { get; private set; }
+    public RetirementData RetirementData { get; private set; }
+    public TaxRateData TaxRateData { get; private set; }
     
     [Required]
     public int PersonCount { get; set; }
+
+    public string StateOfResidence { get; set; }
     
     public int Year { get; private set; }
 
@@ -52,7 +57,7 @@ public class TaxFiling {
     }
 
     public int? AdjustedGrossIncome { get; set; }
-
+    public string? MarginalTaxBracket { get; set; }
     public EmergencyFund EmergencyFund { get; set; } = new();
 
     private List<Debt>? _debts;
@@ -66,6 +71,10 @@ public class TaxFiling {
             return _debts;
         }
     }
+
+    public double? Stocks { get; set; }
+    public double? Bonds { get; set; }
+    public int? International { get; set; }
 
     private int? GetDebts(string category) {
             int? total = null;

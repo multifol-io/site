@@ -67,14 +67,9 @@ namespace IRS
         public int End { get; set; }
     }
 
-    public class Retirement
+    public class RetirementData : DataDocument
     {
-        public string? name { get; set; }
-        public string? repository { get; set; }
-        public string? path { get; set; }
-        public string? version { get; set; }
-        public string? note { get; set; }
-        public List<Source>? source { get; set; }
+
         public HSA? HSA { get; set; }
         public IRA? IRA { get; set; }
         public RothIRA? RothIRA { get; set; }
@@ -94,13 +89,4 @@ namespace IRS
         public int Start { get; set; }
         public int End { get; set; }
     }
-
-    public class Source
-    {
-        public string? date { get; set; }
-        public string? title { get; set; }
-        public string? url { get; set; }
-    }
-
-
 }

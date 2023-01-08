@@ -1,6 +1,6 @@
 public class Person {
-    public Person(TaxFiling taxFiling, int personIndex) {
-        this.TaxFiling = taxFiling;
+    public Person(FamilyYear familyYear, int personIndex) {
+        this.FamilyYear = familyYear;
         this.EmployerPlan = new EmployerPlan(this);
         this.IRA = new IRA(this);
         this.RothIRA = new RothIRA(this);
@@ -47,15 +47,15 @@ public class Person {
 
     public Person? Spouse { 
         get {
-            if (TaxFiling.TaxFilingStatus == TaxFilingStatus.MarriedFilingJointly 
-            || TaxFiling.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart 
-            || TaxFiling.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperately)
+            if (FamilyYear.TaxFilingStatus == TaxFilingStatus.MarriedFilingJointly 
+            || FamilyYear.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart 
+            || FamilyYear.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperately)
             {
                 switch (this.PersonIndex) {
                     case 0:
-                        return TaxFiling.People[1];
+                        return FamilyYear.People[1];
                     case 1:
-                        return TaxFiling.People[0];
+                        return FamilyYear.People[0];
                     default:
                         throw new InvalidDataException("PersonIndex not expected to be " + this.PersonIndex);
                 }
@@ -95,24 +95,26 @@ public class Person {
             int personIndex = PersonIndex;
             switch (personIndex) {
                 case 0:
-                    if (TaxFiling.PersonCount > 1)
+                    if (FamilyYear.PersonCount > 1)
                     {
-                        return TaxFiling.People[1];
+                        return FamilyYear.People[1];
                     }
                     else
                     {
                         return null;
                     }
                 case 1:
-                    return TaxFiling.People[0];
+                    return FamilyYear.People[0];
                 default:
                     return null;
             }
         }
     }
 
-    public TaxFiling TaxFiling { private set; get; }
+    public FamilyYear FamilyYear { private set; get; }
 
+    public string Identifier { get; set; }
+    public int? Age { get; set; }
     public bool FiftyOrOver { get; set; }
     public bool FiftyFiveOrOver { get; set; }
 

@@ -7,15 +7,17 @@ public class HealthSavingsAccount {
 
     public IRS.HSA HSAVariables {
         get {
-            return this.person.TaxFiling.IRSRetirement.HSA;
+            return this.person.FamilyYear.RetirementData.HSA;
         }
     }
 
     private Person person;
     public bool Eligible { get; set; }
     public bool NotEligible {get {return !Eligible;}}
-
     public EmployeeFamily? Family { get; set; }
+    public int? EmployerContribution { get; set; }
+
+    public int? AmountToSave { get { return Limit - (EmployerContribution ?? 0); } }
     
     public int? Limit { 
         get {
@@ -45,10 +47,5 @@ public class HealthSavingsAccount {
 
             return contributionLimit;
         }
-    }
-
-    public int? EmployerContribution { get; set; }
-
-    public int? AmountToSave { get { return Limit - (EmployerContribution ?? 0); }
     }
 }
