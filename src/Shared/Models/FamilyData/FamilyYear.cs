@@ -110,6 +110,17 @@ public class FamilyYear {
         }
     }
 
+    public double Value { 
+        get {
+            double newValue = 0;
+            foreach (var account in Accounts) 
+            {
+                newValue += account.Value;
+            }
+            
+            return newValue;
+        }
+    }
     private List<Account> _Accounts;
     public List<Account> Accounts {
         get {

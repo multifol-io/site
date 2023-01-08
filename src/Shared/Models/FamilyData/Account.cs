@@ -3,6 +3,19 @@ public class Account
     public string Identifier { get; set; }
     public string AccountType { get; set; }
     public string? Custodian { get; set; }
+    public double Value { 
+        get {
+            double newValue = 0;
+            foreach (var investment in Investments) 
+            {
+                newValue += investment.Value;
+            }
+
+            return newValue;
+        }
+    }
+    public bool Edit { get; set; }
+    public double Percentage { get; set; }
 
     private List<Investment>? _Investments;
     public List<Investment> Investments {
