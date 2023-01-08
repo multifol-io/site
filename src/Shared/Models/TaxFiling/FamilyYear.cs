@@ -57,7 +57,8 @@ public class FamilyYear {
     }
 
     public int? AdjustedGrossIncome { get; set; }
-    public string? MarginalTaxBracket { get; set; }
+    public string? FederalMarginalTaxBracket { get; set; }
+    public string? StateMarginalTaxBracket { get; set; }
     public EmergencyFund EmergencyFund { get; set; } = new();
 
     private List<Debt>? _debts;

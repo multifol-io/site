@@ -98,10 +98,10 @@ portfolio/@stepPath
                                             @if (familyYears.Active.TaxFilingStatus != TaxFilingStatus.None) { <span>&nbsp;@familyYears.Active.TaxFilingStatus</span> }
                                             <br/>
                                             <b>Tax Rate:</b> 
-                                            @if (familyYears.Active.MarginalTaxBracket != null) { <span>&nbsp;@familyYears.Active.MarginalTaxBracket</span> }
+                                            @if (familyYears.Active.FederalMarginalTaxBracket != null) { <span>&nbsp;@familyYears.Active.FederalMarginalTaxBracket Federal, @familyYears.Active.StateMarginalTaxBracket State</span> }
                                             <br/>
                                             <b>State of Residence:</b>
-                                            @if (familyYears.Active.MarginalTaxBracket != null) { <span>&nbsp;@familyYears.Active.StateOfResidence</span> }
+                                            @if (familyYears.Active.StateMarginalTaxBracket != null) { <span>&nbsp;@familyYears.Active.StateOfResidence</span> }
                                         </span>
                                     </td>
                                     break;
@@ -241,9 +241,9 @@ portfolio/@stepPath
                                             int? lastStartAmount = null;
 
                                             <br/>
-                                            <InputRadioGroup @bind-Value=familyYears.Active.MarginalTaxBracket>
-                                                <label>Marginal Tax Rate:</label><br/>
-                                                <table>
+                                            <InputRadioGroup @bind-Value=familyYears.Active.FederalMarginalTaxBracket>
+                                                <label>Federal Marginal Tax Rate:</label><br/>
+                                                <table style="margin-left:20px">
                                                     <tr><th></th><th style=text-align:right;padding-right:10px>From</th><th style=text-align:right;padding-right:10px>To</th></tr>
                                                 @foreach (var taxBracket in taxFiler.TaxBrackets)
                                                 {
@@ -263,6 +263,9 @@ portfolio/@stepPath
                                     <select @bind=familyYears.Active.StateOfResidence>
                                         <option value="None">Choose...</option><option value="AL">Alabama (AL)</option><option value="AK">Alaska (AK)</option><option value="AS">American Samoa (AS)</option><option value="AZ">Arizona (AZ)</option><option value="AR">Arkansas (AR)</option><option value="CA">California (CA)</option><option value="CO">Colorado (CO)</option><option value="CT">Connecticut (CT)</option><option value="DE">Delaware (DE)</option><option value="DC">District of Columbia (DC)</option><option value="FL">Florida (FL)</option><option value="GA">Georgia (GA)</option><option value="GU">Guam (GU)</option><option value="HI">Hawaii (HI)</option><option value="ID">Idaho (ID)</option><option value="IL">Illinois (IL)</option><option value="IN">Indiana (IN)</option><option value="IA">Iowa (IA)</option><option value="KS">Kansas (KS)</option><option value="KY">Kentucky (KY)</option><option value="LA">Louisiana (LA)</option><option value="ME">Maine (ME)</option><option value="MD">Maryland (MD)</option><option value="MA">Massachusetts (MA)</option><option value="MI">Michigan (MI)</option><option value="MN">Minnesota (MN)</option><option value="MS">Mississippi (MS)</option><option value="MO">Missouri (MO)</option><option value="MT">Montana (MT)</option><option value="NE">Nebraska (NE)</option><option value="NV">Nevada (NV)</option><option value="NH">New Hampshire (NH)</option><option value="NJ">New Jersey (NJ)</option><option value="NM">New Mexico (NM)</option><option value="NY">New York (NY)</option><option value="NC">North Carolina (NC)</option><option value="ND">North Dakota (ND)</option><option value="CM">Northern Mariana Islands (CM)</option><option value="OH">Ohio (OH)</option><option value="OK">Oklahoma (OK)</option><option value="OR">Oregon (OR)</option><option value="PA">Pennsylvania (PA)</option><option value="PR">Puerto Rico (PR)</option><option value="RI">Rhode Island (RI)</option><option value="SC">South Carolina (SC)</option><option value="SD">South Dakota (SD)</option><option value="TN">Tennessee (TN)</option><option value="TX">Texas (TX)</option><option value="VI">U.S. Virgin Islands (VI)</option><option value="UT">Utah (UT)</option><option value="VT">Vermont (VT)</option><option value="VA">Virginia (VA)</option><option value="WA">Washington (WA)</option><option value="WV">West Virginia (WV)</option><option value="WI">Wisconsin (WI)</option><option value="WY">Wyoming (WY)</option>
                                     </select>
+                                    <br/><br/>
+
+                                    <label>State Marginal Tax Rate:</label> <input class=dollar type=text @bind-Value="familyYears.Active.StateMarginalTaxBracket" @bind-Value:event="oninput"/>%<br/><br/>
                                     <br/><br/>
                                 </EditForm>
                                 <br/>
