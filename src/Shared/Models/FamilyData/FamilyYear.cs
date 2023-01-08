@@ -109,4 +109,16 @@ public class FamilyYear {
             return GetDebts("Low");
         }
     }
+
+    private List<Account> _Accounts;
+    public List<Account> Accounts {
+        get {
+            if (_Accounts == null)
+            {
+                _Accounts = new List<Account>();
+            }
+
+            return _Accounts;
+        }
+    }
 }

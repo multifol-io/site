@@ -28,7 +28,6 @@ public class FamilyYears : IFamilyYears
         //TODO: don't hardcode years. use current date, etc...
         Years[0] = new FamilyYear(retirementDataY1, taxRatesY1, 2022);
         Years[1] = new FamilyYear(retirementDataY2, taxRatesY2, 2023);
-
     }
 
     public FamilyYear[] Years = new FamilyYear[2];
