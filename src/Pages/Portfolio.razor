@@ -54,7 +54,7 @@ portfolio/@stepPath
                     @foreach (var step in steps) {
                         var href = folderName + @step.step;
                         <tr>
-                            <td>
+                            <td style=vertical-align:top>
                                 <div>
                                     <a href="@href" style="background:blue" class="m-1 btn" >✏️</a>
                                 </div>
@@ -121,9 +121,15 @@ portfolio/@stepPath
                                     break;
                                 case "retirement-assets":
                                     <td>
-                                        <span>
-                                            <u><b>Current Retirement Assets:</b></u><br/>
-                                        </span>
+                                        <u><b>Current Retirement Assets:</b></u><br/>
+
+                                        @foreach (var account in familyYears.Active.Accounts) {
+                                            <b>@account.Identifier @account.AccountType @if (account.Custodian != null) { <span> at @account.Custodian</span> } </b><br/>
+                                            @foreach (var investment in account.Investments) {
+                                                <span>xx% @investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span><br/>
+                                            }
+                                            <br/>
+                                        }
                                     </td>
                                     break;                                
                                 case "contributions":

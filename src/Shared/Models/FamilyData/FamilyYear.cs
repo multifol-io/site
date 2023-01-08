@@ -116,6 +116,16 @@ public class FamilyYear {
             if (_Accounts == null)
             {
                 _Accounts = new List<Account>();
+                var taxable = new Account() { AccountType = "Taxable" };
+                var vti = new Investment() { Ticker = "VTI", Name = "Vanguard Total Index", ExpenseRatio = .04, Value = 200 };
+                taxable.Investments.Add(vti);
+                _Accounts.Add(taxable);
+                var my401k = new Account() { AccountType = "401k", Identifier = "My", Custodian = "Fidelity" };
+                var vti2 = new Investment() { Ticker = "VTI", Name = "Vanguard Total Index", ExpenseRatio = .04, Value = 2000 };
+                my401k.Investments.Add(vti2);
+                var bnd = new Investment() { Ticker = "BND", Name = "Vanguard Total Bond", ExpenseRatio = .08, Value = 2000 };
+                my401k.Investments.Add(bnd);
+                _Accounts.Add(my401k);
             }
 
             return _Accounts;
