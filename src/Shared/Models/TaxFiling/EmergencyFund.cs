@@ -35,6 +35,7 @@ public class EmergencyFund {
         get { return (double?)CurrentBalance / (double?)MonthlyExpenses; }
     }
 
+    public bool UseAmount { get; set; }
     public bool Complete { get { return AmountToSave != null; } }
 
     [Required]

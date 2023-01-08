@@ -6,6 +6,8 @@ public class Person {
         this.RothIRA = new RothIRA(this);
         this.HealthSavingsAccount = new HealthSavingsAccount(this);
         this.PersonIndex = personIndex;
+        if (this.PersonIndex == 0) { Identifier = "me"; }
+        else { Identifier = "them"; }
     }
 
     public Employer.Employer _employer;

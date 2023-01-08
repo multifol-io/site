@@ -44,5 +44,23 @@
         "priority": "",
         "returns": "",
         "description": ""
+    },
+    {
+        "step": "retirement-assets",
+        "title": "Retirement Assets",
+        "number": 6,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
+        "step": "contributions",
+        "title": "Contributions",
+        "number": 7,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
     }
 ]
