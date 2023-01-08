@@ -81,14 +81,12 @@ portfolio/@stepPath
                                         <b>Debt:</b> 
                                         @if (familyYears.Active.Debts.Count == 0) { <span>&nbsp;no debts</span> } 
                                         else if (familyYears.Active.Debts.Count >= 1) { 
-                                            <p>
+                                            <br/>
                                             @foreach (var debt in familyYears.Active.Debts)
                                             {
                                                 <span>&nbsp;&nbsp;@debt.Name: @formatMoney(debt.Total) @@ @debt.Rate%</span><br/> 
                                             }
-                                            </p>
                                         }
-
                                     </td>
                                     break;
                                 case "tax-status":
