@@ -80,8 +80,15 @@ portfolio/@stepPath
                                     <td style=text-align:left>
                                         <b>Debt:</b> 
                                         @if (familyYears.Active.Debts.Count == 0) { <span>&nbsp;no debts</span> } 
-                                        else if (familyYears.Active.Debts.Count == 1) { <span>&nbsp;@familyYears.Active.Debts.Count debt</span> }
-                                        else { <span>&nbsp;@familyYears.Active.Debts.Count debts</span> }
+                                        else if (familyYears.Active.Debts.Count >= 1) { 
+                                            <p>
+                                            @foreach (var debt in familyYears.Active.Debts)
+                                            {
+                                                <span>&nbsp;&nbsp;@debt.Name: @formatMoney(debt.Total) @@ @debt.Rate%</span><br/> 
+                                            }
+                                            </p>
+                                        }
+
                                     </td>
                                     break;
                                 case "tax-status":
@@ -102,11 +109,14 @@ portfolio/@stepPath
                                     <td>
                                         <b>Desired Asset allocation:</b>
                                         @if (familyYears.Active.Stocks != null && familyYears.Active.Bonds != null) {
-                                        <span>&nbsp;@familyYears.Active.Stocks% stocks / @familyYears.Active.Bonds% bonds</span><br/>
+                                            <span>&nbsp;@familyYears.Active.Stocks% stocks / @familyYears.Active.Bonds% bonds</span><br/>
+                                        } else {
+                                            <br/>
                                         }
-                                        @if (familyYears.Active.International != null) {
-                                            <span>Desired International allocation: @familyYears.Active.International%</span><br/>
-                                        }
+                                        <span>&nbsp;&nbsp;Desired International allocation: </span>
+                                            @if (familyYears.Active.International != null) {
+                                                <span>@familyYears.Active.International%</span>
+                                            }
                                     </td>
                                     break;
                                 default:
