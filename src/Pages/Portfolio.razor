@@ -119,6 +119,21 @@ portfolio/@stepPath
                                             }
                                     </td>
                                     break;
+                                case "retirement-assets":
+                                    <td>
+                                        <span>
+                                            <u><b>Current Retirement Assets:</b></u><br/>
+                                        </span>
+                                    </td>
+                                    break;                                
+                                case "contributions":
+                                    <td>
+                                        <span>
+                                            <u><b>Contributions:</b></u><br/><br/>
+                                            <b>New annual Contributions</b>
+                                        </span>
+                                    </td>
+                                    break;
                                 default:
                                     <td style=text-align:center>NYI</td><td></td>
                                     break;
@@ -295,7 +310,7 @@ portfolio/@stepPath
                                     <EditForm Model="person" style=margin-left:25px>
                                         <label>Age:</label> <input type=text @bind-Value=person.Age @bind-Value:event=oninput /><br/>
 
-                                        <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier default-value>
+                                        <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
                                             <option value=None>choose...</option>
                                             <option>me</option>
                                             <option>them</option>
@@ -385,7 +400,11 @@ portfolio/@stepPath
                 case ']':
                     if (lastChar == ']') {
                         if (text == "") { text = href; }
-                        if (href.StartsWith("https://"))
+                        if (href.StartsWith("https://bogle.tools/")) 
+                        {
+                            returnVal += "<a href='" + href.Substring(19) + "'>" + text + "</a>";
+                        }
+                        else if (href.StartsWith("https://"))
                         {
                             returnVal += "<a target=_blank href='" + href + "'>" + text + "</a>";
                         } 
