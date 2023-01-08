@@ -142,7 +142,50 @@ portfolio/@stepPath
                                     <td>
                                         <span>
                                             <u><b>Contributions:</b></u>
-                                        </span>
+                                        </span><br/>
+
+                                        @if (familyYears.Active.People[0].EmployerPlan.AmountToSaveForMatch > 0) {
+                                            <span>@formatMoney(familyYears.Active.People[0].EmployerPlan.AmountToSaveForMatch) in @familyYears.Active.People[0].Identifier 401k (Match: @formatMoney(familyYears.Active.People[0].EmployerPlan.MatchAmount))</span><br/>
+                                        }
+                                        @if (familyYears.Active.People[1].EmployerPlan.AmountToSaveForMatch > 0) {
+                                            <span>@formatMoney(familyYears.Active.People[1].EmployerPlan.AmountToSaveForMatch) in @familyYears.Active.People[1].Identifier 401k (Match: @formatMoney(familyYears.Active.People[1].EmployerPlan.MatchAmount))</span><br/>
+                                        }
+                                        @if (familyYears.Active.HighDebts > 0) {
+                                            <span>@familyYears.Active.HighDebts in High Debts</span><br/>
+                                        }
+                                        @if (familyYears.Active.People[0].HealthSavingsAccount.AmountToSave > 0) {
+                                            <span>@formatMoney(familyYears.Active.People[0].HealthSavingsAccount.AmountToSave) in @familyYears.Active.People[0].Identifier HSA (Employer: @formatMoney(familyYears.Active.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
+                                        }
+                                        @if (familyYears.Active.People[1].HealthSavingsAccount.AmountToSave > 0) {
+                                            <span>@formatMoney(familyYears.Active.People[1].HealthSavingsAccount.AmountToSave) in @familyYears.Active.People[1].Identifier HSA (Employer: @formatMoney(familyYears.Active.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
+                                        }
+                                        @if (familyYears.Active.AdjustedGrossIncome != null) {
+                                            if (familyYears.Active.PersonCount > 0) {
+                                                <span>@((MarkupString)GetRecommendedIRAMarkup(familyYears.Active.People[0]))</span><br/>
+                                            }
+                                            if(familyYears.Active.PersonCount > 1) {
+                                                <span>@((MarkupString)GetRecommendedIRAMarkup(familyYears.Active.People[1]))</span><br/>
+                                            }
+                                        }
+                                        @if (familyYears.Active.People[0].EmployerPlan.AmountToSaveForNonMatched > 0) {
+                                            <span>@formatMoney(familyYears.Active.People[0].EmployerPlan.AmountToSaveForNonMatched) in @familyYears.Active.People[0].Identifier 401k</span><br/>
+                                        }
+                                        @if (familyYears.Active.People[1].EmployerPlan.AmountToSaveForNonMatched > 0) {
+                                            <span>@formatMoney(familyYears.Active.People[1].EmployerPlan.AmountToSaveForNonMatched) in @familyYears.Active.People[1].Identifier 401k</span><br/>
+                                        }
+                                        @if (familyYears.Active.People[0].EmployerPlan.AmountToSaveForBackdoorRoth > 0) {
+                                            <span>@formatMoney(familyYears.Active.People[0].EmployerPlan.AmountToSaveForBackdoorRoth) in @familyYears.Active.People[0].Identifier mega backdoor roth</span><br/>
+                                        }
+                                        @if (familyYears.Active.People[1].EmployerPlan.AmountToSaveForBackdoorRoth > 0) {
+                                            <span>@formatMoney(familyYears.Active.People[1].EmployerPlan.AmountToSaveForBackdoorRoth) in @familyYears.Active.People[1].Identifier mega backdoor roth</span><br/>
+                                        }
+                                        @if (familyYears.Active.MediumDebts > 0) {
+                                            <span>@formatMoney(familyYears.Active.MediumDebts) in Medium Debts</span><br/>
+                                        }
+                                        $??? in Taxable<br/>
+                                        @if (familyYears.Active.LowDebts > 0) {
+                                            <span>@formatMoney(familyYears.Active.LowDebts) in Low Debts</span><br/>
+                                        }
                                     </td>
                                     break;
                                 default:
@@ -417,15 +460,15 @@ portfolio/@stepPath
     public string GetRecommendedIRAMarkup(Person person) {
         switch(person.IRATypeRecommendation) {
             case IRAType.DeductibleIRAThenBackdoorRoth:
-                return "<span>IRA: $" + person.IRA.AmountToSave + " ($" + person.IRA.DeductionAllowed + " Deductible), then backdoor roth</span>";
+                return "<span>" + formatMoney(person.IRA.AmountToSave) + " in " + person.Identifier + " IRA (" + formatMoney(person.IRA.DeductionAllowed) + " Deductible), then backdoor roth</span>";
             case IRAType.DeductibleIRA:
-                return "<span>IRA: $" + person.IRA.AmountToSave + " ($" + person.IRA.DeductionAllowed + " Deductible)</span>";
+                return "<span>" + formatMoney(person.IRA.AmountToSave) + " in " + person.Identifier + " IRA (" + formatMoney(person.IRA.DeductionAllowed) + " Deductible)</span>";
             case IRAType.Roth:
-                return "<span>Roth IRA: $" + person.RothIRA.AmountToSave + "</span>";
+                return "<span>" + formatMoney(person.RothIRA.AmountToSave) + " in " + person.Identifier + " Roth IRA</span>";
             case IRAType.NondeductibleIRAThenBackdoorRoth:
-                return "<span>IRA: $" + person.IRA.AmountToSave + " ($" + person.IRA.DeductionAllowed + " Deductible), then backdoor roth</span>";
+                return "<span>" + formatMoney(person.IRA.AmountToSave) + " (nondeductible), then backdoor roth</span>";
             case IRAType.NondeductibleIRA:
-                return "<span>IRA: $" + person.IRA.AmountToSave + " ($" + person.IRA.DeductionAllowed + " Deductible)</span>";
+                return "<span>$" + formatMoney(person.IRA.AmountToSave) + " (nondeductible)</span>";
             default:
                 return "<p>do nothing</p>";
         }
