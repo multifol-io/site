@@ -42,20 +42,15 @@ portfolio/@stepPath
                 Portfolio Review
                 <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
             </h2>
-
-            <p>Getting all your information in one place to help others give you feedback is the idea behind Bogleheads.org's <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Asking Portfolio Questions</a><span class="oi oi-external-link m-2 aria-hidden="true"></span>. Review and complete all the steps.</p>
+            <p><b>Early Preview:</b> This feature is early in its development. Feedback is welcome!</p>
+            <p>Getting all your information in one place to help others give you feedback is the idea behind Bogleheads.org's <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Asking Portfolio Questions</a><span class="oi oi-external-link m-2 aria-hidden="true"></span>. This tool will make it easy to post to bogleheads.org forum with the correct format.</p>
 
             <div>
                 
                 
-                <p ><b>Steps:</b></p>
+                <p ><b>Edit (✏️) and complete all the steps:</b></p>
 
                 <table>
-                    <thead>
-                        <th>✏️ Edit</th>
-                        <th>&nbsp;</th>
-                    </thead>
-  
                     @foreach (var step in steps) {
                         var href = folderName + @step.step;
                         <tr>
@@ -207,7 +202,7 @@ portfolio/@stepPath
                                 }
                                 break;
                             case "tax-status":
-                                <p ><b>Prerequisities:</b></p>
+                                <p ><b>Worksheet:</b></p>
                                 <EditForm Model="familyYears.Active" style=margin-left:25px>
                                     <label>Tax Filing Status:</label>
                                     <select @bind=familyYears.Active.TaxFilingStatus>
@@ -239,16 +234,16 @@ portfolio/@stepPath
                                             <InputRadioGroup @bind-Value=familyYears.Active.MarginalTaxBracket>
                                                 <label>Marginal Tax Rate:</label><br/>
                                                 <table>
-                                                    <tr><th></th><th>Starting at</th><th>Up until</th></tr>
+                                                    <tr><th></th><th style=text-align:right;padding-right:10px>From</th><th style=text-align:right;padding-right:10px>To</th></tr>
                                                 @foreach (var taxBracket in taxFiler.TaxBrackets)
                                                 {
                                                     if (lastBracket != null) {
-                                                        <tr><td><InputRadio Value='@lastBracket'/>@lastBracket</td><td>@lastStartAmount</td><td>@(taxBracket.StartAmount-1)</td></tr>
+                                                        <tr><td><InputRadio Value='@lastBracket'/>&nbsp;@lastBracket</td><td style=text-align:right;padding-left:30px>@formatMoney(lastStartAmount)</td><td style=text-align:right;padding-left:30px>@formatMoney(taxBracket.StartAmount-1)</td></tr>
                                                     }
                                                     lastBracket = taxBracket.Rate;
                                                     lastStartAmount = taxBracket.StartAmount;
                                                 }
-                                                    <tr><td><InputRadio Value='@lastBracket'/>@lastBracket</td><td>@lastStartAmount</td><td>and up</td></tr>
+                                                    <tr><td><InputRadio Value='@lastBracket'/>@lastBracket</td><td style=text-align:right;padding-left:30px>@formatMoney(lastStartAmount)</td><td style=padding-left:30px>and up</td></tr>
                                                 </table>
                                             </InputRadioGroup>
                                         }
@@ -256,10 +251,9 @@ portfolio/@stepPath
 
                                     <br/><label>State of Residence:</label>
                                     <select @bind=familyYears.Active.StateOfResidence>
-                                        <option value=None>choose...</option>
-                                        <option>Washington</option>
-                                        <option>Wyoming</option>
-                                    </select><br/><br/>
+                                        <option value="None">Choose...</option><option value="AL">Alabama (AL)</option><option value="AK">Alaska (AK)</option><option value="AS">American Samoa (AS)</option><option value="AZ">Arizona (AZ)</option><option value="AR">Arkansas (AR)</option><option value="CA">California (CA)</option><option value="CO">Colorado (CO)</option><option value="CT">Connecticut (CT)</option><option value="DE">Delaware (DE)</option><option value="DC">District of Columbia (DC)</option><option value="FL">Florida (FL)</option><option value="GA">Georgia (GA)</option><option value="GU">Guam (GU)</option><option value="HI">Hawaii (HI)</option><option value="ID">Idaho (ID)</option><option value="IL">Illinois (IL)</option><option value="IN">Indiana (IN)</option><option value="IA">Iowa (IA)</option><option value="KS">Kansas (KS)</option><option value="KY">Kentucky (KY)</option><option value="LA">Louisiana (LA)</option><option value="ME">Maine (ME)</option><option value="MD">Maryland (MD)</option><option value="MA">Massachusetts (MA)</option><option value="MI">Michigan (MI)</option><option value="MN">Minnesota (MN)</option><option value="MS">Mississippi (MS)</option><option value="MO">Missouri (MO)</option><option value="MT">Montana (MT)</option><option value="NE">Nebraska (NE)</option><option value="NV">Nevada (NV)</option><option value="NH">New Hampshire (NH)</option><option value="NJ">New Jersey (NJ)</option><option value="NM">New Mexico (NM)</option><option value="NY">New York (NY)</option><option value="NC">North Carolina (NC)</option><option value="ND">North Dakota (ND)</option><option value="CM">Northern Mariana Islands (CM)</option><option value="OH">Ohio (OH)</option><option value="OK">Oklahoma (OK)</option><option value="OR">Oregon (OR)</option><option value="PA">Pennsylvania (PA)</option><option value="PR">Puerto Rico (PR)</option><option value="RI">Rhode Island (RI)</option><option value="SC">South Carolina (SC)</option><option value="SD">South Dakota (SD)</option><option value="TN">Tennessee (TN)</option><option value="TX">Texas (TX)</option><option value="VI">U.S. Virgin Islands (VI)</option><option value="UT">Utah (UT)</option><option value="VT">Vermont (VT)</option><option value="VA">Virginia (VA)</option><option value="WA">Washington (WA)</option><option value="WV">West Virginia (WV)</option><option value="WI">Wisconsin (WI)</option><option value="WY">Wyoming (WY)</option>
+                                    </select>
+                                    <br/><br/>
                                 </EditForm>
                                 <br/>
                                 break;
@@ -350,6 +344,12 @@ portfolio/@stepPath
             return "";
         }
     }
+
+    public string formatMoney(int? amount) 
+    {
+        return String.Format("${0:#,0.#}", amount);
+    }
+
     public string markupize(string? wikiText) {
         if (wikiText == null) return "";
         string returnVal = "<span>";
