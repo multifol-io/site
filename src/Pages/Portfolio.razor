@@ -59,7 +59,6 @@ portfolio/@stepPath
                     @foreach (var step in steps) {
                         var href = folderName + @step.step;
                         <tr>
-
                             <td>
                                 <div>
                                     <a href="@href" style="background:blue" class="m-1 btn" >✏️</a>
@@ -68,9 +67,9 @@ portfolio/@stepPath
                             @switch (step.step) {
                                 case "age": 
                                     <td>
-                                        <b>Age:</b> @familyYears.Active.People[0].Age
+                                        <b>Age:</b> @familyYears.Active.People[0].Age @getPronoun(familyYears.Active.People[0])
                                         @if(familyYears.Active.PersonCount > 1 && familyYears.Active.People[1].Age != null) {
-                                            <span>&nbsp;and @familyYears.Active.People[1].Age</span>
+                                            <span>&nbsp;and @familyYears.Active.People[1].Age @getPronoun(familyYears.Active.People[1])</span>
                                         }
                                     </td>
                                    break;
@@ -205,7 +204,6 @@ portfolio/@stepPath
                                         familyYears.Active?.Debts.Add(new Debt() { Name = "new", Rate = 3.0, Total = 5000 });
                                     }
                                 }
-                            
                                 break;
                             case "tax-status":
                                 <p ><b>Prerequisities:</b></p>
@@ -283,6 +281,14 @@ portfolio/@stepPath
 
                                     <EditForm Model="person" style=margin-left:25px>
                                         <label>Age:</label> <input type=text @bind-Value=person.Age @bind-Value:event=oninput /><br/>
+
+                                        <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
+                                            <option value=None>choose...</option>
+                                            <option>me</option>
+                                            <option>them</option>
+                                            <option>him</option>
+                                            <option>her</option>
+                                        </select><br/><br/>
                                     </EditForm><br/>
                                 }
                                 break;
@@ -329,6 +335,16 @@ portfolio/@stepPath
         }
     }
 
+    public string getPronoun(Person person)
+    {
+        if (person.Identifier != null && person.Identifier != "None") {
+            return "(" + person.Identifier + ")";
+        }
+        else
+        {
+            return "";
+        }
+    }
     public string markupize(string? wikiText) {
         if (wikiText == null) return "";
         string returnVal = "<span>";

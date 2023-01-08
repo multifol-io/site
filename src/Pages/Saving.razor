@@ -10,11 +10,11 @@ saving/@stepPath
 <style>
     .btn {
         color: white;
-        padding: 10px 25px;
+        padding: 10px 10px;
         text-decoration: none;
         display:inline-block;
         text-align:center;
-        width:175px;
+        width:60px;
         border-radius: 10px;
     }
     .dollar {
@@ -56,10 +56,10 @@ saving/@stepPath
 
                 <table>
                     <thead>
-                        <th></th>
+                        <th>✏️ Edit</th>
+                        <th>&nbsp;</th>
                         @if(familyYears.Active.PersonCount > 0) {<th style="padding-right:10px;text-align:center">$</th> }
                         @if(familyYears.Active.PersonCount > 0) {<th style="padding-right:10px;text-align:center">Match</th> }
-                        <th>&nbsp;</th>
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
                     </thead>
@@ -67,20 +67,22 @@ saving/@stepPath
                     @foreach (var step in steps) {
                         var href = folderName + @step.step;
                         <tr>
-
                             <td>
                                 <div>
-                                    <a href="@href" style="background:blue" class="m-1 btn" >@step.number: @step.bestDiagramTitle</a>
+                                    <a href="@href" style="background:blue" class="m-1 btn" >✏️</a>
                                 </div>
                             </td>
-                            @switch (step.number) {
-                                case 1: 
+                            <td>
+                                <b>@step.title:</b>
+                            </td>
+                            @switch (step.step) {
+                                case "emergency-fund": 
                                    <td style=text-align:center>@familyYears.Active.EmergencyFund.AmountToSave</td><td></td>
                                    break;
-                                case 2:
+                                case "retirement-funds-match":
                                    <td style=text-align:center>
                                         @familyYears.Active.People[0].EmployerPlan.AmountToSaveForMatch<br/>
-                                        @if(familyYears.Active.PersonCount > 1) {
+                                        @if(familyYears.Active.PersonCount > 1 && familyYears.Active.People[1].EmployerPlan.AmountToSaveForMatch != null) {
                                             <span>Person2: @familyYears.Active.People[1].EmployerPlan.AmountToSaveForMatch</span>
                                         }
                                    </td>
@@ -89,15 +91,15 @@ saving/@stepPath
                                         @familyYears.Active.People[1].EmployerPlan.MatchAmount
                                    </td>
                                    break;
-                                case 3:
+                                case "high-interest-debt":
                                     <td style=text-align:center>
                                         @familyYears.Active.HighDebts
                                     </td>
                                     break;
-                                case 4: 
+                                case "hsa": 
                                     <td style=text-align:center>
                                         @familyYears.Active.People[0].HealthSavingsAccount.AmountToSave<br/>
-                                        @if(familyYears.Active.PersonCount > 1) {
+                                        @if(familyYears.Active.PersonCount > 1 && familyYears.Active.People[1].HealthSavingsAccount.AmountToSave != null) {
                                             <span>Person2: @familyYears.Active.People[1].HealthSavingsAccount.AmountToSave</span>
                                         }
                                     </td>
@@ -112,7 +114,7 @@ saving/@stepPath
                                         
                                     </td>
                                    break;
-                                case 5:
+                                case "ira-or-roth-ira":
                                     <td style=text-align:left colspan="5">
                                     @if (familyYears.Active.AdjustedGrossIncome != null) {
                                         if (familyYears.Active.PersonCount > 0) {
@@ -124,34 +126,34 @@ saving/@stepPath
                                     }
                                     </td>
                                     break;
-                                case 6: 
+                                case "employer-retirement-funds": 
                                     <td style=text-align:center>
                                         @familyYears.Active.People[0].EmployerPlan.AmountToSaveForNonMatched<br/>
-                                        @if(familyYears.Active.PersonCount > 1) {
+                                        @if(familyYears.Active.PersonCount > 1 && familyYears.Active.People[1].EmployerPlan.AmountToSaveForNonMatched != null) {
                                             <span>Person2: @familyYears.Active.People[1].EmployerPlan.AmountToSaveForNonMatched</span>
                                         }
                                     </td>
                                     break;
-                                case 7: 
+                                case "mega-backdoor-roth": 
                                    <td style=text-align:center>
                                         @familyYears.Active.People[0].EmployerPlan.AmountToSaveForBackdoorRoth<br/>
-                                        @if(familyYears.Active.PersonCount > 1) {
+                                        @if(familyYears.Active.PersonCount > 1 && familyYears.Active.People[1].EmployerPlan.AmountToSaveForBackdoorRoth != null) {
                                             <span>Person2: @familyYears.Active.People[1].EmployerPlan.AmountToSaveForBackdoorRoth</span>
                                         }
                                    </td>
                                    break;
-                                case 8:
+                                case "medium-interest-debt":
                                     <td style=text-align:center>
                                         @familyYears.Active.MediumDebts
                                     </td>
                                     break;
-                                case 9: 
+                                case "taxable-accounts": 
                                     <td style=text-align:center>
                                         @if(familyYears.Active.PersonCount > 0) {<span>no limits</span> }
                                         @if(familyYears.Active.PersonCount > 1) {<br/><span>Person2: no limits</span> }
                                     </td>
                                     break;                                                                   
-                                case 10:
+                                case "low-interest-debt":
                                     <td style=text-align:center>
                                         @familyYears.Active.LowDebts
                                     </td>
