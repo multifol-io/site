@@ -62,7 +62,10 @@ portfolio/@stepPath
                             @switch (step.step) {
                                 case "age": 
                                     <td>
-                                        <b>Age:</b> @familyYears.Active.People[0].Age @getPronoun(familyYears.Active.People[0])
+                                        <b>Age:</b> 
+                                        @if(familyYears.Active.PersonCount > 0 && familyYears.Active.People[0].Age != null) {
+                                            <span>&nbsp;@familyYears.Active.People[0].Age @getPronoun(familyYears.Active.People[0])</span>
+                                        }
                                         @if(familyYears.Active.PersonCount > 1 && familyYears.Active.People[1].Age != null) {
                                             <span>&nbsp;and @familyYears.Active.People[1].Age @getPronoun(familyYears.Active.People[1])</span>
                                         }
@@ -114,9 +117,10 @@ portfolio/@stepPath
                                             <br/>
                                         }
                                         <span>&nbsp;&nbsp;Desired International allocation: </span>
-                                            @if (familyYears.Active.International != null) {
-                                                <span>@familyYears.Active.International%</span>
-                                            }
+                                        @if (familyYears.Active.International != null) {
+                                            <span>@familyYears.Active.International%</span>
+                                        }
+                                        <br/><br/>
                                     </td>
                                     break;
                                 case "retirement-assets":
@@ -124,18 +128,17 @@ portfolio/@stepPath
                                         <u><b>Current Retirement Assets:</b></u><br/>
 
                                         @foreach (var account in familyYears.Active.Accounts) {
-                                            <b>@account.Identifier @account.AccountType @if (account.Custodian != null) { <span> at @account.Custodian</span> } </b><br/>
+                                            <br/><b>&nbsp;&nbsp;@if (account.Identifier != null) {<span>@account.Identifier </span>}@account.AccountType @if (account.Custodian != null) { <span> at @account.Custodian</span> } </b><br/>
                                             @foreach (var investment in account.Investments) {
-                                                <span>xx% @investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span><br/>
+                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;xx% @investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span><br/>
                                             }
-                                            <br/>
                                         }
                                     </td>
                                     break;                                
                                 case "contributions":
                                     <td>
                                         <span>
-                                            <u><b>Contributions:</b></u><br/>
+                                            <u><b>Contributions:</b></u>
                                         </span>
                                     </td>
                                     break;
@@ -335,8 +338,15 @@ portfolio/@stepPath
                                 </EditForm><br/>
                                 break;
                             case "retirement-assets":
-                                <p><b>Worksheet:</b> </p>
+                                <u><b>Current Retirement Assets:</b></u><br/>
 
+                                @foreach (var account in familyYears.Active.Accounts) {
+                                    <br/><b>&nbsp;&nbsp;@if (account.Identifier != null) {<span>@account.Identifier </span>}@account.AccountType @if (account.Custodian != null) { <span> at @account.Custodian</span> } </b><br/>
+                                    @foreach (var investment in account.Investments) {
+                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;@investment.Percentage% @investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span><br/>
+                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;<input type=text @bind-Value=investment.Shares @bind-Value:event=oninput /> ✖️ $<input type=text @bind-Value=investment.Price @bind-Value:event=oninput /> 🟰 $<input type=text @bind-Value=investment.Value @bind-Value:event=oninput /></span><br/>
+                                    }
+                                }
                                 
                                 break;
                             case "contributions":

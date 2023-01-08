@@ -6,4 +6,5 @@ public class Investment
     public double Value { get; set; }
     public double? Shares { get; set; }
     public double? Price { get; set; }
+    public double Percentage { get; set; }
 }
