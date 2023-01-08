@@ -77,7 +77,7 @@ portfolio/@stepPath
                                    <td style=text-align:left>
                                         <b>Emergency funds:</b>
                                         @if (familyYears.Active.EmergencyFund.CurrentMonths != null) {
-                                            <span>&nbsp;@familyYears.Active.EmergencyFund.CurrentMonths months</span>
+                                            <span>&nbsp;@familyYears.Active.EmergencyFund.CurrentMonthsString months</span>
                                         }
                                    </td>
                                    break;
@@ -146,7 +146,7 @@ portfolio/@stepPath
 
                     <h4>@((MarkupString)markupize(step.priority))</h4>
 
-                    <p><b>Summary:</b> @((MarkupString)markupize(step.summary))</p>
+                    <p>@((MarkupString)markupize(step.summary))</p>
 
                         @switch (step.step) {
                             case "emergency-fund":
@@ -156,9 +156,10 @@ portfolio/@stepPath
                                     <DataAnnotationsValidator />
                                     <ValidationSummary />
                                     
-                                    <label>Monthly Expenses:</label> <span>$</span><input class=dollar type=text @bind-Value="familyYears.Active.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /><br/><br/>
                                     <label>Current Emergency Fund:</label> <span>$</span><input class=dollar type=text @bind-Value="familyYears.Active.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/><br/><br/>
-                                    <label>Months:</label> @familyYears.Active.EmergencyFund.CurrentMonths<br/>
+                                    <label>➗ Monthly Expenses:</label> <span>$</span><input class=dollar type=text @bind-Value="familyYears.Active.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /><br/><br/>
+                                    <hr style=width:300px />
+                                    <div style=text-align:right;width:275px>@familyYears.Active.EmergencyFund.CurrentMonthsString months</div>
                                 </EditForm><br/>
                                 break;
                             case "debts":
@@ -302,7 +303,11 @@ portfolio/@stepPath
                                 </EditForm><br/>
                                 break;
                         }
-                    <p><b>Details:</b> @((MarkupString)markupize(step.description))</p>
+                    <p>
+                        @if(step.description != "") {
+                            <b>Details:</b> <span>@((MarkupString)markupize(step.description))</span>
+                        }
+                    </p>
 
                     <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
                     <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>

@@ -25,6 +25,12 @@ public class EmergencyFund {
         get { return TargetEmergencyFund - CurrentBalance; }
     }
 
+    public string CurrentMonthsString {
+        get {
+            return String.Format("{0:#,0.#}", CurrentMonths);
+        }
+    }
+
     public double? CurrentMonths {
         get { return (double?)CurrentBalance / (double?)MonthlyExpenses; }
     }
