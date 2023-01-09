@@ -145,19 +145,19 @@ portfolio/@stepPath
                                         </span><br/>
 
                                         @if (familyYears.Active.People[0].EmployerPlan.AmountToSaveForMatch > 0) {
-                                            <span>@formatMoney(familyYears.Active.People[0].EmployerPlan.AmountToSaveForMatch) in @familyYears.Active.People[0].Identifier 401k (Match: @formatMoney(familyYears.Active.People[0].EmployerPlan.MatchAmount))</span><br/>
+                                            <span>@formatMoney(familyYears.Active.People[0].EmployerPlan.AmountToSaveForMatch) in @familyYears.Active.People[0].PossessiveID 401k (Match: @formatMoney(familyYears.Active.People[0].EmployerPlan.MatchAmount))</span><br/>
                                         }
                                         @if (familyYears.Active.People[1].EmployerPlan.AmountToSaveForMatch > 0) {
-                                            <span>@formatMoney(familyYears.Active.People[1].EmployerPlan.AmountToSaveForMatch) in @familyYears.Active.People[1].Identifier 401k (Match: @formatMoney(familyYears.Active.People[1].EmployerPlan.MatchAmount))</span><br/>
+                                            <span>@formatMoney(familyYears.Active.People[1].EmployerPlan.AmountToSaveForMatch) in @familyYears.Active.People[1].PossessiveID 401k (Match: @formatMoney(familyYears.Active.People[1].EmployerPlan.MatchAmount))</span><br/>
                                         }
                                         @if (familyYears.Active.HighDebts > 0) {
                                             <span>@familyYears.Active.HighDebts in High Debts</span><br/>
                                         }
                                         @if (familyYears.Active.People[0].HealthSavingsAccount.AmountToSave > 0) {
-                                            <span>@formatMoney(familyYears.Active.People[0].HealthSavingsAccount.AmountToSave) in @familyYears.Active.People[0].Identifier HSA (Employer: @formatMoney(familyYears.Active.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
+                                            <span>@formatMoney(familyYears.Active.People[0].HealthSavingsAccount.AmountToSave) in @familyYears.Active.People[0].PossessiveID HSA (Employer: @formatMoney(familyYears.Active.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
                                         }
                                         @if (familyYears.Active.People[1].HealthSavingsAccount.AmountToSave > 0) {
-                                            <span>@formatMoney(familyYears.Active.People[1].HealthSavingsAccount.AmountToSave) in @familyYears.Active.People[1].Identifier HSA (Employer: @formatMoney(familyYears.Active.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
+                                            <span>@formatMoney(familyYears.Active.People[1].HealthSavingsAccount.AmountToSave) in @familyYears.Active.People[1].PossessiveID HSA (Employer: @formatMoney(familyYears.Active.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
                                         }
                                         @if (familyYears.Active.AdjustedGrossIncome != null) {
                                             if (familyYears.Active.PersonCount > 0) {
@@ -168,16 +168,16 @@ portfolio/@stepPath
                                             }
                                         }
                                         @if (familyYears.Active.People[0].EmployerPlan.AmountToSaveForNonMatched > 0) {
-                                            <span>@formatMoney(familyYears.Active.People[0].EmployerPlan.AmountToSaveForNonMatched) in @familyYears.Active.People[0].Identifier 401k</span><br/>
+                                            <span>@formatMoney(familyYears.Active.People[0].EmployerPlan.AmountToSaveForNonMatched) in @familyYears.Active.People[0].PossessiveID 401k</span><br/>
                                         }
                                         @if (familyYears.Active.People[1].EmployerPlan.AmountToSaveForNonMatched > 0) {
-                                            <span>@formatMoney(familyYears.Active.People[1].EmployerPlan.AmountToSaveForNonMatched) in @familyYears.Active.People[1].Identifier 401k</span><br/>
+                                            <span>@formatMoney(familyYears.Active.People[1].EmployerPlan.AmountToSaveForNonMatched) in @familyYears.Active.People[1].PossessiveID 401k</span><br/>
                                         }
                                         @if (familyYears.Active.People[0].EmployerPlan.AmountToSaveForBackdoorRoth > 0) {
-                                            <span>@formatMoney(familyYears.Active.People[0].EmployerPlan.AmountToSaveForBackdoorRoth) in @familyYears.Active.People[0].Identifier mega backdoor roth</span><br/>
+                                            <span>@formatMoney(familyYears.Active.People[0].EmployerPlan.AmountToSaveForBackdoorRoth) in @familyYears.Active.People[0].PossessiveID mega backdoor roth</span><br/>
                                         }
                                         @if (familyYears.Active.People[1].EmployerPlan.AmountToSaveForBackdoorRoth > 0) {
-                                            <span>@formatMoney(familyYears.Active.People[1].EmployerPlan.AmountToSaveForBackdoorRoth) in @familyYears.Active.People[1].Identifier mega backdoor roth</span><br/>
+                                            <span>@formatMoney(familyYears.Active.People[1].EmployerPlan.AmountToSaveForBackdoorRoth) in @familyYears.Active.People[1].PossessiveID mega backdoor roth</span><br/>
                                         }
                                         @if (familyYears.Active.MediumDebts > 0) {
                                             <span>@formatMoney(familyYears.Active.MediumDebts) in Medium Debts</span><br/>
@@ -384,8 +384,6 @@ portfolio/@stepPath
                                 </EditForm><br/>
                                 break;
                             case "retirement-assets":
-                                <b>Portfolio Size:</b><span>&nbsp;@formatMoney(familyYears.Active.Value)</span><br/>
-
                                 <u><b>Current Retirement Assets:</b></u><br/><br/>
 
                                 @code{
@@ -397,15 +395,25 @@ portfolio/@stepPath
                                 int accountIndex = 0;
                                 @foreach (var account in familyYears.Active.Accounts) {
                                     int accBuffer = accountIndex++;
-                                    <br/><b>&nbsp;&nbsp;<input type=text @bind-Value=account.Identifier @bind-Value:event=oninput placeholder='pronoun/identifier' /><input type=text @bind-Value=account.AccountType @bind-Value:event=oninput placeholder='account type'/> <span> at <input type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' /></span> Total: @formatMoney(account.Value)</b><br/>
+                                    <br/>
+                                    <div style=margin-left:40px>
+                                        <input type=text @bind-Value=account.Identifier @bind-Value:event=oninput placeholder='pronoun/identifier' /><input type=text @bind-Value=account.AccountType @bind-Value:event=oninput placeholder='account type'/> <span> at <input type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' /></span>
+                                        <button style=margin-left:20px @onclick='@(e=>deleteAccount(e,accBuffer))'>❌ Account</button>
+                                    </div>
                                     int investmentIndex = 0;
                                     @foreach (var investment in account.Investments) {
                                         int invBuffer = investmentIndex++;
-                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text @bind-Value=investment.Name @bind-Value:event=oninput placeholder='investment fullname' /> (<input type=text @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/>) (<input type=text @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput placeholder='expense ratio'/>%)</span><br/>
-                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text @bind-Value=investment.Shares @bind-Value:event=oninput placeholder='shares'/> ✖️ $<input type=text @bind-Value=investment.Price @bind-Value:event=oninput placeholder='price'/> 🟰 $<input type=text @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/></span><br/>
-                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button @onclick='@(e=>deleteInvestment(e,accBuffer,invBuffer))'>Delete Investment</button></span><br/>
-                                        <br/>
+                                        <div style=margin-top:10px;margin-left:80px>
+                                            <input type=text @bind-Value=investment.Name @bind-Value:event=oninput placeholder='investment fullname' /> (<input type=text @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/>) (<input type=text @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput placeholder='expense ratio'/>%)
+                                            <button style=margin-left:20px @onclick='@(e=>deleteInvestment(e,accBuffer,invBuffer))'>❌ Investment</button>
+                                        </div>
+                                        <div style=margin-left:85px>
+                                            @* <input type=text @bind-Value=investment.Shares @bind-Value:event=oninput placeholder='shares'/> ✖️ $<input type=text @bind-Value=investment.Price @bind-Value:event=oninput placeholder='price'/> *@
+                                            Investment Value 🟰 $<input type=text @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/>
+                                        </div>
                                     }
+                                    <button style=margin-left:80px @onclick='@(e=>addInvestment(e,accBuffer))'>➕ Investment</button>
+
                                     @code{
                                         void addInvestment(MouseEventArgs e, int accountIndex)
                                         {
@@ -416,11 +424,19 @@ portfolio/@stepPath
                                         {
                                             familyYears.Active.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
                                         }
+                                        void deleteAccount(MouseEventArgs e, int accountIndex)
+                                        {
+                                            familyYears.Active.Accounts.RemoveAt(accountIndex);
+                                        }
                                     }
-                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button @onclick='@(e=>addInvestment(e,accBuffer))'>Add Investment</button></span><br/>
+                                    <hr style=margin-left:40px/>
+                                    <div style=margin-left:40px>Account Total: @formatMoney(account.Value)</div>
                                 }
+                                <hr/>
+                                <div>Portfolio Size: @formatMoney(familyYears.Active.Value)</div>
                                 
-                                <br/><span>&nbsp;&nbsp;&nbsp;&nbsp;<button @onclick=newAccount>New Account</button></span>
+                                <br/>
+                                <div><button @onclick=newAccount>➕ Account</button></div>
                                 @code{
                                     void newAccount()
                                     {
@@ -460,11 +476,11 @@ portfolio/@stepPath
     public string GetRecommendedIRAMarkup(Person person) {
         switch(person.IRATypeRecommendation) {
             case IRAType.DeductibleIRAThenBackdoorRoth:
-                return "<span>" + formatMoney(person.IRA.AmountToSave) + " in " + person.Identifier + " IRA (" + formatMoney(person.IRA.DeductionAllowed) + " Deductible), then backdoor roth</span>";
+                return "<span>" + formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + formatMoney(person.IRA.DeductionAllowed) + " Deductible), then backdoor roth</span>";
             case IRAType.DeductibleIRA:
-                return "<span>" + formatMoney(person.IRA.AmountToSave) + " in " + person.Identifier + " IRA (" + formatMoney(person.IRA.DeductionAllowed) + " Deductible)</span>";
+                return "<span>" + formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + formatMoney(person.IRA.DeductionAllowed) + " Deductible)</span>";
             case IRAType.Roth:
-                return "<span>" + formatMoney(person.RothIRA.AmountToSave) + " in " + person.Identifier + " Roth IRA</span>";
+                return "<span>" + formatMoney(person.RothIRA.AmountToSave) + " in " + person.PossessiveID + " Roth IRA</span>";
             case IRAType.NondeductibleIRAThenBackdoorRoth:
                 return "<span>" + formatMoney(person.IRA.AmountToSave) + " (nondeductible), then backdoor roth</span>";
             case IRAType.NondeductibleIRA:
@@ -476,8 +492,8 @@ portfolio/@stepPath
 
     public string getPronoun(Person person)
     {
-        if (person.Identifier != null && person.Identifier != "None") {
-            return "(" + person.Identifier + ")";
+        if (person.PossessiveID != null && person.PossessiveID != "None") {
+            return "(" + person.PossessiveID + ")";
         }
         else
         {

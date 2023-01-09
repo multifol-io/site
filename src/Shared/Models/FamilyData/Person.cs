@@ -116,6 +116,27 @@ public class Person {
     public FamilyYear FamilyYear { private set; get; }
 
     public string Identifier { get; set; }
+    
+    public string? PossessiveID { 
+        get {
+            switch (Identifier)
+            {
+                case "me":
+                    return "my";
+                case "them":
+                    return "their";
+                case "him":
+                    return "his";
+                case "her":
+                    return "her";
+                case null:
+                    return null;
+                default:
+                    return "undefined";
+            }
+        }
+    }
+
     public int? Age { get; set; }
     public bool FiftyOrOver { get; set; }
     public bool FiftyFiveOrOver { get; set; }
