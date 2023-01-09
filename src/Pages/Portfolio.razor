@@ -63,28 +63,30 @@ portfolio/@stepPath
                             @switch (step.step) {
                                 case "age": 
                                     <td>
-                                        <b>Age:</b> 
+                                        @((MarkupString)bold("Age:"))
                                         @if(familyYears.Active.PersonCount > 0 && familyYears.Active.People[0].Age != null) {
                                             <span>&nbsp;@familyYears.Active.People[0].Age @getPronoun(familyYears.Active.People[0])</span>
                                         }
                                         @if(familyYears.Active.PersonCount > 1 && familyYears.Active.People[1].Age != null) {
                                             <span>&nbsp;and @familyYears.Active.People[1].Age @getPronoun(familyYears.Active.People[1])</span>
                                         }
+                                        <br/><br/>
                                     </td>
                                    break;
                                 case "emergency-fund":
                                    <td style=text-align:left>
-                                        <b>Emergency funds:</b>
+                                        @((MarkupString)bold("Emergency funds:"))
                                         @if (familyYears.Active.EmergencyFund.CurrentMonths != null) {
                                             <span>&nbsp;@familyYears.Active.EmergencyFund.CurrentMonthsString months</span>
                                         } else if (familyYears.Active.EmergencyFund.UseAmount) {
                                             <span>&nbsp;$@familyYears.Active.EmergencyFund.CurrentBalance</span>
                                         }
+                                        <br/><br/>
                                    </td>
                                    break;
                                 case "debts":
                                     <td style=text-align:left>
-                                        <b>Debt:</b> 
+                                        @((MarkupString)bold("Debt:"))
                                         @if (familyYears.Active.Debts.Count == 0) { <span>&nbsp;no debts</span> } 
                                         else if (familyYears.Active.Debts.Count >= 1) { 
                                             <br/>
@@ -93,25 +95,27 @@ portfolio/@stepPath
                                                 <span>&nbsp;&nbsp;@debt.Name: @formatMoney(debt.Total) @@ @debt.Rate%</span><br/> 
                                             }
                                         }
+                                        <br/><br/>
                                     </td>
                                     break;
                                 case "tax-status":
                                     <td>
                                         <span>
-                                            <b>Tax Filing Status:</b> 
+                                            @((MarkupString)bold("Tax Filing Status:"))
                                             @if (familyYears.Active.TaxFilingStatus != TaxFilingStatus.None) { <span>&nbsp;@familyYears.Active.TaxFilingStatus</span> }
-                                            <br/>
-                                            <b>Tax Rate:</b> 
+                                            <br/><br/>
+                                            @((MarkupString)bold("Tax Rate:"))
                                             @if (familyYears.Active.FederalMarginalTaxBracket != null) { <span>&nbsp;@familyYears.Active.FederalMarginalTaxBracket Federal, @familyYears.Active.StateMarginalTaxBracket% State</span> }
-                                            <br/>
-                                            <b>State of Residence:</b>
+                                            <br/><br/>
+                                            @((MarkupString)bold("State of Residence:"))
                                             @if (familyYears.Active.StateMarginalTaxBracket != null) { <span>&nbsp;@familyYears.Active.StateOfResidence</span> }
                                         </span>
+                                        <br/><br/>
                                     </td>
                                     break;
                                 case "asset-allocation":
                                     <td>
-                                        <b>Desired Asset allocation:</b>
+                                        @((MarkupString)bold("Desired Asset allocation:"))
                                         @if (familyYears.Active.Stocks != null && familyYears.Active.Bonds != null) {
                                             <span>&nbsp;@familyYears.Active.Stocks% stocks / @familyYears.Active.Bonds% bonds</span><br/>
                                         } else {
@@ -126,12 +130,14 @@ portfolio/@stepPath
                                     break;
                                 case "retirement-assets":
                                     <td>
-                                        <b>Portfolio Size:</b>&nbsp;@estimatePortfolio(familyYears.Active)<br/>
-
-                                        <u><b>Current Retirement Assets:</b></u><br/>
+                                        @((MarkupString)bold("Portfolio Size:"))&nbsp;@estimatePortfolio(familyYears.Active)<br/>
+                                        <br/>
+                                        @((MarkupString)boldUnderline("Current Retirement Assets:"))<br/>
 
                                         @foreach (var account in familyYears.Active.Accounts) {
-                                            <br/><b>&nbsp;&nbsp;@if (account.Identifier != null) {<span>@account.Identifier&nbsp;</span>}@account.AccountType @if (account.Custodian != null) { <span> at @account.Custodian</span> } (@formatPercent(account.Percentage))</b><br/>
+                                            <br/>
+                                            @((MarkupString)bold((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "") + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + "(" + formatPercent(account.Percentage) + ")" ))
+                                            <br/>
                                             @foreach (var investment in account.Investments) {
                                                 <span>&nbsp;&nbsp;&nbsp;&nbsp;@formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span><br/>
                                             }
@@ -142,7 +148,7 @@ portfolio/@stepPath
                                 case "contributions":
                                     <td>
                                         <span>
-                                            <u><b>Contributions:</b></u>
+                                            @((MarkupString)boldUnderline("Contributions:"))
                                         </span><br/>
 
                                         @if (familyYears.Active.EmergencyFund.AmountToSave > 0) {
@@ -199,6 +205,8 @@ portfolio/@stepPath
                         </tr>
                     }
                 </table>
+                <br/>
+                <InputCheckbox id=showMarkup @bind-Value=ShowMarkup /> <label for=showMarkup>Show markup to create forum post</label><br/>
             </div>
             
             <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
@@ -559,6 +567,23 @@ portfolio/@stepPath
         }
     }
 
+    public string bold(string text) {
+        if (ShowMarkup) {
+            return "[b]<b>" + text + "</b>[/b]";
+        } else {
+            return "<b>" + text + "</b>";
+        }
+    }
+
+    public string boldUnderline(string text) {
+        if (ShowMarkup) {
+            return "[b][u]<b><u>" + text + "</u></b>[/u][/b]";
+        } else {
+            return "<b><u>" + text + "</u></b>";
+        }
+    }
+
+
     public string markupize(string? wikiText) {
         if (wikiText == null) return "";
         string returnVal = "<span>";
@@ -646,6 +671,7 @@ portfolio/@stepPath
 
     [Parameter]
     public string? stepPath { get; set; }
+    public bool ShowMarkup { get; set; }
 
     private Step[]? steps;
     private const string folderName = "/portfolio/";
