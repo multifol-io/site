@@ -2,6 +2,7 @@
 @page "/portfolio/{stepPath}"
 @inject HttpClient Http
 @inject IFamilyYears familyYears
+@inject IJSRuntime JSRuntime
 
 <PageTitle>
 portfolio/@stepPath
@@ -47,18 +48,16 @@ portfolio/@stepPath
             <p>Getting all your information in one place to help others give you feedback is the idea behind Bogleheads.org's <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Asking Portfolio Questions</a><span class="oi oi-external-link m-2 aria-hidden="true"></span>. This tool will make it easy to post to bogleheads.org forum with the correct format.</p>
 
             <div>
-                
-                
                 <p ><b>Edit (✏️) and complete all the steps:</b></p>
 
-                <table>
+                <table id=_reviewTable>
                     @foreach (var step in steps) {
                         var href = folderName + @step.step;
                         <tr>
                             <td style=vertical-align:top>
-                                <div>
+                                <span>
                                     <a href="@href" style="background:blue" class="m-1 btn" >✏️</a>
-                                </div>
+                                </span>
                             </td>
                             @switch (step.step) {
                                 case "age": 
@@ -206,7 +205,20 @@ portfolio/@stepPath
                     }
                 </table>
                 <br/>
-                <InputCheckbox id=showMarkup @bind-Value=ShowMarkup /> <label for=showMarkup>Show markup to create forum post</label><br/>
+                
+                <button style=margin-left:20px @onclick=CopyTextToClipboard>Copy to clipboard</button>
+                <InputCheckbox id=showMarkup style=margin-left:10px @bind-Value=ShowMarkup /> <label for=showMarkup>Use forum post markup: [b]bold[/b]</label><br/>
+                
+                
+                @code{
+                    private async Task CopyTextToClipboard()
+                    {
+                        var text = await JSRuntime.InvokeAsync<string>("getTableInnerText");
+                        text = text.Replace("\n✏️\t","");
+                        text = text.Replace("✏️\t","");
+                        await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", text);
+                    }
+                }
             </div>
             
             <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
