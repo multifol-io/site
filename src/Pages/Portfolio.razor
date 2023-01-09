@@ -144,6 +144,9 @@ portfolio/@stepPath
                                             <u><b>Contributions:</b></u>
                                         </span><br/>
 
+                                        @if (familyYears.Active.EmergencyFund.AmountToSave > 0) {
+                                            <span>@formatMoney(familyYears.Active.EmergencyFund.AmountToSave) in Emergency Fund</span><br/>
+                                        }
                                         @if (familyYears.Active.People[0].EmployerPlan.AmountToSaveForMatch > 0) {
                                             <span>@formatMoney(familyYears.Active.People[0].EmployerPlan.AmountToSaveForMatch) in @familyYears.Active.People[0].PossessiveID 401k (Match: @formatMoney(familyYears.Active.People[0].EmployerPlan.MatchAmount))</span><br/>
                                         }
@@ -378,8 +381,11 @@ portfolio/@stepPath
                                 <p><b>Worksheet:</b> </p>
 
                                 <EditForm Model="familyYears.Active" style=margin-left:25px>
+                                    <label>Desired Asset Allocation:</label><br/>
                                     <label>Stock:</label> <input type=text @bind-Value=familyYears.Active.Stocks @bind-Value:event=oninput />%<br/>
                                     <label>Bond:</label> <input type=text @bind-Value=familyYears.Active.Bonds @bind-Value:event=oninput />%<br/>
+                                    <hr/>
+                                    <label>Desired International allocation (% of Stock):</label><br/>
                                     <label>International:</label> <input type=text @bind-Value=familyYears.Active.International @bind-Value:event=oninput />%<br/>
                                 </EditForm><br/>
                                 break;
@@ -397,7 +403,16 @@ portfolio/@stepPath
                                     int accBuffer = accountIndex++;
                                     <br/>
                                     <div style=margin-left:40px>
-                                        <input type=text @bind-Value=account.Identifier @bind-Value:event=oninput placeholder='pronoun/identifier' /><input type=text @bind-Value=account.AccountType @bind-Value:event=oninput placeholder='account type'/> <span> at <input type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' /></span>
+                                        @if (familyYears.Active.PersonCount == 2) {
+                                        <select @bind=account.Identifier>
+                                            <option>our</option>
+                                            @for(int i=0;i<familyYears.Active.PersonCount;i++)
+                                            {
+                                                <option>@familyYears.Active.People[i].PossessiveID</option>
+                                            }
+                                        </select>
+                                        }
+                                        <input type=text @bind-Value=account.AccountType @bind-Value:event=oninput placeholder='account type'/> <span> at <input type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' /></span>
                                         <button style=margin-left:20px @onclick='@(e=>deleteAccount(e,accBuffer))'>❌ Account</button>
                                     </div>
                                     int investmentIndex = 0;
@@ -492,8 +507,8 @@ portfolio/@stepPath
 
     public string getPronoun(Person person)
     {
-        if (person.PossessiveID != null && person.PossessiveID != "None") {
-            return "(" + person.PossessiveID + ")";
+        if (person.Identifier != null && person.Identifier != "None") {
+            return "(" + person.Identifier + ")";
         }
         else
         {
