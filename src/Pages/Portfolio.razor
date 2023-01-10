@@ -148,7 +148,7 @@ portfolio/@stepPath
 
                                         @foreach (var account in familyYears.Active.Accounts) {
                                             <br/>
-                                            @((MarkupString)bold((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "") + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + "(" + formatPercent(account.Percentage) + ")" ))
+                                            @((MarkupString)bold((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "") + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + " (" + formatPercent(account.Percentage) + ")" ))
                                             <br/>
                                             @foreach (var investment in account.Investments) {
                                                 <span>&nbsp;&nbsp;&nbsp;&nbsp;@formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span><br/>
@@ -157,6 +157,18 @@ portfolio/@stepPath
                                         <br/>
                                     </td>
                                     break;                                
+                                case "available-funds":
+                                    <td>
+                                        @((MarkupString)boldUnderline("Available funds:"))<br/>
+                                        <br/>
+                                    </td>
+                                    break;
+                                case "questions":
+                                    <td>
+                                        @((MarkupString)boldUnderline("Questions:"))<br/>
+                                        <br/>
+                                    </td>
+                                    break;
                                 case "contributions":
                                     <td>
                                         <span>
@@ -425,6 +437,19 @@ portfolio/@stepPath
                                 </EditForm><br/>
                                 break;
                             case "retirement-assets":
+                                <p><b>Prerequisites:</b> </p>
+
+                                <label style=margin-left:25px>Tax Filing Status:</label>
+                                <select @bind=familyYears.Active.TaxFilingStatus>
+                                    <option value=None>choose...</option>
+                                    <option>Single</option>
+                                    <option value=HeadOfHousehold>Head of Household</option>
+                                    <option value=MarriedFilingJointly>Married filing jointly</option>
+                                    <option value=MarriedFilingSeperately>Married filing seperately</option>
+                                    <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                                </select><br/>
+                                <br/>
+
                                 <u><b>Current Retirement Assets:</b></u><br/><br/>
 
                                 @code{
@@ -447,19 +472,37 @@ portfolio/@stepPath
                                             }
                                         </select>
                                         }
-                                        <input type=text @bind-Value=account.AccountType @bind-Value:event=oninput placeholder='account type'/> <span> at <input type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' /></span>
+                                        <select @bind=account.AccountType>
+                                            <option>Account Type...</option>
+                                            <option>401k</option>
+                                            <option>403b</option>
+                                            <option>457b</option>
+                                            <option>Inherited IRA</option>
+                                            <option>Inherited Roth IRA</option>
+                                            <option value="Traditional IRA">IRA</option>
+                                            <option>Rollover IRA</option>
+                                            <option>Roth IRA</option>
+                                            <option>SIMPLE IRA</option>
+                                            <option>Traditional IRA</option>
+                                            <option>Taxable</option>
+                                        </select>
+                                        @* <input type=text @bind-Value=account.AccountType @bind-Value:event=oninput placeholder='account type'/> *@
+                                        <span> at <input type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' /></span>
                                         <button style=margin-left:20px @onclick='@(e=>deleteAccount(e,accBuffer))'>❌ Account</button>
                                     </div>
                                     int investmentIndex = 0;
                                     @foreach (var investment in account.Investments) {
                                         int invBuffer = investmentIndex++;
                                         <div style=margin-top:10px;margin-left:80px>
-                                            <input type=text @bind-Value=investment.Name @bind-Value:event=oninput placeholder='investment fullname' /> (<input type=text @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/>) (<input type=text @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput placeholder='expense ratio'/>%)
-                                            <button style=margin-left:20px @onclick='@(e=>deleteInvestment(e,accBuffer,invBuffer))'>❌ Investment</button>
+                                            <input style="width:70px;text-transform: uppercase;" type=text @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/>
+                                            Balance 🟰 $<input type=text @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/>
                                         </div>
                                         <div style=margin-left:85px>
-                                            @* <input type=text @bind-Value=investment.Shares @bind-Value:event=oninput placeholder='shares'/> ✖️ $<input type=text @bind-Value=investment.Price @bind-Value:event=oninput placeholder='price'/> *@
-                                            Investment Value 🟰 $<input type=text @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/>
+                                            <input type=text @bind-Value=investment.Name @bind-Value:event=oninput placeholder='investment fullname' />
+                                            &nbsp;(
+                                                <input style="width:70px" type=text @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput placeholder='expense ratio'/>
+                                            %)
+                                            <button style=margin-left:20px @onclick='@(e=>deleteInvestment(e,accBuffer,invBuffer))'>❌ Investment</button>
                                         </div>
                                     }
                                     <button style=margin-left:80px @onclick='@(e=>addInvestment(e,accBuffer))'>➕ Investment</button>
@@ -567,27 +610,29 @@ portfolio/@stepPath
     public string estimatePortfolio(FamilyYear familyYear) 
     {
         if (familyYear.Value >= 10000000) {
-            return "8 digits";
+            return "8-figures";
         } else if (familyYear.Value >= 6666666) {
-            return "high 7 digits";
+            return "high 7-figures";
         } else if (familyYear.Value >= 3333333) {
-            return "mid 7 digits";
+            return "mid 7-figures";
         } else if (familyYear.Value >= 1000000) {
-            return "low 7 digits";
+            return "low 7-figures";
         } else if (familyYear.Value >= 666666) {
-            return "high 6 digits";
+            return "high 6-figures";
         } else if (familyYear.Value >= 333333) {
-            return "mid 6 digits";
+            return "mid 6-figures";
         } else if (familyYear.Value >= 100000) {
-            return "low 6 digits";
+            return "low 6-figures";
         } else if (familyYear.Value >= 66666) {
-            return "high 5 digits";
+            return "high 5-figures";
         } else if (familyYear.Value >= 33333) {
-            return "mid 5 digits";
+            return "mid 5-figures";
         } else if (familyYear.Value >= 10000) {
-            return "low 5 digits";
+            return "low 5-figures";
         } else if (familyYear.Value >= 1000) {
-            return "4 digits";
+            return "4-figures";
+        } else if (familyYear.Value == 0) {
+            return "-";
         } else {
             return "less than $1,000";
         }

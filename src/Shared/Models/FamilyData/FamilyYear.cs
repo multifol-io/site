@@ -127,8 +127,6 @@ public class FamilyYear {
             if (_Accounts == null)
             {
                 _Accounts = new List<Account>();
-                _Accounts.Add(new Account() { AccountType = "Taxable", Custodian = "Vanguard" });
-                _Accounts[0].Investments.Add(new Investment() { Ticker = "VTI", Name = "Vanguard Total Stock"});
             }
 
             return _Accounts;

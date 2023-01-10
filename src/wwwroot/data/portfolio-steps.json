@@ -62,5 +62,23 @@
         "priority": "",
         "returns": "",
         "description": ""
+    },
+    {
+        "step": "available-funds",
+        "title": "Available Funds",
+        "number": 8,
+        "summary": "Fill out funds available in 401k, 403b accounts",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
+        "step": "questions",
+        "title": "Questions",
+        "number": 9,
+        "summary": "Fill out questions",
+        "priority": "",
+        "returns": "",
+        "description": ""
     }
 ]
