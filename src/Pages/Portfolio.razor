@@ -596,11 +596,11 @@ portfolio/@stepPath
 
     public string formatMoney(int? amount) 
     {
-        return String.Format("${0:#,0.#}", amount);
+        return String.Format("${0:#,0.##}", amount);
     }
     public string formatMoney(double? amount) 
     {
-        return String.Format("${0:#,0.#}", amount);
+        return String.Format("${0:#,0.##}", amount);
     }
     public string formatPercent(double? amount)
     {
