@@ -110,6 +110,12 @@ public class FamilyYear {
         }
     }
 
+    public int? UnknownDebts {
+        get {
+            return GetDebts(null);
+        }
+    }
+
     public double Value { 
         get {
             double newValue = 0;

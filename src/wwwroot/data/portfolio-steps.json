@@ -40,7 +40,7 @@
         "step": "asset-allocation",
         "title": "Asset Allocation",
         "number": 5,
-        "summary": "What is your desired asset allocation?",
+        "summary": "What is your desired [[Asset allocation|asset allocation]] (ratio of stocks to bonds)?",
         "priority": "",
         "returns": "",
         "description": ""
@@ -58,7 +58,7 @@
         "step": "contributions",
         "title": "Contributions",
         "number": 7,
-        "summary": "Fill out all sections of [[https://bogle.tools/saving|Annual Saving]]",
+        "summary": "Fill out all sections of [[https://bogle.tools/saving|Annual Saving]], then navigate back to your Portfolio Review to complete it.",
         "priority": "",
         "returns": "",
         "description": ""

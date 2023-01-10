@@ -14,6 +14,8 @@ public class Debt {
                 return "Medium";
             } else if (Rate <= 3) {
                 return "Low";
+            } else if (Rate == null) {
+                return "Unknown";
             } else {
                 return null;
             }

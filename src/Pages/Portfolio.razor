@@ -91,7 +91,7 @@ portfolio/@stepPath
                                         @if (familyYears.Active.EmergencyFund.CurrentMonths != null) {
                                             <span>&nbsp;@familyYears.Active.EmergencyFund.CurrentMonthsString months</span>
                                         } else if (familyYears.Active.EmergencyFund.UseAmount) {
-                                            <span>&nbsp;$@familyYears.Active.EmergencyFund.CurrentBalance</span>
+                                            <span>&nbsp;@formatMoney(familyYears.Active.EmergencyFund.CurrentBalance)</span>
                                         }
                                         <br/><br/>
                                    </td>
@@ -104,7 +104,7 @@ portfolio/@stepPath
                                             <br/>
                                             @foreach (var debt in familyYears.Active.Debts)
                                             {
-                                                <span>&nbsp;&nbsp;@debt.Name: @formatMoney(debt.Total) @@ @debt.Rate%</span><br/> 
+                                                <span>&nbsp;&nbsp;@debt.Name: @formatMoney(debt.Total) @@ @(debt.Rate == null ? "unknown" : debt.Rate)%</span><br/> 
                                             }
                                         }
                                         <br/><br/>
@@ -297,7 +297,7 @@ portfolio/@stepPath
                                     <div style=text-align:right;width:275px>@familyYears.Active.EmergencyFund.CurrentMonthsString months</div>
                                     @if(familyYears.Active.EmergencyFund.CurrentMonths == null && familyYears.Active.EmergencyFund.CurrentBalance != null) {
                                         <br/><br/>
-                                        <InputCheckbox id=useAmount @bind-Value=familyYears.Active.EmergencyFund.UseAmount /> <label for=useAmount>Only publish amount (don't know approximate expenses)</label><br/>
+                                        <InputCheckbox id=useAmount @bind-Value=familyYears.Active.EmergencyFund.UseAmount /> <label for=useAmount>Only publish amount, since I haven't yet estimated monthly expenses</label><br/>
                                         <span>(Months is MORE useful than a dollar amount.)</span>
                                     }
                                 </EditForm><br/>
@@ -305,44 +305,48 @@ portfolio/@stepPath
                             case "debts":
                                 <p><b>Worksheet:</b> </p>
                                 <div>
-                                    <i>list of debts (all interest rates):</i><br>
+                                    <i>list of debts (all interest rates):</i><br/><br/>
                                     <EditForm Model="familyYears.Active">
                                         <table>
                                             <thead>
-                                            <th><label>name</label></th>
-                                            <th><label>interest %</label></th>
-                                            <th><label>category</label></th>
-                                            <th><label>total $</label></th>
-                                            <th><label>payoff date</label></th>
+                                            <th style="width:150px"><label>name</label></th>
+                                            <th style="width:120px"><label>total $</label></th>
+                                            <th style="width:100px"><label>interest %</label></th>
+                                            <th><label>rate category</label></th>
                                             <th><label></label></th>
                                             </thead>
-                                            @foreach (var debt in familyYears.Active.Debts) {
-                                                var myDebt = debt;
+                                            @for (var i=0;i<familyYears.Active.Debts.Count;i++) {
+                                                var debt = familyYears.Active.Debts[i];
+                                                int debtBuffer = i;
                                                 <tr>
-                                                <td><input type=text class=dollar @bind-Value=debt.Name @bind-Value:event=oninput /></td>
-                                                <td><input type=text class=dollar @bind-Value=debt.Rate @bind-Value:event=oninput /></td>
+                                                <td><input style=width:100% type=text class=dollar @bind-Value=debt.Name @bind-Value:event=oninput placeholder='description'/></td>
+                                                <td><input style=width:100% type=text class=dollar @bind-Value=debt.Total @bind-Value:event=oninput placeholder='amount owed'/></td>
+                                                <td><input style=width:100% type=text class=dollar @bind-Value=debt.Rate @bind-Value:event=oninput placeholder='rate'/></td>
                                                 <td><span>@debt.Category</span></td>
-                                                <td><input type=text class=dollar @bind-Value=debt.Total @bind-Value:event=oninput /></td>
-                                                <td><input type=text class=dollar @bind-Value=debt.PayoffDate @bind-Value:event=oninput /></td>
-                                                <td><button @onclick=@(() => familyYears.Active.Debts.Remove(myDebt))>@myDebt.Name<span class="oi oi-delete" aria-hidden="true"></span></button></td>
+                                                <td><button @onclick=@(e=>RemoveDebt(e, debtBuffer))>❌ Debt</button></td>
                                                 </tr>
                                             }
                                         </table>
-                                        <button @onclick=addDebt>Add</button>
+                                        <br/>
+                                        <button @onclick=addDebt>➕ Debt</button>
 
                                         <br/><br/>
-                                        <label>Amounts to Pay-Off (@step.title):</label><br/>
-                                        High Interest: <span>$</span>@formatMoney(familyYears.Active.HighDebts)<br/>
-                                        Medium Interest: <span>$</span>@formatMoney(familyYears.Active.MediumDebts)<br/>
-                                        Low Interest: <span>$</span>@formatMoney(familyYears.Active.LowDebts)<br/>
+                                        <label>Amounts to Pay-Off (@step.title):</label><br/><br/>
+                                        High Interest: @formatMoney(familyYears.Active.HighDebts)<br/>
+                                        Medium Interest: @formatMoney(familyYears.Active.MediumDebts)<br/>
+                                        Low Interest: @formatMoney(familyYears.Active.LowDebts)<br/>
+                                        Unknown Interest: @formatMoney(familyYears.Active.UnknownDebts)<br/>
                                         <br/>
                                     </EditForm>
                                 </div>
 
                                 @code{
+                                    void RemoveDebt(MouseEventArgs e, int debtIndex) {
+                                        familyYears.Active.Debts.RemoveAt(debtIndex);
+                                    }
                                     void addDebt()
                                     {
-                                        familyYears.Active?.Debts.Add(new Debt() { Name = "new", Rate = 3.0, Total = 5000 });
+                                        familyYears.Active?.Debts.Add(new Debt());
                                     }
                                 }
                                 break;
@@ -440,11 +444,11 @@ portfolio/@stepPath
 
                                 <EditForm Model="familyYears.Active" style=margin-left:25px>
                                     <label>Desired Asset Allocation:</label><br/>
-                                    <label>Stock:</label> <input type=text @bind-Value=familyYears.Active.Stocks @bind-Value:event=oninput />%<br/>
-                                    <label>Bond:</label> <input type=text @bind-Value=familyYears.Active.Bonds @bind-Value:event=oninput />%<br/>
+                                    <label>Stock:</label> <input style=width:50px;text-align:right type=text @bind-Value=familyYears.Active.Stocks @bind-Value:event=oninput />%<br/>
+                                    <label>Bond:</label> <input style=width:50px;text-align:right type=text @bind-Value=familyYears.Active.Bonds @bind-Value:event=oninput />%<br/>
                                     <hr/>
                                     <label>Desired International allocation (% of Stock):</label><br/>
-                                    <label>International:</label> <input type=text @bind-Value=familyYears.Active.International @bind-Value:event=oninput />%<br/>
+                                    <label>International:</label> <input style=width:50px;text-align:right type=text @bind-Value=familyYears.Active.International @bind-Value:event=oninput />%<br/>
                                 </EditForm><br/>
                                 break;
                             case "available-funds":
