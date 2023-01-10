@@ -17,6 +17,12 @@ public class Account
     public bool Edit { get; set; }
     public double Percentage { get; set; }
 
+    public string FullName 
+    {
+        get {
+            return (Identifier != null ? Identifier+ " " : "") + AccountType + (Custodian != null ? " at " + Custodian : "");
+        }
+    }
     private List<Investment>? _Investments;
     public List<Investment> Investments {
         get {
@@ -28,6 +34,19 @@ public class Account
             return _Investments;
         }
     }
+
+    private List<Investment>? _AvailableFunds;
+    public List<Investment> AvailableFunds {
+        get {
+            if (_AvailableFunds == null)
+            {
+                _AvailableFunds = new List<Investment>();
+            }
+
+            return _AvailableFunds;
+        }
+    }
+
     public void UpdatePercentages(double totalValue)
     {
         foreach (var investment in Investments)

@@ -161,6 +161,16 @@ portfolio/@stepPath
                                     <td>
                                         @((MarkupString)boldUnderline("Available funds:"))<br/>
                                         <br/>
+                                             @foreach (var account in familyYears.Active.Accounts) {
+                                                @if (account.AvailableFunds.Count > 0) {
+                                                    <br/>
+                                                        <span>@account.FullName</span><br/>
+                                                    <br/>
+                                                    @foreach (var investment in account.AvailableFunds) {
+                                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;@formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span><br/>
+                                                    }
+                                                }
+                                            }
                                     </td>
                                     break;
                                 case "questions":
@@ -220,6 +230,7 @@ portfolio/@stepPath
                                         @if (familyYears.Active.LowDebts > 0) {
                                             <span>@formatMoney(familyYears.Active.LowDebts) in Low Debts</span><br/>
                                         }
+                                        <br/>
                                     </td>
                                     break;
                                 default:
@@ -435,6 +446,18 @@ portfolio/@stepPath
                                     <label>Desired International allocation (% of Stock):</label><br/>
                                     <label>International:</label> <input type=text @bind-Value=familyYears.Active.International @bind-Value:event=oninput />%<br/>
                                 </EditForm><br/>
+                                break;
+                            case "available-funds":
+                                <td>
+                                    <label>Account</label>
+                                    <select>
+                                        @foreach (var account in familyYears.Active.Accounts) {
+                                            <option>
+                                                @account.FullName
+                                            </option>
+                                        }
+                                    </select>
+                                </td>
                                 break;
                             case "retirement-assets":
                                 <p><b>Prerequisites:</b> </p>
