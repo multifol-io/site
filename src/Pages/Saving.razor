@@ -50,11 +50,13 @@ saving/@stepPath
             string prevPage = folderName + prevStep?.step;
             string nextPage = folderName + nextStep?.step;
             
-            <h2 style="max-width:350px">
-                <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
+            <h3 style="max-width:350px">
                 Annual Saving
-                <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
-            </h2>
+                <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
+                <span style=text-align:center>0</span>
+                <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
+                <br/>
+            </h3>
 
             <p>To save money efficiently, you should prioritize the most efficient techniques. This tool helps you apply the <a target=_blank href="https://www.bogleheads.org/wiki/Prioritizing_investments">Bogleheads Prioritizing Investments wiki</a> ↗️. Review and complete the steps that apply to you.</p>
             <p><b>Feedback Welcome:</b> This feature is early in its development. Feedback is welcome on <a href='https://www.bogleheads.org/forum/viewtopic.php?t=393724'>forum post</a> or via <a href="https://linktr.ee/rrelyea">email/twitter</a>!</p>
@@ -70,7 +72,6 @@ saving/@stepPath
 
                 <table>
                     <thead>
-                        
                         <th colspan=2>Press edit (✏️) to complete each step:</th>
                         @if(familyYears.Active.PersonCount > 0) {<th style="padding-right:10px;text-align:center">$</th> }
                         @if(familyYears.Active.PersonCount > 0) {<th style="padding-right:10px;text-align:center">Match</th> }
@@ -195,11 +196,17 @@ saving/@stepPath
                     string prevPage = folderName + prevStep?.step;
                     string nextPage = folderName + nextStep?.step;
 
-                    <h2 style="max-width:350px">
+                    <h3 style="max-width:350px">
+                        Annual Saving
                         <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-                        @step.number: @step.title
-                        <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
+                        <span style=text-align:center>@step.number</span>
+                        <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
+                        <br/>
+                    </h3>
+                    <h2>
+                        @step.title
                     </h2>
+                    <hr/>
 
                     <h4>@((MarkupString)markupize(step.priority))</h4>
 
