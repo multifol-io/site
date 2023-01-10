@@ -14,9 +14,6 @@ search/@engine
 }
 
 @if (familyYears.Search.Engine != null) {
-    <span>Engine:@familyYears.Search.Engine</span>
-    @if(familyYears.Search.Engine == "") { <span>empty string</span>}
-    @if(familyYears.Search.Engine == null) { <span>null</span>}
     string engineDomain = "";
     <br/>
     <EditForm Model='familyYears.Search' style="font-size:18pt">
