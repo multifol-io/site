@@ -151,7 +151,7 @@ portfolio/@stepPath
                                             @((MarkupString)bold((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "") + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + " (" + formatPercent(account.Percentage) + ")" ))
                                             <br/>
                                             @foreach (var investment in account.Investments) {
-                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;@formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span><br/>
+                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;@formatPercent(investment.Percentage) @investment.Name (@investment.Ticker.ToUpperInvariant()) (@investment.ExpenseRatio%)</span><br/>
                                             }
                                         }
                                         <br/>
@@ -160,17 +160,17 @@ portfolio/@stepPath
                                 case "available-funds":
                                     <td>
                                         @((MarkupString)boldUnderline("Available funds:"))<br/>
-                                        <br/>
                                              @foreach (var account in familyYears.Active.Accounts) {
                                                 @if (account.AvailableFunds.Count > 0) {
                                                     <br/>
                                                         <span>@account.FullName</span><br/>
                                                     <br/>
                                                     @foreach (var investment in account.AvailableFunds) {
-                                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;@formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span><br/>
+                                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;@investment.Name (@investment.Ticker.ToUpperInvariant()) (@investment.ExpenseRatio%)</span><br/>
                                                     }
                                                 }
                                             }
+                                            <br/>
                                     </td>
                                     break;
                                 case "questions":
@@ -454,13 +454,37 @@ portfolio/@stepPath
                             case "available-funds":
                                 <td>
                                     <label>Account</label>
-                                    <select>
-                                        @foreach (var account in familyYears.Active.Accounts) {
-                                            <option>
+                                    <select @bind=currentAccountIndex>
+                                        <option>Choose Account...</option>
+                                        @for (int i=0;i<familyYears.Active.Accounts.Count;i++) {
+                                            var account = familyYears.Active.Accounts[i];
+                                            <option value=@i>
                                                 @account.FullName
                                             </option>
                                         }
                                     </select>
+
+                                     @if(currentAccountIndex != null && currentAccountIndex != "Choose Account...") {
+                                        int index = int.Parse(currentAccountIndex);
+                                        var currentAccount = familyYears.Active.Accounts[index];
+                                        for (int i=0;i < currentAccount.AvailableFunds.Count; i++) {
+                                            var investment = currentAccount.AvailableFunds[i];
+                                            int invBuffer = i;
+                                            <div style=margin-top:10px;margin-left:80px>
+                                                <input style="width:70px;text-transform: uppercase;" type=text @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/>
+                                            </div>
+                                            <div style=margin-left:85px>
+                                                <input type=text @bind-Value=investment.Name @bind-Value:event=oninput placeholder='investment fullname' />
+                                                &nbsp;(
+                                                    <input style="width:70px" type=text @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput placeholder='expense ratio'/>
+                                                %)
+                                                <button style=margin-left:20px @onclick='@(e=>deleteAvailableFund(e,currentAccount,invBuffer))'>❌ Fund</button>
+                                            </div>
+                                        }
+                                        <br/>
+                                        <br/>
+                                        <button style=margin-left:80px @onclick='@(e=>addAvailableFund(e,currentAccount))'>➕ Fund</button>
+                                    }
                                 </td>
                                 break;
                             case "questions":
@@ -548,6 +572,15 @@ portfolio/@stepPath
                                         void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
                                         {
                                             familyYears.Active.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
+                                        }
+                                        void addAvailableFund(MouseEventArgs e, Account account)
+                                        {
+                                            var newFund = new Investment();
+                                            account.AvailableFunds.Add(newFund);
+                                        }
+                                        void deleteAvailableFund(MouseEventArgs e, Account account, int investmentIndex)
+                                        {
+                                            account.AvailableFunds.RemoveAt(investmentIndex);
                                         }
                                         void deleteAccount(MouseEventArgs e, int accountIndex)
                                         {
@@ -775,7 +808,7 @@ portfolio/@stepPath
     [Parameter]
     public string? stepPath { get; set; }
     public bool ShowMarkup { get; set; }
-
+    public string? currentAccountIndex { get; set; }
     private Step[]? steps;
     private const string folderName = "/portfolio/";
 
