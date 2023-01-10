@@ -20,6 +20,8 @@ public class FamilyYears : IFamilyYears
             familyYears.CurrentYear = 1;
         }
 
+        familyYears.Search = new SearchModel();
+
         return familyYears;
     }
 
@@ -38,6 +40,4 @@ public class FamilyYears : IFamilyYears
         get { return Years[CurrentYear]; }
     }
     public SearchModel Search { get; set; }
-
-
 }

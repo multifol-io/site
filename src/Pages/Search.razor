@@ -10,11 +10,13 @@ search/@engine
 
 
 @if (engine != null) {
-    familyYears.Search = new();
     familyYears.Search.Engine = engine;
 }
 
-@if (familyYears.Search != null) {
+@if (familyYears.Search.Engine != null) {
+    <span>Engine:@familyYears.Search.Engine</span>
+    @if(familyYears.Search.Engine == "") { <span>empty string</span>}
+    @if(familyYears.Search.Engine == null) { <span>null</span>}
     string engineDomain = "";
     <br/>
     <EditForm Model='familyYears.Search' style="font-size:18pt">
@@ -26,7 +28,7 @@ search/@engine
             }
             @engineDomain
         </label>
-        <input type=text style="width:500px" @onkeydown=@Enter placeholder='terms to find' @bind-Value='@familyYears.Search.Terms' @bind-Value:event="oninput" />
+        <input type=text style="width:500px" @onkeydown=KeyDown placeholder='terms to find' @bind-Value='@familyYears.Search.Terms' @bind-Value:event="oninput"  />
         <input type=button onclick='@doSearch' value="Go" />
         <br/>
         <label style="font-size:12pt">Search Bogleheads.org: </label> 
@@ -67,7 +69,7 @@ search/@engine
 @code {
     string prompt = "";
 
-    public void Enter(KeyboardEventArgs e)
+    private void KeyDown(KeyboardEventArgs e)
     {
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {
@@ -83,7 +85,4 @@ search/@engine
 
     [Parameter]
     public string? engine { get; set; }
-    protected override async Task OnInitializedAsync()
-    {
-    }
 }

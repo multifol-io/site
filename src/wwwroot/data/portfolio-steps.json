@@ -22,7 +22,7 @@
         "step": "tax-status",
         "title": "Tax Status",
         "number": 3,
-        "summary": "Important tax status details",
+        "summary": "Fill out tax status details",
         "priority": "",
         "returns": "",
         "description": ""
@@ -40,7 +40,7 @@
         "step": "asset-allocation",
         "title": "Asset Allocation",
         "number": 5,
-        "summary": "",
+        "summary": "What is your desired asset allocation?",
         "priority": "",
         "returns": "",
         "description": ""
