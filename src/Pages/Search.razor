@@ -42,13 +42,13 @@ search/@engine
 <br/>
 
 <p style="font-size:10pt">
-    @if (familyYears.Search != null && familyYears.Search.Engine == null) {
+    @if (familyYears.Search == null || familyYears.Search.Engine == null) {
         prompt = "Choose search engine to use:";
     } else {
         prompt = "Switch to use:";
     }
     @prompt
-    <a target="_blank" href="https://www.bogleheads.org/forum/search.php">Forum Search</a> |
+    <a target="_blank" href="https://www.bogleheads.org/forum/search.php">Forum Search</a> ↗️ |
     <a href="search/bing">Bing.com</a> | 
     <a href="search/brave">Brave.com</a> | 
     <a href="search/duckduckgo">DuckDuckGo.com</a> | 
