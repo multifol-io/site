@@ -332,9 +332,9 @@ portfolio/@stepPath
 
                                         <br/><br/>
                                         <label>Amounts to Pay-Off (@step.title):</label><br/>
-                                        High Interest: <span>$</span>@familyYears.Active.HighDebts<br/>
-                                        Medium Interest: <span>$</span>@familyYears.Active.MediumDebts<br/>
-                                        Low Interest: <span>$</span>@familyYears.Active.LowDebts<br/>
+                                        High Interest: <span>$</span>@formatMoney(familyYears.Active.HighDebts)<br/>
+                                        Medium Interest: <span>$</span>@formatMoney(familyYears.Active.MediumDebts)<br/>
+                                        Low Interest: <span>$</span>@formatMoney(familyYears.Active.LowDebts)<br/>
                                         <br/>
                                     </EditForm>
                                 </div>

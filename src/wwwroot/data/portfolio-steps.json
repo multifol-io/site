@@ -67,7 +67,7 @@
         "step": "available-funds",
         "title": "Available Funds",
         "number": 8,
-        "summary": "Fill out funds available in 401k, 403b accounts",
+        "summary": "Fill out funds available in 401k, 403b accounts. Accounts are created in [[https://bogle.tools/portfolio/retirement-assets|Portfolio/Retirement Assets]]",
         "priority": "",
         "returns": "",
         "description": ""
