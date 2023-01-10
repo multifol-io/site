@@ -24,6 +24,19 @@ portfolio/@stepPath
     .percent {
         width: 50px;
     }
+    .article a[href^="http"]::after,
+    .article a[href^="https://"]::after
+    {
+        content: "";
+        width: 11px;
+        height: 11px;
+        margin-left: 4px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z'/%3E%3Cpath fill-rule='evenodd' d='M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z'/%3E%3C/svg%3E");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        display: inline-block;
+    }
 </style>
 
     @if (steps == null || familyYears == null)
@@ -45,7 +58,7 @@ portfolio/@stepPath
                 <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
             </h2>
             <p><b>Early Preview:</b> This feature is early in its development. Feedback is welcome!</p>
-            <p>Getting all your information in one place to help others give you feedback is the idea behind Bogleheads.org's <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Asking Portfolio Questions</a><span class="oi oi-external-link m-2 aria-hidden="true"></span>. This tool will make it easy to post to bogleheads.org forum with the correct format.</p>
+            <p>Getting all your information in one place to help others give you feedback is the idea behind Bogleheads.org's <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Asking Portfolio Questions</a> ↗️. This tool will make it easy to post to bogleheads.org forum with the correct format.</p>
 
             <div>
                 <p ><b>Press edit (✏️) to complete each step:</b></p>
@@ -206,8 +219,9 @@ portfolio/@stepPath
                 </table>
                 <br/>
 
-                <button style=margin-left:20px @onclick=CopyTextToClipboard>Copy to clipboard</button>
-                <InputCheckbox id=showMarkup style=margin-left:10px @bind-Value=ShowMarkup /> <label for=showMarkup>Use forum post markup: [b]bold[/b]</label><br/>
+                <InputCheckbox id=showMarkup style=margin-left:20px @bind-Value=ShowMarkup /> <label for=showMarkup>Use forum post markup: [b]bold[/b]</label><br/>
+                <br/>
+                <button style=margin-left:20px @onclick=CopyTextToClipboard>Copy to clipboard</button><br/>
                 
                 
                 @code{
@@ -244,7 +258,7 @@ portfolio/@stepPath
 
                     <h4>@((MarkupString)markupize(step.priority))</h4>
 
-                    <p>@((MarkupString)markupize(step.summary))</p>
+                    <p class="article">@((MarkupString)markupize(step.summary))</p>
 
                         @switch (step.step) {
                             case "emergency-fund":
