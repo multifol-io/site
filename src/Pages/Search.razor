@@ -2,30 +2,35 @@
 @page "/search/{engine}/"
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
+@inject IFamilyYears familyYears
 
 <PageTitle>
-bogle.tools/search/@engine
+search/@engine
 </PageTitle>
 
 
 @if (engine != null) {
-    search.Engine = engine;
+    familyYears.Search = new();
+    familyYears.Search.Engine = engine;
+}
+
+@if (familyYears.Search != null) {
     string engineDomain = "";
     <br/>
-    <EditForm Model='search' style="font-size:18pt">
+    <EditForm Model='familyYears.Search' style="font-size:18pt">
         <label>
-            @if (engine == "other") {
-                engineDomain = search.Domain + " search:";
+            @if (familyYears.Search.Engine == "other") {
+                engineDomain = familyYears.Search.Domain + " search:";
             } else {
-                engineDomain = engine + ".com search:";
+                engineDomain = familyYears.Search.Engine + ".com search:";
             }
             @engineDomain
         </label>
-        <input type=text style="width:500px" @onkeydown=@Enter placeholder='terms to find' @bind-Value='@search.Terms' @bind-Value:event="oninput" />
+        <input type=text style="width:500px" @onkeydown=@Enter placeholder='terms to find' @bind-Value='@familyYears.Search.Terms' @bind-Value:event="oninput" />
         <input type=button onclick='@doSearch' value="Go" />
         <br/>
         <label style="font-size:12pt">Search Bogleheads.org: </label> 
-        <select style="font-size:12pt" @bind="@search.Location">
+        <select style="font-size:12pt" @bind="@familyYears.Search.Location">
             <option value=1>Entire site</option>
             <option value=2>Forum only</option>
             <option value=3>Wiki only</option>
@@ -37,7 +42,7 @@ bogle.tools/search/@engine
 <br/>
 
 <p style="font-size:10pt">
-    @if (engine == null) {
+    @if (familyYears.Search != null && familyYears.Search.Engine == null) {
         prompt = "Choose search engine to use:";
     } else {
         prompt = "Switch to use:";
@@ -51,10 +56,10 @@ bogle.tools/search/@engine
 </p>
 
 @if (engine == "other") {
-    <EditForm Model='search' style="margin:25px">
+    <EditForm Model='familyYears.Search' style="margin:25px">
         <label>Provide Details about Search Engine to use:</label><br/>
-        <label>Other Search Domain Name:</label> <input type=text placeholder="search engine name" @bind-Value='@search.Domain' @bind-Value:event="oninput" /><br/>
-        <label>Url Pattern after domain:</label> <input style="width:500px" type=text @bind-Value='@search.UrlPattern' @bind-Value:event="oninput" /><br/>
+        <label>Other Search Domain Name:</label> <input type=text placeholder="search engine name" @bind-Value='@familyYears.Search.Domain' @bind-Value:event="oninput" /><br/>
+        <label>Url Pattern after domain:</label> <input style="width:500px" type=text @bind-Value='@familyYears.Search.UrlPattern' @bind-Value:event="oninput" /><br/>
     </EditForm><br/>
 }
 
@@ -71,15 +76,13 @@ bogle.tools/search/@engine
 
     public async Task doSearch()
     {
-        var fullUrl = search.CalculatedUrl;
+        var fullUrl = familyYears.Search.CalculatedUrl;
         await JSRuntime.InvokeAsync<object>("open", fullUrl ,"_blank");
     }
 
     [Parameter]
     public string? engine { get; set; }
-    public SearchModel search { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        search = new();
     }
 }

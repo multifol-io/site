@@ -37,4 +37,7 @@ public class FamilyYears : IFamilyYears
     public FamilyYear Active {
         get { return Years[CurrentYear]; }
     }
+    public SearchModel Search { get; set; }
+
+
 }
