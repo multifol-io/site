@@ -196,6 +196,11 @@ portfolio/@stepPath
                                         <span>
                                             @((MarkupString)boldUnderline("Contributions:"))
                                         </span><br/>
+                                        @if (familyYears.Active.PlannedSavings > 0) {
+                                            <span>Planned contributions: @formatMoney(familyYears.Active.PlannedSavings)</span><br/><br/>
+                                        }
+
+                                        <span>Prioritized Investments:</span><br/>
 
                                         @if (familyYears.Active.EmergencyFund.AmountToSave > 0) {
                                             <span>@formatMoney(familyYears.Active.EmergencyFund.AmountToSave) in Emergency Fund</span><br/>
