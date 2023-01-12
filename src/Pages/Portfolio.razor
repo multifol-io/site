@@ -3,6 +3,7 @@
 @inject HttpClient Http
 @inject IFamilyYears familyYears
 @inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
 
 <PageTitle>
 portfolio/@stepPath
@@ -109,7 +110,7 @@ portfolio/@stepPath
                                                 <span>&nbsp;&nbsp;@debt.Name: @formatMoney(debt.Total) @@ @(debt.Rate == null ? "unknown" : debt.Rate)%</span><br/> 
                                             }
                                         }
-                                        <br/><br/>
+                                        <br/>
                                     </td>
                                     break;
                                 case "tax-status":
@@ -175,10 +176,19 @@ portfolio/@stepPath
                                             <br/>
                                     </td>
                                     break;
+                                case "additional-background":
+                                    @((MarkupString)boldUnderline("Additional Background:"))<br/>
+                                    @familyYears.Active.AdditionalBackground
+                                    <br/>
+                                    break;
                                 case "questions":
                                     <td>
                                         @((MarkupString)boldUnderline("Questions:"))<br/>
-                                        <br/>
+                                        @for (int i = 0; i < familyYears.Active.Questions.Count; i++) {
+                                            var question = familyYears.Active.Questions[i];
+                                            @(i+1 + ".") @question
+                                            <br/><br/>
+                                        }
                                     </td>
                                     break;
                                 case "contributions":
@@ -365,10 +375,10 @@ portfolio/@stepPath
                                     <select @bind=familyYears.Active.TaxFilingStatus>
                                         <option value=None>choose...</option>
                                         <option>Single</option>
-                                        <option value=HeadOfHousehold>Head of Household</option>
                                         <option value=MarriedFilingJointly>Married filing jointly</option>
                                         <option value=MarriedFilingSeperately>Married filing seperately</option>
                                         <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                                        <option value=HeadOfHousehold>Head of Household</option>
                                     </select><br/>
                                     @foreach (var taxFiler in familyYears.Active.TaxRateData.TaxData.TaxFilers)
                                     {
@@ -423,26 +433,28 @@ portfolio/@stepPath
                                 <select @bind=familyYears.Active.TaxFilingStatus>
                                     <option value=None>choose...</option>
                                     <option>Single</option>
-                                    <option value=HeadOfHousehold>Head of Household</option>
                                     <option value=MarriedFilingJointly>Married filing jointly</option>
                                     <option value=MarriedFilingSeperately>Married filing seperately</option>
                                     <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                                    <option value=HeadOfHousehold>Head of Household</option>
                                 </select><br/><br/>
                                 
                                 <p><b>Worksheet:</b> </p>
                                 @for (int i = 0; i < familyYears.Active.PersonCount; i++) {
                                     var person = familyYears.Active.People[i];
-                                    <p><b>Person @(i+1):</b> </p>
+                                    int personIndex = i + 1;
+                                    <p><b>Person @personIndex:</b> </p>
 
                                     <EditForm Model="person" style=margin-left:25px>
-                                        <label>Age:</label> <input type=text @bind-Value=person.Age @bind-Value:event=oninput /><br/>
+                                        <label>Age:</label> <input style=width:60px type=text @bind-Value=person.Age @bind-Value:event=oninput /><br/>
 
                                         <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
                                             <option value=None>choose...</option>
-                                            <option>me</option>
-                                            <option>them</option>
+                                            <option>person @personIndex</option>
                                             <option>him</option>
                                             <option>her</option>
+                                            <option>me</option>
+                                            <option>them</option>
                                         </select><br/><br/>
                                     </EditForm><br/>
                                 }
@@ -490,14 +502,32 @@ portfolio/@stepPath
                                             </div>
                                         }
                                         <br/>
-                                        <br/>
                                         <button style=margin-left:80px @onclick='@(e=>addAvailableFund(e,currentAccount))'>➕ Fund</button>
                                     }
                                 </td>
                                 break;
+                            case "additional-background":
+                                <td>
+                                    <textarea style=width:600px;height:300px @bind-Value=familyYears.Active.AdditionalBackground @bind-Value:event=oninput placeholder='additional background information'>
+                                        @familyYears.Active.AdditionalBackground
+                                    </textarea>
+                                </td>
+                                break;
                             case "questions":
                                 <td>
-                                    More coming soon...
+                                    @for (int i = 0; i < familyYears.Active.Questions.Count; i++) {
+                                        int iBuffer = i;
+                                        @(i+1 + ".") <input type=text @bind-Value=familyYears.Active.Questions[iBuffer] @bind-Value:event="oninput" placeholder="ask question" /><br/>
+                                        <br/>
+                                    }
+                                    <br/>
+                                        <button style=margin-left:80px @onclick=addQuestion>➕ Question</button>
+                                    <br/>
+                                    @code {
+                                        void addQuestion() {
+                                            familyYears.Active.Questions.Add("");
+                                        }
+                                    }
                                 </td>
                                 break;                                
                             case "retirement-assets":
@@ -507,14 +537,14 @@ portfolio/@stepPath
                                 <select @bind=familyYears.Active.TaxFilingStatus>
                                     <option value=None>choose...</option>
                                     <option>Single</option>
-                                    <option value=HeadOfHousehold>Head of Household</option>
                                     <option value=MarriedFilingJointly>Married filing jointly</option>
                                     <option value=MarriedFilingSeperately>Married filing seperately</option>
                                     <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                                    <option value=HeadOfHousehold>Head of Household</option>
                                 </select><br/>
                                 <br/>
 
-                                <u><b>Current Retirement Assets:</b></u><br/><br/>
+                                <u><b>Current Retirement Assets:</b></u><br/>
 
                                 @code{
                                     void editAccount(MouseEventArgs e, int index)
@@ -614,9 +644,7 @@ portfolio/@stepPath
                                 }
                                 break;
                             case "contributions":
-                                <p><b>Worksheet:</b> </p>
-
-                                
+                                Navigation.NavigateTo("/portfolio-contributions");        
                                 break;
                         }
                     <p>

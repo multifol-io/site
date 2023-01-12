@@ -12,10 +12,21 @@ public class FamilyYear {
     
     [Required]
     public int PersonCount { get; set; }
-
     public string StateOfResidence { get; set; }
-    
     public int Year { get; private set; }
+    public string? AdditionalBackground { get; set; }
+    private List<string> _Questions;
+    public List<string> Questions
+    {
+        get {
+            if (_Questions == null)
+            {
+                _Questions = new List<string>();
+            }
+
+            return _Questions;
+        }
+    }
 
     private List<Person>? _people;
     public List<Person> People {
@@ -57,6 +68,15 @@ public class FamilyYear {
     }
 
     public int? AdjustedGrossIncome { get; set; }
+    public int? IncomeTaxPaid { get; set; }
+    public int? TaxableToInvest { get; set; }
+    public int? PlannedSavings { 
+        get {
+            int? annualExpenses = EmergencyFund.MonthlyExpenses * 12;
+            int investFromTaxable = TaxableToInvest ?? 0;
+            return AdjustedGrossIncome - IncomeTaxPaid - annualExpenses + investFromTaxable;
+        }
+    }
     public string? FederalMarginalTaxBracket { get; set; }
     public string? StateMarginalTaxBracket { get; set; }
     public EmergencyFund EmergencyFund { get; set; } = new();

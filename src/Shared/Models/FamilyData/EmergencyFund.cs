@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+
 public class EmergencyFund {
     public int TargetMonths {get;set;} = 3;
     [Required]
