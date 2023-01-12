@@ -73,9 +73,18 @@
         "description": ""
     },
     {
+        "step": "additional-background",
+        "title": "Additional Background",
+        "number": 9,
+        "summary": "Give background information to help provide more context",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
         "step": "questions",
         "title": "Questions",
-        "number": 9,
+        "number": 10,
         "summary": "Fill out questions",
         "priority": "",
         "returns": "",

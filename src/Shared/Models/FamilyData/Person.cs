@@ -6,8 +6,8 @@ public class Person {
         this.RothIRA = new RothIRA(this);
         this.HealthSavingsAccount = new HealthSavingsAccount(this);
         this.PersonIndex = personIndex;
-        if (this.PersonIndex == 0) { Identifier = "me"; }
-        else { Identifier = "them"; }
+        if (this.PersonIndex == 0) { Identifier = "person 1"; }
+        else { Identifier = "person 2"; }
     }
 
     public Employer.Employer _employer;
@@ -131,6 +131,10 @@ public class Person {
                     return "her";
                 case null:
                     return null;
+                case "person 1":
+                    return "person 1's";
+                case "person 2":
+                    return "person 2's";
                 default:
                     return "undefined";
             }
@@ -138,8 +142,16 @@ public class Person {
     }
 
     public int? Age { get; set; }
-    public bool FiftyOrOver { get; set; }
-    public bool FiftyFiveOrOver { get; set; }
+    public bool FiftyOrOver { 
+        get {
+            return Age >= 50;
+        }
+    }
+    public bool FiftyFiveOrOver { 
+        get {
+            return Age >= 55;
+        }
+    }
 
     public EmployerPlan EmployerPlan { get; set; }
     public HealthSavingsAccount HealthSavingsAccount { get; set; }
