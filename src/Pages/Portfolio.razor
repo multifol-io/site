@@ -522,7 +522,11 @@ portfolio/@stepPath
                                 <td>
                                     @for (int i = 0; i < familyYears.Active.Questions.Count; i++) {
                                         int iBuffer = i;
-                                        @(i+1 + ".") <input type=text @bind-Value=familyYears.Active.Questions[iBuffer] @bind-Value:event="oninput" placeholder="ask question" /><br/>
+                                        <label >@(i+1 + ". ")</label> 
+                                        <textarea style=width:500px;vertical-align:top @bind-Value=familyYears.Active.Questions[iBuffer] @bind-Value:event="oninput" placeholder="ask question">
+                                            @familyYears.Active.Questions[iBuffer]
+                                        </textarea>
+                                        <br/>
                                         <br/>
                                     }
                                     <br/>
