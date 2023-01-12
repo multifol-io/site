@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 
 public class EmergencyFund {
     public int TargetMonths {get;set;} = 3;
