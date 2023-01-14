@@ -1,0 +1,17 @@
+@page "/3fund"
+@inject IJSRuntime JSRuntime
+
+<PageTitle>
+3fund performance
+</PageTitle>
+<div>
+    Our 3fund part of the site is currently hosted on a different server. 
+    Redirecting to <a target=_blank href=https://rrelyea.github.io/3fund>rrelyea.github.io/3fund</a> in a new tab....
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await JSRuntime.InvokeAsync<object>("open", "https://rrelyea.github.io/3fund" ,"_blank");     
+    }
+}
