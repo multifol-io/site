@@ -1,0 +1,1390 @@
+{
+  "BIV": {
+    "longName": "Vanguard Intermediate-Term Bond ETF",
+    "expenseRatio": 0.04
+  },
+  "BLV": {
+    "longName": "Vanguard Long-Term Bond ETF",
+    "expenseRatio": 0.04
+  },
+  "BND": {
+    "longName": "Vanguard Total Bond Market ETF",
+    "expenseRatio": 0.03
+  },
+  "BNDW": {
+    "longName": "Vanguard Total World Bond ETF",
+    "expenseRatio": 0.06
+  },
+  "BNDX": {
+    "longName": "Vanguard Total International Bond ETF",
+    "expenseRatio": 0.07
+  },
+  "BSV": {
+    "longName": "Vanguard Short-Term Bond ETF",
+    "expenseRatio": 0.04
+  },
+  "EDV": {
+    "longName": "Vanguard Extended Duration Treasury ETF",
+    "expenseRatio": 0.06
+  },
+  "ESGV": {
+    "longName": "Vanguard ESG U.S. Stock ETF",
+    "expenseRatio": 0.09
+  },
+  "IVOG": {
+    "longName": "Vanguard S\u0026P Mid-Cap 400 Growth ETF",
+    "expenseRatio": 0.15
+  },
+  "IVOO": {
+    "longName": "Vanguard S\u0026P Mid-Cap 400 ETF",
+    "expenseRatio": 0.1
+  },
+  "IVOV": {
+    "longName": "Vanguard S\u0026P Mid-Cap 400 Value ETF",
+    "expenseRatio": 0.15
+  },
+  "MGC": {
+    "longName": "Vanguard Mega Cap ETF",
+    "expenseRatio": 0.07
+  },
+  "MGK": {
+    "longName": "Vanguard Mega Cap Growth ETF",
+    "expenseRatio": 0.07
+  },
+  "MGV": {
+    "longName": "Vanguard Mega Cap Value ETF",
+    "expenseRatio": 0.07
+  },
+  "VADGX": {
+    "longName": "Vanguard Advice Select Dividend Growth Fund",
+    "expenseRatio": 0.45
+  },
+  "VAGVX": {
+    "longName": "Vanguard Advice Select Global Value Fund",
+    "expenseRatio": 0.4
+  },
+  "VAIGX": {
+    "longName": "Vanguard Advice Select International Growth Fund",
+    "expenseRatio": 0.42
+  },
+  "VAIPX": {
+    "longName": "Vanguard Inflation-Protected Securities Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VASFX": {
+    "longName": "Vanguard Alternative Strategies Fund",
+    "expenseRatio": 1.28
+  },
+  "VASGX": {
+    "longName": "Vanguard LifeStrategy Growth Fund",
+    "expenseRatio": 0.14
+  },
+  "VASIX": {
+    "longName": "Vanguard LifeStrategy Income Fund",
+    "expenseRatio": 0.11
+  },
+  "VASVX": {
+    "longName": "Vanguard Selected Value Fund",
+    "expenseRatio": 0.32
+  },
+  "VAW": {
+    "longName": "Vanguard Materials ETF",
+    "expenseRatio": 0.1
+  },
+  "VB": {
+    "longName": "Vanguard Small-Cap ETF",
+    "expenseRatio": 0.05
+  },
+  "VBAIX": {
+    "longName": "Vanguard Balanced Index Fund Institutional Shares",
+    "expenseRatio": 0.06
+  },
+  "VBIAX": {
+    "longName": "Vanguard Balanced Index Fund Admiral Shares",
+    "expenseRatio": 0.07
+  },
+  "VBILX": {
+    "longName": "Vanguard Intermediate-Term Bond Index Fund Admiral Shares",
+    "expenseRatio": 0.07
+  },
+  "VBIMX": {
+    "longName": "Vanguard Intermediate-Term Bond Index Fund Institutional Shares",
+    "expenseRatio": 0.05
+  },
+  "VBIPX": {
+    "longName": "Vanguard Short-Term Bond Index Fund Institutional Plus",
+    "expenseRatio": 0.04
+  },
+  "VBIRX": {
+    "longName": "Vanguard Short-Term Bond Index Fund Admiral Shares",
+    "expenseRatio": 0.07
+  },
+  "VBITX": {
+    "longName": "Vanguard Short-Term Bond Index Fund Institutional Shares",
+    "expenseRatio": 0.05
+  },
+  "VBIUX": {
+    "longName": "Vanguard Intermediate-Term Bond Index Fund Institutional Plus",
+    "expenseRatio": 0.04
+  },
+  "VBK": {
+    "longName": "Vanguard Small-Cap Growth ETF",
+    "expenseRatio": 0.07
+  },
+  "VBLAX": {
+    "longName": "Vanguard Long-Term Bond Index Fund Admiral Shares",
+    "expenseRatio": 0.07
+  },
+  "VBLIX": {
+    "longName": "Vanguard Long-Term Bond Index Fund Institutional Plus",
+    "expenseRatio": 0.04
+  },
+  "VBLLX": {
+    "longName": "Vanguard Long-Term Bond Index Fund Institutional Shares",
+    "expenseRatio": 0.05
+  },
+  "VBMPX": {
+    "longName": "Vanguard Total Bond Market Index Fund Institutional Plus Shares",
+    "expenseRatio": 0.03
+  },
+  "VBPIX": {
+    "longName": "Vanguard Baillie Gifford Global Positive Impact Stock Fund Investor Shares",
+    "expenseRatio": 0.59
+  },
+  "VBR": {
+    "longName": "Vanguard Small-Cap Value ETF",
+    "expenseRatio": 0.07
+  },
+  "VBTIX": {
+    "longName": "Vanguard Total Bond Market Index Fund Institutional Shares",
+    "expenseRatio": 0.035
+  },
+  "VBTLX": {
+    "longName": "Vanguard Total Bond Market Index Fund Admiral Shares",
+    "expenseRatio": 0.05
+  },
+  "VCADX": {
+    "longName": "Vanguard California Intermediate-Term Tax-Exempt Fund Admiral Shares",
+    "expenseRatio": 0.09
+  },
+  "VCAIX": {
+    "longName": "Vanguard California Intermediate-Term Tax-Exempt Fund Investor Shares",
+    "expenseRatio": 0.17
+  },
+  "VCDAX": {
+    "longName": "Vanguard Consumer Discretionary Index Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VCEB": {
+    "longName": "Vanguard ESG U.S. Corporate Bond ETF",
+    "expenseRatio": 0.12
+  },
+  "VCIT": {
+    "longName": "Vanguard Intermediate-Term Corporate Bond ETF",
+    "expenseRatio": 0.04
+  },
+  "VCITX": {
+    "longName": "Vanguard California Long-Term Tax-Exempt Fund Investor Shares",
+    "expenseRatio": 0.17
+  },
+  "VCLAX": {
+    "longName": "Vanguard California Long-Term Tax-Exempt Fund Admiral Shares",
+    "expenseRatio": 0.09
+  },
+  "VCLT": {
+    "longName": "Vanguard Long-Term Corporate Bond ETF",
+    "expenseRatio": 0.04
+  },
+  "VCMDX": {
+    "longName": "Vanguard Commodity Strategy Fund Admiral Shares",
+    "expenseRatio": 0.2
+  },
+  "VCOBX": {
+    "longName": "Vanguard Core Bond Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VCORX": {
+    "longName": "Vanguard Core Bond Fund Investor Shares",
+    "expenseRatio": 0.2
+  },
+  "VCPAX": {
+    "longName": "Vanguard Core-Plus Bond Fund Admiral Shares",
+    "expenseRatio": 0.2
+  },
+  "VCPIX": {
+    "longName": "Vanguard Core-Plus Bond Fund Investor Shares",
+    "expenseRatio": 0.3
+  },
+  "VCR": {
+    "longName": "Vanguard Consumer Discretionary ETF",
+    "expenseRatio": 0.1
+  },
+  "VCSAX": {
+    "longName": "Vanguard Consumer Staples Index Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VCSH": {
+    "longName": "Vanguard Short-Term Corporate Bond ETF",
+    "expenseRatio": 0.04
+  },
+  "VCTXX": {
+    "longName": "Vanguard California Municipal Money Market Fund",
+    "expenseRatio": 0.16
+  },
+  "VDADX": {
+    "longName": "Vanguard Dividend Appreciation Index Fund Admiral Shares",
+    "expenseRatio": 0.08
+  },
+  "VDC": {
+    "longName": "Vanguard Consumer Staples ETF",
+    "expenseRatio": 0.1
+  },
+  "VDE": {
+    "longName": "Vanguard Energy ETF",
+    "expenseRatio": 0.1
+  },
+  "VDEQX": {
+    "longName": "Vanguard Diversified Equity Fund",
+    "expenseRatio": 0.35
+  },
+  "VDIGX": {
+    "longName": "Vanguard Dividend Growth Fund",
+    "expenseRatio": 0.27
+  },
+  "VDIPX": {
+    "longName": "Vanguard Developed Markets Index Fund Institutional Plus Shares",
+    "expenseRatio": 0.04
+  },
+  "VEA": {
+    "longName": "Vanguard FTSE Developed Markets ETF",
+    "expenseRatio": 0.05
+  },
+  "VEGBX": {
+    "longName": "Vanguard Emerging Markets Bond Fund Admiral Shares",
+    "expenseRatio": 0.4
+  },
+  "VEIGX": {
+    "longName": "Vanguard Global ESG Select Stock Fund Investor Shares",
+    "expenseRatio": 0.56
+  },
+  "VEIPX": {
+    "longName": "Vanguard Equity Income Fund Investor Shares",
+    "expenseRatio": 0.28
+  },
+  "VEIRX": {
+    "longName": "Vanguard Equity Income Fund Admiral Shares",
+    "expenseRatio": 0.19
+  },
+  "VEMAX": {
+    "longName": "Vanguard Emerging Markets Stock Index Fund Admiral Shares",
+    "expenseRatio": 0.14
+  },
+  "VEMBX": {
+    "longName": "Vanguard Emerging Markets Bond Fund Investor Shares",
+    "expenseRatio": 0.55
+  },
+  "VEMIX": {
+    "longName": "Vanguard Emerging Markets Stock Index Fund Institutional Shares",
+    "expenseRatio": 0.1
+  },
+  "VEMPX": {
+    "longName": "Vanguard Extended Market Index Fund Institutional Plus Shares",
+    "expenseRatio": 0.04
+  },
+  "VEMRX": {
+    "longName": "Vanguard Emerging Markets Index Fund Institutional Plus Shares",
+    "expenseRatio": 0.08
+  },
+  "VENAX": {
+    "longName": "Vanguard Energy Index Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VEOAX": {
+    "longName": "Vanguard Global Environmental Opportunities Stock Fund Admiral Shares",
+    "expenseRatio": 0.6
+  },
+  "VEOIX": {
+    "longName": "Vanguard Global Environmental Opportunities Stock Fund Investor Shares",
+    "expenseRatio": 0.75
+  },
+  "VESGX": {
+    "longName": "Vanguard Global ESG Select Stock Fund Admiral Shares",
+    "expenseRatio": 0.46
+  },
+  "VESIX": {
+    "longName": "Vanguard European Stock Index Fund Institutional Shares",
+    "expenseRatio": 0.08
+  },
+  "VEU": {
+    "longName": "Vanguard FTSE All-World ex-US ETF",
+    "expenseRatio": 0.07
+  },
+  "VEUPX": {
+    "longName": "Vanguard European Stock Index Fund Institutional Plus Shares",
+    "expenseRatio": 0.07
+  },
+  "VEUSX": {
+    "longName": "Vanguard European Stock Index Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VEVFX": {
+    "longName": "Vanguard Explorer Value Fund",
+    "expenseRatio": 0.53
+  },
+  "VEXAX": {
+    "longName": "Vanguard Extended Market Index Fund Admiral Shares",
+    "expenseRatio": 0.06
+  },
+  "VEXPX": {
+    "longName": "Vanguard Explorer Fund Investor Shares",
+    "expenseRatio": 0.4
+  },
+  "VEXRX": {
+    "longName": "Vanguard Explorer Fund Admiral Shares",
+    "expenseRatio": 0.29
+  },
+  "VFAIX": {
+    "longName": "Vanguard Financials Index Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VFFVX": {
+    "longName": "Vanguard Target Retirement 2055 Fund",
+    "expenseRatio": 0.08
+  },
+  "VFH": {
+    "longName": "Vanguard Financials ETF",
+    "expenseRatio": 0.1
+  },
+  "VFIAX": {
+    "longName": "Vanguard 500 Index Fund Admiral Shares",
+    "expenseRatio": 0.04
+  },
+  "VFICX": {
+    "longName": "Vanguard Intermediate-Term Investment-Grade Fund Investor Shares",
+    "expenseRatio": 0.2
+  },
+  "VFIDX": {
+    "longName": "Vanguard Intermediate-Term Investment-Grade Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VFIFX": {
+    "longName": "Vanguard Target Retirement 2050 Fund",
+    "expenseRatio": 0.08
+  },
+  "VFIIX": {
+    "longName": "Vanguard GNMA Fund Investor Shares",
+    "expenseRatio": 0.21
+  },
+  "VFIJX": {
+    "longName": "Vanguard GNMA Fund Admiral Shares",
+    "expenseRatio": 0.11
+  },
+  "VFIRX": {
+    "longName": "Vanguard Short-Term Treasury Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VFISX": {
+    "longName": "Vanguard Short-Term Treasury Fund Investor Shares",
+    "expenseRatio": 0.2
+  },
+  "VFITX": {
+    "longName": "Vanguard Intermediate-Term Treasury Fund Investor Shares",
+    "expenseRatio": 0.2
+  },
+  "VFIUX": {
+    "longName": "Vanguard Intermediate-Term Treasury Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VFMF": {
+    "longName": "Vanguard U.S. Multifactor ETF",
+    "expenseRatio": 0.18
+  },
+  "VFMFX": {
+    "longName": "Vanguard U.S. Multifactor Fund Admiral Shares",
+    "expenseRatio": 0.18
+  },
+  "VFMO": {
+    "longName": "Vanguard U.S. Momentum Factor ETF",
+    "expenseRatio": 0.13
+  },
+  "VFMV": {
+    "longName": "Vanguard U.S. Minimum Volatility ETF",
+    "expenseRatio": 0.13
+  },
+  "VFORX": {
+    "longName": "Vanguard Target Retirement 2040 Fund",
+    "expenseRatio": 0.08
+  },
+  "VFQY": {
+    "longName": "Vanguard U.S. Quality Factor ETF",
+    "expenseRatio": 0.13
+  },
+  "VFSAX": {
+    "longName": "Vanguard FTSE All-World ex-US Small-Cap Index Fund Admiral Shares",
+    "expenseRatio": 0.16
+  },
+  "VFSIX": {
+    "longName": "Vanguard Short-Term Investment-Grade Fund Institutional Shares",
+    "expenseRatio": 0.07
+  },
+  "VFSNX": {
+    "longName": "Vanguard FTSE All-World ex-US Small-Cap Index Fund Institutional Shares",
+    "expenseRatio": 0.11
+  },
+  "VFSTX": {
+    "longName": "Vanguard Short-Term Investment-Grade Fund Investor Shares",
+    "expenseRatio": 0.2
+  },
+  "VFSUX": {
+    "longName": "Vanguard Short-Term Investment-Grade Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VFTAX": {
+    "longName": "Vanguard FTSE Social Index Fund Admiral Shares",
+    "expenseRatio": 0.14
+  },
+  "VFTNX": {
+    "longName": "Vanguard FTSE Social Index Fund Institutional Shares",
+    "expenseRatio": 0.12
+  },
+  "VFVA": {
+    "longName": "Vanguard U.S. Value Factor ETF",
+    "expenseRatio": 0.13
+  },
+  "VFWAX": {
+    "longName": "Vanguard FTSE All-World ex-US Index Fund Admiral Shares",
+    "expenseRatio": 0.11
+  },
+  "VFWPX": {
+    "longName": "Vanguard FTSE All-World ex-US Index Fund Institutional Plus Shares",
+    "expenseRatio": 0.06
+  },
+  "VFWSX": {
+    "longName": "Vanguard FTSE All-World ex-US Index Fund Institutional Shares",
+    "expenseRatio": 0.08
+  },
+  "VGAVX": {
+    "longName": "Vanguard Emerging Markets Government Bond Index Fund Admiral Shares",
+    "expenseRatio": 0.2
+  },
+  "VGCAX": {
+    "longName": "Vanguard Global Credit Bond Fund Admiral Shares",
+    "expenseRatio": 0.25
+  },
+  "VGCIX": {
+    "longName": "Vanguard Global Credit Bond Fund Investor Shares",
+    "expenseRatio": 0.35
+  },
+  "VGELX": {
+    "longName": "Vanguard Energy Fund Admiral Shares",
+    "expenseRatio": 0.33
+  },
+  "VGENX": {
+    "longName": "Vanguard Energy Fund Investor Shares",
+    "expenseRatio": 0.41
+  },
+  "VGHAX": {
+    "longName": "Vanguard Health Care Fund Admiral Shares",
+    "expenseRatio": 0.25
+  },
+  "VGHCX": {
+    "longName": "Vanguard Health Care Fund Investor Shares",
+    "expenseRatio": 0.3
+  },
+  "VGIAX": {
+    "longName": "Vanguard Growth and Income Fund Admiral Shares",
+    "expenseRatio": 0.22
+  },
+  "VGIT": {
+    "longName": "Vanguard Intermediate-Term Treasury ETF",
+    "expenseRatio": 0.04
+  },
+  "VGIVX": {
+    "longName": "Vanguard Emerging Markets Government Bond Index Fund Institutional Shares",
+    "expenseRatio": 0.18
+  },
+  "VGK": {
+    "longName": "Vanguard FTSE Europe ETF",
+    "expenseRatio": 0.08
+  },
+  "VGLT": {
+    "longName": "Vanguard Long-Term Treasury ETF",
+    "expenseRatio": 0.04
+  },
+  "VGPMX": {
+    "longName": "Vanguard Global Capital Cycles Fund",
+    "expenseRatio": 0.36
+  },
+  "VGRLX": {
+    "longName": "Vanguard Global ex-U.S. Real Estate Index Fund Admiral Shares",
+    "expenseRatio": 0.12
+  },
+  "VGRNX": {
+    "longName": "Vanguard Global ex-U.S. Real Estate Index Fund Institutional Shares",
+    "expenseRatio": 0.11
+  },
+  "VGSH": {
+    "longName": "Vanguard Short-Term Treasury ETF",
+    "expenseRatio": 0.04
+  },
+  "VGSLX": {
+    "longName": "Vanguard Real Estate Index Fund Admiral Shares",
+    "expenseRatio": 0.12
+  },
+  "VGSNX": {
+    "longName": "Vanguard Real Estate Index Fund Institutional Shares",
+    "expenseRatio": 0.1
+  },
+  "VGSTX": {
+    "longName": "Vanguard STAR Fund",
+    "expenseRatio": 0.31
+  },
+  "VGT": {
+    "longName": "Vanguard Information Technology ETF",
+    "expenseRatio": 0.1
+  },
+  "VGWAX": {
+    "longName": "Vanguard Global Wellington Fund Admiral Shares",
+    "expenseRatio": 0.32
+  },
+  "VGWIX": {
+    "longName": "Vanguard Global Wellesley Income Fund Investor Shares",
+    "expenseRatio": 0.42
+  },
+  "VGWLX": {
+    "longName": "Vanguard Global Wellington Fund Investor Shares",
+    "expenseRatio": 0.44
+  },
+  "VGYAX": {
+    "longName": "Vanguard Global Wellesley Income Fund Admiral Shares",
+    "expenseRatio": 0.29
+  },
+  "VHCAX": {
+    "longName": "Vanguard Capital Opportunity Fund Admiral Shares",
+    "expenseRatio": 0.36
+  },
+  "VHCIX": {
+    "longName": "Vanguard Health Care Index Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VHCOX": {
+    "longName": "Vanguard Capital Opportunity Fund Investor Shares",
+    "expenseRatio": 0.43
+  },
+  "VHGEX": {
+    "longName": "Vanguard Global Equity Fund",
+    "expenseRatio": 0.45
+  },
+  "VHT": {
+    "longName": "Vanguard Health Care ETF",
+    "expenseRatio": 0.1
+  },
+  "VHYAX": {
+    "longName": "Vanguard High Dividend Yield Index Fund Admiral Shares",
+    "expenseRatio": 0.08
+  },
+  "VIAAX": {
+    "longName": "Vanguard International Dividend Appreciation Index Fund Admiral Shares",
+    "expenseRatio": 0.16
+  },
+  "VICBX": {
+    "longName": "Vanguard Intermediate-Term Corporate Bond Index Fund Institutional Shares",
+    "expenseRatio": 0.05
+  },
+  "VICSX": {
+    "longName": "Vanguard Intermediate-Term Corporate Bond Index Fund Admiral Shares",
+    "expenseRatio": 0.07
+  },
+  "VIEIX": {
+    "longName": "Vanguard Extended Market Index Fund Institutional Shares",
+    "expenseRatio": 0.05
+  },
+  "VIG": {
+    "longName": "Vanguard Dividend Appreciation ETF",
+    "expenseRatio": 0.06
+  },
+  "VIGAX": {
+    "longName": "Vanguard Growth Index Fund Admiral Shares",
+    "expenseRatio": 0.05
+  },
+  "VIGI": {
+    "longName": "Vanguard International Dividend Appreciation ETF",
+    "expenseRatio": 0.15
+  },
+  "VIGIX": {
+    "longName": "Vanguard Growth Index Fund Institutional Shares",
+    "expenseRatio": 0.04
+  },
+  "VIHAX": {
+    "longName": "Vanguard International High Dividend Yield Index Fund Admiral Shares",
+    "expenseRatio": 0.22
+  },
+  "VIIGX": {
+    "longName": "Vanguard Intermediate-Term Treasury Index Fund Institutional Shares",
+    "expenseRatio": 0.05
+  },
+  "VIIIX": {
+    "longName": "Vanguard Institutional Index Fund Institutional Plus Shares",
+    "expenseRatio": 0.02
+  },
+  "VIMAX": {
+    "longName": "Vanguard Mid-Cap Index Fund Admiral Shares",
+    "expenseRatio": 0.05
+  },
+  "VINAX": {
+    "longName": "Vanguard Industrials Index Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VINEX": {
+    "longName": "Vanguard International Explorer Fund",
+    "expenseRatio": 0.4
+  },
+  "VINIX": {
+    "longName": "Vanguard Institutional Index Fund Institutional Shares",
+    "expenseRatio": 0.035
+  },
+  "VIOG": {
+    "longName": "Vanguard S\u0026P Small-Cap 600 Growth ETF",
+    "expenseRatio": 0.15
+  },
+  "VIOO": {
+    "longName": "Vanguard S\u0026P Small-Cap 600 ETF",
+    "expenseRatio": 0.1
+  },
+  "VIOV": {
+    "longName": "Vanguard S\u0026P Small-Cap 600 Value ETF",
+    "expenseRatio": 0.15
+  },
+  "VIPIX": {
+    "longName": "Vanguard Inflation-Protected Securities Fund Institutional Shares",
+    "expenseRatio": 0.07
+  },
+  "VIPSX": {
+    "longName": "Vanguard Inflation-Protected Securities Fund Investor Shares",
+    "expenseRatio": 0.2
+  },
+  "VIS": {
+    "longName": "Vanguard Industrials ETF",
+    "expenseRatio": 0.1
+  },
+  "VITAX": {
+    "longName": "Vanguard Information Technology Index Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VITNX": {
+    "longName": "Vanguard Institutional Total Stock Market Index Fund Institutional Shares",
+    "expenseRatio": 0.03
+  },
+  "VITPX": {
+    "longName": "Vanguard Institutional Total Stock Market Index Fund Institutional Plus Shares",
+    "expenseRatio": 0.02
+  },
+  "VITSX": {
+    "longName": "Vanguard Total Stock Market Index Fund Institutional Shares",
+    "expenseRatio": 0.03
+  },
+  "VIVIX": {
+    "longName": "Vanguard Value Index Fund Institutional Shares",
+    "expenseRatio": 0.04
+  },
+  "VLCAX": {
+    "longName": "Vanguard Large-Cap Index Fund Admiral Shares",
+    "expenseRatio": 0.05
+  },
+  "VLCIX": {
+    "longName": "Vanguard Long-Term Corporate Bond Index Fund Institutional Shares",
+    "expenseRatio": 0.05
+  },
+  "VLGIX": {
+    "longName": "Vanguard Long-Term Treasury Index Fund Institutional Shares",
+    "expenseRatio": 0.05
+  },
+  "VLGSX": {
+    "longName": "Vanguard Long-Term Treasury Index Fund Admiral Shares",
+    "expenseRatio": 0.07
+  },
+  "VLISX": {
+    "longName": "Vanguard Large-Cap Index Fund Institutional Shares",
+    "expenseRatio": 0.04
+  },
+  "VLTCX": {
+    "longName": "Vanguard Long-Term Corporate Bond Index Fund Admiral Shares",
+    "expenseRatio": 0.07
+  },
+  "VLXVX": {
+    "longName": "Vanguard Target Retirement 2065 Fund",
+    "expenseRatio": 0.08
+  },
+  "VMATX": {
+    "longName": "Vanguard Massachusetts Tax-Exempt Fund",
+    "expenseRatio": 0.13
+  },
+  "VMBIX": {
+    "longName": "Vanguard Mortgage-Backed Securities Index Fund Institutional Shares",
+    "expenseRatio": 0.05
+  },
+  "VMBS": {
+    "longName": "Vanguard Mortgage-Backed Securities ETF",
+    "expenseRatio": 0.04
+  },
+  "VMBSX": {
+    "longName": "Vanguard Mortgage-Backed Securities Index Fund Admiral Shares",
+    "expenseRatio": 0.07
+  },
+  "VMCIX": {
+    "longName": "Vanguard Mid-Cap Index Fund Institutional Shares",
+    "expenseRatio": 0.04
+  },
+  "VMCPX": {
+    "longName": "Vanguard Mid-Cap Index Fund Institutional Plus Shares",
+    "expenseRatio": 0.03
+  },
+  "VMCTX": {
+    "longName": "Vanguard Mega Cap Index Fund Institutional Shares",
+    "expenseRatio": 0.06
+  },
+  "VMFGX": {
+    "longName": "Vanguard S\u0026P Mid-Cap 400 Growth Index Fund Institutional Shares",
+    "expenseRatio": 0.08
+  },
+  "VMFVX": {
+    "longName": "Vanguard S\u0026P Mid-Cap 400 Value Index Fund Institutional Shares",
+    "expenseRatio": 0.08
+  },
+  "VMFXX": {
+    "longName": "Vanguard Federal Money Market Fund",
+    "expenseRatio": 0.11
+  },
+  "VMGAX": {
+    "longName": "Vanguard Mega Cap Growth Index Fund Institutional Shares",
+    "expenseRatio": 0.06
+  },
+  "VMGMX": {
+    "longName": "Vanguard Mid-Cap Growth Index Fund Admiral Shares",
+    "expenseRatio": 0.07
+  },
+  "VMGRX": {
+    "longName": "Vanguard Mid-Cap Growth Fund",
+    "expenseRatio": 0.33
+  },
+  "VMIAX": {
+    "longName": "Vanguard Materials Index Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VMLTX": {
+    "longName": "Vanguard Limited-Term Tax-Exempt Fund Investor Shares",
+    "expenseRatio": 0.17
+  },
+  "VMLUX": {
+    "longName": "Vanguard Limited-Term Tax-Exempt Fund Admiral Shares",
+    "expenseRatio": 0.09
+  },
+  "VMMSX": {
+    "longName": "Vanguard Emerging Markets Select Stock Fund",
+    "expenseRatio": 0.84
+  },
+  "VMNFX": {
+    "longName": "Vanguard Market Neutral Fund Investor Shares",
+    "expenseRatio": 1.31
+  },
+  "VMNIX": {
+    "longName": "Vanguard Market Neutral Fund Institutional Shares",
+    "expenseRatio": 1.25
+  },
+  "VMNVX": {
+    "longName": "Vanguard Global Minimum Volatility Fund Admiral Shares",
+    "expenseRatio": 0.14
+  },
+  "VMRXX": {
+    "longName": "Vanguard Cash Reserves Federal Money Market Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VMSXX": {
+    "longName": "Vanguard Municipal Money Market Fund",
+    "expenseRatio": 0.15
+  },
+  "VMVAX": {
+    "longName": "Vanguard Mid-Cap Value Index Fund Admiral Shares",
+    "expenseRatio": 0.07
+  },
+  "VMVFX": {
+    "longName": "Vanguard Global Minimum Volatility Fund Investor Shares",
+    "expenseRatio": 0.21
+  },
+  "VMVLX": {
+    "longName": "Vanguard Mega Cap Value Index Fund Institutional Shares",
+    "expenseRatio": 0.06
+  },
+  "VNJTX": {
+    "longName": "Vanguard New Jersey Long-Term Tax-Exempt Fund Investor Shares",
+    "expenseRatio": 0.17
+  },
+  "VNJUX": {
+    "longName": "Vanguard New Jersey Long-Term Tax-Exempt Fund Admiral Shares",
+    "expenseRatio": 0.09
+  },
+  "VNQ": {
+    "longName": "Vanguard Real Estate ETF",
+    "expenseRatio": 0.12
+  },
+  "VNQI": {
+    "longName": "Vanguard Global ex-U.S. Real Estate ETF",
+    "expenseRatio": 0.12
+  },
+  "VNYTX": {
+    "longName": "Vanguard New York Long-Term Tax-Exempt Fund Investor Shares",
+    "expenseRatio": 0.17
+  },
+  "VNYUX": {
+    "longName": "Vanguard New York Long-Term Tax-Exempt Fund Admiral Shares",
+    "expenseRatio": 0.09
+  },
+  "VO": {
+    "longName": "Vanguard Mid-Cap ETF",
+    "expenseRatio": 0.04
+  },
+  "VOE": {
+    "longName": "Vanguard Mid-Cap Value ETF",
+    "expenseRatio": 0.07
+  },
+  "VOHIX": {
+    "longName": "Vanguard Ohio Long-Term Tax-Exempt Fund",
+    "expenseRatio": 0.13
+  },
+  "VONE": {
+    "longName": "Vanguard Russell 1000 ETF",
+    "expenseRatio": 0.08
+  },
+  "VONG": {
+    "longName": "Vanguard Russell 1000 Growth ETF",
+    "expenseRatio": 0.08
+  },
+  "VONV": {
+    "longName": "Vanguard Russell 1000 Value ETF",
+    "expenseRatio": 0.08
+  },
+  "VOO": {
+    "longName": "Vanguard S\u0026P 500 ETF",
+    "expenseRatio": 0.03
+  },
+  "VOOG": {
+    "longName": "Vanguard S\u0026P 500 Growth ETF",
+    "expenseRatio": 0.1
+  },
+  "VOOV": {
+    "longName": "Vanguard S\u0026P 500 Value ETF",
+    "expenseRatio": 0.1
+  },
+  "VOT": {
+    "longName": "Vanguard Mid-Cap Growth ETF",
+    "expenseRatio": 0.07
+  },
+  "VOX": {
+    "longName": "Vanguard Communication Services ETF",
+    "expenseRatio": 0.1
+  },
+  "VPADX": {
+    "longName": "Vanguard Pacific Stock Index Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VPAIX": {
+    "longName": "Vanguard Pennsylvania Long-Term Tax-Exempt Fund Investor Shares",
+    "expenseRatio": 0.17
+  },
+  "VPALX": {
+    "longName": "Vanguard Pennsylvania Long-Term Tax-Exempt Fund Admiral Shares",
+    "expenseRatio": 0.09
+  },
+  "VPCCX": {
+    "longName": "Vanguard PRIMECAP Core Fund",
+    "expenseRatio": 0.46
+  },
+  "VPGDX": {
+    "longName": "Vanguard Managed Allocation Fund",
+    "expenseRatio": 0.31
+  },
+  "VPKIX": {
+    "longName": "Vanguard Pacific Stock Index Fund Institutional Shares",
+    "expenseRatio": 0.08
+  },
+  "VPL": {
+    "longName": "Vanguard FTSE Pacific ETF",
+    "expenseRatio": 0.08
+  },
+  "VPMAX": {
+    "longName": "Vanguard PRIMECAP Fund Admiral Shares",
+    "expenseRatio": 0.31
+  },
+  "VPMCX": {
+    "longName": "Vanguard PRIMECAP Fund Investor Shares",
+    "expenseRatio": 0.38
+  },
+  "VPU": {
+    "longName": "Vanguard Utilities ETF",
+    "expenseRatio": 0.1
+  },
+  "VQNPX": {
+    "longName": "Vanguard Growth and Income Fund Investor Shares",
+    "expenseRatio": 0.32
+  },
+  "VRGWX": {
+    "longName": "Vanguard Russell 1000 Growth Index Fund Institutional Shares",
+    "expenseRatio": 0.07
+  },
+  "VRNIX": {
+    "longName": "Vanguard Russell 1000 Index Fund Institutional Shares",
+    "expenseRatio": 0.07
+  },
+  "VRTGX": {
+    "longName": "Vanguard Russell 2000 Growth Index Fund Institutional Shares",
+    "expenseRatio": 0.08
+  },
+  "VRTIX": {
+    "longName": "Vanguard Russell 2000 Index Fund Institutional Shares",
+    "expenseRatio": 0.08
+  },
+  "VRTTX": {
+    "longName": "Vanguard Russell 3000 Index Fund Institutional Shares",
+    "expenseRatio": 0.08
+  },
+  "VRTVX": {
+    "longName": "Vanguard Russell 2000 Value Index Fund Institutional Shares",
+    "expenseRatio": 0.08
+  },
+  "VRVIX": {
+    "longName": "Vanguard Russell 1000 Value Index Fund Institutional Shares",
+    "expenseRatio": 0.07
+  },
+  "VSBIX": {
+    "longName": "Vanguard Short-Term Treasury Index Fund Institutional Shares",
+    "expenseRatio": 0.05
+  },
+  "VSBSX": {
+    "longName": "Vanguard Short-Term Treasury Index Fund Admiral Shares",
+    "expenseRatio": 0.07
+  },
+  "VSCGX": {
+    "longName": "Vanguard LifeStrategy Conservative Growth Fund",
+    "expenseRatio": 0.12
+  },
+  "VSCIX": {
+    "longName": "Vanguard Small-Cap Index Fund Institutional Shares",
+    "expenseRatio": 0.04
+  },
+  "VSCPX": {
+    "longName": "Vanguard Small-Cap Index Fund Institutional Plus Shares",
+    "expenseRatio": 0.03
+  },
+  "VSCSX": {
+    "longName": "Vanguard Short-Term Corporate Bond Index Fund Admiral Shares",
+    "expenseRatio": 0.07
+  },
+  "VSEQX": {
+    "longName": "Vanguard Strategic Equity Fund",
+    "expenseRatio": 0.17
+  },
+  "VSGAX": {
+    "longName": "Vanguard Small-Cap Growth Index Fund Admiral Shares",
+    "expenseRatio": 0.07
+  },
+  "VSGBX": {
+    "longName": "Vanguard Short-Term Federal Fund Investor Shares",
+    "expenseRatio": 0.2
+  },
+  "VSGDX": {
+    "longName": "Vanguard Short-Term Federal Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VSGIX": {
+    "longName": "Vanguard Small-Cap Growth Index Fund Institutional Shares",
+    "expenseRatio": 0.06
+  },
+  "VSGNX": {
+    "longName": "Vanguard S\u0026P Small-Cap 600 Growth Index Fund Institutional Shares",
+    "expenseRatio": 0.08
+  },
+  "VSGX": {
+    "longName": "Vanguard ESG International Stock ETF",
+    "expenseRatio": 0.12
+  },
+  "VSIAX": {
+    "longName": "Vanguard Small-Cap Value Index Fund Admiral Shares",
+    "expenseRatio": 0.07
+  },
+  "VSIGX": {
+    "longName": "Vanguard Intermediate-Term Treasury Index Fund Admiral Shares",
+    "expenseRatio": 0.07
+  },
+  "VSIIX": {
+    "longName": "Vanguard Small-Cap Value Index Fund Institutional Shares",
+    "expenseRatio": 0.06
+  },
+  "VSMAX": {
+    "longName": "Vanguard Small-Cap Index Fund Admiral Shares",
+    "expenseRatio": 0.05
+  },
+  "VSMGX": {
+    "longName": "Vanguard LifeStrategy Moderate Growth Fund",
+    "expenseRatio": 0.13
+  },
+  "VSMPX": {
+    "longName": "Vanguard Total Stock Market Index Fund Institutional Plus Shares",
+    "expenseRatio": 0.02
+  },
+  "VSMSX": {
+    "longName": "Vanguard S\u0026P Small-Cap 600 Index Fund Institutional Shares",
+    "expenseRatio": 0.08
+  },
+  "VSMVX": {
+    "longName": "Vanguard S\u0026P Small-Cap 600 Value Index Fund Institutional Shares",
+    "expenseRatio": 0.08
+  },
+  "VSPGX": {
+    "longName": "Vanguard S\u0026P 500 Growth Index Fund Institutional Shares",
+    "expenseRatio": 0.08
+  },
+  "VSPMX": {
+    "longName": "Vanguard S\u0026P Mid-Cap 400 Index Fund Institutional Shares",
+    "expenseRatio": 0.08
+  },
+  "VSPVX": {
+    "longName": "Vanguard S\u0026P 500 Value Index Fund Institutional Shares",
+    "expenseRatio": 0.08
+  },
+  "VSS": {
+    "longName": "Vanguard FTSE All-World ex-US Small-Cap ETF",
+    "expenseRatio": 0.07
+  },
+  "VSTBX": {
+    "longName": "Vanguard Short-Term Corporate Bond Index Fund Institutional Shares",
+    "expenseRatio": 0.05
+  },
+  "VSTCX": {
+    "longName": "Vanguard Strategic Small-Cap Equity Fund",
+    "expenseRatio": 0.26
+  },
+  "VSVNX": {
+    "longName": "Vanguard Target Retirement 2070 Fund",
+    "expenseRatio": 0.08
+  },
+  "VT": {
+    "longName": "Vanguard Total World Stock ETF",
+    "expenseRatio": 0.07
+  },
+  "VTABX": {
+    "longName": "Vanguard Total International Bond Index Fund Admiral Shares",
+    "expenseRatio": 0.11
+  },
+  "VTAPX": {
+    "longName": "Vanguard Short-Term Inflation-Protected Securities Index Fund Admiral Shares",
+    "expenseRatio": 0.06
+  },
+  "VTC": {
+    "longName": "Vanguard Total Corporate Bond ETF",
+    "expenseRatio": 0.04
+  },
+  "VTCAX": {
+    "longName": "Vanguard Communication Services Index Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VTCIX": {
+    "longName": "Vanguard Tax-Managed Capital Appreciation Fund Institutional Shares",
+    "expenseRatio": 0.06
+  },
+  "VTCLX": {
+    "longName": "Vanguard Tax-Managed Capital Appreciation Fund Admiral Shares",
+    "expenseRatio": 0.09
+  },
+  "VTEAX": {
+    "longName": "Vanguard Tax-Exempt Bond Index Fund Admiral Shares",
+    "expenseRatio": 0.09
+  },
+  "VTEB": {
+    "longName": "Vanguard Tax-Exempt Bond ETF",
+    "expenseRatio": 0.05
+  },
+  "VTHR": {
+    "longName": "Vanguard Russell 3000 ETF",
+    "expenseRatio": 0.1
+  },
+  "VTHRX": {
+    "longName": "Vanguard Target Retirement 2030 Fund",
+    "expenseRatio": 0.08
+  },
+  "VTI": {
+    "longName": "Vanguard Total Stock Market ETF",
+    "expenseRatio": 0.03
+  },
+  "VTIAX": {
+    "longName": "Vanguard Total International Stock Index Fund Admiral Shares",
+    "expenseRatio": 0.11
+  },
+  "VTIFX": {
+    "longName": "Vanguard Total International Bond Index Fund Institutional Shares",
+    "expenseRatio": 0.07
+  },
+  "VTINX": {
+    "longName": "Vanguard Target Retirement Income Fund",
+    "expenseRatio": 0.08
+  },
+  "VTIP": {
+    "longName": "Vanguard Short-Term Inflation-Protected Securities ETF",
+    "expenseRatio": 0.04
+  },
+  "VTIVX": {
+    "longName": "Vanguard Target Retirement 2045 Fund",
+    "expenseRatio": 0.08
+  },
+  "VTMFX": {
+    "longName": "Vanguard Tax-Managed Balanced Fund Admiral Shares",
+    "expenseRatio": 0.09
+  },
+  "VTMGX": {
+    "longName": "Vanguard Developed Markets Index Fund Admiral Shares",
+    "expenseRatio": 0.07
+  },
+  "VTMNX": {
+    "longName": "Vanguard Developed Markets Index Fund Institutional Shares",
+    "expenseRatio": 0.05
+  },
+  "VTMSX": {
+    "longName": "Vanguard Tax-Managed Small-Cap Fund Admiral Shares",
+    "expenseRatio": 0.09
+  },
+  "VTPSX": {
+    "longName": "Vanguard Total International Stock Index Fund Institutional Plus Shares",
+    "expenseRatio": 0.07
+  },
+  "VTRIX": {
+    "longName": "Vanguard International Value Fund",
+    "expenseRatio": 0.36
+  },
+  "VTSAX": {
+    "longName": "Vanguard Total Stock Market Index Fund Admiral Shares",
+    "expenseRatio": 0.04
+  },
+  "VTSIX": {
+    "longName": "Vanguard Tax-Managed Small-Cap Fund Institutional Shares",
+    "expenseRatio": 0.06
+  },
+  "VTSNX": {
+    "longName": "Vanguard Total International Stock Index Fund Institutional Shares",
+    "expenseRatio": 0.08
+  },
+  "VTSPX": {
+    "longName": "Vanguard Short-Term Inflation-Protected Securities Index Fund Institutional Shares",
+    "expenseRatio": 0.04
+  },
+  "VTTHX": {
+    "longName": "Vanguard Target Retirement 2035 Fund",
+    "expenseRatio": 0.08
+  },
+  "VTTSX": {
+    "longName": "Vanguard Target Retirement 2060 Fund",
+    "expenseRatio": 0.08
+  },
+  "VTTVX": {
+    "longName": "Vanguard Target Retirement 2025 Fund",
+    "expenseRatio": 0.08
+  },
+  "VTV": {
+    "longName": "Vanguard Value ETF",
+    "expenseRatio": 0.04
+  },
+  "VTWAX": {
+    "longName": "Vanguard Total World Stock Index Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VTWG": {
+    "longName": "Vanguard Russell 2000 Growth ETF",
+    "expenseRatio": 0.15
+  },
+  "VTWIX": {
+    "longName": "Vanguard Total World Stock Index Fund Institutional Shares",
+    "expenseRatio": 0.08
+  },
+  "VTWNX": {
+    "longName": "Vanguard Target Retirement 2020 Fund",
+    "expenseRatio": 0.08
+  },
+  "VTWO": {
+    "longName": "Vanguard Russell 2000 ETF",
+    "expenseRatio": 0.1
+  },
+  "VTWV": {
+    "longName": "Vanguard Russell 2000 Value ETF",
+    "expenseRatio": 0.15
+  },
+  "VUBFX": {
+    "longName": "Vanguard Ultra-Short-Term Bond Fund Investor Shares",
+    "expenseRatio": 0.2
+  },
+  "VUG": {
+    "longName": "Vanguard Growth ETF",
+    "expenseRatio": 0.04
+  },
+  "VUIAX": {
+    "longName": "Vanguard Utilities Index Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VUSB": {
+    "longName": "Vanguard Ultra-Short Bond ETF",
+    "expenseRatio": 0.1
+  },
+  "VUSFX": {
+    "longName": "Vanguard Ultra-Short-Term Bond Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VUSTX": {
+    "longName": "Vanguard Long-Term Treasury Fund Investor Shares",
+    "expenseRatio": 0.2
+  },
+  "VUSUX": {
+    "longName": "Vanguard Long-Term Treasury Fund Admiral Shares",
+    "expenseRatio": 0.1
+  },
+  "VUSXX": {
+    "longName": "Vanguard Treasury Money Market Fund",
+    "expenseRatio": 0.09
+  },
+  "VV": {
+    "longName": "Vanguard Large-Cap ETF",
+    "expenseRatio": 0.04
+  },
+  "VVIAX": {
+    "longName": "Vanguard Value Index Fund Admiral Shares",
+    "expenseRatio": 0.05
+  },
+  "VWAHX": {
+    "longName": "Vanguard High-Yield Tax-Exempt Fund Investor Shares",
+    "expenseRatio": 0.17
+  },
+  "VWALX": {
+    "longName": "Vanguard High-Yield Tax-Exempt Fund Admiral Shares",
+    "expenseRatio": 0.09
+  },
+  "VWEAX": {
+    "longName": "Vanguard High-Yield Corporate Fund Admiral Shares",
+    "expenseRatio": 0.13
+  },
+  "VWEHX": {
+    "longName": "Vanguard High-Yield Corporate Fund Investor Shares",
+    "expenseRatio": 0.23
+  },
+  "VWELX": {
+    "longName": "Vanguard Wellington Fund Investor Shares",
+    "expenseRatio": 0.24
+  },
+  "VWENX": {
+    "longName": "Vanguard Wellington Fund Admiral Shares",
+    "expenseRatio": 0.16
+  },
+  "VWESX": {
+    "longName": "Vanguard Long-Term Investment-Grade Fund Investor Shares",
+    "expenseRatio": 0.22
+  },
+  "VWETX": {
+    "longName": "Vanguard Long-Term Investment-Grade Fund Admiral Shares",
+    "expenseRatio": 0.12
+  },
+  "VWIAX": {
+    "longName": "Vanguard Wellesley Income Fund Admiral Shares",
+    "expenseRatio": 0.16
+  },
+  "VWICX": {
+    "longName": "Vanguard International Core Stock Fund Investor Shares",
+    "expenseRatio": 0.45
+  },
+  "VWIGX": {
+    "longName": "Vanguard International Growth Fund Investor Shares",
+    "expenseRatio": 0.45
+  },
+  "VWILX": {
+    "longName": "Vanguard International Growth Fund Admiral Shares",
+    "expenseRatio": 0.34
+  },
+  "VWINX": {
+    "longName": "Vanguard Wellesley Income Fund Investor Shares",
+    "expenseRatio": 0.23
+  },
+  "VWITX": {
+    "longName": "Vanguard Intermediate-Term Tax-Exempt Fund Investor Shares",
+    "expenseRatio": 0.17
+  },
+  "VWIUX": {
+    "longName": "Vanguard Intermediate-Term Tax-Exempt Fund Admiral Shares",
+    "expenseRatio": 0.09
+  },
+  "VWLTX": {
+    "longName": "Vanguard Long-Term Tax-Exempt Fund Investor Shares",
+    "expenseRatio": 0.17
+  },
+  "VWLUX": {
+    "longName": "Vanguard Long-Term Tax-Exempt Fund Admiral Shares",
+    "expenseRatio": 0.09
+  },
+  "VWNAX": {
+    "longName": "Vanguard Windsor II Fund Admiral Shares",
+    "expenseRatio": 0.26
+  },
+  "VWNDX": {
+    "longName": "Vanguard Windsor Fund Investor Shares",
+    "expenseRatio": 0.3
+  },
+  "VWNEX": {
+    "longName": "Vanguard Windsor Fund Admiral Shares",
+    "expenseRatio": 0.2
+  },
+  "VWNFX": {
+    "longName": "Vanguard Windsor II Fund Investor Shares",
+    "expenseRatio": 0.34
+  },
+  "VWO": {
+    "longName": "Vanguard FTSE Emerging Markets ETF",
+    "expenseRatio": 0.08
+  },
+  "VWOB": {
+    "longName": "Vanguard Emerging Markets Government Bond ETF",
+    "expenseRatio": 0.2
+  },
+  "VWSTX": {
+    "longName": "Vanguard Short-Term Tax-Exempt Fund Investor Shares",
+    "expenseRatio": 0.17
+  },
+  "VWSUX": {
+    "longName": "Vanguard Short-Term Tax-Exempt Fund Admiral Shares",
+    "expenseRatio": 0.09
+  },
+  "VWUAX": {
+    "longName": "Vanguard U.S. Growth Fund Admiral Shares",
+    "expenseRatio": 0.23
+  },
+  "VWUSX": {
+    "longName": "Vanguard U.S. Growth Fund Investor Shares",
+    "expenseRatio": 0.33
+  },
+  "VXF": {
+    "longName": "Vanguard Extended Market ETF",
+    "expenseRatio": 0.06
+  },
+  "VXUS": {
+    "longName": "Vanguard Total International Stock ETF",
+    "expenseRatio": 0.07
+  },
+  "VYFXX": {
+    "longName": "Vanguard New York Municipal Money Market Fund",
+    "expenseRatio": 0.16
+  },
+  "VYM": {
+    "longName": "Vanguard High Dividend Yield ETF",
+    "expenseRatio": 0.06
+  },
+  "VYMI": {
+    "longName": "Vanguard International High Dividend Yield ETF",
+    "expenseRatio": 0.22
+  },
+  "VZICX": {
+    "longName": "Vanguard International Core Stock Fund Admiral Shares",
+    "expenseRatio": 0.35
+  }
+}
