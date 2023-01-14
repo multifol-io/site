@@ -4,6 +4,7 @@
 @inject IFamilyYears familyYears
 @inject IJSRuntime JSRuntime
 @inject NavigationManager Navigation
+@inject IList<Fund> Funds
 
 <PageTitle>
 portfolio/@stepPath
@@ -613,7 +614,7 @@ portfolio/@stepPath
                                     @code{
                                         void addInvestment(MouseEventArgs e, int accountIndex)
                                         {
-                                            var newInvestment = new Investment();
+                                            var newInvestment = new Investment(Funds);
                                             familyYears.Active.Accounts[accountIndex].Investments.Add(newInvestment);
                                         }
                                         void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
@@ -622,7 +623,7 @@ portfolio/@stepPath
                                         }
                                         void addAvailableFund(MouseEventArgs e, Account account)
                                         {
-                                            var newFund = new Investment();
+                                            var newFund = new Investment(Funds);
                                             account.AvailableFunds.Add(newFund);
                                         }
                                         void deleteAvailableFund(MouseEventArgs e, Account account, int investmentIndex)
@@ -646,7 +647,7 @@ portfolio/@stepPath
                                     void newAccount()
                                     {
                                         var newAccount = new Account();
-                                        var newInvestment = new Investment();
+                                        var newInvestment = new Investment(Funds);
                                         newAccount.Investments.Add(newInvestment);
                                         familyYears.Active?.Accounts.Add(newAccount);
                                     }
