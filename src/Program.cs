@@ -15,7 +15,7 @@ if (familyYears != null) {
     builder.Services.AddSingleton<IFamilyYears>(familyYears);
 }
 
-var fundsJson = await httpClient.GetAsync("https://raw.githubusercontent.com/bogle-tools/site/main/src/wwwroot/data/vanguard-funds.json");
+var fundsJson = await httpClient.GetAsync("https://raw.githubusercontent.com/bogle-tools/site/main/src/wwwroot/data/funds.json");
 var Funds = await JsonSerializer.DeserializeAsync<List<Fund>>(fundsJson.Content.ReadAsStream());
 builder.Services.AddSingleton<IList<Fund>>(Funds);
 
