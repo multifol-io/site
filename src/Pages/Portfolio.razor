@@ -146,7 +146,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     break;
                                 case "retirement-assets":
                                     <td>
-                                        @((MarkupString)bold("Portfolio Size:"))&nbsp;@estimatePortfolio(familyYears.Active)<br/>
+                                        @((MarkupString)bold("Portfolio Size:"))&nbsp;@(familyYears.Active.ValueStyle==0?estimatePortfolio(familyYears.Active):formatMoney(familyYears.Active.Value))<br/>
                                         <br/>
                                         @((MarkupString)boldUnderline("Current Retirement Assets:"))<br/>
 
@@ -155,7 +155,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                             @((MarkupString)bold((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "") + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + " (" + formatPercent(account.Percentage) + ")" ))
                                             <br/>
                                             @foreach (var investment in account.Investments) {
-                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;@formatPercent(investment.Percentage) @investment.Name (@investment.Ticker.ToUpperInvariant()) (@investment.ExpenseRatio%)</span><br/>
+                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;@formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span><br/>
                                             }
                                         }
                                         <br/>
@@ -689,7 +689,16 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                 }
                                 <hr/>
                                 <div>Portfolio Size: @formatMoney(familyYears.Active.Value)</div>
-                                
+
+                                @if(familyYears.Active.Value > 0) {
+                                <br/>
+                                <div>Portfolio Value style (for <NavLink href="/portfolio">summary page</NavLink>):</div>
+                                <InputRadioGroup @bind-Value=familyYears.Active.ValueStyle>
+                                    <InputRadio Value='0' /> @estimatePortfolio(familyYears.Active) <br/>
+                                    <InputRadio Value='1' /> @formatMoney(familyYears.Active.Value) <br/>
+                                </InputRadioGroup>
+                                }
+
                                 <br/>
                                 <div><button @onclick=newAccount>➕ Account</button></div>
                                 @code{

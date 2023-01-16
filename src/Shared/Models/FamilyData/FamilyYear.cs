@@ -147,6 +147,9 @@ public class FamilyYear {
             return newValue;
         }
     }
+
+    public int ValueStyle { get; set; }
+
     private List<Account> _Accounts;
     public List<Account> Accounts {
         get {
