@@ -2,7 +2,7 @@
 @page "/portfolio/{stepPath}"
 @inject HttpClient Http
 @inject IFamilyYears familyYears
-@inject IJSRuntime JSRuntime
+@inject IJSRuntime JS
 @inject NavigationManager Navigation
 @inject IList<Fund> Funds
 
@@ -264,16 +264,65 @@ portfolio/@stepPath
                 <br/>
                 <button style=margin-left:20px @onclick=CopyTextToClipboard>Copy to clipboard</button><br/>
                 
-                
-                @code{
-                    private async Task CopyTextToClipboard()
-                    {
-                        var text = await JSRuntime.InvokeAsync<string>("getTableInnerText");
-                        text = text.Replace("\n✏️\t","");
-                        text = text.Replace("✏️\t","");
-                        await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", text);
-                    }
+                @if (new Uri(Navigation.Uri).Host == "localhost")
+                {
+                    <br/>
+                    <label>Load portfolio data file:</label> <InputFile OnChange="@((e) => OnChange(e))" />
+                    <br/>
+                    <br/>
+                    <button @onclick="DownloadFileFromStream">
+                    Download portfolio data file
+                    </button>
                 }
+
+                @code {
+                        IReadOnlyList<IBrowserFile>? files = new List<IBrowserFile>();
+                        void OnChange(InputFileChangeEventArgs e)
+                        {
+                        files = e.GetMultipleFiles();
+                        }
+                        async Task ReadFiles()
+                        {
+                        if (files != null)
+                        {
+                            foreach (var file in files)
+                            {
+                                // get the file size
+                                var buffer = new byte[file.Size];
+                                // read the text file
+                                await file.OpenReadStream().ReadAsync(buffer);
+                                // convert byte array to string
+                                var content = System.Text.Encoding.UTF8.GetString(buffer);
+                                // print results(content of file) to console
+                                Console.WriteLine(content);
+                                }
+                            }
+                        }
+
+                        private async Task DownloadFileFromStream()
+                        {
+                            var options = new JsonSerializerOptions() { ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve};
+                            var jsonOut = System.Text.Json.JsonSerializer.Serialize(familyYears.Active, options);
+
+                            using (MemoryStream ms = new MemoryStream(System.Text.Encoding.ASCII.GetBytes(jsonOut)))
+                            {
+                                var fileName = "bogle-tools.json";
+
+                                using var streamRef = new DotNetStreamReference(stream: ms);
+
+                                await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+                            }
+
+                        }
+
+                        private async Task CopyTextToClipboard()
+                        {
+                            var text = await JS.InvokeAsync<string>("getTableInnerText");
+                            text = text.Replace("\n✏️\t","");
+                            text = text.Replace("✏️\t","");
+                            await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
+                        }
+                    }
             </div>
             
             <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
