@@ -5,7 +5,7 @@
 @inject IFamilyYears familyYears
 
 <PageTitle>
-saving/@stepPath
+Saving@(stepPath==null?": Review":": "+stepPath.Replace('-',' '))
 </PageTitle>
 
 <style>

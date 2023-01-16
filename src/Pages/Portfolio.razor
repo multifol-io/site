@@ -7,7 +7,7 @@
 @inject IList<Fund> Funds
 
 <PageTitle>
-portfolio/@stepPath
+Portfolio@(stepPath==null?": Review":": "+stepPath.Replace('-',' '))
 </PageTitle>
 
 <style>
@@ -306,7 +306,7 @@ portfolio/@stepPath
 
                             using (MemoryStream ms = new MemoryStream(System.Text.Encoding.ASCII.GetBytes(jsonOut)))
                             {
-                                var fileName = "bogle-tools.json";
+                                var fileName = "portfolio-bogle-tools.json";
 
                                 using var streamRef = new DotNetStreamReference(stream: ms);
 
