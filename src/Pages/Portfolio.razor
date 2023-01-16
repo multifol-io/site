@@ -146,7 +146,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     break;
                                 case "retirement-assets":
                                     <td>
-                                        @((MarkupString)bold("Portfolio Size:"))&nbsp;@(familyYears.Active.ValueStyle==0?estimatePortfolio(familyYears.Active):formatMoney(familyYears.Active.Value))<br/>
+                                        @((MarkupString)bold("Portfolio Size:"))&nbsp;@(familyYears.Active.ValueStyle==0?estimatePortfolio(familyYears.Active):(familyYears.Active.ValueStyle==1?formatMoney(familyYears.Active.Value):formatMoneyThousands(familyYears.Active.Value)))<br/>
                                         <br/>
                                         @((MarkupString)boldUnderline("Current Retirement Assets:"))<br/>
 
@@ -341,7 +341,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                     string nextPage = folderName + nextStep?.step;
 
                     <h3 style="max-width:350px">
-                        Portfolio Review
+                        <NavLink href=/portfolio>Portfolio Review</NavLink>
                         <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
                         <span style=text-align:center>@step.number</span>
                         <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
@@ -690,17 +690,19 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                 <hr/>
                                 <div>Portfolio Size: @formatMoney(familyYears.Active.Value)</div>
 
+                                <br/>
+                                <div><button @onclick=newAccount>➕ Account</button></div>
+
                                 @if(familyYears.Active.Value > 0) {
                                 <br/>
-                                <div>Portfolio Value style (for <NavLink href="/portfolio">summary page</NavLink>):</div>
+                                <div>Portfolio Value style (for <NavLink href="/portfolio">portfolio review</NavLink>):</div>
                                 <InputRadioGroup @bind-Value=familyYears.Active.ValueStyle>
-                                    <InputRadio Value='0' /> @estimatePortfolio(familyYears.Active) <br/>
-                                    <InputRadio Value='1' /> @formatMoney(familyYears.Active.Value) <br/>
+                                    <InputRadio id=estimate Value='0' /> <label for=estimate>@estimatePortfolio(familyYears.Active)</label> <br/>
+                                    <InputRadio id=dollar Value='1' /> <label for=dollar>@formatMoney(familyYears.Active.Value)</label> <br/>
+                                    <InputRadio id=rounded Value='2' /> <label for=rounded>@formatMoneyThousands(familyYears.Active.Value)</label> <br/>
                                 </InputRadioGroup>
                                 }
 
-                                <br/>
-                                <div><button @onclick=newAccount>➕ Account</button></div>
                                 @code{
                                     void newAccount()
                                     {
@@ -770,6 +772,18 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
     public string formatMoney(double? amount) 
     {
         return String.Format("${0:#,0.##}", amount);
+    }
+    public string formatMoneyThousands(double? amount) 
+    {
+        if (amount == null) return "";
+
+        if (amount >= 1000000) {
+            return String.Format("${0:#,0.##M}", Math.Round((double)amount / 10000.0)/100.0);
+        } else if (amount >= 1000) {
+            return String.Format("${0:#,0.##K}", Math.Round((double)amount / 1000.0));
+        } else {
+            return String.Format("${0:#,0.##}", amount);
+        }
     }
     public string formatPercent(double? amount)
     {
