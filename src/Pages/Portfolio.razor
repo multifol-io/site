@@ -454,18 +454,18 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
 
                                             <br/>
                                             <InputRadioGroup @bind-Value=familyYears.Active.FederalMarginalTaxBracket>
-                                                <label>Federal Marginal Tax Rate:</label><br/>
+                                                <label>Tax Bracket (@familyYears.Active.TaxFilingStatus):</label><br/>
                                                 <table style="margin-left:20px">
-                                                    <tr><th></th><th style=text-align:right;padding-right:10px>From</th><th style=text-align:right;padding-right:10px>To</th></tr>
+                                                    <tr><th></th><th></th></tr>
                                                 @foreach (var taxBracket in taxFiler.TaxBrackets)
                                                 {
                                                     if (lastBracket != null) {
-                                                        <tr><td><InputRadio Value='@lastBracket'/>&nbsp;@lastBracket</td><td style=text-align:right;padding-left:30px>@formatMoney(lastStartAmount)</td><td style=text-align:right;padding-left:30px>@formatMoney(taxBracket.StartAmount-1)</td></tr>
+                                                        <tr><td><InputRadio Value='@lastBracket'/>&nbsp;@lastBracket</td><td style=padding-left:30px>@(lastStartAmount==1?"Up":formatMoney(lastStartAmount)) to @formatMoney(taxBracket.StartAmount)</td></tr>
                                                     }
                                                     lastBracket = taxBracket.Rate;
-                                                    lastStartAmount = taxBracket.StartAmount;
+                                                    lastStartAmount = taxBracket.StartAmount + 1;
                                                 }
-                                                    <tr><td><InputRadio Value='@lastBracket'/>@lastBracket</td><td style=text-align:right;padding-left:30px>@formatMoney(lastStartAmount)</td><td style=padding-left:30px>and up</td></tr>
+                                                    <tr><td><InputRadio Value='@lastBracket'/>&nbsp;@lastBracket</td><td style=padding-left:30px>Over @formatMoney(lastStartAmount-1)</td></tr>
                                                 </table>
                                             </InputRadioGroup>
                                         }
