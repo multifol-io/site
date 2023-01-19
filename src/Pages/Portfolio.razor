@@ -1,5 +1,6 @@
 @page "/portfolio"
 @page "/portfolio/{stepPath}"
+@page "/portfolio/reload"
 @inject HttpClient Http
 @inject IFamilyYears familyYears
 @inject IJSRuntime JS
@@ -40,6 +41,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
         display: inline-block;
     }
 </style>
+    @if (new Uri(Navigation.Uri).PathAndQuery == "/portfolio/reload")
+    {
+        // reload is a workaround where the correct data seemed to be deleted, but i needed to navigate away and then back to retirement-assets
+        Navigation.NavigateTo("/portfolio/retirement-assets");
+    }
 
     @if (steps == null || familyYears == null)
     {
@@ -146,7 +152,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     break;
                                 case "retirement-assets":
                                     <td>
-                                        @((MarkupString)bold("Portfolio Size:"))&nbsp;@(familyYears.Active.ValueStyle==0?estimatePortfolio(familyYears.Active):(familyYears.Active.ValueStyle==1?formatMoney(familyYears.Active.Value):formatMoneyThousands(familyYears.Active.Value)))<br/>
+                                        @((MarkupString)bold("Portfolio Size:"))&nbsp;@(familyYears.Active.ValueStyle==0?formatMoneyThousands(familyYears.Active.Value):(familyYears.Active.ValueStyle==1?estimatePortfolio(familyYears.Active):formatMoney(familyYears.Active.Value)))<br/>
                                         <br/>
                                         @((MarkupString)boldUnderline("Current Retirement Assets:"))<br/>
 
@@ -170,7 +176,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                                         <span>@account.FullName</span><br/>
                                                     <br/>
                                                     @foreach (var investment in account.AvailableFunds) {
-                                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;@investment.Name (@investment.Ticker.ToUpperInvariant()) (@investment.ExpenseRatio%)</span><br/>
+                                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;@investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span><br/>
                                                     }
                                                 }
                                             }
@@ -538,6 +544,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                             </option>
                                         }
                                     </select>
+                                    <br/>
 
                                      @if(currentAccountIndex != null && currentAccountIndex != "Choose Account...") {
                                         int index = int.Parse(currentAccountIndex);
@@ -545,19 +552,19 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                         for (int i=0;i < currentAccount.AvailableFunds.Count; i++) {
                                             var investment = currentAccount.AvailableFunds[i];
                                             int invBuffer = i;
-                                            <div style=margin-top:10px;margin-left:80px>
-                                                <input style="width:70px;text-transform: uppercase;" type=text @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/>
+                                            <div style=margin-top:10px;margin-left:80px;padding-left:3em;text-indent:-3em;>
+                                                <button @onclick='@(e=>deleteAvailableFund(e,currentAccount,invBuffer))'>❌</button>
+                                                <input @ref=tickerN style="width:70px;text-transform: uppercase;" type=text @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/>
                                             </div>
                                             <div style=margin-left:85px>
                                                 <input type=text @bind-Value=investment.Name @bind-Value:event=oninput placeholder='investment fullname' />
                                                 &nbsp;(
                                                     <input style="width:70px" type=text @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput placeholder='expense ratio'/>
                                                 %)
-                                                <button style=margin-left:20px @onclick='@(e=>deleteAvailableFund(e,currentAccount,invBuffer))'>❌ Fund</button>
                                             </div>
                                         }
                                         <br/>
-                                        <button style=margin-left:80px @onclick='@(e=>addAvailableFund(e,currentAccount))'>➕ Fund</button>
+                                        <button style=margin-left:80px @onclick='@(e=>addAvailableFund(e,currentAccount))'>➕</button>
                                     }
                                 </td>
                                 break;
@@ -611,21 +618,24 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                         familyYears.Active.Accounts[index].Edit = true;
                                     }
                                 }
-                                int accountIndex = 0;
+
+                                accountIndex = 0;
                                 @foreach (var account in familyYears.Active.Accounts) {
-                                    int accBuffer = accountIndex++;
+                                    int accBuffer = accountIndex;
+                                    accountIndex++;
                                     <br/>
-                                    <div style=margin-left:40px>
+                                    <div style=padding-left:3em;text-indent:-3em;>
+                                        <button @onclick='@(e=>deleteAccount(e,accBuffer))'>❌</button>
                                         @if (familyYears.Active.PersonCount == 2) {
-                                        <select @bind=account.Identifier>
+                                        <select @ref=accountN @bind=account.Identifier>
                                             <option>our</option>
-                                            @for(int i=0;i<familyYears.Active.PersonCount;i++)
+                                            @for(int p=0;p<familyYears.Active.PersonCount;p++)
                                             {
-                                                <option>@familyYears.Active.People[i].PossessiveID</option>
+                                                <option>@familyYears.Active.People[p].PossessiveID</option>
                                             }
                                         </select>
                                         }
-                                        <select @bind=account.AccountType>
+                                        <select @ref=accountN @bind=account.AccountType>
                                             <option>Account Type...</option>
                                             <option>401k</option>
                                             <option>403b</option>
@@ -639,78 +649,83 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                             <option>Traditional IRA</option>
                                             <option>Taxable</option>
                                         </select>
-                                        @* <input type=text @bind-Value=account.AccountType @bind-Value:event=oninput placeholder='account type'/> *@
-                                        <span> at <input type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' /></span>
-                                        <button style=margin-left:20px @onclick='@(e=>deleteAccount(e,accBuffer))'>❌ Account</button>
+                                        <span> at <input style="width:140px" type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' /></span>
                                     </div>
-                                    int investmentIndex = 0;
+                                    
+                                    investmentIndex = 0;
                                     @foreach (var investment in account.Investments) {
-                                        int invBuffer = investmentIndex++;
-                                        <div style=margin-top:10px;margin-left:80px>
-                                            <input style="width:70px;text-transform: uppercase;" type=text @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/>
-                                            Balance 🟰 $<input type=text @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/>
+                                        int invBuffer = investmentIndex;
+                                        investmentIndex++;
+                                        <div style=margin-top:10px;margin-left:20px;padding-left:3em;text-indent:-3em;>
+                                            <button @onclick='@(e=>deleteInvestment(e,accBuffer,invBuffer))'>❌</button>
+                                            <input @ref=tickerN style="width:70px;text-transform: uppercase;" type=text @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/>
+                                            Balance 🟰 $<input style=width:100px type=text @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/>
                                         </div>
                                         <div style=margin-left:85px>
                                             <input type=text @bind-Value=investment.Name @bind-Value:event=oninput placeholder='investment fullname' />
                                             &nbsp;(
                                                 <input style="width:70px" type=text @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput placeholder='expense ratio'/>
                                             %)
-                                            <button style=margin-left:20px @onclick='@(e=>deleteInvestment(e,accBuffer,invBuffer))'>❌ Investment</button>
                                         </div>
                                     }
-                                    <button style=margin-left:80px @onclick='@(e=>addInvestment(e,accBuffer))'>➕ Investment</button>
-
-                                    @code{
-                                        void addInvestment(MouseEventArgs e, int accountIndex)
-                                        {
-                                            var newInvestment = new Investment(Funds);
-                                            familyYears.Active.Accounts[accountIndex].Investments.Add(newInvestment);
-                                        }
-                                        void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
-                                        {
-                                            familyYears.Active.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
-                                        }
-                                        void addAvailableFund(MouseEventArgs e, Account account)
-                                        {
-                                            var newFund = new Investment(Funds);
-                                            account.AvailableFunds.Add(newFund);
-                                        }
-                                        void deleteAvailableFund(MouseEventArgs e, Account account, int investmentIndex)
-                                        {
-                                            account.AvailableFunds.RemoveAt(investmentIndex);
-                                        }
-                                        void deleteAccount(MouseEventArgs e, int accountIndex)
-                                        {
-                                            familyYears.Active.Accounts.RemoveAt(accountIndex);
-                                        }
-                                    }
+                                    <button style=margin-left:20px @onclick='@(e=>addInvestment(e,accBuffer))'>➕</button>
                                     <hr style=margin-left:40px/>
                                     <div style=margin-left:40px>Account Total: @formatMoney(account.Value)</div>
                                 }
+                                <br/>
+                                <div><button @onclick=addAccount>➕</button></div>
                                 <hr/>
                                 <div>Portfolio Size: @formatMoney(familyYears.Active.Value)</div>
 
-                                <br/>
-                                <div><button @onclick=newAccount>➕ Account</button></div>
-
-                                @if(familyYears.Active.Value > 0) {
-                                <br/>
-                                <div>Portfolio Value style (for <NavLink href="/portfolio">portfolio review</NavLink>):</div>
-                                <InputRadioGroup @bind-Value=familyYears.Active.ValueStyle>
-                                    <InputRadio id=estimate Value='0' /> <label for=estimate>@estimatePortfolio(familyYears.Active)</label> <br/>
-                                    <InputRadio id=dollar Value='1' /> <label for=dollar>@formatMoney(familyYears.Active.Value)</label> <br/>
-                                    <InputRadio id=rounded Value='2' /> <label for=rounded>@formatMoneyThousands(familyYears.Active.Value)</label> <br/>
-                                </InputRadioGroup>
-                                }
-
                                 @code{
-                                    void newAccount()
+                                    private ElementReference tickerN;
+                                    private ElementReference accountN;
+
+                                    private async void addInvestment(MouseEventArgs e, int accountIndex)
+                                    {
+                                        var newInvestment = new Investment(Funds);
+                                        familyYears.Active.Accounts[accountIndex].Investments.Add(newInvestment);
+                                        focusTicker = true;
+                                    }
+
+                                    void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
+                                    {
+                                        familyYears.Active.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
+                                        Navigation.NavigateTo("/portfolio/reload");
+                                    }
+                                    void addAvailableFund(MouseEventArgs e, Account account)
+                                    {
+                                        var newFund = new Investment(Funds);
+                                        account.AvailableFunds.Add(newFund);
+                                        focusTicker = true;
+                                    }
+                                    void deleteAvailableFund(MouseEventArgs e, Account account, int investmentIndex)
+                                    {
+                                        account.AvailableFunds.RemoveAt(investmentIndex);
+                                    }
+                                    void addAccount()
                                     {
                                         var newAccount = new Account();
                                         var newInvestment = new Investment(Funds);
                                         newAccount.Investments.Add(newInvestment);
                                         familyYears.Active?.Accounts.Add(newAccount);
+                                        focusAccount = true;
                                     }
+                                    void deleteAccount(MouseEventArgs e, int accountIndex)
+                                    {
+                                        familyYears.Active.Accounts.RemoveAt(accountIndex);
+                                        Navigation.NavigateTo("/portfolio/reload");
+                                    }
+                                }
+
+                                @if(familyYears.Active.Value > 0) {
+                                <br/>
+                                <div>Preferred technique to represent the approximate size of your total portfolio (in <NavLink href="/portfolio">portfolio review</NavLink>):</div>
+                                <InputRadioGroup @bind-Value=familyYears.Active.ValueStyle>
+                                    <InputRadio id=rounded Value='0' /> <label for=rounded>@formatMoneyThousands(familyYears.Active.Value)</label> <br/>
+                                    <InputRadio id=estimate Value='1' /> <label for=estimate>@estimatePortfolio(familyYears.Active)</label> <br/>
+                                    <InputRadio id=dollar Value='2' /> <label for=dollar>@formatMoney(familyYears.Active.Value)</label> <br/>
+                                </InputRadioGroup>
                                 }
                                 break;
                             case "contributions":
@@ -922,13 +937,28 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
 
         return returnVal;
     }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (focusTicker)
+            {
+                await tickerN.FocusAsync();
+                focusTicker = false;
+            } else if (focusAccount) {
+                await accountN.FocusAsync();
+                focusAccount = false;
+            }
+    }
 
     [Parameter]
     public string? stepPath { get; set; }
     public bool ShowMarkup { get; set; }
     public string? currentAccountIndex { get; set; }
     private Step[]? steps;
+    public int accountIndex = 0;
+    public int investmentIndex = 0;
     private const string folderName = "/portfolio/";
+    private bool focusTicker = false;
+    private bool focusAccount = false;
 
     protected override async Task OnInitializedAsync()
     {

@@ -5,7 +5,18 @@ public class Investment
     {
         this.funds = funds;
     }
-    public string Name { get; set; }
+
+    private string? _Name;
+    public string? Name { 
+        get {
+            return _Name;
+        }
+        set {
+            _Name = value;
+        }
+    }
+
+    public bool AutoCompleted { get; set; }
     private string _Ticker;
     public string Ticker {
         get {
@@ -13,19 +24,42 @@ public class Investment
         }
         set {
             _Ticker = value.ToUpperInvariant();
+            bool found = false;
             foreach (var fund in funds)
             {
                 if (_Ticker == fund.Ticker)
                 {
-                    Name = fund.LongName;
-                    ExpenseRatio = fund.ExpenseRatio;
+                    AutoComplete(fund.LongName, fund.ExpenseRatio);
+                    found = true;
+                }
+            }
+            if (!found) {
+                if (AutoCompleted) {
+                    ExpenseRatio = null;
+                    Name = null;
+                    AutoCompleted = false;
                 }
             }
         }
     }
-    public double? ExpenseRatio { get; set; }
+
+    private void AutoComplete(string name, double? expenseRatio) {
+        Name = name;
+        ExpenseRatio = expenseRatio;
+        AutoCompleted = true;
+    }
+
+    private double? _ExpenseRatio;
+    public double? ExpenseRatio {
+        get {
+            return _ExpenseRatio;
+        }
+        set {
+            _ExpenseRatio = value;
+        }
+     }
     public double? Shares { get; set; }
     public double? Price { get; set; }
-    public double Value { get; set; }
+    public double? Value { get; set; }
     public double Percentage { get; set; }
 }

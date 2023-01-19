@@ -8,7 +8,7 @@ public class Account
             double newValue = 0;
             foreach (var investment in Investments) 
             {
-                newValue += investment.Value;
+                newValue += investment.Value ?? 0;
             }
 
             return newValue;
@@ -51,7 +51,7 @@ public class Account
     {
         foreach (var investment in Investments)
         {
-            investment.Percentage = investment.Value / totalValue * 100;
+            investment.Percentage = investment.Value ?? 0 / totalValue * 100;
         }
     }
 }
