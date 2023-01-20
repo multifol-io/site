@@ -67,44 +67,57 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                 <p ><b>Prerequisities:</b></p>
                 <EditForm Model="familyYears" style=margin-left:25px>
                     <label>Target Year:</label> <select @bind=familyYears.Year><option>2022</option><option>2023</option></select><br/>
-                    <label>Tax Filing Status:</label>
-                    <select @bind=familyYears.TaxFilingStatus>
-                        <option value=None>choose...</option>
-                        <option>Single</option>
-                        <option value=MarriedFilingJointly>Married filing jointly</option>
-                        <option value=MarriedFilingSeperately>Married filing seperately</option>
-                        <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
-                        <option value=HeadOfHousehold>Head of Household</option>
-                    </select><br/>
-                    @if(familyYears.PersonCount == 0) 
-                    {
-                        <span>People Details...</span><br/>
-                    }
-                    @for (int i = 0; i < familyYears.PersonCount; i++) {
-                        var person = familyYears.People[i];
-                        <span>Person @(i+1):</span><br/>
-                        <div style=margin-left:25px>
-                            <label>Age:</label> <input style=width:60px type=text @bind-Value=person.Age @bind-Value:event=oninput /><br/>
+                    <span>People Details:</span><br/>
+                    <div style=margin-left:25px>
 
-                            <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
-                                <option value=None>choose...</option>
-                                <option>person @(i+1)</option>
-                                <option>him</option>
-                                <option>her</option>
-                                <option>me</option>
-                                <option>them</option>
-                            </select><br/>
+                        <label>Tax Filing Status:</label>
+                        <select @bind=familyYears.TaxFilingStatus>
+                            <option value=None>choose...</option>
+                            <option>Single</option>
+                            <option value=MarriedFilingJointly>Married filing jointly</option>
+                            <option value=MarriedFilingSeperately>Married filing seperately</option>
+                            <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                            <option value=HeadOfHousehold>Head of Household</option>
+                        </select><br/>
+                        @for (int i = 0; i < familyYears.PersonCount; i++) {
+                            var person = familyYears.People[i];
+                            <span>Person @(i+1):</span><br/>
+                            <div style=margin-left:25px>
+                                <label>Age:</label> <input style=width:60px type=text @bind-Value=person.Age @bind-Value:event=oninput /><br/>
+                                <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
+                                    <option value=None>choose...</option>
+                                    <option>person @(i+1)</option>
+                                    <option>him</option>
+                                    <option>her</option>
+                                    <option>me</option>
+                                    <option>them</option>
+                                </select><br/>
 
-                            <label>Employer:</label> <input style=width:200px type=text @bind-Value=person.EmployerBenefits.Company @bind-Value:event=oninput /><br/>
-                            <label>Annual Salary:</label> $<input type=text class=dollar @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
-                        </div>
-                    }
+                                <label>Employer:</label> <input style=width:200px type=text @bind-Value=person.EmployerBenefits.Company @bind-Value:event=oninput /><br/>
+                                <label>Annual Salary:</label> $<input type=text class=dollar @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
+                            </div>
+                        }
+                    </div>
                     <hr/>
-                    <label>Estimated Adjusted Gross Income:</label> $<input type=text class=dollar @bind-Value=familyYears.AdjustedGrossIncome @bind-Value:event=oninput /><br/>
-                    <label>Monthly Expenses:</label> <span>$</span><input class=dollar type=text @bind-Value="familyYears.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /><br/>
-                    <label>Annual Income Tax Paid:</label> <span>$</span><input class=dollar type=text @bind-Value="familyYears.IncomeTaxPaid" @bind-Value:event="oninput" /><br/>
-                    <label>Money in Taxable Fund, to help invest more:</label> <span>$</span><input class=dollar type=text @bind-Value="familyYears.TaxableToInvest" @bind-Value:event="oninput" /><br/>
-                    <label>Planned Savings:</label> <span>@formatMoney(familyYears.PlannedSavings)</span><br/>
+                    <p>@switch(familyYears.PersonCount) {
+                        default:
+                        case 0:
+                            break;
+                        case 1:
+                            <span>@familyYears.People[0].PossessiveID&nbsp;</span>
+                            break;
+                        case 2:
+                            <span>@familyYears.People[0].PossessiveID &amp; @familyYears.People[1].PossessiveID</span>
+                            break;
+                        } 
+                        Income/Savings Budget</p>
+                    <div style=margin-left:25px>
+                        <label>Estimated Adjusted Gross Income:</label> $<input type=text class=dollar @bind-Value=familyYears.AdjustedGrossIncome @bind-Value:event=oninput /><br/>
+                        <label>Monthly Expenses:</label> <span>$</span><input class=dollar type=text @bind-Value="familyYears.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /><br/>
+                        <label>Annual Income Tax Paid:</label> <span>$</span><input class=dollar type=text @bind-Value="familyYears.IncomeTaxPaid" @bind-Value:event="oninput" /><br/>
+                        <label>Money in Taxable Fund, to help invest more:</label> <span>$</span><input class=dollar type=text @bind-Value="familyYears.TaxableToInvest" @bind-Value:event="oninput" /><br/>
+                        <label>Planned Savings:</label> <span>@formatMoney(familyYears.PlannedSavings)</span><br/>
+                    </div>
                 </EditForm>
                 <br/>
                 <p ><b>Prioritized Steps:</b></p>
@@ -333,7 +346,12 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                             <span>Lookup and Enter @familyYears.People[personBuffer].EmployerBenefits.Company benefit details:</span><br/><br/>
                                             <p>Workplace retirement savings:</p>
                                             <EditForm Model="person" style=margin-left:25px>
-                                                <InputCheckbox @bind-Value=person.EmployerBenefits.Employer401k.Offered id=@eligibleId /> <label style="display:inline" for=@eligibleId>Offers workplace retirement savings</label><br/><br/>
+                                                <label style="display:inline" for=@eligibleId>Offers workplace retirement savings</label> <InputSelect @bind-Value=person.EmployerBenefits.Employer401k.Offered id=@eligibleId>
+                                                @foreach (var option in Enum.GetValues<TriState>()) {
+                                                    <option value="@option">@option</option>
+                                                }
+                                                </InputSelect><br/>
+                                                    <br/>
                                                 <fieldset disabled=@person.EmployerPlan.NotEligible style='margin-left:20px'>
                                                     <label>Matching Levels:</label><br/>
                                                     @for (var m = 0; m < person.EmployerBenefits.Employer401k.MatchRules.Count; m++) 
@@ -354,7 +372,11 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                             <hr/>
                                             <p>HSA:</p>
                                             <EditForm Model="person" style=margin-left:25px>
-                                                <InputCheckbox @bind-Value=person.HealthSavingsAccount.Eligible id='@haveHDHPid'/> <label for='@haveHDHPid' style="display:inline">Offers high deductible health plan</label><br/><br/>
+                                                <label style="display:inline" for=@haveHDHPid>Offers high deductible health plan</label> <InputSelect @bind-Value=person.HealthSavingsAccount.Eligible id=@haveHDHPid>
+                                                @foreach (var option in Enum.GetValues<TriState>()) {
+                                                    <option value="@option">@option</option>
+                                                }
+                                                </InputSelect><br/>                                                
                                                 <fieldset disabled=@person.HealthSavingsAccount.NotEligible style='margin-left:20px'>
                                                     <label>Employer Contribution Levels:</label>
                                                     @foreach(var employerContributionLevel in person.EmployerBenefits.HSA.EmployerContributionLevels)
@@ -440,8 +462,12 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                         <label>Employer:</label> <input type=text @bind-Value=person.EmployerBenefits.Company @bind-Value:event=oninput /><br/>
                                         <label>Annual Salary:</label> $<input type=text class=dollar @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
                                         <br/>
-                                        <InputCheckbox @bind-Value=person.EmployerBenefits.Employer401k.Offered id=@eligibleId /> <label style="display:inline" for=@eligibleId>Eligible for workplace retirement savings</label><br/>
-                                        <fieldset disabled=@person.EmployerPlan.NotEligible style='margin-left:20px'>
+                                        <label style="display:inline" for=@eligibleId>Offers workplace retirement savings</label> <InputSelect @bind-Value=person.EmployerBenefits.Employer401k.Offered id=@eligibleId>
+                                        @foreach (var option in Enum.GetValues<TriState>()) {
+                                            <option value="@option">@option</option>
+                                        }
+                                        </InputSelect><br/>
+                                       <fieldset disabled=@person.EmployerPlan.NotEligible style='margin-left:20px'>
                                             <label>Matching Levels:</label><br/>
                                             @foreach (var matchRule in person.EmployerBenefits.Employer401k.MatchRules)
                                             {
@@ -494,7 +520,11 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
 
                                     <EditForm Model="person" style=margin-left:25px>
                                         <label>Eligible for Catchup Contributions (55 or older):</label> @person.FiftyFiveOrOver<br/><br/>
-                                        <InputCheckbox @bind-Value=person.HealthSavingsAccount.Eligible id='@haveHDHPid'/> <label for='@haveHDHPid' style="display:inline">Have high deductible health plan</label><br/><br/>
+                                        <label style="display:inline" for=@haveHDHPid>Offers high deductible health plan</label> <InputSelect @bind-Value=person.HealthSavingsAccount.Eligible id=@haveHDHPid>
+                                        @foreach (var option in Enum.GetValues<TriState>()) {
+                                            <option value="@option">@option</option>
+                                        }
+                                        </InputSelect><br/>         
                                         <fieldset disabled=@person.HealthSavingsAccount.NotEligible style='margin-left:20px'>
                                             <label>Individual/Family:</label>   <select @bind=person.HealthSavingsAccount.Family><option value=None>choose...</option><option value=EmployeeOnly>Employee only</option><option>Family</option></select><br/>
 
@@ -544,7 +574,12 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                         <p><b>Person @(i+1):</b> </p>
 
                                         <EditForm Model="person" style=margin-left:25px>
-                                            <InputCheckbox @bind-Value=person.EmployerBenefits.Employer401k.Offered id='@eligibleId'/> <label for='@eligibleId'>Eligible for workplace retirement savings</label><br/><br/>
+                                            <label style="display:inline" for=@eligibleId>Offers workplace retirement savings</label> <InputSelect @bind-Value=person.EmployerBenefits.Employer401k.Offered id=@eligibleId>
+                                            @foreach (var option in Enum.GetValues<TriState>()) {
+                                                <option value="@option">@option</option>
+                                            }
+                                            </InputSelect><br/>
+
                                             <label>Eligible for Catchup Contributions (50 or older):</label> @person.FiftyOrOver<br/><br/>
                                             <InputCheckbox id=@existingIRABalance @bind-Value=person.IRA.HasExistingBalance /> <label for=@existingIRABalance>Has IRA with > $0</label><br/><br/>
 
@@ -605,7 +640,11 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     <p><b>Person @(i+1):</b> </p>
 
                                     <EditForm Model="person" style=margin-left:25px>
-                                        <InputCheckbox @bind-Value=person.EmployerBenefits.Employer401k.Offered id=@eligibleId /> <label for=@eligibleId>Eligible for workplace retirement savings</label><br/><br/>
+                                        <label style="display:inline" for=@eligibleId>Offers workplace retirement savings</label> <InputSelect @bind-Value=person.EmployerBenefits.Employer401k.Offered id=@eligibleId>
+                                        @foreach (var option in Enum.GetValues<TriState>()) {
+                                            <option value="@option">@option</option>
+                                        }
+                                        </InputSelect><br/>
 
                                         <label>Eligible for Catchup Contributions (50 or older):</label> @person.FiftyOrOver<br/><br/>
 
@@ -634,9 +673,14 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                 @for (int i = 0; i < familyYears.PersonCount; i++) {
                                     var person = familyYears.People[i];
                                     <p><b>Person @(i+1):</b> </p>
+                                    var eligibleId = "eligible-" + i;
 
                                     <EditForm Model="person" style=margin-left:25px>
-                                        <InputCheckbox @bind-Value=person.EmployerBenefits.Employer401k.Offered id='eligible'/> <label for='eligible'>Eligible for workplace retirement savings</label><br/><br/>
+                                        <label style="display:inline" for=@eligibleId>Offers workplace retirement savings</label> <InputSelect @bind-Value=person.EmployerBenefits.Employer401k.Offered id=@eligibleId>
+                                        @foreach (var option in Enum.GetValues<TriState>()) {
+                                            <option value="@option">@option</option>
+                                        }
+                                        </InputSelect><br/>
 
                                         <fieldset disabled=@person.EmployerPlan.NotEligible style='margin-left:20px'>
                                             <label>@person.FamilyYears.Year Employer Post Tax "Mega Backdoor Roth" Contribution Allowed:</label> <span>$</span><input type=text class=dollar @bind-Value=person.EmployerBenefits.MegaBackdoorRoth.ContributionLimit @bind-Value:event=oninput/><br/><br/>

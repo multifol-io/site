@@ -7,7 +7,7 @@ namespace Employer {
     // Root myDeserializedClass = JsonConvert.DeserializeObject<Employer>(myJsonResponse);
     public class Employer401k
     {
-        public bool Offered { get; set; }
+        public TriState Offered { get; set; } = TriState.ChoiceNeeded;
         private List<MatchRule> _MatchRules;
         public List<MatchRule> MatchRules {
             get {

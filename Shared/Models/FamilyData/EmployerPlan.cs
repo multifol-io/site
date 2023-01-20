@@ -10,11 +10,22 @@ public class EmployerPlan : INotifyPropertyChanged {
     private Person person;
     private IRS.Employer401k? Employer401k;
 
-    public bool Eligible {
+    public TriState Eligible {
         get => person.EmployerBenefits.Employer401k.Offered;
     }
 
-    public bool NotEligible {get {return !Eligible;}}
+    public bool? NotEligible {
+        get {
+            switch (Eligible) {
+                case TriState.ChoiceNeeded:
+                case TriState.False:
+                    return true;
+                case TriState.True:
+                default:
+                    return false;
+            }
+        }
+    }
 
     public int? AnnualSalary { get; set; }
     public int? MatchA { 
@@ -125,7 +136,7 @@ public class EmployerPlan : INotifyPropertyChanged {
     public int? ContributionAllowed { 
         get
         {
-            if (Eligible)
+            if (Eligible == TriState.True)
             {
                 return Employer401k.ContributionLimit
                     + (person.FiftyOrOver ? Employer401k.CatchUpContributionLimit : 0);
