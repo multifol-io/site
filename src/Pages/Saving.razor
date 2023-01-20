@@ -76,6 +76,10 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                         <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
                         <option value=HeadOfHousehold>Head of Household</option>
                     </select><br/>
+                    @if(familyYears.PersonCount == 0) 
+                    {
+                        <span>People Details...</span><br/>
+                    }
                     @for (int i = 0; i < familyYears.PersonCount; i++) {
                         var person = familyYears.People[i];
                         <span>Person @(i+1):</span><br/>
@@ -92,8 +96,10 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                             </select><br/>
 
                             <label>Employer:</label> <input style=width:200px type=text @bind-Value=person.EmployerBenefits.Company @bind-Value:event=oninput /><br/>
+                            <label>Annual Salary:</label> $<input type=text class=dollar @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
                         </div>
                     }
+                    <hr/>
                     <label>Estimated Adjusted Gross Income:</label> $<input type=text class=dollar @bind-Value=familyYears.AdjustedGrossIncome @bind-Value:event=oninput /><br/>
                     <label>Monthly Expenses:</label> <span>$</span><input class=dollar type=text @bind-Value="familyYears.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /><br/>
                     <label>Annual Income Tax Paid:</label> <span>$</span><input class=dollar type=text @bind-Value="familyYears.IncomeTaxPaid" @bind-Value:event="oninput" /><br/>
@@ -115,12 +121,17 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                 <a href="@href" style="background:blue" class="m-1 btn" >✏️</a>
                             </td>
                             @switch (step.step) {
-                                case "benefit-lookup":
+                                case "benefit-entry":
                                     <td>
-                                        @if (familyYears.People[0].EmployerBenefits.Downloaded || familyYears.People[1].EmployerBenefits.Downloaded) {
-                                            <span>Found some</span><br/>
-                                        } else {
-                                            <b>@step.title</b>
+                                        @if (familyYears.PersonCount > 0 && familyYears.People[0].EmployerBenefits.Downloaded && familyYears.People[0].EmployerBenefits.Company != null) {
+                                            <span>Found @familyYears.People[0].EmployerBenefits.Company benefit details</span><br/>
+                                        } else if (familyYears.People[0].EmployerPlan.AnnualSalary != 0) {
+                                            <b>@step.title</b>@if(familyYears.People[0].EmployerBenefits.Company != null) { <span>: @familyYears.People[0].EmployerBenefits.Company</span><br/>}
+                                        }
+                                        @if (familyYears.PersonCount > 1 && familyYears.People[1].EmployerBenefits.Downloaded && familyYears.People[1].EmployerBenefits.Company != null) {
+                                            <span>Found @familyYears.People[1].EmployerBenefits.Company benefit details</span><br/>
+                                        } else if (familyYears.People[1].EmployerPlan.AnnualSalary != 0) {
+                                            <b>@step.title</b>@if(familyYears.People[1].EmployerBenefits.Company != null) { <span>: @familyYears.People[1].EmployerBenefits.Company</span><br/>}
                                         }
                                     </td>
                                     break;
@@ -134,12 +145,29 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     </td>
                                    break;
                                 case "retirement-funds-match":
+                                    bool titleShowing2 = false;
                                     <td>
                                         @if (familyYears.People[0].EmployerPlan.AmountToSaveForMatch > 0) {
-                                            <span>@formatMoney(familyYears.People[0].EmployerPlan.AmountToSaveForMatch) in @familyYears.People[0].PossessiveID 401k (Match: @formatMoney(familyYears.People[0].EmployerPlan.MatchAmount))</span><br/>
+                                            <span>@formatMoney(familyYears.People[0].EmployerPlan.AmountToSaveForMatch) in @familyYears.People[0].PossessiveID 401k</span>
+                                                @if (familyYears.People[0].EmployerPlan.MatchAmount == null) {
+                                                    <br/> <b>Match amount?</b><br/>
+                                                } else { 
+                                                    <span>&nbsp;(Match: @formatMoney(familyYears.People[0].EmployerPlan.MatchAmount))</span><br/>
+                                                }
+                                        } else if (familyYears.People[0].EmployerPlan.AnnualSalary != 0) {
+                                            titleShowing2 = true;
+                                            <b>@step.title</b>
                                         }
                                         @if (familyYears.People[1].EmployerPlan.AmountToSaveForMatch > 0) {
-                                            <span>@formatMoney(familyYears.People[1].EmployerPlan.AmountToSaveForMatch) in @familyYears.People[1].PossessiveID 401k (Match: @formatMoney(familyYears.People[1].EmployerPlan.MatchAmount))</span><br/>
+                                            <span>@formatMoney(familyYears.People[1].EmployerPlan.AmountToSaveForMatch) in @familyYears.People[1].PossessiveID 401k</span>
+                                            @if(familyYears.People[1].EmployerPlan.MatchAmount == null)
+                                            {
+                                                <br/> <b>Match amount?</b><br/>
+                                            } else { 
+                                                    <span>&nbsp;(Match: @formatMoney(familyYears.People[1].EmployerPlan.MatchAmount))</span><br/>
+                                            }
+                                        } else if (familyYears.People[1].EmployerPlan.AnnualSalary != 0 && !titleShowing2) {
+                                            <b>@step.title</b>
                                         }
                                         @if (familyYears.People[0].EmployerPlan.AmountToSaveForMatch == null && familyYears.People[1].EmployerPlan.AmountToSaveForMatch == null) {
                                             <b>@step.title</b>
@@ -188,7 +216,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                         @if (familyYears.PersonCount > 0) {
                                             if (familyYears.People[0].EmployerPlan.AmountToSaveForNonMatched != null && familyYears.People[0].EmployerPlan.AmountToSaveForNonMatched > 0) {
                                                 <span>@formatMoney(familyYears.People[0].EmployerPlan.AmountToSaveForNonMatched) in @familyYears.People[0].PossessiveID 401k</span><br/>
-                                            } else {
+                                        } else if (familyYears.People[0].EmployerPlan.AnnualSalary != 0) {
                                                 titleShowing = true;
                                                 <b>@step.title</b><br/>
                                             }
@@ -196,20 +224,30 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                         @if (familyYears.PersonCount > 1) {
                                             if (familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched != null && familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched > 0) {
                                                 <span>@formatMoney(familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched) in @familyYears.People[1].PossessiveID 401k</span><br/>
-                                            } else if (!titleShowing) {
-                                            <b>@step.title</b>
+                                            } else if (familyYears.People[1].EmployerPlan.AnnualSalary != 0 && !titleShowing) {
+                                                <b>@step.title</b>
                                             }
                                         }
                                     </td>
                                     
                                     break;
                                 case "mega-backdoor-roth": 
+                                    bool titleShowing4 = false;
                                     <td>
-                                        @if (familyYears.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
-                                            <span>@formatMoney(familyYears.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyYears.People[0].PossessiveID mega backdoor roth</span><br/>
+                                        @if (familyYears.PersonCount > 0) {
+                                            if (familyYears.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
+                                                <span>@formatMoney(familyYears.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyYears.People[0].PossessiveID mega backdoor roth</span><br/>
+                                            } else if (familyYears.People[0].EmployerPlan.AnnualSalary != 0) {
+                                                titleShowing4 = true;
+                                                <b>@step.title</b><br/>
+                                            }
                                         }
-                                        @if (familyYears.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit  > 0) {
-                                            <span>@formatMoney(familyYears.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyYears.People[1].PossessiveID mega backdoor roth</span><br/>
+                                        @if (familyYears.PersonCount > 1) {
+                                            if (familyYears.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
+                                                <span>@formatMoney(familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched) in @familyYears.People[1].PossessiveID 401k</span><br/>
+                                            } else if (familyYears.People[1].EmployerPlan.AnnualSalary != 0 && !titleShowing4) {
+                                                <b>@step.title</b>
+                                            }
                                         }
                                         @if (familyYears.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit == null && familyYears.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit == null) {
                                             <b>@step.title</b>
@@ -285,25 +323,70 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     var person = familyYears.People[i];
                                     var personBuffer = i;
                                     var eligibleId = "eligible-" + i;
+                                    var haveHDHPid = "eligible-" + i;
                                     <p><b>Person @(i+1):</b> </p>
 
-                                    <EditForm Model="person" style=margin-left:25px>
                                         <label>Employer:</label> <input type=text @bind-Value=person.EmployerBenefits.Company @bind-Value:event=oninput /><br/>
-                                        <span>@person.EmployerBenefits.Downloaded</span>
-                                    </EditForm>
-                                }
-                                <br/>
-                                <button @onclick=lookupBenefits>Lookup Benefits</button>
-
-                                @code {
-                                    private async void lookupBenefits(MouseEventArgs e)
-                                    {
-                                        for (int i = 0; i < familyYears.PersonCount; i++) {
-                                            var person = familyYears.People[i];
-                                            await person.EmployerBenefits.GetEmployerDataAsync(person.FamilyYears.Year);
+                                        @if (person.EmployerBenefits.Downloaded) { 
+                                            <span>Found @familyYears.People[personBuffer].EmployerBenefits.Company benefit details</span><br/><br/>
+                                        } else {
+                                            <span>Lookup and Enter @familyYears.People[personBuffer].EmployerBenefits.Company benefit details:</span><br/><br/>
+                                            <p>Workplace retirement savings:</p>
+                                            <EditForm Model="person" style=margin-left:25px>
+                                                <InputCheckbox @bind-Value=person.EmployerBenefits.Employer401k.Offered id=@eligibleId /> <label style="display:inline" for=@eligibleId>Offers workplace retirement savings</label><br/><br/>
+                                                <fieldset disabled=@person.EmployerPlan.NotEligible style='margin-left:20px'>
+                                                    <label>Matching Levels:</label><br/>
+                                                    @for (var m = 0; m < person.EmployerBenefits.Employer401k.MatchRules.Count; m++) 
+                                                    {
+                                                        var matchRuleBuffer = m;
+                                                        <div>
+                                                            <button @onclick='@(e=>deleteMatchRule(e,personBuffer,matchRuleBuffer))'>❌</button>&nbsp;
+                                                            <label>Match:</label> <input type=text class=percent @bind-Value=person.EmployerBenefits.Employer401k.MatchRules[matchRuleBuffer].MatchPercentage @bind-Value:event=oninput />%
+                                                            <label margin-left:30px>for next</label> <input style="width:30px" type=text class=percent @bind-Value=person.EmployerBenefits.Employer401k.MatchRules[matchRuleBuffer].ForNextPercent @bind-Value:event=oninput/>%
+                                                        </div>
+                                                    }
+                                                    <br/>
+                                                    <button @onclick='@(e=>addMatchRule(e,personBuffer))'>➕</button><br/><br/><br/>
+                                                    <label>Max Match:</label> $<input type=text class=dollar @bind-Value=person.EmployerBenefits.Employer401k.MatchLimit @bind-Value:event=oninput/><br/><br/>
+                                                    <label>Post Tax "Mega Backdoor Roth" Contribution Allowed:</label> <span>$</span><input type=text class=dollar @bind-Value=person.EmployerBenefits.MegaBackdoorRoth.ContributionLimit @bind-Value:event=oninput/><br/>
+                                                </fieldset>
+                                            </EditForm><br/>
+                                            <hr/>
+                                            <p>HSA:</p>
+                                            <EditForm Model="person" style=margin-left:25px>
+                                                <InputCheckbox @bind-Value=person.HealthSavingsAccount.Eligible id='@haveHDHPid'/> <label for='@haveHDHPid' style="display:inline">Offers high deductible health plan</label><br/><br/>
+                                                <fieldset disabled=@person.HealthSavingsAccount.NotEligible style='margin-left:20px'>
+                                                    <label>Employer Contribution Levels:</label>
+                                                    @foreach(var employerContributionLevel in person.EmployerBenefits.HSA.EmployerContributionLevels)
+                                                    {
+                                                        var contributionLevelBuffer = contributionIndex;
+                                                        contributionIndex++;
+                                                        <div>
+                                                            <button @onclick='@(e=>deleteContributionLevel(e,personBuffer,contributionLevelBuffer))'>❌</button>&nbsp;
+                                                            <label>Description:</label> <input type=text class=dollar @bind-Value=employerContributionLevel.Description @bind-Value:event=oninput/>&nbsp;
+                                                            <label>Amount:</label> <input type=text class=dollar @bind-Value=employerContributionLevel.Amount @bind-Value:event=oninput/><br/>
+                                                        </div>
+                                                    }
+                                                    <br/>
+                                                    <button @onclick='@(e=>addContributionLevel(e,personBuffer))'>➕</button><br/><br/>
+                                                </fieldset>
+                                                <br/>
+                                            </EditForm>
+                                        }
+                                    <br/>
+                                    @code{
+                                        private async void addContributionLevel(MouseEventArgs e, int personIndex)
+                                        {
+                                            var contributionLevel = new EmployerContributionLevel();
+                                            familyYears.People[personIndex].EmployerBenefits.HSA.EmployerContributionLevels.Add(contributionLevel);
+                                        }
+                                        private async void deleteContributionLevel(MouseEventArgs e, int personIndex, int contributionLevelIndex)
+                                        {
+                                            familyYears.People[personIndex].EmployerBenefits.HSA.EmployerContributionLevels.RemoveAt(contributionLevelIndex);
                                         }
                                     }
                                 }
+                                <br/>
                                 break;
                             case 1:
                                 <p ><b>Prerequisities:</b></p>
@@ -350,13 +433,13 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     var person = familyYears.People[i];
                                     var personBuffer = i;
                                     var eligibleId = "eligible-" + i;
+                                    matchRuleIndex = 0;
                                     <p><b>Person @(i+1):</b> </p>
 
                                     <EditForm Model="person" style=margin-left:25px>
                                         <label>Employer:</label> <input type=text @bind-Value=person.EmployerBenefits.Company @bind-Value:event=oninput /><br/>
                                         <label>Annual Salary:</label> $<input type=text class=dollar @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
                                         <br/>
-                                        @(matchRuleIndex = 0)
                                         <InputCheckbox @bind-Value=person.EmployerBenefits.Employer401k.Offered id=@eligibleId /> <label style="display:inline" for=@eligibleId>Eligible for workplace retirement savings</label><br/>
                                         <fieldset disabled=@person.EmployerPlan.NotEligible style='margin-left:20px'>
                                             <label>Matching Levels:</label><br/>
@@ -506,6 +589,15 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                                 <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
                                                 <option value=HeadOfHousehold>Head of Household</option>
                                                 </select><br/>
+
+                                                @for (int i = 0; i < familyYears.PersonCount; i++) {
+                                                    var person = familyYears.People[i];
+                                                    <span>Person @(i+1):</span><br/>
+                                                    <div style=margin-left:25px>
+                                                        <label>Age:</label> <input style=width:60px type=text @bind-Value=person.Age @bind-Value:event=oninput /><br/>
+                                                        <label>Employer:</label> <input style=width:200px type=text @bind-Value=person.EmployerBenefits.Company @bind-Value:event=oninput /><br/>
+                                                    </div>
+                                                }
                                 </EditForm><br/>
                                 @for (int i = 0; i < familyYears.PersonCount; i++) {
                                     var person = familyYears.People[i];
@@ -618,8 +710,8 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                             
                                 break;
                         }
-                    <p><b>Approximate Return:</b> @step.returns</p>
-                    <p class="article"><b>Details:</b> @((MarkupString)markupize(step.description))</p>
+                    @if(step.returns != "N/A") {<p><b>Approximate Return:</b> @step.returns</p>}
+                    @if(step.description != "") {<p class="article"><b>Details:</b> @((MarkupString)markupize(step.description))</p>}
 
                     <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
                     <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
@@ -753,6 +845,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
     private string[] lastEmployer = { null, null };
     private const string folderName = "/saving/";
     private int matchRuleIndex;
+    private int contributionIndex;
     protected override async Task OnInitializedAsync()
     {
         steps = await Http.GetFromJsonAsync<Step[]>("data/saving-steps.json");

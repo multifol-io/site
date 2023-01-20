@@ -1,11 +1,11 @@
 [
     {
-        "step": "benefit-lookup",
-        "title": "Benefit Lookup",
+        "step": "benefit-entry",
+        "title": "Benefit Entry",
         "number": 0,
-        "summary": "Searching for your employer(s) benefit information.",
+        "summary": "Employer(s) Benefit Details",
         "priority": "",
-        "returns": "",
+        "returns": "N/A",
         "description": ""
     },
     {
