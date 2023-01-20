@@ -1,77 +1,64 @@
-using System.Text.Json;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 public class EmployerPlan : INotifyPropertyChanged {
     public EmployerPlan(Person person) {
         this.person = person;
-        this.Employer401k = this.person.FamilyYear.RetirementData.Employer401k;
+        this.Employer401k = this.person.FamilyYears.RetirementData.Employer401k;
     }
 
     private Person person;
     private IRS.Employer401k? Employer401k;
 
-    private async Task GetEmployerDataAsync(string employer) {
-        HttpClient httpClient = new();
-        var lEmployer = employer.ToLowerInvariant().Trim();
-        var year = person.FamilyYear.Year;
-    
-        if (lEmployer == "test") {
-            var requestUri = "https://api.saving.bogle.tools/api/UploadEmployerInfo?code=8VyPqHmGuPDZq6G2tmbJ7g0vN9BqIQhSGmRA-jBBEInkAzFuUvlxuA==";
-            
-            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, requestUri))
-            {
-                var body = new Employer.Employer()
-                {
-                    Company = lEmployer
-                };
-
-                string jsonString = JsonSerializer.Serialize(body);
-                request.Content = new StringContent(jsonString, Encoding.UTF8, "application/json");
-
-                HttpResponseMessage responseMsg = await httpClient.SendAsync(request).ConfigureAwait(false);
-
-                if (responseMsg == null)
-                {
-                    throw new InvalidOperationException(
-                        string.Format(
-                            "The response message was null when executing operation {0}.",
-                            request.Method));
-                }
-            }
-        }
-
-        var employerStream = await httpClient.GetStreamAsync(
-            "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/employers/" 
-            + lEmployer + "/" + lEmployer + ".retirement." + year + ".json");
-        var employerData = JsonSerializer.Deserialize<Employer.Employer>(employerStream);
-        person.Employer = employerData;
-    }
-
-    private string _employer;
-    public string Employer { 
-        get{ return _employer; }
-        set{
-            _employer = value;
-            GetEmployerDataAsync(_employer);
-        }
-    }
-
-    private bool _eligible;
     public bool Eligible {
-        get => _eligible;
-        set => SetProperty(ref _eligible, value);
+        get => person.EmployerBenefits.Employer401k.Offered;
     }
 
     public bool NotEligible {get {return !Eligible;}}
 
     public int? AnnualSalary { get; set; }
-    public int? MatchA { get; set; }
-    public int? MatchALimit { get; set; }
-    public int? MatchB { get; set; }
-    public int? MatchBLimit { get; set; }
-    public int? MaxMatch { get; set; }
+    public int? MatchA { 
+        get {
+            if (person.EmployerBenefits.Employer401k.MatchRules.Count >= 1) {
+                return person.EmployerBenefits.Employer401k.MatchRules[0].MatchPercentage;
+            } else {
+                return null;
+            }
+        }
+    }
+    public int? MatchALimit { 
+        get {
+            if (person.EmployerBenefits.Employer401k.MatchRules.Count >= 1) {
+                return person.EmployerBenefits.Employer401k.MatchRules[0].ForNextPercent;
+            } else {
+                return null;
+            }
+        }
+    }
+    public int? MatchB { 
+        get {
+            if (person.EmployerBenefits.Employer401k.MatchRules.Count >= 2) {
+                return person.EmployerBenefits.Employer401k.MatchRules[1].MatchPercentage;
+            } else {
+                return null;
+            }
+        }
+    }
+    public int? MatchBLimit { 
+        get {
+            if (person.EmployerBenefits.Employer401k.MatchRules.Count >= 2) {
+                return person.EmployerBenefits.Employer401k.MatchRules[1].ForNextPercent;
+            } else {
+                return null;
+            }
+        }
+    }
+    public int? MaxMatch {
+        get {
+            return person.EmployerBenefits.Employer401k.MatchLimit;
+        }
+    }
+
     public int? AmountToSaveForMatch { 
         get
         {
@@ -123,10 +110,17 @@ public class EmployerPlan : INotifyPropertyChanged {
     public bool CompleteUnmatched { get { return AmountToSaveForNonMatched != null; } }
 
     public int? AmountToSaveForNonMatched {
-        get { return ContributionAllowed - (AmountToSaveForMatch ?? 0); }
+        get { 
+            if (AmountToSaveForMatch != null)
+            {
+                return ContributionAllowed - (AmountToSaveForMatch); 
+            }
+            else
+            {
+                return null; 
+            }
+        }   
     }
-
-    public int? AmountToSaveForBackdoorRoth { get; set; }
 
     public int? ContributionAllowed { 
         get

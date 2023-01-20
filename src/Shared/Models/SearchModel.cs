@@ -1,4 +1,9 @@
 public class SearchModel {
+
+    public static async Task<SearchModel> CreateAsync() {
+        return new SearchModel();
+    }
+    
     public string Terms { get; set; } = "";
     public string Engine { get; set; } = "";
     public string Domain { get; set; } = "ask.com";

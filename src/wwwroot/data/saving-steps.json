@@ -1,5 +1,14 @@
 [
     {
+        "step": "benefit-lookup",
+        "title": "Benefit Lookup",
+        "number": 0,
+        "summary": "Searching for your employer(s) benefit information.",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
         "step": "emergency-fund",
         "title": "Emergency Fund",
         "number": 1,
