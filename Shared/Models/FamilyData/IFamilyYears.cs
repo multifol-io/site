@@ -3,6 +3,8 @@ using IRS;
 public interface IFamilyYears
 {
     public EmergencyFund EmergencyFund { get; set; }
+    public bool DebtsComplete { get; }
+    public TriState DebtFree { get; set; }
     public List<Debt> Debts { get; }
     public int? HighDebts { get; }
     public int? MediumDebts { get; }

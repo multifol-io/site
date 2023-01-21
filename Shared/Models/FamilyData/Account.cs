@@ -1,7 +1,7 @@
 public class Account 
 {
     public string Identifier { get; set; }
-    public string AccountType { get; set; }
+    public string AccountType { get; set; } = "Taxable";
     public string? Custodian { get; set; }
     public double Value { 
         get {
@@ -51,7 +51,7 @@ public class Account
     {
         foreach (var investment in Investments)
         {
-            investment.Percentage = investment.Value ?? 0 / totalValue * 100;
+            investment.Percentage = (investment.Value ?? 0) / totalValue * 100;
         }
     }
 }

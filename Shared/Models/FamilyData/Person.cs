@@ -39,24 +39,28 @@ public class Person {
 
     public string? PossessiveID { 
         get {
-            switch (Identifier)
-            {
-                case "me":
-                    return "my";
-                case "them":
-                    return "their";
-                case "him":
-                    return "his";
-                case "her":
-                    return "her";
-                case null:
-                    return null;
-                case "person 1":
-                    return "person 1's";
-                case "person 2":
-                    return "person 2's";
-                default:
-                    return "undefined";
+            if (FamilyYears.PersonCount > 1) {
+                switch (Identifier)
+                {
+                    case "me":
+                        return "my";
+                    case "them":
+                        return "their";
+                    case "him":
+                        return "his";
+                    case "her":
+                        return "her";
+                    case null:
+                        return null;
+                    case "person 1":
+                        return "person 1's";
+                    case "person 2":
+                        return "person 2's";
+                    default:
+                        return "undefined";
+                }
+            } else {
+                return null;
             }
         }
     }

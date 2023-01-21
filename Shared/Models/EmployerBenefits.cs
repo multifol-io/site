@@ -132,7 +132,6 @@ namespace Employer {
                     HSA = employerData.HSA;
                     MegaBackdoorRoth = employerData.MegaBackdoorRoth;
                     Downloaded = true;
-                    Company = Company;
                 }
                 else
                 {

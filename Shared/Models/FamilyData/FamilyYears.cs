@@ -89,7 +89,6 @@ public class FamilyYears : IFamilyYears
                 case TaxFilingStatus.ChoiceNeeded:
                 default:
                     return 0;
-
             }
         } 
     }
@@ -122,7 +121,7 @@ public class FamilyYears : IFamilyYears
         }
     }
     
-    private TaxFilingStatus _taxFilingStatus;
+    private TaxFilingStatus _taxFilingStatus = TaxFilingStatus.Single;
     [Required]
     public TaxFilingStatus TaxFilingStatus { 
         get {
@@ -140,13 +139,19 @@ public class FamilyYears : IFamilyYears
         get {
             int? annualExpenses = EmergencyFund.MonthlyExpenses * 12;
             int investFromTaxable = TaxableToInvest ?? 0;
-            return AdjustedGrossIncome - IncomeTaxPaid - annualExpenses + investFromTaxable;
+            return AdjustedGrossIncome - (IncomeTaxPaid ?? 0) - annualExpenses + investFromTaxable;
         }
     }
     public string? FederalMarginalTaxBracket { get; set; }
     public string? StateMarginalTaxBracket { get; set; }
     public EmergencyFund EmergencyFund { get; set; } = new();
 
+    public bool DebtsComplete {
+        get {
+            return ((Debts.Count == 0 && DebtFree == TriState.True) || Debts.Count > 0);
+        }
+    }
+    public TriState DebtFree { get; set; }
     private List<Debt>? _debts;
     public List<Debt> Debts
     {

@@ -174,7 +174,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                              @foreach (var account in familyYears.Accounts) {
                                                 @if (account.AvailableFunds.Count > 0) {
                                                     <br/>
-                                                        <span>@account.FullName</span><br/>
+                                                        <b>Funds available in @account.FullName</b><br/>
                                                     <br/>
                                                     @foreach (var investment in account.AvailableFunds) {
                                                         <span>&nbsp;&nbsp;&nbsp;&nbsp;@investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span><br/>
@@ -213,19 +213,19 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                         @if (familyYears.EmergencyFund.AmountToSave > 0) {
                                             <span>@formatMoney(familyYears.EmergencyFund.AmountToSave) in Emergency Fund</span><br/>
                                         }
-                                        @if (familyYears.People[0].EmployerPlan.AmountToSaveForMatch > 0) {
+                                        @if (familyYears.PersonCount > 0 && familyYears.People[0].EmployerPlan.AmountToSaveForMatch > 0) {
                                             <span>@formatMoney(familyYears.People[0].EmployerPlan.AmountToSaveForMatch) in @familyYears.People[0].PossessiveID 401k (Match: @formatMoney(familyYears.People[0].EmployerPlan.MatchAmount))</span><br/>
                                         }
-                                        @if (familyYears.People[1].EmployerPlan.AmountToSaveForMatch > 0) {
+                                        @if (familyYears.PersonCount > 1 && familyYears.People[1].EmployerPlan.AmountToSaveForMatch > 0) {
                                             <span>@formatMoney(familyYears.People[1].EmployerPlan.AmountToSaveForMatch) in @familyYears.People[1].PossessiveID 401k (Match: @formatMoney(familyYears.People[1].EmployerPlan.MatchAmount))</span><br/>
                                         }
                                         @if (familyYears.HighDebts > 0) {
                                             <span>@familyYears.HighDebts in High Debts</span><br/>
                                         }
-                                        @if (familyYears.People[0].HealthSavingsAccount.AmountToSave > 0) {
+                                        @if (familyYears.PersonCount > 0 && familyYears.People[0].HealthSavingsAccount.AmountToSave > 0) {
                                             <span>@formatMoney(familyYears.People[0].HealthSavingsAccount.AmountToSave) in @familyYears.People[0].PossessiveID HSA (Employer: @formatMoney(familyYears.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
                                         }
-                                        @if (familyYears.People[1].HealthSavingsAccount.AmountToSave > 0) {
+                                        @if (familyYears.PersonCount > 1 && familyYears.People[1].HealthSavingsAccount.AmountToSave > 0) {
                                             <span>@formatMoney(familyYears.People[1].HealthSavingsAccount.AmountToSave) in @familyYears.People[1].PossessiveID HSA (Employer: @formatMoney(familyYears.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
                                         }
                                         @if (familyYears.AdjustedGrossIncome != null) {
@@ -236,16 +236,16 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                                 <span>@((MarkupString)GetRecommendedIRAMarkup(familyYears.People[1]))</span><br/>
                                             }
                                         }
-                                        @if (familyYears.People[0].EmployerPlan.AmountToSaveForNonMatched > 0) {
+                                        @if (familyYears.PersonCount > 0 && familyYears.People[0].EmployerPlan.AmountToSaveForNonMatched > 0) {
                                             <span>@formatMoney(familyYears.People[0].EmployerPlan.AmountToSaveForNonMatched) in @familyYears.People[0].PossessiveID 401k</span><br/>
                                         }
-                                        @if (familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched > 0) {
+                                        @if (familyYears.PersonCount > 1 && familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched > 0) {
                                             <span>@formatMoney(familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched) in @familyYears.People[1].PossessiveID 401k</span><br/>
                                         }
-                                        @if (familyYears.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
+                                        @if (familyYears.PersonCount > 0 && familyYears.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
                                             <span>@formatMoney(familyYears.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyYears.People[0].PossessiveID mega backdoor roth</span><br/>
                                         }
-                                        @if (familyYears.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
+                                        @if (familyYears.PersonCount > 1 && familyYears.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
                                             <span>@formatMoney(familyYears.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyYears.People[1].PossessiveID mega backdoor roth</span><br/>
                                         }
                                         @if (familyYears.MediumDebts > 0) {

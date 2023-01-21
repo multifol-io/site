@@ -51,7 +51,10 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
             var nextStep = steps[0];
             string prevPage = folderName + prevStep?.step;
             string nextPage = folderName + nextStep?.step;
-            
+            pastTotal = false;
+            int? runningTotal = 0;
+            int itemTotal = 0;
+
             <h3 style="max-width:350px">
                 Annual Saving
                 <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
@@ -84,14 +87,16 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                             <span>Person @(i+1):</span><br/>
                             <div style=margin-left:25px>
                                 <label>Age:</label> <input style=width:60px type=text @bind-Value=person.Age @bind-Value:event=oninput /><br/>
-                                <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
-                                    <option value="ChoiceNeeded">ChoiceNeeded</option>
-                                    <option>person @(i+1)</option>
-                                    <option>him</option>
-                                    <option>her</option>
-                                    <option>me</option>
-                                    <option>them</option>
-                                </select><br/>
+                                @if (familyYears.PersonCount > 1) {
+                                    <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
+                                        <option value="ChoiceNeeded">ChoiceNeeded</option>
+                                        <option>person @(i+1)</option>
+                                        <option>him</option>
+                                        <option>her</option>
+                                        <option>me</option>
+                                        <option>them</option>
+                                    </select><br/>
+                                }
 
                                 <label>Employer:</label> <input style=width:200px type=text @bind-Value=person.EmployerBenefits.Company @bind-Value:event=oninput /><br/>
                                 <label>Annual Salary:</label> $<input type=text class=dollar @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
@@ -126,6 +131,19 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                 <table>
                     @foreach (var step in steps) {
                         var href = folderName + @step.step;
+                        if (!pastTotal) {
+                            pastTotal = familyYears.PlannedSavings <= runningTotal;
+
+                            if (pastTotal) {
+                                <tr><td colspan=3>
+                                    <hr/>
+                                    <div>Planned savings @(familyYears.PlannedSavings==runningTotal?"met":"exceeded") after @formatMoney(itemTotal+1*(familyYears.PlannedSavings-runningTotal)) towards Step @(step.number-1)</div>
+                                    <hr/>    
+                                </td></tr>
+                            }
+                        }
+                        itemTotal = 0;
+
                         <tr>
                             <td style=text-align:right>
                                 @step.number
@@ -135,30 +153,42 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                             </td>
                             @switch (step.step) {
                                 case "benefit-entry":
+                                    bool titleShown4 = false;
                                     <td>
-                                        @if (familyYears.PersonCount > 0 && familyYears.People[0].EmployerBenefits.Complete && familyYears.People[0].EmployerBenefits.Company != null) {
-                                            if (familyYears.People[0].EmployerBenefits.Downloaded) {
-                                                <span>Found @familyYears.People[0].EmployerBenefits.Company benefit details</span><br/>
-                                            } else {
-                                                <span>Entered @familyYears.People[0].EmployerBenefits.Company benefit details</span><br/>
+                                        @if (familyYears.PersonCount > 0) {
+                                            if (familyYears.People[0].EmployerBenefits.Complete && familyYears.People[0].EmployerBenefits.Company != null) {
+                                                if (familyYears.People[0].EmployerBenefits.Downloaded) {
+                                                    <span>Found @familyYears.People[0].EmployerBenefits.Company benefit details</span><br/>
+                                                } else {
+                                                    <span>Entered @familyYears.People[0].EmployerBenefits.Company benefit details</span><br/>
+                                                }
+                                            } else if (familyYears.People[0].EmployerPlan.AnnualSalary != 0) {
+                                                titleShown4 = true;
+                                                <div>
+                                                    <b>@step.title</b>@if(familyYears.People[0].EmployerBenefits.Company != null) { <span>: @familyYears.People[0].EmployerBenefits.Company</span> }
+                                                </div>
                                             }
-                                        } else if (familyYears.People[0].EmployerPlan.AnnualSalary != 0) {
-                                            <b>@step.title</b>@if(familyYears.People[0].EmployerBenefits.Company != null) { <span>: @familyYears.People[0].EmployerBenefits.Company</span><br/>}
                                         }
-                                        @if (familyYears.PersonCount > 1 && familyYears.People[1].EmployerBenefits.Complete && familyYears.People[1].EmployerBenefits.Company != null) {
-                                            if (familyYears.People[1].EmployerBenefits.Downloaded) {
-                                                <span>Found @familyYears.People[1].EmployerBenefits.Company benefit details</span><br/>
-                                            } else {
-                                                <span>Entered @familyYears.People[1].EmployerBenefits.Company benefit details</span><br/>
+                                        @if (familyYears.PersonCount > 1) {
+                                            if (familyYears.People[1].EmployerBenefits.Complete && familyYears.People[1].EmployerBenefits.Company != null) {
+                                                if (familyYears.People[1].EmployerBenefits.Downloaded) {
+                                                    <span>Found @familyYears.People[1].EmployerBenefits.Company benefit details</span><br/>
+                                                } else {
+                                                    <span>Entered @familyYears.People[1].EmployerBenefits.Company benefit details</span><br/>
+                                                }
+                                            } else if (familyYears.People[1].EmployerPlan.AnnualSalary != 0 && !titleShown4) {
+                                                <div>
+                                                    <b>@step.title</b>@if(familyYears.People[1].EmployerBenefits.Company != null) { <span>: @familyYears.People[1].EmployerBenefits.Company</span> }
+                                                </div>
                                             }
-                                        } else if (familyYears.People[1].EmployerPlan.AnnualSalary != 0) {
-                                            <b>@step.title</b>@if(familyYears.People[1].EmployerBenefits.Company != null) { <span>: @familyYears.People[1].EmployerBenefits.Company</span><br/>}
                                         }
                                     </td>
                                     break;
                                 case "emergency-fund": 
                                     <td>
                                         @if (familyYears.EmergencyFund.AmountToSave != null) {
+                                            runningTotal += addItem(familyYears.EmergencyFund.AmountToSave);
+                                            itemTotal += addItem(familyYears.EmergencyFund.AmountToSave);
                                             <span>@formatMoney(familyYears.EmergencyFund.AmountToSave) in Emergency Fund</span><br/>
                                         } else {
                                             <b>@step.title</b>
@@ -167,38 +197,45 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                    break;
                                 case "retirement-funds-match":
                                     <td>
-                                        @if (familyYears.PersonCount > 0 && familyYears.People[0].EmployerBenefits.Employer401k.Offered == TriState.True) {
-                                            @if (familyYears.People[0].EmployerPlan.AmountToSaveForMatch > 0) {
+                                        @if (familyYears.PersonCount > 0) {
+                                            if (familyYears.People[0].EmployerPlan.AmountToSaveForMatch > 0 && familyYears.People[0].EmployerBenefits.Employer401k.Offered == TriState.True) {
+                                                runningTotal += addItem(familyYears.People[0].EmployerPlan.AmountToSaveForMatch);
+                                                itemTotal += addItem(familyYears.People[0].EmployerPlan.AmountToSaveForMatch);
                                                 <span>@formatMoney(familyYears.People[0].EmployerPlan.AmountToSaveForMatch) in @familyYears.People[0].PossessiveID 401k</span>
                                                 @if (familyYears.People[0].EmployerPlan.MatchAmount == null) {
                                                     <br/> <b>Match amount?</b><br/>
                                                 } else { 
                                                     <span>&nbsp;(Match: @formatMoney(familyYears.People[0].EmployerPlan.MatchAmount))</span><br/>
                                                 }
+                                            } else if (familyYears.People[0].EmployerBenefits.Employer401k.Offered == TriState.False) {
+                                                <div><del>@familyYears.People[0].PossessiveID @step.title</del></div>
                                             } else if (familyYears.People[0].EmployerPlan.AnnualSalary != 0) {
-                                                <b>@step.title</b>
+                                                <div><b>@familyYears.People[0].PossessiveID @step.title</b></div>
                                             }
                                         }
-                                        @if (familyYears.PersonCount > 1 && familyYears.People[1].EmployerBenefits.Employer401k.Offered == TriState.True) {
-                                            @if (familyYears.People[1].EmployerPlan.AmountToSaveForMatch > 0) {
+                                        @if (familyYears.PersonCount > 1) {
+                                            if (familyYears.People[1].EmployerPlan.AmountToSaveForMatch > 0 && familyYears.People[1].EmployerBenefits.Employer401k.Offered == TriState.True) {
+                                                runningTotal += addItem(familyYears.People[1].EmployerPlan.AmountToSaveForMatch);
+                                                itemTotal += addItem(familyYears.People[1].EmployerPlan.AmountToSaveForMatch);
                                                 <span>@formatMoney(familyYears.People[1].EmployerPlan.AmountToSaveForMatch) in @familyYears.People[1].PossessiveID 401k</span>
                                                 @if (familyYears.People[1].EmployerPlan.MatchAmount == null) {
                                                     <br/> <b>Match amount?</b><br/>
                                                 } else { 
                                                     <span>&nbsp;(Match: @formatMoney(familyYears.People[1].EmployerPlan.MatchAmount))</span><br/>
                                                 }
+                                            } else if (familyYears.People[1].EmployerBenefits.Employer401k.Offered == TriState.False) {
+                                            
                                             } else if (familyYears.People[1].EmployerPlan.AnnualSalary != 0) {
-                                                <b>@step.title</b>
+                                                <div><b>@familyYears.People[1].PossessiveID @step.title</b></div>
                                             }
-                                        }
-                                        @if (familyYears.People[0].EmployerPlan.AmountToSaveForMatch == null && familyYears.People[1].EmployerPlan.AmountToSaveForMatch == null) {
-                                            <b>@step.title</b>
                                         }
                                     </td>
                                    break;
                                 case "high-interest-debt":
                                     <td>
-                                        @if (familyYears.Debts.Count > 0) {
+                                        @if (familyYears.Debts.Count > 0 || familyYears.DebtsComplete) {
+                                            runningTotal += addItem(familyYears.HighDebts);
+                                            itemTotal += addItem(familyYears.HighDebts);
                                             <span>@formatMoney(familyYears.HighDebts>0?familyYears.HighDebts:0) in High-Interest Debts</span><br/>
                                         } else {
                                             <b>@step.title</b>
@@ -207,14 +244,27 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     break;
                                 case "hsa":
                                     <td>
-                                        @if (familyYears.PersonCount > 0 && familyYears.People[0].EmployerBenefits.Complete && familyYears.People[0].HealthSavingsAccount.AmountToSave > 0) {
-                                            <span>@formatMoney(familyYears.People[0].HealthSavingsAccount.AmountToSave) in @familyYears.People[0].PossessiveID HSA (Employer: @formatMoney(familyYears.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
+                                        @if (familyYears.PersonCount > 0) {
+                                            if ((familyYears.People[0].EmployerBenefits.Complete || familyYears.People[0].EmployerPlan.AnnualSalary == 0) && familyYears.People[0].HealthSavingsAccount.AmountToSave > 0) {
+                                                runningTotal += addItem(familyYears.People[0].HealthSavingsAccount.AmountToSave);
+                                                itemTotal += addItem(familyYears.People[0].HealthSavingsAccount.AmountToSave);
+                                                <span>@formatMoney(familyYears.People[0].HealthSavingsAccount.AmountToSave) in @familyYears.People[0].PossessiveID HSA (Employer: @formatMoney(familyYears.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
+                                            } else if (familyYears.People[0].EmployerBenefits.HSA.HighDeductibleHealthPlanAvailable == TriState.False) {
+                                                <div><del>@familyYears.People[0].PossessiveID @step.title</del></div>
+                                            } else {
+                                                <div><b>@familyYears.People[0].PossessiveID @step.title</b></div>
+                                            }
                                         }
-                                        @if (familyYears.PersonCount > 1 && familyYears.People[1].EmployerBenefits.Complete && familyYears.People[1].HealthSavingsAccount.AmountToSave > 0) {
-                                            <span>@formatMoney(familyYears.People[1].HealthSavingsAccount.AmountToSave) in @familyYears.People[1].PossessiveID HSA (Employer: @formatMoney(familyYears.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
-                                        }
-                                        @if (familyYears.People[0].HealthSavingsAccount.AmountToSave == null && familyYears.People[1].HealthSavingsAccount.AmountToSave == null) {
-                                            <b>@step.title</b>
+                                        @if (familyYears.PersonCount > 1) {
+                                            if ((familyYears.People[1].EmployerBenefits.Complete || familyYears.People[1].EmployerPlan.AnnualSalary == 0) && familyYears.People[1].HealthSavingsAccount.AmountToSave > 0) {
+                                                runningTotal += addItem(familyYears.People[1].HealthSavingsAccount.AmountToSave);
+                                                itemTotal += addItem(familyYears.People[1].HealthSavingsAccount.AmountToSave);
+                                                <span>@formatMoney(familyYears.People[1].HealthSavingsAccount.AmountToSave) in @familyYears.People[1].PossessiveID HSA (Employer: @formatMoney(familyYears.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
+                                            } else if (familyYears.People[1].EmployerBenefits.HSA.HighDeductibleHealthPlanAvailable == TriState.False) {
+                                                <div><del>@familyYears.People[1].PossessiveID @step.title</del></div>
+                                            } else {
+                                                <div><b>@familyYears.People[1].PossessiveID @step.title</b></div>
+                                            }
                                         }
                                     </td>
                                    break;
@@ -222,9 +272,13 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     <td>
                                         @if (familyYears.AdjustedGrossIncome != null) {
                                             if (familyYears.PersonCount > 0) {
+                                                runningTotal += addItem(GetRecommdedIRAAmount(familyYears.People[0]));
+                                                itemTotal += addItem(GetRecommdedIRAAmount(familyYears.People[0]));
                                                 <span>@((MarkupString)GetRecommendedIRAMarkup(familyYears.People[0]))</span><br/>
                                             }
                                             if(familyYears.PersonCount > 1) {
+                                                runningTotal += addItem(GetRecommdedIRAAmount(familyYears.People[0]));
+                                                itemTotal += addItem(GetRecommdedIRAAmount(familyYears.People[0]));
                                                 <span>@((MarkupString)GetRecommendedIRAMarkup(familyYears.People[1]))</span><br/>
                                             }
                                         } else {
@@ -233,21 +287,31 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     </td>
                                     break;
                                 case "employer-retirement-funds": 
-                                    bool titleShowing = false;
                                     <td>
-                                        @if (familyYears.PersonCount > 0 && familyYears.People[0].EmployerBenefits.Employer401k.Offered == TriState.True) {
-                                            if (familyYears.People[0].EmployerPlan.AmountToSaveForNonMatched != null && familyYears.People[0].EmployerPlan.AmountToSaveForNonMatched > 0) {
+                                        @if (familyYears.PersonCount > 0) {
+                                            if (familyYears.People[0].EmployerBenefits.Employer401k.Offered == TriState.True && 
+                                                familyYears.People[0].EmployerPlan.AmountToSaveForNonMatched != null
+                                                && familyYears.People[0].EmployerPlan.AmountToSaveForNonMatched > 0) {
+                                                runningTotal += addItem(familyYears.People[0].EmployerPlan.AmountToSaveForNonMatched);
+                                                itemTotal += addItem(familyYears.People[0].EmployerPlan.AmountToSaveForNonMatched);
                                                 <span>@formatMoney(familyYears.People[0].EmployerPlan.AmountToSaveForNonMatched) in @familyYears.People[0].PossessiveID 401k</span><br/>
+                                            } else if (familyYears.People[0].EmployerBenefits.Employer401k.Offered == TriState.False) {
+                                                <div><del>@familyYears.People[0].PossessiveID @step.title</del></div>
                                             } else if (familyYears.People[0].EmployerPlan.AnnualSalary != 0) {
-                                                titleShowing = true;
-                                                <b>@step.title</b><br/>
+                                                <b>@familyYears.People[0].PossessiveID @step.title</b><br/>
                                             }
                                         }
-                                        @if (familyYears.PersonCount > 1 && familyYears.People[1].EmployerBenefits.Employer401k.Offered == TriState.True) {
-                                            if (familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched != null && familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched > 0) {
+                                        @if (familyYears.PersonCount > 1) {
+                                            if (familyYears.People[1].EmployerBenefits.Employer401k.Offered == TriState.True && 
+                                                familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched != null
+                                                && familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched > 0) {
+                                                runningTotal += addItem(familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched);
+                                                itemTotal += addItem(familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched);
                                                 <span>@formatMoney(familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched) in @familyYears.People[1].PossessiveID 401k</span><br/>
-                                            } else if (familyYears.People[1].EmployerPlan.AnnualSalary != 0 && !titleShowing) {
-                                                <b>@step.title</b>
+                                            } else if (familyYears.People[1].EmployerBenefits.Employer401k.Offered == TriState.False) {
+                                                <div><del>@familyYears.People[1].PossessiveID @step.title</del></div>
+                                            } else if (familyYears.People[1].EmployerPlan.AnnualSalary != 0) {
+                                                <b>@familyYears.People[1].PossessiveID @step.title</b>
                                             }
                                         }
                                     </td>
@@ -255,36 +319,56 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     break;
                                 case "mega-backdoor-roth": 
                                     <td>
-                                        @if (familyYears.PersonCount > 0 && familyYears.People[0].EmployerBenefits.Employer401k.Offered == TriState.True && familyYears.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
-                                            <span>@formatMoney(familyYears.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyYears.People[0].PossessiveID mega backdoor roth</span><br/>
-                                        } else if (familyYears.People[0].EmployerPlan.AnnualSalary != 0) {
-                                            <b>@familyYears.People[0].PossessiveID @step.title</b><br/>
+                                        @if (familyYears.PersonCount > 0) {
+                                            if (familyYears.People[0].EmployerBenefits.Employer401k.Offered == TriState.True && familyYears.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
+                                                runningTotal += addItem(familyYears.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit);
+                                                itemTotal += addItem(familyYears.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit);
+                                                <span>@formatMoney(familyYears.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyYears.People[0].PossessiveID mega backdoor roth</span><br/>
+                                            } else if (familyYears.People[0].EmployerBenefits.Employer401k.Offered == TriState.False) {
+                                                <div><del>@familyYears.People[0].PossessiveID @step.title</del></div>
+                                            } else if (familyYears.People[0].EmployerPlan.AnnualSalary != 0) {
+                                                <b>@familyYears.People[0].PossessiveID @step.title</b><br/>
+                                            }
                                         }
-                                        @if (familyYears.PersonCount > 1 && familyYears.People[1].EmployerBenefits.Employer401k.Offered == TriState.True && familyYears.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
-                                            <span>@formatMoney(familyYears.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyYears.People[1].PossessiveID mega backdoor roth</span><br/>
-                                        } else if (familyYears.People[1].EmployerPlan.AnnualSalary != 0) {
-                                            <b>@familyYears.People[1].PossessiveID @step.title</b><br/>
+                                        @if (familyYears.PersonCount > 1) {
+                                            if (familyYears.People[1].EmployerBenefits.Employer401k.Offered == TriState.True && familyYears.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
+                                                runningTotal += addItem(familyYears.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit);
+                                                itemTotal += addItem(familyYears.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit);
+                                                <span>@formatMoney(familyYears.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyYears.People[1].PossessiveID mega backdoor roth</span><br/>
+                                            } else if (familyYears.People[1].EmployerBenefits.Employer401k.Offered == TriState.False) {
+                                                <div><del>@familyYears.People[1].PossessiveID @step.title</del></div>
+                                            } else if (familyYears.People[1].EmployerPlan.AnnualSalary != 0) {
+                                                <b>@familyYears.People[1].PossessiveID @step.title</b><br/>
+                                            }
                                         }
                                     </td>
                                    break;
                                 case "medium-interest-debt":
                                     <td>
-                                        @if (familyYears.Debts.Count > 0) {
-                                                <span>@formatMoney(familyYears.MediumDebts>0?familyYears.MediumDebts:0) in Medium-Interest Debts</span><br/>
+                                        @if (familyYears.Debts.Count > 0 || familyYears.DebtsComplete) {
+                                            runningTotal += addItem(familyYears.MediumDebts);
+                                            itemTotal += addItem(familyYears.MediumDebts);
+                                            <span>@formatMoney(familyYears.MediumDebts>0?familyYears.MediumDebts:0) in Medium-Interest Debts</span><br/>
                                         } else {
                                             <b>@step.title</b>
                                         }
                                     </td>
                                     break;
-                                case "taxable-accounts": 
+                                case "taxable-accounts":
+                                    if (familyYears.PlannedSavings > runningTotal) {
+                                        itemTotal += addItem(familyYears.PlannedSavings-runningTotal);
+                                        runningTotal += addItem(itemTotal);
+                                    }
                                     <td>
-                                        "no limit" in Taxable
+                                        @formatMoney(itemTotal) in Taxable
                                     </td>
                                     break;                                                                   
                                 case "low-interest-debt":
                                     <td>
-                                        @if (familyYears.Debts.Count > 0) {
-                                                <span>@formatMoney(familyYears.LowDebts>0?familyYears.LowDebts:0) in Low-Interest Debts</span><br/>
+                                        @if (familyYears.Debts.Count > 0 || familyYears.DebtsComplete) {
+                                            runningTotal += addItem(familyYears.LowDebts);
+                                            itemTotal += addItem(familyYears.LowDebts);
+                                            <span>@formatMoney(familyYears.LowDebts>0?familyYears.LowDebts:0) in Low-Interest Debts</span><br/>
                                         } else {
                                             <b>@step.title</b>
                                         }
@@ -307,8 +391,8 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
         }
         else
         {
-            @foreach (var step in steps) {
-                @if (step.step == stepPath) {
+            foreach (var step in steps) {
+                if (step.step == stepPath) {
                     var firstStepNum = steps[0].number;
                     var lastStepNum = steps[steps.Length-1].number;
                     var prevStep = step.number > firstStepNum ? steps[step.number - 1] : null;
@@ -331,7 +415,6 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                     <h4>@((MarkupString)markupize(step.priority))</h4>
 
                     <p class="article"><b>Summary:</b> @((MarkupString)markupize(step.summary))</p>
-
                         @switch (step.number) {
                             case 0:
                                 @for (int i = 0; i < familyYears.PersonCount; i++) {
@@ -341,62 +424,66 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     var haveHDHPid = "eligible-" + i;
                                     <p><b>Person @(i+1):</b> </p>
 
-                                        <label>Employer:</label> <input type=text @bind-Value=person.EmployerBenefits.Company @bind-Value:event=oninput /><br/>
-                                        @if (person.EmployerBenefits.Downloaded) { 
-                                            <span>Found @familyYears.People[personBuffer].EmployerBenefits.Company benefit details</span><br/><br/>
-                                        } else {
-                                            <span>Lookup and Enter @familyYears.People[personBuffer].EmployerBenefits.Company benefit details:</span><br/><br/>
-                                            <p>Workplace retirement savings:</p>
-                                            <EditForm Model="person" style=margin-left:25px>
-                                                <label style="display:inline" for=@eligibleId>Offers workplace retirement savings</label> <InputSelect @bind-Value=person.EmployerBenefits.Employer401k.Offered id=@eligibleId>
-                                                @foreach (var option in Enum.GetValues<TriState>()) {
-                                                    <option value="@option">@option</option>
-                                                }
-                                                </InputSelect><br/>
-                                                    <br/>
-                                                <fieldset disabled=@person.EmployerPlan.NotEligible style='margin-left:20px'>
-                                                    <label>Matching Levels:</label><br/>
-                                                    @for (var m = 0; m < person.EmployerBenefits.Employer401k.MatchRules.Count; m++) 
-                                                    {
-                                                        var matchRuleBuffer = m;
-                                                        <div>
-                                                            <button @onclick='@(e=>deleteMatchRule(e,personBuffer,matchRuleBuffer))'>❌</button>&nbsp;
-                                                            <label>Match:</label> <input type=text class=percent @bind-Value=person.EmployerBenefits.Employer401k.MatchRules[matchRuleBuffer].MatchPercentage @bind-Value:event=oninput />%
-                                                            <label margin-left:30px>for next</label> <input style="width:30px" type=text class=percent @bind-Value=person.EmployerBenefits.Employer401k.MatchRules[matchRuleBuffer].ForNextPercent @bind-Value:event=oninput/>%
-                                                        </div>
-                                                    }
-                                                    <br/>
-                                                    <button @onclick='@(e=>addMatchRule(e,personBuffer))'>➕</button><br/><br/><br/>
-                                                    <label>Max Match:</label> $<input type=text class=dollar @bind-Value=person.EmployerBenefits.Employer401k.MatchLimit @bind-Value:event=oninput/><br/><br/>
-                                                    <label>Post Tax "Mega Backdoor Roth" Contribution Allowed:</label> <span>$</span><input type=text class=dollar @bind-Value=person.EmployerBenefits.MegaBackdoorRoth.ContributionLimit @bind-Value:event=oninput/><br/>
-                                                </fieldset>
-                                            </EditForm><br/>
-                                            <hr/>
-                                            <p>HSA:</p>
-                                            <EditForm Model="person" style=margin-left:25px>
-                                                <label style="display:inline" for=@haveHDHPid>Offers high deductible health plan</label> <InputSelect @bind-Value=person.EmployerBenefits.HSA.HighDeductibleHealthPlanAvailable id=@haveHDHPid>
-                                                @foreach (var option in Enum.GetValues<TriState>()) {
-                                                    <option value="@option">@option</option>
-                                                }
-                                                </InputSelect><br/>                                                
-                                                <fieldset disabled=@(person.EmployerBenefits.HSA.HighDeductibleHealthPlanAvailable!=TriState.True) style='margin-left:20px'>
-                                                    <label>Employer Contribution Levels:</label>
-                                                    @foreach(var employerContributionLevel in person.EmployerBenefits.HSA.EmployerContributionLevels)
-                                                    {
-                                                        var contributionLevelBuffer = contributionIndex;
-                                                        contributionIndex++;
-                                                        <div>
-                                                            <button @onclick='@(e=>deleteContributionLevel(e,personBuffer,contributionLevelBuffer))'>❌</button>&nbsp;
-                                                            <label>Description:</label> <input type=text class=dollar @bind-Value=employerContributionLevel.Description @bind-Value:event=oninput/>&nbsp;
-                                                            <label>Amount:</label> <input type=text class=dollar @bind-Value=employerContributionLevel.Amount @bind-Value:event=oninput/><br/>
-                                                        </div>
-                                                    }
-                                                    <br/>
-                                                    <button @onclick='@(e=>addContributionLevel(e,personBuffer))'>➕</button><br/><br/>
-                                                </fieldset>
-                                                <br/>
-                                            </EditForm>
+                                    <label>Employer:</label> <input type=text @bind-Value=person.EmployerBenefits.Company @bind-Value:event=oninput /><br/>
+                                    <br/>
+                                    @if (person.EmployerBenefits.Downloaded) { 
+                                        <span>Found @familyYears.People[personBuffer].EmployerBenefits.Company benefit details</span><br/><br/>
+                                    } else {
+                                        <span>Lookup and Enter @familyYears.People[personBuffer].EmployerBenefits.Company benefit details:</span><br/><br/>
+                                    }
+
+                                    <p>Workplace retirement savings:</p>
+                                    <EditForm Model="person" style=margin-left:25px>
+                                        <label style="display:inline" for=@eligibleId>Offers workplace retirement savings</label> <InputSelect @bind-Value=person.EmployerBenefits.Employer401k.Offered id=@eligibleId>
+                                        @foreach (var option in Enum.GetValues<TriState>()) {
+                                            <option value="@option">@option</option>
                                         }
+                                        </InputSelect><br/>
+                                            <br/>
+                                        <fieldset disabled=@person.EmployerPlan.NotEligible style='margin-left:20px'>
+                                            <label>Matching Levels:</label><br/>
+                                            @for (var m = 0; m < person.EmployerBenefits.Employer401k.MatchRules.Count; m++) 
+                                            {
+                                                var matchRuleBuffer = m;
+                                                <div>
+                                                    <button @onclick='@(e=>deleteMatchRule(e,personBuffer,matchRuleBuffer))'>❌</button>&nbsp;
+                                                    <label>Match:</label> <input type=text class=percent @bind-Value=person.EmployerBenefits.Employer401k.MatchRules[matchRuleBuffer].MatchPercentage @bind-Value:event=oninput />%
+                                                    <label margin-left:30px>for next</label> <input style="width:30px" type=text class=percent @bind-Value=person.EmployerBenefits.Employer401k.MatchRules[matchRuleBuffer].ForNextPercent @bind-Value:event=oninput/>%
+                                                </div>
+                                            }
+
+                                            <br/>
+                                            <button @onclick='@(e=>addMatchRule(e,personBuffer))'>➕</button><br/><br/><br/>
+                                            <label>Max Match:</label> $<input type=text class=dollar @bind-Value=person.EmployerBenefits.Employer401k.MatchLimit @bind-Value:event=oninput/><br/><br/>
+                                            <label>Post Tax "Mega Backdoor Roth" Contribution Allowed:</label> <span>$</span><input type=text class=dollar @bind-Value=person.EmployerBenefits.MegaBackdoorRoth.ContributionLimit @bind-Value:event=oninput/><br/>
+                                        </fieldset>
+                                    </EditForm><br/>
+                                    <hr/>
+                                    <p>HSA:</p>
+                                    <EditForm Model="person" style=margin-left:25px>
+                                        <label style="display:inline" for=@haveHDHPid>Offers high deductible health plan</label> <InputSelect @bind-Value=person.EmployerBenefits.HSA.HighDeductibleHealthPlanAvailable id=@haveHDHPid>
+                                        @foreach (var option in Enum.GetValues<TriState>()) {
+                                            <option value="@option">@option</option>
+                                        }
+                                        </InputSelect><br/>                                                
+                                        <fieldset disabled=@(person.EmployerBenefits.HSA.HighDeductibleHealthPlanAvailable!=TriState.True) style='margin-left:20px'>
+                                            <label>Employer Contribution Levels:</label>
+                                            @foreach(var employerContributionLevel in person.EmployerBenefits.HSA.EmployerContributionLevels)
+                                            {
+                                                var contributionLevelBuffer = contributionIndex;
+                                                contributionIndex++;
+                                                <div>
+                                                    <button @onclick='@(e=>deleteContributionLevel(e,personBuffer,contributionLevelBuffer))'>❌</button>&nbsp;
+                                                    <label>Description:</label> <input type=text class=dollar @bind-Value=employerContributionLevel.Description @bind-Value:event=oninput/>&nbsp;
+                                                    <label>Amount:</label> <input type=text class=dollar @bind-Value=employerContributionLevel.Amount @bind-Value:event=oninput/><br/>
+                                                </div>
+                                            }
+
+                                            <br/>
+                                            <button @onclick='@(e=>addContributionLevel(e,personBuffer))'>➕</button><br/><br/>
+                                        </fieldset>
+                                        <br/>
+                                    </EditForm>
                                     <br/>
                                     @code{
                                         private async void addContributionLevel(MouseEventArgs e, int personIndex)
@@ -676,29 +763,39 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                 <p><b>Worksheet:</b> </p>
                                 <div>
                                     <i>list of debts (all interest rates):</i><br/><br/>
+
+                                    @if (familyYears.DebtFree == TriState.ChoiceNeeded || familyYears.DebtFree == TriState.True) {
+                                        <label style="display:inline" for=debtFree>Debt free:</label> <InputSelect @bind-Value=familyYears.DebtFree id=debtFree>
+                                        @foreach (var option in Enum.GetValues<TriState>()) {
+                                            <option value="@option">@option</option>
+                                        }
+                                        </InputSelect><br/>
+                                        <br/>
+                                    }
+
                                     <EditForm Model="familyYears">
                                         <table>
                                             <thead>
+                                            <th></th>
                                             <th style="width:150px"><label>name</label></th>
                                             <th style="width:150px"><label>total $</label></th>
                                             <th style="width:100px"><label>interest %</label></th>
                                             <th>rate</th>
-                                            <th><label></label></th>
                                             </thead>
                                             @for (var i=0;i<familyYears.Debts.Count;i++) {
                                                 var debt = familyYears.Debts[i];
                                                 int debtBuffer = i;
                                                 <tr>
+                                                <td><button @onclick=@(e=>RemoveDebt(e, debtBuffer))>❌</button></td>
                                                 <td><input style=width:100% type=text class=dollar @bind-Value=debt.Name @bind-Value:event=oninput placeholder='description'/></td>
                                                 <td><input style=width:100% type=text class=dollar @bind-Value=debt.Total @bind-Value:event=oninput placeholder='amount owed'/></td>
                                                 <td><input style=width:100% type=text class=dollar @bind-Value=debt.Rate @bind-Value:event=oninput placeholder='rate'/></td>
                                                 <td><span>@debt.Category</span></td>
-                                                <td><button @onclick=@(e=>RemoveDebt(e, debtBuffer))>❌ Debt</button></td>
                                                 </tr>
                                             }
                                         </table>
                                         <br/>
-                                        <button @onclick=addDebt>➕ Debt</button>
+                                        <button @onclick=addDebt>➕</button>
 
                                         <br/><br/>
                                         <label>Amount to Pay-Off (@step.title):</label> <span>$</span>
@@ -722,10 +819,14 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                 @code{
                                     void RemoveDebt(MouseEventArgs e, int debtIndex) {
                                         familyYears.Debts.RemoveAt(debtIndex);
+                                        if (familyYears.Debts.Count == 0) {
+                                            familyYears.DebtFree = TriState.ChoiceNeeded;
+                                        }
                                     }
                                     void addDebt()
                                     {
                                         familyYears?.Debts.Add(new Debt());
+                                        familyYears.DebtFree = TriState.False;
                                     }
                                 }
                             
@@ -748,6 +849,9 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
         text,
     }
 
+    public int addItem(int? itemAmount) {
+        return itemAmount ?? 0;
+    }
     public string formatMoney(int? amount) 
     {
         return String.Format("${0:#,0.##}", amount);
@@ -761,6 +865,20 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
         return String.Format("{0:#,0.#}%", amount);
     }
 
+    public int? GetRecommdedIRAAmount(Person person) {
+        switch(person.IRATypeRecommendation) {
+            case IRAType.DeductibleIRAThenBackdoorRoth:
+            case IRAType.DeductibleIRA:
+                return person.IRA.AmountToSave;
+            case IRAType.Roth:
+                return person.RothIRA.AmountToSave;
+            case IRAType.NondeductibleIRAThenBackdoorRoth:
+            case IRAType.NondeductibleIRA:
+                return person.IRA.AmountToSave;
+            default:
+                return null;
+        }
+    }
     public string GetRecommendedIRAMarkup(Person person) {
         switch(person.IRATypeRecommendation) {
             case IRAType.DeductibleIRAThenBackdoorRoth:
@@ -867,6 +985,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
     public string? stepPath { get; set; }
 
     private Step[]? steps;
+    private bool pastTotal;
     private string[] lastEmployer = { null, null };
     private const string folderName = "/saving/";
     private int matchRuleIndex;
