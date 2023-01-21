@@ -393,10 +393,10 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
         {
             foreach (var step in steps) {
                 if (step.step == stepPath) {
-                    var firstStepNum = steps[0].number;
-                    var lastStepNum = steps[steps.Length-1].number;
-                    var prevStep = step.number > firstStepNum ? steps[step.number - 1] : null;
-                    var nextStep = step.number < lastStepNum ? steps[step.number + 1] : null;
+                    var firstStepIndex = 0;
+                    var lastStepIndex = steps.Length-1;
+                    var prevStep = step.number - 1 >= firstStepIndex ? steps[step.number - 1] : null;
+                    var nextStep = step.number + 1 <= lastStepIndex ? steps[step.number + 1] : null;
                     string prevPage = folderName + prevStep?.step;
                     string nextPage = folderName + nextStep?.step;
 

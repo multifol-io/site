@@ -200,60 +200,78 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     </td>
                                     break;
                                 case "contributions":
+                                    runningTotal = 0;
+                                    pastTotal = false;
+
                                     <td>
                                         <span>
                                             @((MarkupString)boldUnderline("Contributions:"))
                                         </span><br/>
                                         @if (familyYears.PlannedSavings > 0) {
-                                            <span>Planned contributions: @formatMoney(familyYears.PlannedSavings)</span><br/><br/>
+                                            <span>Planned savings: @formatMoney(familyYears.PlannedSavings)</span><br/><br/>
                                         }
 
                                         <span>Prioritized Investments:</span><br/>
 
                                         @if (familyYears.EmergencyFund.AmountToSave > 0) {
                                             <span>@formatMoney(familyYears.EmergencyFund.AmountToSave) in Emergency Fund</span><br/>
+                                            @((MarkupString)checkTotal(familyYears.EmergencyFund.AmountToSave))
                                         }
                                         @if (familyYears.PersonCount > 0 && familyYears.People[0].EmployerPlan.AmountToSaveForMatch > 0) {
                                             <span>@formatMoney(familyYears.People[0].EmployerPlan.AmountToSaveForMatch) in @familyYears.People[0].PossessiveID 401k (Match: @formatMoney(familyYears.People[0].EmployerPlan.MatchAmount))</span><br/>
+                                            @((MarkupString)checkTotal(familyYears.People[0].EmployerPlan.AmountToSaveForMatch))
                                         }
                                         @if (familyYears.PersonCount > 1 && familyYears.People[1].EmployerPlan.AmountToSaveForMatch > 0) {
                                             <span>@formatMoney(familyYears.People[1].EmployerPlan.AmountToSaveForMatch) in @familyYears.People[1].PossessiveID 401k (Match: @formatMoney(familyYears.People[1].EmployerPlan.MatchAmount))</span><br/>
+                                            @((MarkupString)checkTotal(familyYears.People[1].EmployerPlan.AmountToSaveForMatch))
                                         }
                                         @if (familyYears.HighDebts > 0) {
                                             <span>@familyYears.HighDebts in High Debts</span><br/>
+                                            @((MarkupString)checkTotal(familyYears.HighDebts))
                                         }
                                         @if (familyYears.PersonCount > 0 && familyYears.People[0].HealthSavingsAccount.AmountToSave > 0) {
                                             <span>@formatMoney(familyYears.People[0].HealthSavingsAccount.AmountToSave) in @familyYears.People[0].PossessiveID HSA (Employer: @formatMoney(familyYears.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
+                                            @((MarkupString)checkTotal(familyYears.People[0].HealthSavingsAccount.AmountToSave))
                                         }
                                         @if (familyYears.PersonCount > 1 && familyYears.People[1].HealthSavingsAccount.AmountToSave > 0) {
                                             <span>@formatMoney(familyYears.People[1].HealthSavingsAccount.AmountToSave) in @familyYears.People[1].PossessiveID HSA (Employer: @formatMoney(familyYears.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
+                                            @((MarkupString)checkTotal(familyYears.People[1].HealthSavingsAccount.AmountToSave))
                                         }
                                         @if (familyYears.AdjustedGrossIncome != null) {
                                             if (familyYears.PersonCount > 0) {
                                                 <span>@((MarkupString)GetRecommendedIRAMarkup(familyYears.People[0]))</span><br/>
+                                                @((MarkupString)checkTotal(GetRecommdedIRAAmount(familyYears.People[0])))
                                             }
                                             if(familyYears.PersonCount > 1) {
                                                 <span>@((MarkupString)GetRecommendedIRAMarkup(familyYears.People[1]))</span><br/>
+                                                @((MarkupString)checkTotal(GetRecommdedIRAAmount(familyYears.People[1])))
                                             }
                                         }
                                         @if (familyYears.PersonCount > 0 && familyYears.People[0].EmployerPlan.AmountToSaveForNonMatched > 0) {
                                             <span>@formatMoney(familyYears.People[0].EmployerPlan.AmountToSaveForNonMatched) in @familyYears.People[0].PossessiveID 401k</span><br/>
+                                            @((MarkupString)checkTotal(familyYears.People[0].EmployerPlan.AmountToSaveForNonMatched))
                                         }
                                         @if (familyYears.PersonCount > 1 && familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched > 0) {
                                             <span>@formatMoney(familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched) in @familyYears.People[1].PossessiveID 401k</span><br/>
+                                            @((MarkupString)checkTotal(familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched))
                                         }
                                         @if (familyYears.PersonCount > 0 && familyYears.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
                                             <span>@formatMoney(familyYears.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyYears.People[0].PossessiveID mega backdoor roth</span><br/>
+                                            @((MarkupString)checkTotal(familyYears.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
                                         }
                                         @if (familyYears.PersonCount > 1 && familyYears.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
                                             <span>@formatMoney(familyYears.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyYears.People[1].PossessiveID mega backdoor roth</span><br/>
+                                            @((MarkupString)checkTotal(familyYears.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
                                         }
                                         @if (familyYears.MediumDebts > 0) {
                                             <span>@formatMoney(familyYears.MediumDebts) in Medium Debts</span><br/>
+                                            @((MarkupString)checkTotal(familyYears.MediumDebts))
                                         }
-                                        $??? in Taxable<br/>
+                                        @formatMoney(familyYears.PlannedSavings-runningTotal) in Taxable<br/>
+                                        @((MarkupString)checkTotal(familyYears.PlannedSavings-runningTotal))
                                         @if (familyYears.LowDebts > 0) {
                                             <span>@formatMoney(familyYears.LowDebts) in Low Debts</span><br/>
+                                            @((MarkupString)checkTotal(familyYears.LowDebts))
                                         }
                                         <br/>
                                     </td>
@@ -372,10 +390,10 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
         {
             @foreach (var step in steps) {
                 @if (step.step == stepPath) {
-                    var firstStepNum = steps[0].number;
-                    var lastStepNum = steps[steps.Length-1].number;
-                    var prevStep = step.number > firstStepNum ? steps[step.number - 1] : null;
-                    var nextStep = step.number < lastStepNum ? steps[step.number + 1] : null;
+                    var firstStepIndex = 0;
+                    var lastStepIndex = steps.Length-1;
+                    var prevStep = step.number - 2 >= firstStepIndex ? steps[step.number - 2] : null;
+                    var nextStep = step.number <= lastStepIndex ? steps[step.number] : null;
                     string prevPage = folderName + prevStep?.step;
                     string nextPage = folderName + nextStep?.step;
 
@@ -787,6 +805,36 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
         normal = 0,
         href,
         text,
+    }
+    public bool pastTotal = false;
+    public int runningTotal = 0;
+
+    public string checkTotal(int? itemTotal) {
+        runningTotal += itemTotal ?? 0;
+        if (!pastTotal) {
+            pastTotal = familyYears.PlannedSavings <= runningTotal;
+
+            if (pastTotal) {
+                return "<div><hr/><div>Planned savings " + (familyYears.PlannedSavings==runningTotal?"met":"exceeded") + " after " + formatMoney(itemTotal+(familyYears.PlannedSavings-runningTotal)) + " towards last step</div><hr/></div>";
+            }
+        }
+
+        return null;
+    }
+
+    public int? GetRecommdedIRAAmount(Person person) {
+        switch(person.IRATypeRecommendation) {
+            case IRAType.DeductibleIRAThenBackdoorRoth:
+            case IRAType.DeductibleIRA:
+                return person.IRA.AmountToSave;
+            case IRAType.Roth:
+                return person.RothIRA.AmountToSave;
+            case IRAType.NondeductibleIRAThenBackdoorRoth:
+            case IRAType.NondeductibleIRA:
+                return person.IRA.AmountToSave;
+            default:
+                return null;
+        }
     }
 
     public string GetRecommendedIRAMarkup(Person person) {
