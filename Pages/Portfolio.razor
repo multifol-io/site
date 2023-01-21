@@ -174,7 +174,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                              @foreach (var account in familyYears.Accounts) {
                                                 @if (account.AvailableFunds.Count > 0) {
                                                     <br/>
-                                                        <b>Funds available in @account.FullName</b><br/>
+                                                        @((MarkupString)bold("Funds available in " + account.FullName))<br/>
                                                     <br/>
                                                     @foreach (var investment in account.AvailableFunds) {
                                                         <span>&nbsp;&nbsp;&nbsp;&nbsp;@investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span><br/>
