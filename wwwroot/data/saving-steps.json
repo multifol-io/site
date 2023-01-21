@@ -1,5 +1,14 @@
 [
     {
+        "step": "benefit-entry",
+        "title": "Benefit Entry",
+        "number": 0,
+        "summary": "Employer(s) Benefit Details",
+        "priority": "",
+        "returns": "N/A",
+        "description": ""
+    },
+    {
         "step": "emergency-fund",
         "title": "Emergency Fund",
         "number": 1,
