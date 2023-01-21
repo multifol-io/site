@@ -64,7 +64,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
             <h3 style="max-width:350px">
                 Portfolio Review
                 <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-                <span style=text-align:center>0</span>
+                <span style=text-align:center>Top</span>
                 <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                 <br/>
             </h3>
@@ -372,8 +372,10 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
         {
             @foreach (var step in steps) {
                 @if (step.step == stepPath) {
-                    var prevStep = step.number >= 1 + 1 ? steps[step.number - 2] : null;
-                    var nextStep = step.number <= steps.Length - 1 ? steps[step.number] : null;
+                    var firstStepNum = steps[0].number;
+                    var lastStepNum = steps[steps.Length-1].number;
+                    var prevStep = step.number > firstStepNum ? steps[step.number - 1] : null;
+                    var nextStep = step.number < lastStepNum ? steps[step.number + 1] : null;
                     string prevPage = folderName + prevStep?.step;
                     string nextPage = folderName + nextStep?.step;
 

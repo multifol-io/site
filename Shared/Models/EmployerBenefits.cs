@@ -71,6 +71,7 @@ namespace Employer {
 
         [JsonIgnore]
         public bool Downloaded { get; set; }
+        [JsonIgnore]
         public bool Complete {
             get {
                 return Employer401k.Offered != TriState.ChoiceNeeded && HSA.HighDeductibleHealthPlanAvailable != TriState.ChoiceNeeded;
@@ -140,7 +141,6 @@ namespace Employer {
             }
             catch (Exception e)
             {
-                Console.WriteLine("message: " + e.Message);
             }
         }
     }

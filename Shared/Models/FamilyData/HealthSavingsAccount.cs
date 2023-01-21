@@ -35,7 +35,6 @@ public class HealthSavingsAccount {
             _EmployerContributionString = value;
             if (_EmployerContributionString != null) {
                 EmployerContribution = int.Parse(_EmployerContributionString);
-                Console.WriteLine(EmployerContribution);
             }
         }
      }
