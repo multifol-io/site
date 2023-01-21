@@ -26,7 +26,7 @@ namespace Employer {
 
     public class HSA
     {
-        public bool HighDeductibleHealthPlanAvailable { get; set; }
+        public TriState HighDeductibleHealthPlanAvailable { get; set; }
         private List<EmployerContributionLevel> _EmployerContributionLevels; 
         public List<EmployerContributionLevel> EmployerContributionLevels { 
             get {
@@ -71,6 +71,11 @@ namespace Employer {
 
         [JsonIgnore]
         public bool Downloaded { get; set; }
+        public bool Complete {
+            get {
+                return Employer401k.Offered != TriState.ChoiceNeeded && HSA.HighDeductibleHealthPlanAvailable != TriState.ChoiceNeeded;
+            }
+        }
         public Employer401k Employer401k { get; set; } = new();
         public HSA HSA { get; set; } = new();
         public MegaBackdoorRoth MegaBackdoorRoth { get; set; } = new();
@@ -110,7 +115,15 @@ namespace Employer {
                     "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/employers/" 
                     + lEmployer + "/" + lEmployer + ".retirement." + year + ".json");
                 
-                var employerData = JsonSerializer.Deserialize<Employer.EmployerBenefits>(employerStream);
+                var options = new JsonSerializerOptions()
+                {
+                    Converters =
+                    {
+                        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                    }
+                };
+                                   
+                var employerData = JsonSerializer.Deserialize<Employer.EmployerBenefits>(employerStream, options);
 
                 if (employerData != null)
                 {

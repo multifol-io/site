@@ -43,7 +43,7 @@ public class RothIRA {
                 return ApplyRange(rothIraVariables.ContributionPhaseOutRange.MarriedFilingSeparately.Start,
                                   rothIraVariables.ContributionPhaseOutRange.MarriedFilingSeparately.End,
                                   person.FamilyYears.AdjustedGrossIncome, MaximumContributionByAge);
-            case TaxFilingStatus.None:
+            case TaxFilingStatus.ChoiceNeeded:
             default:
                 return null;
         }

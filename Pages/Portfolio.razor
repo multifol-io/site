@@ -125,7 +125,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     <td>
                                         <span>
                                             @((MarkupString)bold("Tax Filing Status:"))
-                                            @if (familyYears.TaxFilingStatus != TaxFilingStatus.None) { <span>&nbsp;@familyYears.TaxFilingStatus</span> }
+                                            @if (familyYears.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@familyYears.TaxFilingStatus</span> }
                                             <br/><br/>
                                             @((MarkupString)bold("Tax Rate:"))
                                             @if (familyYears.FederalMarginalTaxBracket != null) { <span>&nbsp;@familyYears.FederalMarginalTaxBracket Federal, @familyYears.StateMarginalTaxBracket% State</span> }
@@ -324,7 +324,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                             var options = new JsonSerializerOptions() 
                             {
                                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
-                                WriteIndented = true
+                                WriteIndented = true,
+                                Converters =
+                                    {
+                                        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                                    }
                             };
                             await DownloadFileFromStream(familyYears.People[index].EmployerBenefits, options, "employer-benefits-"+index+".json");
                         }
@@ -461,7 +465,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                 <EditForm Model="familyYears" style=margin-left:25px>
                                     <label>Tax Filing Status:</label>
                                     <select @bind=familyYears.TaxFilingStatus>
-                                        <option value=None>choose...</option>
+                                        <option value="ChoiceNeeded">ChoiceNeeded</option>
                                         <option>Single</option>
                                         <option value=MarriedFilingJointly>Married filing jointly</option>
                                         <option value=MarriedFilingSeperately>Married filing seperately</option>
@@ -510,7 +514,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
 
                                     <br/><label>State of Residence:</label>
                                     <select @bind=familyYears.StateOfResidence>
-                                        <option value="None">Choose...</option><option value="AL">Alabama (AL)</option><option value="AK">Alaska (AK)</option><option value="AS">American Samoa (AS)</option><option value="AZ">Arizona (AZ)</option><option value="AR">Arkansas (AR)</option><option value="CA">California (CA)</option><option value="CO">Colorado (CO)</option><option value="CT">Connecticut (CT)</option><option value="DE">Delaware (DE)</option><option value="DC">District of Columbia (DC)</option><option value="FL">Florida (FL)</option><option value="GA">Georgia (GA)</option><option value="GU">Guam (GU)</option><option value="HI">Hawaii (HI)</option><option value="ID">Idaho (ID)</option><option value="IL">Illinois (IL)</option><option value="IN">Indiana (IN)</option><option value="IA">Iowa (IA)</option><option value="KS">Kansas (KS)</option><option value="KY">Kentucky (KY)</option><option value="LA">Louisiana (LA)</option><option value="ME">Maine (ME)</option><option value="MD">Maryland (MD)</option><option value="MA">Massachusetts (MA)</option><option value="MI">Michigan (MI)</option><option value="MN">Minnesota (MN)</option><option value="MS">Mississippi (MS)</option><option value="MO">Missouri (MO)</option><option value="MT">Montana (MT)</option><option value="NE">Nebraska (NE)</option><option value="NV">Nevada (NV)</option><option value="NH">New Hampshire (NH)</option><option value="NJ">New Jersey (NJ)</option><option value="NM">New Mexico (NM)</option><option value="NY">New York (NY)</option><option value="NC">North Carolina (NC)</option><option value="ND">North Dakota (ND)</option><option value="CM">Northern Mariana Islands (CM)</option><option value="OH">Ohio (OH)</option><option value="OK">Oklahoma (OK)</option><option value="OR">Oregon (OR)</option><option value="PA">Pennsylvania (PA)</option><option value="PR">Puerto Rico (PR)</option><option value="RI">Rhode Island (RI)</option><option value="SC">South Carolina (SC)</option><option value="SD">South Dakota (SD)</option><option value="TN">Tennessee (TN)</option><option value="TX">Texas (TX)</option><option value="VI">U.S. Virgin Islands (VI)</option><option value="UT">Utah (UT)</option><option value="VT">Vermont (VT)</option><option value="VA">Virginia (VA)</option><option value="WA">Washington (WA)</option><option value="WV">West Virginia (WV)</option><option value="WI">Wisconsin (WI)</option><option value="WY">Wyoming (WY)</option>
+                                        <option value="ChoiceNeeded">ChoiceNeeded...</option><option value="AL">Alabama (AL)</option><option value="AK">Alaska (AK)</option><option value="AS">American Samoa (AS)</option><option value="AZ">Arizona (AZ)</option><option value="AR">Arkansas (AR)</option><option value="CA">California (CA)</option><option value="CO">Colorado (CO)</option><option value="CT">Connecticut (CT)</option><option value="DE">Delaware (DE)</option><option value="DC">District of Columbia (DC)</option><option value="FL">Florida (FL)</option><option value="GA">Georgia (GA)</option><option value="GU">Guam (GU)</option><option value="HI">Hawaii (HI)</option><option value="ID">Idaho (ID)</option><option value="IL">Illinois (IL)</option><option value="IN">Indiana (IN)</option><option value="IA">Iowa (IA)</option><option value="KS">Kansas (KS)</option><option value="KY">Kentucky (KY)</option><option value="LA">Louisiana (LA)</option><option value="ME">Maine (ME)</option><option value="MD">Maryland (MD)</option><option value="MA">Massachusetts (MA)</option><option value="MI">Michigan (MI)</option><option value="MN">Minnesota (MN)</option><option value="MS">Mississippi (MS)</option><option value="MO">Missouri (MO)</option><option value="MT">Montana (MT)</option><option value="NE">Nebraska (NE)</option><option value="NV">Nevada (NV)</option><option value="NH">New Hampshire (NH)</option><option value="NJ">New Jersey (NJ)</option><option value="NM">New Mexico (NM)</option><option value="NY">New York (NY)</option><option value="NC">North Carolina (NC)</option><option value="ND">North Dakota (ND)</option><option value="CM">Northern Mariana Islands (CM)</option><option value="OH">Ohio (OH)</option><option value="OK">Oklahoma (OK)</option><option value="OR">Oregon (OR)</option><option value="PA">Pennsylvania (PA)</option><option value="PR">Puerto Rico (PR)</option><option value="RI">Rhode Island (RI)</option><option value="SC">South Carolina (SC)</option><option value="SD">South Dakota (SD)</option><option value="TN">Tennessee (TN)</option><option value="TX">Texas (TX)</option><option value="VI">U.S. Virgin Islands (VI)</option><option value="UT">Utah (UT)</option><option value="VT">Vermont (VT)</option><option value="VA">Virginia (VA)</option><option value="WA">Washington (WA)</option><option value="WV">West Virginia (WV)</option><option value="WI">Wisconsin (WI)</option><option value="WY">Wyoming (WY)</option>
                                     </select>
                                     <br/><br/>
 
@@ -523,7 +527,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                 <p ><b>Prerequisities:</b></p>
                                 <label>Tax Filing Status:</label>
                                 <select @bind=familyYears.TaxFilingStatus>
-                                    <option value=None>choose...</option>
+                                    <option value="ChoiceNeeded">ChoiceNeeded</option>
                                     <option>Single</option>
                                     <option value=MarriedFilingJointly>Married filing jointly</option>
                                     <option value=MarriedFilingSeperately>Married filing seperately</option>
@@ -541,7 +545,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                         <label>Age:</label> <input style=width:60px type=text @bind-Value=person.Age @bind-Value:event=oninput /><br/>
 
                                         <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
-                                            <option value=None>choose...</option>
+                                            <option value="ChoiceNeeded">ChoiceNeeded</option>
                                             <option>person @personIndex</option>
                                             <option>him</option>
                                             <option>her</option>
@@ -632,7 +636,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
 
                                 <label style=margin-left:25px>Tax Filing Status:</label>
                                 <select @bind=familyYears.TaxFilingStatus>
-                                    <option value=None>choose...</option>
+                                    <option value="ChoiceNeeded">ChoiceNeeded</option>
                                     <option>Single</option>
                                     <option value=MarriedFilingJointly>Married filing jointly</option>
                                     <option value=MarriedFilingSeperately>Married filing seperately</option>

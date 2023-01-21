@@ -72,7 +72,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
 
                         <label>Tax Filing Status:</label>
                         <select @bind=familyYears.TaxFilingStatus>
-                            <option value=None>choose...</option>
+                            <option value="ChoiceNeeded">ChoiceNeeded</option>
                             <option>Single</option>
                             <option value=MarriedFilingJointly>Married filing jointly</option>
                             <option value=MarriedFilingSeperately>Married filing seperately</option>
@@ -85,7 +85,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                             <div style=margin-left:25px>
                                 <label>Age:</label> <input style=width:60px type=text @bind-Value=person.Age @bind-Value:event=oninput /><br/>
                                 <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
-                                    <option value=None>choose...</option>
+                                    <option value="ChoiceNeeded">ChoiceNeeded</option>
                                     <option>person @(i+1)</option>
                                     <option>him</option>
                                     <option>her</option>
@@ -104,7 +104,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                         case 0:
                             break;
                         case 1:
-                            <span>@familyYears.People[0].PossessiveID&nbsp;</span>
+                            <span>@familyYears.People[0].PossessiveID</span>
                             break;
                         case 2:
                             <span>@familyYears.People[0].PossessiveID &amp; @familyYears.People[1].PossessiveID</span>
@@ -136,13 +136,21 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                             @switch (step.step) {
                                 case "benefit-entry":
                                     <td>
-                                        @if (familyYears.PersonCount > 0 && familyYears.People[0].EmployerBenefits.Downloaded && familyYears.People[0].EmployerBenefits.Company != null) {
-                                            <span>Found @familyYears.People[0].EmployerBenefits.Company benefit details</span><br/>
+                                        @if (familyYears.PersonCount > 0 && familyYears.People[0].EmployerBenefits.Complete && familyYears.People[0].EmployerBenefits.Company != null) {
+                                            if (familyYears.People[0].EmployerBenefits.Downloaded) {
+                                                <span>Found @familyYears.People[0].EmployerBenefits.Company benefit details</span><br/>
+                                            } else {
+                                                <span>Entered @familyYears.People[0].EmployerBenefits.Company benefit details</span><br/>
+                                            }
                                         } else if (familyYears.People[0].EmployerPlan.AnnualSalary != 0) {
                                             <b>@step.title</b>@if(familyYears.People[0].EmployerBenefits.Company != null) { <span>: @familyYears.People[0].EmployerBenefits.Company</span><br/>}
                                         }
-                                        @if (familyYears.PersonCount > 1 && familyYears.People[1].EmployerBenefits.Downloaded && familyYears.People[1].EmployerBenefits.Company != null) {
-                                            <span>Found @familyYears.People[1].EmployerBenefits.Company benefit details</span><br/>
+                                        @if (familyYears.PersonCount > 1 && familyYears.People[1].EmployerBenefits.Complete && familyYears.People[1].EmployerBenefits.Company != null) {
+                                            if (familyYears.People[1].EmployerBenefits.Downloaded) {
+                                                <span>Found @familyYears.People[1].EmployerBenefits.Company benefit details</span><br/>
+                                            } else {
+                                                <span>Entered @familyYears.People[1].EmployerBenefits.Company benefit details</span><br/>
+                                            }
                                         } else if (familyYears.People[1].EmployerPlan.AnnualSalary != 0) {
                                             <b>@step.title</b>@if(familyYears.People[1].EmployerBenefits.Company != null) { <span>: @familyYears.People[1].EmployerBenefits.Company</span><br/>}
                                         }
@@ -158,29 +166,30 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     </td>
                                    break;
                                 case "retirement-funds-match":
-                                    bool titleShowing2 = false;
                                     <td>
-                                        @if (familyYears.People[0].EmployerPlan.AmountToSaveForMatch > 0) {
-                                            <span>@formatMoney(familyYears.People[0].EmployerPlan.AmountToSaveForMatch) in @familyYears.People[0].PossessiveID 401k</span>
-                                                @if (familyYears.People[0].EmployerPlan.MatchAmount == null) {
-                                                    <br/> <b>Match amount?</b><br/>
-                                                } else { 
-                                                    <span>&nbsp;(Match: @formatMoney(familyYears.People[0].EmployerPlan.MatchAmount))</span><br/>
+                                        @if (familyYears.PersonCount > 0 && familyYears.People[0].EmployerBenefits.Employer401k.Offered == TriState.True) {
+                                                @if (familyYears.People[0].EmployerPlan.AmountToSaveForMatch > 0) {
+                                                    <span>@formatMoney(familyYears.People[0].EmployerPlan.AmountToSaveForMatch) in @familyYears.People[0].PossessiveID 401k</span>
+                                                    @if (familyYears.People[0].EmployerPlan.MatchAmount == null) {
+                                                        <br/> <b>Match amount?</b><br/>
+                                                    } else { 
+                                                        <span>&nbsp;(Match: @formatMoney(familyYears.People[0].EmployerPlan.MatchAmount))</span><br/>
+                                                    }
+                                                } else if (familyYears.People[0].EmployerPlan.AnnualSalary != 0) {
+                                                    <b>@step.title</b>
                                                 }
-                                        } else if (familyYears.People[0].EmployerPlan.AnnualSalary != 0) {
-                                            titleShowing2 = true;
-                                            <b>@step.title</b>
                                         }
-                                        @if (familyYears.People[1].EmployerPlan.AmountToSaveForMatch > 0) {
-                                            <span>@formatMoney(familyYears.People[1].EmployerPlan.AmountToSaveForMatch) in @familyYears.People[1].PossessiveID 401k</span>
-                                            @if(familyYears.People[1].EmployerPlan.MatchAmount == null)
-                                            {
-                                                <br/> <b>Match amount?</b><br/>
-                                            } else { 
-                                                    <span>&nbsp;(Match: @formatMoney(familyYears.People[1].EmployerPlan.MatchAmount))</span><br/>
-                                            }
-                                        } else if (familyYears.People[1].EmployerPlan.AnnualSalary != 0 && !titleShowing2) {
-                                            <b>@step.title</b>
+                                        @if (familyYears.PersonCount > 1 && familyYears.People[1].EmployerBenefits.Employer401k.Offered == TriState.True && familyYears.People[1].EmployerPlan.AmountToSaveForMatch > 0) {
+                                                @if (familyYears.People[1].EmployerPlan.AmountToSaveForMatch > 0) {
+                                                    <span>@formatMoney(familyYears.People[1].EmployerPlan.AmountToSaveForMatch) in @familyYears.People[1].PossessiveID 401k</span>
+                                                    @if (familyYears.People[1].EmployerPlan.MatchAmount == null) {
+                                                        <br/> <b>Match amount?</b><br/>
+                                                    } else { 
+                                                        <span>&nbsp;(Match: @formatMoney(familyYears.People[1].EmployerPlan.MatchAmount))</span><br/>
+                                                    }
+                                                } else if (familyYears.People[1].EmployerPlan.AnnualSalary != 0) {
+                                                    <b>@step.title</b>
+                                                }
                                         }
                                         @if (familyYears.People[0].EmployerPlan.AmountToSaveForMatch == null && familyYears.People[1].EmployerPlan.AmountToSaveForMatch == null) {
                                             <b>@step.title</b>
@@ -198,10 +207,10 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     break;
                                 case "hsa":
                                     <td>
-                                        @if (familyYears.People[0].HealthSavingsAccount.AmountToSave > 0) {
+                                        @if (familyYears.PersonCount > 0 && familyYears.People[0].EmployerBenefits.Complete && familyYears.People[0].HealthSavingsAccount.AmountToSave > 0) {
                                             <span>@formatMoney(familyYears.People[0].HealthSavingsAccount.AmountToSave) in @familyYears.People[0].PossessiveID HSA (Employer: @formatMoney(familyYears.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
                                         }
-                                        @if (familyYears.People[1].HealthSavingsAccount.AmountToSave > 0) {
+                                        @if (familyYears.PersonCount > 1 && familyYears.People[1].EmployerBenefits.Complete && familyYears.People[1].HealthSavingsAccount.AmountToSave > 0) {
                                             <span>@formatMoney(familyYears.People[1].HealthSavingsAccount.AmountToSave) in @familyYears.People[1].PossessiveID HSA (Employer: @formatMoney(familyYears.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
                                         }
                                         @if (familyYears.People[0].HealthSavingsAccount.AmountToSave == null && familyYears.People[1].HealthSavingsAccount.AmountToSave == null) {
@@ -226,15 +235,15 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                 case "employer-retirement-funds": 
                                     bool titleShowing = false;
                                     <td>
-                                        @if (familyYears.PersonCount > 0) {
+                                        @if (familyYears.PersonCount > 0 && familyYears.People[0].EmployerBenefits.Complete) {
                                             if (familyYears.People[0].EmployerPlan.AmountToSaveForNonMatched != null && familyYears.People[0].EmployerPlan.AmountToSaveForNonMatched > 0) {
                                                 <span>@formatMoney(familyYears.People[0].EmployerPlan.AmountToSaveForNonMatched) in @familyYears.People[0].PossessiveID 401k</span><br/>
-                                        } else if (familyYears.People[0].EmployerPlan.AnnualSalary != 0) {
+                                            } else if (familyYears.People[0].EmployerPlan.AnnualSalary != 0) {
                                                 titleShowing = true;
                                                 <b>@step.title</b><br/>
                                             }
                                         }
-                                        @if (familyYears.PersonCount > 1) {
+                                        @if (familyYears.PersonCount > 1 && familyYears.People[1].EmployerBenefits.Complete) {
                                             if (familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched != null && familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched > 0) {
                                                 <span>@formatMoney(familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched) in @familyYears.People[1].PossessiveID 401k</span><br/>
                                             } else if (familyYears.People[1].EmployerPlan.AnnualSalary != 0 && !titleShowing) {
@@ -247,7 +256,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                 case "mega-backdoor-roth": 
                                     bool titleShowing4 = false;
                                     <td>
-                                        @if (familyYears.PersonCount > 0) {
+                                        @if (familyYears.PersonCount > 0 && familyYears.People[0].EmployerBenefits.Complete) {
                                             if (familyYears.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
                                                 <span>@formatMoney(familyYears.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyYears.People[0].PossessiveID mega backdoor roth</span><br/>
                                             } else if (familyYears.People[0].EmployerPlan.AnnualSalary != 0) {
@@ -255,7 +264,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                                 <b>@step.title</b><br/>
                                             }
                                         }
-                                        @if (familyYears.PersonCount > 1) {
+                                        @if (familyYears.PersonCount > 1 && familyYears.People[1].EmployerBenefits.Complete) {
                                             if (familyYears.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
                                                 <span>@formatMoney(familyYears.People[1].EmployerPlan.AmountToSaveForNonMatched) in @familyYears.People[1].PossessiveID 401k</span><br/>
                                             } else if (familyYears.People[1].EmployerPlan.AnnualSalary != 0 && !titleShowing4) {
@@ -372,7 +381,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                             <hr/>
                                             <p>HSA:</p>
                                             <EditForm Model="person" style=margin-left:25px>
-                                                <label style="display:inline" for=@haveHDHPid>Offers high deductible health plan</label> <InputSelect @bind-Value=person.HealthSavingsAccount.Eligible id=@haveHDHPid>
+                                                <label style="display:inline" for=@haveHDHPid>Offers high deductible health plan</label> <InputSelect @bind-Value=person.EmployerBenefits.HSA.HighDeductibleHealthPlanAvailable id=@haveHDHPid>
                                                 @foreach (var option in Enum.GetValues<TriState>()) {
                                                     <option value="@option">@option</option>
                                                 }
@@ -443,7 +452,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     <label>Target Year:</label> <select @bind=familyYears.Year><option>2022</option><option>2023</option></select><br/>
 
                                     <label>Tax Filing Status:</label> <select @bind=familyYears.TaxFilingStatus>
-                                        <option value=None>choose...</option>
+                                        <option value="ChoiceNeeded">ChoiceNeeded</option>
                                         <option>Single</option>
                                         <option value=MarriedFilingJointly>Married filing jointly</option>
                                         <option value=MarriedFilingSeperately>Married filing seperately</option>
@@ -505,7 +514,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     <label>Target Year:</label> <select @bind=familyYears.Year><option>2022</option><option>2023</option></select><br/>
                                     
                                     <label>Tax Filing Status:</label> <select @bind=familyYears.TaxFilingStatus>
-                                                <option value=None>choose...</option>
+                                                <option value="ChoiceNeeded">ChoiceNeeded</option>
                                                 <option>Single</option>
                                                 <option value=MarriedFilingJointly>Married filing jointly</option>
                                                 <option value=MarriedFilingSeperately>Married filing seperately</option>
@@ -526,7 +535,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                         }
                                         </InputSelect><br/>         
                                         <fieldset disabled=@person.HealthSavingsAccount.NotEligible style='margin-left:20px'>
-                                            <label>Individual/Family:</label>   <select @bind=person.HealthSavingsAccount.Family><option value=None>choose...</option><option value=EmployeeOnly>Employee only</option><option>Family</option></select><br/>
+                                            <label>Individual/Family:</label>   <select @bind=person.HealthSavingsAccount.Family><option value="ChoiceNeeded">ChoiceNeeded</option><option value=EmployeeOnly>Employee only</option><option>Family</option></select><br/>
 
                                             <label>Contribution Limit:</label> @formatMoney(person.HealthSavingsAccount.Limit)<br/><br/>
 
@@ -551,7 +560,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     <label>Target Year:</label> <select @bind=familyYears.Year><option>2022</option><option>2023</option></select><br/>
 
                                     <label>Tax Filing Status:</label> <select @bind=familyYears.TaxFilingStatus>
-                                        <option value=None>choose...</option>
+                                        <option value="ChoiceNeeded">ChoiceNeeded</option>
                                         <option>Single</option>
                                         <option value=MarriedFilingJointly>Married filing jointly</option>
                                         <option value=MarriedFilingSeperately>Married filing seperately</option>
@@ -617,7 +626,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     <label>Target Year:</label> <select @bind=familyYears.Year><option>2022</option><option>2023</option></select><br/>
 
                                     <label>Tax Filing Status:</label> <select @bind=familyYears.TaxFilingStatus>
-                                                <option value=None>choose...</option>
+                                                <option value="ChoiceNeeded">ChoiceNeeded</option>
                                                 <option>Single</option>
                                                 <option value=MarriedFilingJointly>Married filing jointly</option>
                                                 <option value=MarriedFilingSeperately>Married filing seperately</option>
@@ -661,7 +670,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     <label>Target Year:</label> <select @bind=familyYears.Year><option>2022</option><option>2023</option></select><br/>
 
                                     <label>Tax Filing Status:</label> <select @bind=familyYears.TaxFilingStatus>
-                                        <option value=None>choose...</option>
+                                        <option value="ChoiceNeeded">ChoiceNeeded</option>
                                         <option>Single</option>
                                         <option value=MarriedFilingJointly>Married filing jointly</option>
                                         <option value=MarriedFilingSeperately>Married filing seperately</option>

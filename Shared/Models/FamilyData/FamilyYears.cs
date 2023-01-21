@@ -86,7 +86,7 @@ public class FamilyYears : IFamilyYears
                     return 1;
                 case TaxFilingStatus.MarriedFilingJointly:
                     return 2;
-                case TaxFilingStatus.None:
+                case TaxFilingStatus.ChoiceNeeded:
                 default:
                     return 0;
 

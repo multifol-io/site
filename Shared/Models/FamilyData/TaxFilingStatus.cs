@@ -1,5 +1,5 @@
 public enum TaxFilingStatus {
-    None = 0,
+    ChoiceNeeded = 0,
     Single,
     HeadOfHousehold,
     MarriedFilingSeperately,

@@ -89,7 +89,7 @@ public class IRA {
                     return null;
                 }
             default:
-            case TaxFilingStatus.None:
+            case TaxFilingStatus.ChoiceNeeded:
                 return null;
         }
     }
