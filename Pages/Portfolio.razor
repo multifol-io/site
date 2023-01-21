@@ -819,7 +819,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
             pastTotal = familyYears.PlannedSavings <= runningTotal;
 
             if (pastTotal) {
-                return "<div><hr/><div>Planned savings " + (familyYears.PlannedSavings==runningTotal?"met":"exceeded") + " after " + formatMoney(itemTotal+(familyYears.PlannedSavings-runningTotal)) + " towards previous step</div><hr/></div>";
+                return "<div>-------<br/><div>Planned savings " + (familyYears.PlannedSavings==runningTotal?"met":"exceeded") + " after " + formatMoney(itemTotal+(familyYears.PlannedSavings-runningTotal)) + " towards previous step</div>-------<br/></div>";
             }
         }
 
