@@ -267,8 +267,12 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                             <span>@formatMoney(familyYears.MediumDebts) in Medium Debts</span><br/>
                                             @((MarkupString)checkTotal(familyYears.MediumDebts))
                                         }
-                                        @formatMoney(familyYears.PlannedSavings-runningTotal) in Taxable<br/>
-                                        @((MarkupString)checkTotal(familyYears.PlannedSavings-runningTotal))
+                                        @if (familyYears.PlannedSavings > runningTotal) {
+                                            <span>@formatMoney(familyYears.PlannedSavings-runningTotal) in Taxable</span><br/>
+                                            @((MarkupString)checkTotal(familyYears.PlannedSavings-runningTotal))
+                                        } else {
+                                            <span>@formatMoney(0) in Taxable</span><br/>
+                                        }
                                         @if (familyYears.LowDebts > 0) {
                                             <span>@formatMoney(familyYears.LowDebts) in Low Debts</span><br/>
                                             @((MarkupString)checkTotal(familyYears.LowDebts))
@@ -815,7 +819,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
             pastTotal = familyYears.PlannedSavings <= runningTotal;
 
             if (pastTotal) {
-                return "<div><hr/><div>Planned savings " + (familyYears.PlannedSavings==runningTotal?"met":"exceeded") + " after " + formatMoney(itemTotal+(familyYears.PlannedSavings-runningTotal)) + " towards last step</div><hr/></div>";
+                return "<div><hr/><div>Planned savings " + (familyYears.PlannedSavings==runningTotal?"met":"exceeded") + " after " + formatMoney(itemTotal+(familyYears.PlannedSavings-runningTotal)) + " towards previous step</div><hr/></div>";
             }
         }
 
