@@ -1,12 +1,12 @@
-public class SearchModel {
+public class SearchModel : ISearchModel {
 
-    public static async Task<SearchModel> CreateAsync() {
+    public static ISearchModel Create() {
         return new SearchModel();
     }
     
     public string Terms { get; set; } = "";
-    public string Engine { get; set; } = "";
-    public string Domain { get; set; } = "ask.com";
+    public string Engine { get; set; } = "duckduckgo";
+    public string Domain { get; set; } = "duckduckgo.com";
     public int Location { get; set; } = 2;
     public string BogleheadsUrl {
         get {

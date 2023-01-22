@@ -486,12 +486,12 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     </EditForm>
                                     <br/>
                                     @code{
-                                        private async void addContributionLevel(MouseEventArgs e, int personIndex)
+                                        private void addContributionLevel(MouseEventArgs e, int personIndex)
                                         {
                                             var contributionLevel = new EmployerContributionLevel();
                                             familyYears.People[personIndex].EmployerBenefits.HSA.EmployerContributionLevels.Add(contributionLevel);
                                         }
-                                        private async void deleteContributionLevel(MouseEventArgs e, int personIndex, int contributionLevelIndex)
+                                        private void deleteContributionLevel(MouseEventArgs e, int personIndex, int contributionLevelIndex)
                                         {
                                             familyYears.People[personIndex].EmployerBenefits.HSA.EmployerContributionLevels.RemoveAt(contributionLevelIndex);
                                         }
@@ -570,12 +570,12 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     </EditForm><br/>
                                 }
                                 @code{
-                                    private async void addMatchRule(MouseEventArgs e, int personIndex)
+                                    private void addMatchRule(MouseEventArgs e, int personIndex)
                                     {
                                         var matchRule = new MatchRule();
                                         familyYears.People[personIndex].EmployerBenefits.Employer401k.MatchRules.Add(matchRule);
                                     }
-                                    private async void deleteMatchRule(MouseEventArgs e, int personIndex, int matchIndex)
+                                    private void deleteMatchRule(MouseEventArgs e, int personIndex, int matchIndex)
                                     {
                                         familyYears.People[personIndex].EmployerBenefits.Employer401k.MatchRules.RemoveAt(matchIndex);
                                     }
@@ -651,8 +651,6 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                         var existingIRABalance = "existingIRABalance-" + i;
                                         var tId = "traditional-" + i;
                                         var rId = "roth-" + i;
-                                        var traditional = "traditional";
-                                        var roth = "roth";
                                         <p><b>Person @(i+1):</b> </p>
 
                                         <EditForm Model="person" style=margin-left:25px>
@@ -825,8 +823,10 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     }
                                     void addDebt()
                                     {
-                                        familyYears?.Debts.Add(new Debt());
-                                        familyYears.DebtFree = TriState.False;
+                                        if (familyYears != null) {
+                                            familyYears.Debts.Add(new Debt());
+                                            familyYears.DebtFree = TriState.False;
+                                        }
                                     }
                                 }
                             
@@ -986,7 +986,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
 
     private Step[]? steps;
     private bool pastTotal;
-    private string[] lastEmployer = { null, null };
+    private string?[] lastEmployer = { null, null };
     private const string folderName = "/saving/";
     private int matchRuleIndex;
     private int contributionIndex;
@@ -1005,7 +1005,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                 await benefits.GetEmployerDataAsync(familyYears.Year);
                 lastEmployer[i] = benefits.Company;
                 if (benefits.Downloaded) {
-                    InvokeAsync(StateHasChanged); 
+                    await InvokeAsync(StateHasChanged); 
                 }
             }
         }

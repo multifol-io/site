@@ -9,7 +9,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 var httpClient = new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) };
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-builder.Services.AddScoped(async(sp) => await SearchModel.CreateAsync());
+builder.Services.AddScoped<ISearchModel>(sp => SearchModel.Create());
 
 FamilyYears? familyYears = await FamilyYears.Create(httpClient);
 if (familyYears != null) {
@@ -18,5 +18,7 @@ if (familyYears != null) {
 
 var fundsJson = await httpClient.GetAsync("https://raw.githubusercontent.com/bogle-tools/site/main/wwwroot/data/funds.json");
 var Funds = await JsonSerializer.DeserializeAsync<List<Fund>>(fundsJson.Content.ReadAsStream());
-builder.Services.AddSingleton<IList<Fund>>(Funds);
+if (Funds != null) {
+    builder.Services.AddSingleton<IList<Fund>>(Funds);
+}
 await builder.Build().RunAsync();

@@ -5,7 +5,7 @@ public class HealthSavingsAccount {
         this.person = person;
     }
 
-    public IRS.HSA HSAVariables {
+    public IRS.HSA? HSAVariables {
         get {
             return this.person.FamilyYears.RetirementData.HSA;
         }
@@ -44,17 +44,17 @@ public class HealthSavingsAccount {
     
     public int? Limit { 
         get {
-            if (Eligible == TriState.False && person.OtherPerson != null && person.OtherPerson.HealthSavingsAccount.NotEligible.Value) return null;
+            if (Eligible == TriState.False && person.OtherPerson != null && person.OtherPerson.HealthSavingsAccount.NotEligible.HasValue && person.OtherPerson.HealthSavingsAccount.NotEligible.Value) return null;
             
             int? contributionLimit = null;
 
             switch (Family)
             {
                 case EmployeeFamily.Family:
-                    contributionLimit = HSAVariables.ContributionLimit.Family;
+                    contributionLimit = HSAVariables?.ContributionLimit?.Family;
                     break;
                 case EmployeeFamily.EmployeeOnly:
-                    contributionLimit = HSAVariables.ContributionLimit.SelfOnly;
+                    contributionLimit = HSAVariables?.ContributionLimit?.SelfOnly;
                     break;
                 default:
                     break;
@@ -62,9 +62,9 @@ public class HealthSavingsAccount {
 
             if (person.FiftyFiveOrOver) {
                 if (contributionLimit == null) {
-                    contributionLimit = HSAVariables.ContributionLimit.CatchUp;
+                    contributionLimit = HSAVariables?.ContributionLimit?.CatchUp;
                 } else {
-                    contributionLimit += HSAVariables.ContributionLimit.CatchUp;
+                    contributionLimit += HSAVariables?.ContributionLimit?.CatchUp;
                 }
             }
 

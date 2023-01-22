@@ -92,10 +92,10 @@ public class FamilyYears : IFamilyYears
             }
         } 
     }
-    public string StateOfResidence { get; set; }
+    public string? StateOfResidence { get; set; }
     public int Year { get; set; }
     public string? AdditionalBackground { get; set; }
-    private List<string> _Questions;
+    private List<string>? _Questions;
     public List<string> Questions
     {
         get {
@@ -168,7 +168,7 @@ public class FamilyYears : IFamilyYears
     public double? Bonds { get; set; }
     public int? International { get; set; }
 
-    private int? GetDebts(string category) {
+    private int? GetDebts(string? category) {
             int? total = null;
             foreach (var debt in Debts) {
                 if (debt.Category == category) {
@@ -221,7 +221,7 @@ public class FamilyYears : IFamilyYears
 
     public int ValueStyle { get; set; } = 0;
 
-    private List<Account> _Accounts;
+    private List<Account>? _Accounts;
     public List<Account> Accounts {
         get {
             if (_Accounts == null)

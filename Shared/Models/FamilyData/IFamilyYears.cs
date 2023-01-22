@@ -13,7 +13,7 @@ public interface IFamilyYears
     public TaxFilingStatus TaxFilingStatus { get; set; }
     public int Year { get; set; }
     public string? FederalMarginalTaxBracket { get; set; }
-    public string StateOfResidence { get; set; }
+    public string? StateOfResidence { get; set; }
     public string? StateMarginalTaxBracket { get; set; }
     public int PersonCount { get; }
     public List<Person> People { get; }

@@ -17,13 +17,13 @@ public class Investment
     }
 
     public bool AutoCompleted { get; set; }
-    private string _Ticker;
-    public string Ticker {
+    private string? _Ticker;
+    public string? Ticker {
         get {
             return _Ticker;
         }
         set {
-            _Ticker = value.ToUpperInvariant();
+            _Ticker = value?.ToUpperInvariant();
             bool found = false;
             foreach (var fund in funds)
             {
@@ -43,7 +43,7 @@ public class Investment
         }
     }
 
-    private void AutoComplete(string name, double? expenseRatio) {
+    private void AutoComplete(string? name, double? expenseRatio) {
         Name = name;
         ExpenseRatio = expenseRatio;
         AutoCompleted = true;

@@ -17,7 +17,7 @@ public class Person {
 
     public int? Age { get; set; }
     public string Identifier { get; set; }
-    public string Employer { get; set; }
+    public string? Employer { get; set; }
     public EmployerPlan EmployerPlan { get; set; }
     public HealthSavingsAccount HealthSavingsAccount { get; set; }
     [JsonIgnore]
@@ -25,12 +25,12 @@ public class Person {
     [JsonIgnore]
     public RothIRA RothIRA { get; set; }
 
-    private EmployerBenefits _employer;
+    private EmployerBenefits? _employerBenefits;
     [JsonIgnore]
-    public EmployerBenefits EmployerBenefits { 
-        get { return _employer; }
+    public EmployerBenefits? EmployerBenefits { 
+        get { return _employerBenefits; }
         set { 
-            _employer = value;
+            _employerBenefits = value;
         }
     }
 
@@ -121,7 +121,7 @@ public class Person {
 
     public int PersonIndex { private set; get; }
     
-    public Person OtherPerson { 
+    public Person? OtherPerson { 
         get {
             int personIndex = PersonIndex;
             switch (personIndex) {

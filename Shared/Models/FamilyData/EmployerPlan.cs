@@ -8,7 +8,7 @@ public class EmployerPlan : INotifyPropertyChanged {
     }
 
     private Person person;
-    private IRS.Employer401k? Employer401k;
+    private IRS.Employer401k Employer401k;
 
     public TriState Eligible {
         get => person.EmployerBenefits.Employer401k.Offered;
@@ -148,15 +148,15 @@ public class EmployerPlan : INotifyPropertyChanged {
         }
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-    void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new 
                          PropertyChangedEventArgs(propertyName));
     }
 
-    bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string 
+    bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string? 
                                                      propertyName = null)
     {
         if (Equals(storage, value))

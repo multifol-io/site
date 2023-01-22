@@ -18,8 +18,8 @@ public class IRA {
         {
             if (person.FamilyYears.PersonCount > person.PersonIndex && person.FamilyYears.AdjustedGrossIncome != null)
             {
-                return iraVariables.ContributionLimit
-                    + (person.FiftyOrOver ? iraVariables.CatchUpContributionLimit : 0);
+                return iraVariables?.ContributionLimit
+                    + (person.FiftyOrOver ? iraVariables?.CatchUpContributionLimit : 0);
             }
             else
             {

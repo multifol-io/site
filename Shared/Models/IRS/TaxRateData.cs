@@ -10,21 +10,21 @@ namespace IRS
 
     public class TaxBracket
     {
-        public string Rate { get; set; }
+        public string? Rate { get; set; }
         public int StartAmount { get; set; }
     }
 
     public class TaxData
     {
         public int AnnualExclusionForGifts { get; set; }
-        public List<TaxFiler> TaxFilers { get; set; }
+        public List<TaxFiler>? TaxFilers { get; set; }
     }
 
     public class TaxFiler
     {
-        public string TaxFilingStatus { get; set; }
+        public string? TaxFilingStatus { get; set; }
         public int StandardDeduction { get; set; }
-        public List<TaxBracket> TaxBrackets { get; set; }
+        public List<TaxBracket>? TaxBrackets { get; set; }
     }
 
 

@@ -8,7 +8,7 @@ namespace Employer {
     public class Employer401k
     {
         public TriState Offered { get; set; } = TriState.ChoiceNeeded;
-        private List<MatchRule> _MatchRules;
+        private List<MatchRule>? _MatchRules;
         public List<MatchRule> MatchRules {
             get {
                 if (_MatchRules == null) {
@@ -27,7 +27,7 @@ namespace Employer {
     public class HSA
     {
         public TriState HighDeductibleHealthPlanAvailable { get; set; }
-        private List<EmployerContributionLevel> _EmployerContributionLevels; 
+        private List<EmployerContributionLevel>? _EmployerContributionLevels; 
         public List<EmployerContributionLevel> EmployerContributionLevels { 
             get {
                 if (_EmployerContributionLevels == null) {
@@ -43,7 +43,7 @@ namespace Employer {
     }
 
     public class EmployerContributionLevel {
-        public string Description { get; set; }
+        public string? Description { get; set; }
         public int Amount { get; set; }
     }
 
@@ -60,8 +60,8 @@ namespace Employer {
 
     public class EmployerBenefits : DataDocument
     {
-        private string _Company;
-        public string Company { 
+        private string? _Company;
+        public string? Company { 
             get { return _Company; }
             set { 
                 _Company = value;
@@ -84,7 +84,7 @@ namespace Employer {
         public async Task GetEmployerDataAsync(int year) {
             var employer = Company;
             HttpClient httpClient = new();
-            var lEmployer = employer.ToLowerInvariant().Trim();
+            var lEmployer = employer?.ToLowerInvariant().Trim();
         
             if (lEmployer == "test") {
                 var requestUri = "https://api.saving.bogle.tools/api/UploadEmployerInfo?code=8VyPqHmGuPDZq6G2tmbJ7g0vN9BqIQhSGmRA-jBBEInkAzFuUvlxuA==";
@@ -138,7 +138,7 @@ namespace Employer {
                     Console.WriteLine("employer data was null for " + lEmployer);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
         }
