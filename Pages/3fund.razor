@@ -333,9 +333,11 @@ class App extends React.Component {
           @code{
               void setFunds(ChangeEventArgs e)
               {
-                  var fundFamily = fundFamilies.Where(ff=> ff.Index == int.Parse(e.Value?.ToString())).ToList()[0];
-                  Funds = fundFamily.Name;
-                  setTickers(fundFamily);
+                  if (fundFamilies != null) {
+                      var fundFamily = fundFamilies.Where(ff=> ff.Index == int.Parse(e.Value?.ToString())).ToList()[0];
+                      Funds = fundFamily.Name;
+                      setTickers(fundFamily);
+                  }
               }
 
               async void setTickers(FundFamily fundFamily)
@@ -344,12 +346,10 @@ class App extends React.Component {
                   Tickers[1] = fundFamily.InternationalStockFund;
                   Tickers[2] = fundFamily.BondFund;
 
-                  monthlyQuotes = new Array[3];
                   monthlyQuotes[0] = await MonthlyQuotes.GetMonthlyQuotesAsync(Http,"https://raw.githubusercontent.com/rrelyea/3fund-prices/main/data/MA_" + Tickers[0] + ".csv");
                   monthlyQuotes[1] = await MonthlyQuotes.GetMonthlyQuotesAsync(Http,"https://raw.githubusercontent.com/rrelyea/3fund-prices/main/data/MA_" + Tickers[1] + ".csv");
                   monthlyQuotes[2] = await MonthlyQuotes.GetMonthlyQuotesAsync(Http,"https://raw.githubusercontent.com/rrelyea/3fund-prices/main/data/MA_" + Tickers[2] + ".csv");
 
-                  dailyQuotes = new Array[3];
                   dailyQuotes[0] = await DailyQuotes.GetDailyQuotesAsync(Http,"https://raw.githubusercontent.com/rrelyea/3fund-prices/main/data/D_" + Tickers[0] + ".csv");
                   dailyQuotes[1] = await DailyQuotes.GetDailyQuotesAsync(Http,"https://raw.githubusercontent.com/rrelyea/3fund-prices/main/data/D_" + Tickers[1] + ".csv");
                   dailyQuotes[2] = await DailyQuotes.GetDailyQuotesAsync(Http,"https://raw.githubusercontent.com/rrelyea/3fund-prices/main/data/D_" + Tickers[2] + ".csv");
@@ -564,68 +564,66 @@ export default App; *@
 @code {
 
     string showYears() {
-      if (monthlyQuotes[0] == null) return "";
+
+      if (monthlyQuotes == null) return "<p>ShowYears here</p>";
 
       var assetStock = Allocations[0];
       var assetStockIntl = Allocations[1];
       var assetBond = Allocations[2];
-      var runningTotal = 10000;
+      double runningTotal = 10000;
       var eoyLabelAndDataAdded = false;
 
       var years = new int[currentYear - startYear];
-      var yearsPerf = new int[currentYear - startYear];
+      var yearsPerf = new double[currentYear - startYear];
       var labels = new string[currentYear - startYear + 2];
       var data = new double[currentYear - startYear + 2];
 
       for (var year = startYear; year <= currentYear; year++) {
-        var endMonthLocal = year == currentYear ? currentMonth : 12;
-        var startMonthLocal = year == startYear ? startMonth + 1 : 1;
-        var delta1 = this.getChange(this.state, year, startMonthLocal, year, endMonthLocal, 0);
-        if (double.IsNaN(delta1)) {
-          endMonthLocal = endMonthLocal - 1;
-          delta1 = this.getChange(this.state, year, startMonthLocal, year, endMonthLocal, 0);
-        }
-        var delta2 = this.getChange(this.state, year, startMonthLocal, year, endMonthLocal, 1);
-        var delta3 = this.getChange(this.state, year, startMonthLocal, year, endMonthLocal, 2);
-        var composite = (assetStock * 100 * (1-assetStockIntl)) * delta1 + 
-          (assetStock * 100 * (assetStockIntl)) * delta2 + 
-          (assetBond * 100 * delta3);
-        composite = delta1 == null || delta2 == null || delta3 == null ? null : composite;
-        years[currentYear - year + 1] = year;
-        yearsPerf[currentYear - year + 1] = composite;
+          var endMonthLocal = year == currentYear ? currentMonth : 12;
+          var startMonthLocal = year == startYear ? startMonth + 1 : 1;
+          var delta1 = getChange(year, startMonthLocal, year, endMonthLocal, 0);
+          if (double.IsNaN(delta1??double.NaN)) {
+              endMonthLocal = endMonthLocal - 1;
+              delta1 = getChange(year, startMonthLocal, year, endMonthLocal, 0);
+          }
+          var delta2 = getChange(year, startMonthLocal, year, endMonthLocal, 1);
+          var delta3 = getChange(year, startMonthLocal, year, endMonthLocal, 2);
+          var composite = (assetStock * 100 * (1-assetStockIntl)) * delta1 + 
+            (assetStock * 100 * (assetStockIntl)) * delta2 + 
+            (assetBond * 100 * delta3);
+          composite = delta1 == null || delta2 == null || delta3 == null ? null : composite;
+          years[currentYear - year + 1] = year;
+          yearsPerf[currentYear - year + 1] = composite ?? double.NaN;
 
-        if (!eoyLabelAndDataAdded) {
-          labels[year - startYear] = (startYear - 1).ToString();
-          data[year - startYear] = runningTotal;
-          eoyLabelAndDataAdded = true;
-        }
-        
-        labels[year - startYear + 1] = year.ToString();
-        runningTotal = runningTotal * (100.0+Number(composite))/100.0;
-        data[year - startYear + 1] = runningTotal;
+          if (!eoyLabelAndDataAdded) {
+              labels[year - startYear] = (startYear - 1).ToString();
+              data[year - startYear] = runningTotal;
+              eoyLabelAndDataAdded = true;
+          }
+          
+          labels[year - startYear + 1] = year.ToString();
+          runningTotal = runningTotal * (100.0+(composite??0.0))/100.0;
+          data[year - startYear + 1] = runningTotal;
       }
 
       if (showYear == 0) {
-        this.chartData.labels = labels;
-        this.chartData.datasets = [{
-          data:data,
-          label: startYear.toString() + " - " + currentYear.toString(),
-          borderColor: '#3e95cd',
-          backgroundColor: '#7bb6dd',
-          fill: false,
-        }];
+
       }
 
       string markupResult = "";
       int index = 0;
-      foreach (var period in years) {
-        markupResult += "<tr key=" +index + "><td><label><input name='check' defaultChecked="+period==showYear+" year="+period+ " type='checkbox' className='yearButton' onClick=@((e)=>this.changeYear(e)) />"
-             + "<span className='year'>@period[0]</span></label></td><td className='value'>" + period[1]).toFixed(1)+"%") + "</td></tr>";
-        index++;
-      };
+      for (var yearIndex = 0; yearIndex < years.Length; yearIndex++ ) {
+          var year = years[yearIndex];
+          var yearPerf = yearsPerf[yearIndex];
+          markupResult += "<tr key=" +index + "><td><label><input name='check' defaultChecked="+year==showYear+" year="+year+ " type='checkbox' className='yearButton' onClick=@((e)=>this.changeYear(e)) />";
+          markupResult += "<span className='year'>@period[0]</span></label></td><td className='value'>" + yearPerf+"%" + "</td></tr>";
+          index++;
+      }
+      
+      return markupResult;
     }
     
-    double? getChange(data, int yearA, int monthA, int yearB, int monthB, int fund) {
+    double? getChange(int yearA, int monthA, int yearB, int monthB, int fund) {
       if (monthA == 1) {
         monthA = 12;
         yearA = yearA - 1;
@@ -633,19 +631,22 @@ export default App; *@
         monthA = monthA - 1;
       }
 
-      var startPrice = getPrice(data, yearA, monthA, fund);
+      var startPrice = getPrice(yearA, monthA, fund);
       if (startPrice == null) return null;
-      var endPrice = getPrice(data, yearB, monthB, fund);
+      var endPrice = getPrice(yearB, monthB, fund);
       if (endPrice == null) return null;
       var change = (endPrice - startPrice)/startPrice;
       return change;
     }
 
-    double? getPrice (data, int year, int month, int fund) {
+    double? getPrice (int year, int month, int fund) {
       var i = (year - startYear) * 12 + (month - startMonth);
       if (i + indexes[fund] < 1) return null;
-      if (i + indexes[fund] > data.monthlyQuotes[fund].length) return null;
-      return data.monthlyQuotes[fund][i + indexes[fund]][1];
+      if (i + indexes[fund] > monthlyQuotes[fund].Count) return null;
+
+      var monthlyQuoteList = monthlyQuotes[fund];
+      var monthlyQuote = monthlyQuoteList[i+indexes[fund]];
+      return double.Parse(monthlyQuote.Close);
     }    
     [Parameter]
     public string? Year { get; set; }
@@ -661,8 +662,6 @@ export default App; *@
     public string[] Tickers = new string[3];
     public string StatusMessage { get; set; } = "";
     public FundFamily[]? fundFamilies;
-    public Array[]? monthlyQuotes;
-    public Array[]? dailyQuotes;
 
     public int currentYear = DateTime.Now.Year;
     public int currentMonth = DateTime.Now.Month;
@@ -671,6 +670,8 @@ export default App; *@
     public int showYear = 0;
     public int showMonth = 0;
     public int[] indexes = {1,1,1};
+    public List<MonthlyQuotes>[] monthlyQuotes;
+    public List<DailyQuotes>[] dailyQuotes;
 
 
     protected override async Task OnInitializedAsync()

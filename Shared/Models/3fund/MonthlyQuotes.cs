@@ -14,10 +14,10 @@ public class MonthlyQuotes
     public string AdjustedClose { get; set; } 
     public string Dividend { get; set; } 
 
-    public static async Task<MonthlyQuotes[]> GetMonthlyQuotesAsync(HttpClient httpClient, string url)
+    public static async Task<List<MonthlyQuotes>> GetMonthlyQuotesAsync(HttpClient httpClient, string url)
     {
         var csvContent = await httpClient.GetStringAsync(url);
-        List<MonthlyQuotes> monthlyQuotes = new ();
+        List<MonthlyQuotes> monthlyQuotesList = new ();
         var skippedFirstLine = false;
         var index = 0;
         foreach(var line in csvContent.Split('\n'))
@@ -31,10 +31,10 @@ public class MonthlyQuotes
             {
                 var chunks = line.Split(',');
                 MonthlyQuotes monthlyQuote = new (index++,chunks[0],chunks[1],chunks[2],chunks[3]);
-                monthlyQuotes.Add(monthlyQuote);
+                monthlyQuotesList.Add(monthlyQuote);
             }
         }
 
-        return monthlyQuotes.ToArray<MonthlyQuotes>();
+        return monthlyQuotesList;
     }
 }

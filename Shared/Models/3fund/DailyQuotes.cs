@@ -10,10 +10,10 @@ public class DailyQuotes
     public string Date { get; set; } 
     public string Close { get; set; } 
 
-    public static async Task<DailyQuotes[]> GetDailyQuotesAsync(HttpClient httpClient, string url)
+    public static async Task<List<DailyQuotes>> GetDailyQuotesAsync(HttpClient httpClient, string url)
     {
         var csvContent = await httpClient.GetStringAsync(url);
-        List<DailyQuotes> dailyQuotes = new ();
+        List<DailyQuotes> dailyQuotesList = new ();
         var skippedFirstLine = false;
         var index = 0;
         foreach(var line in csvContent.Split('\n'))
@@ -27,10 +27,10 @@ public class DailyQuotes
             {
                 var chunks = line.Split(',');
                 DailyQuotes dailyQuote = new (index++,chunks[0],chunks[1]);
-                dailyQuotes.Add(dailyQuote);
+                dailyQuotesList.Add(dailyQuote);
             }
         }
 
-        return dailyQuotes.ToArray<DailyQuotes>();
+        return dailyQuotesList;
     }
 }

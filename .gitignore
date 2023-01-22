@@ -1,4 +1,4 @@
 /obj
 /bin
 .vs
-.csproj.user
+src.csproj.user
