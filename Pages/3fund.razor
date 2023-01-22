@@ -4,14 +4,16 @@
 <PageTitle>
 3fund performance
 </PageTitle>
+
 <div>
-    Our 3fund part of the site is currently hosted on a different server. 
-    Redirecting to <a target=_blank href=https://rrelyea.github.io/3fund>rrelyea.github.io/3fund</a> in a new tab....
+    Our 3fund performance site is currently hosted on a different server. <br/>
+    <br/>
+    <p>Redirecting to <a target=_blank href=https://rrelyea.github.io/3fund>rrelyea.github.io/3fund</a> in a new tab....</p>
 </div>
 
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await JSRuntime.InvokeAsync<object>("open", "https://rrelyea.github.io/3fund" ,"_blank");     
+        await JSRuntime.InvokeVoidAsync("open", "https://rrelyea.github.io/3fund" ,"_blank");     
     }
 }
