@@ -3,7 +3,10 @@
 @page "/portfolio-contributions"
 @inject HttpClient Http
 @inject IFamilyData familyData
+@inject IJSRuntime JS
 @using Employer
+@inject NavigationManager Navigation
+@using System.Text.Json.Serialization
 
 <PageTitle>
 Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
@@ -488,6 +491,18 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                         <br/>
                                     </EditForm>
                                     <br/>
+
+                                    @if (new Uri(Navigation.Uri).Host == "localhost")
+                                        {
+
+                                            <button @onclick="DownloadEmployer1">
+                                            Download employer1 benefits file
+                                            </button>
+                                                                                    <br/>
+                                            <button @onclick="DownloadEmployer2">
+                                            Download employer2 beneftis file
+                                            </button>
+                                        }
                                     @code{
                                         private void addContributionLevel(MouseEventArgs e, int personIndex)
                                         {
@@ -498,6 +513,34 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                         {
                                             familyData.People[personIndex].EmployerBenefits.HSA.EmployerContributionLevels.RemoveAt(contributionLevelIndex);
                                         }
+                                        private async Task DownloadEmployer1() {
+                                            await DownloadEmployer(0);
+                                        }
+                                        private async Task DownloadEmployer2() {
+                                            await DownloadEmployer(1);
+                                        }
+                                        private async Task DownloadEmployer(int index) {
+                                            var options = new JsonSerializerOptions() 
+                                            {
+                                                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+                                                WriteIndented = true,
+                                                Converters =
+                                                    {
+                                                        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                                                    }
+                                            };
+                                            await DownloadFileFromStream(familyData.People[index].EmployerBenefits, options, "employer-benefits-"+index+".json");
+                                        }
+                                        private async Task DownloadFileFromStream(object data, JsonSerializerOptions options, string fileName)
+                                        {
+                                            var jsonOut = System.Text.Json.JsonSerializer.Serialize(data, options);
+
+                                            using (MemoryStream ms = new MemoryStream(System.Text.Encoding.ASCII.GetBytes(jsonOut)))
+                                            {
+                                                using var streamRef = new DotNetStreamReference(stream: ms);
+                                                await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+                                            }
+                                        }                                        
                                     }
                                 }
                                 <br/>

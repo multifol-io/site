@@ -293,25 +293,21 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                 <InputCheckbox id=showMarkup style=margin-left:20px @bind-Value=ShowMarkup /> <label for=showMarkup>Use forum post markup: [b]bold[/b]</label><br/>
                 <br/>
                 <button style=margin-left:20px @onclick=CopyTextToClipboard>Copy to clipboard</button><br/>
-                
-                @if (new Uri(Navigation.Uri).Host == "localhost")
-                {
-                    <br/>
-                    <label>Load portfolio data file:</label> <InputFile OnChange="@((e) => OnLoadPortfolio(e))" />
-                    <br/>
-                    <br/>
-                    <button @onclick="DownloadPortfolio">
-                    Download portfolio data file
-                    </button>
-                                        <br/>
-                    <button @onclick="DownloadEmployer1">
-                    Download employer1 benefits file
-                    </button>
-                                                            <br/>
-                    <button @onclick="DownloadEmployer2">
-                    Download employer2 beneftis file
-                    </button>
-                }
+
+                <hr/>
+                <br/>
+                <label>SAVE to your device via a </label>
+                <button @onclick="DownloadPortfolio">
+                "Download" of your portfolio data file
+                </button>
+                <br/>
+                 (⚠️ WARNING - this data file has your $$ amounts of investments. Don't share! Keep secure. Use clipboard button above to use the stanard portfolio format, which contains somewhat less info.)
+                <br/>
+                <label>LOAD portfolio data file:</label> <InputFile OnChange="@((e) => OnLoadPortfolio(e))" />
+                <br/>
+
+                <br/>
+
 
                 @code {
                         IReadOnlyList<IBrowserFile>? files = new List<IBrowserFile>();
@@ -337,24 +333,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                             }
                         }
 
-                        private async Task DownloadEmployer1() {
-                            await DownloadEmployer(0);
-                        }
-                        private async Task DownloadEmployer2() {
-                            await DownloadEmployer(1);
-                        }
-                        private async Task DownloadEmployer(int index) {
-                            var options = new JsonSerializerOptions() 
-                            {
-                                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
-                                WriteIndented = true,
-                                Converters =
-                                    {
-                                        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                                    }
-                            };
-                            await DownloadFileFromStream(familyData.People[index].EmployerBenefits, options, "employer-benefits-"+index+".json");
-                        }
                         private async Task DownloadPortfolio() {
                             var options = new JsonSerializerOptions() 
                             {
@@ -695,6 +673,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                 @foreach (var account in familyData.Accounts) {
                                     int accBuffer = accountIndex;
                                     accountIndex++;
+                                    var accountId = "account"+accBuffer;
                                     <br/>
                                     <div style=padding-left:3em;text-indent:-3em;>
                                         <button @onclick='@(e=>deleteAccount(e,accBuffer))'>❌</button>
@@ -722,7 +701,8 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                             <option>Traditional IRA</option>
                                             <option>Taxable</option>
                                         </select>
-                                        <span> at <input style="width:140px" type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' /></span>
+                                        <span> at <input style="width:140px" type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' /></span><br/>
+                                        <span><label for=@accountId>Note: </label><input id=@accountId type=text @bind-value=account.Note @bind-value:event=oninput placeholder='account note'/></span>
                                     </div>
                                     
                                     investmentIndex = 0;
@@ -746,13 +726,28 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     <div style=margin-left:40px>Account Total: @formatMoney(account.Value)</div>
                                 }
                                 <br/>
-                                <div><button @onclick=addAccount>➕</button></div>
+                                <div><button @onclick=addAccount>➕ Account</button></div>
                                 <hr/>
                                 <div>Portfolio Size: @formatMoney(familyData.Value)</div>
-
-
                                 <br/>
-                                    <label>Import Vanguard/Fidelity CSV file:</label> <InputFile multiple=true accept=".csv" OnChange="@((e) => OnChangeCSV(e))" />
+                                <div>
+                                    Above, is the manual data entry technique. Below is an ADVANCED FEATURE (faster way) to import some data, but be careful, and make sure you trust any site you do that kind of thing with!!!
+                                </div>
+                                <br/>
+                                <hr/>
+                                    <div>⚠️ Advanced Feature: Import Vanguard/Fidelity CSV file</div>
+                                    <ol>
+                                        <li>Download .csv file from Vanguard or Fidelity to your downloads folder (or other location).</li>
+                                        <li>Press "Choose files" button and select one or more files in your downloads folder: 
+                                            <InputFile multiple=true accept=".csv" OnChange="@((e) => OnChangeCSV(e))" />
+                                        </li>
+                                        <li>Portfolio Review tool will attempt to load your account balances from the .csv file(s), including tickers and $$ of each stock/fund.</li>
+                                        <li>Once you do the import, you likely want to delete the file from your downloads folder (that you downloaded it to in step 1).</li>
+                                    </ol>
+                                    <span>
+                                    ⚠️ WARNING: uploading csv files from vanguard/fidelity is exposing information to this site.<br/>
+                                    Only do this to a site you trust to not harvest this data. Bogle.tools runs on your machine only, even though it is a web site, and will not send data off of your device without your explicit permission.
+                                    </span>
                                 <br/>
 
                                 @code{
@@ -841,7 +836,10 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                                             }
 
                                                             if (lastAccountNumber != accountNumber) {
-                                                                currentAccount = new () { Custodian = accountName + " " + accountNumber };
+                                                                currentAccount = new () { 
+                                                                    Note = accountName != null ? "⚠️" + accountName: "",
+                                                                    Custodian = (accountNameIndex != -1 ? "Fidelity" : "Vanguard")
+                                                                 };
                                                                 familyData.Accounts.Add(currentAccount);
                                                                 lastAccountNumber = accountNumber;
                                                             }
@@ -868,7 +866,8 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                                     }
                                                 }
                                             }
-                                            updateAccountRendering = true;
+
+                                            Navigation.NavigateTo("/portfolio/reload");
                                         }
                                     }
 
@@ -1168,11 +1167,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                 await accountN.FocusAsync();
                 focusAccount = false;
             }
-
-            if (updateAccountRendering) {
-                await InvokeAsync(StateHasChanged); 
-                updateAccountRendering = false;
-            }
     }
 
     [Parameter]
@@ -1185,7 +1179,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
     private const string folderName = "/portfolio/";
     private bool focusTicker = false;
     private bool focusAccount = false;
-    private bool updateAccountRendering = false;
 
     protected override async Task OnInitializedAsync()
     {

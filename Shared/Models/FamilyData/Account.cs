@@ -4,10 +4,11 @@ public class Account
         Investments = new();
         AvailableFunds = new();
     }
-    
+
     public string? Identifier { get; set; }
     public string AccountType { get; set; } = "Taxable";
     public string? Custodian { get; set; }
+    public string? Note { get; set; }
     public double Value { 
         get {
             double newValue = 0;
