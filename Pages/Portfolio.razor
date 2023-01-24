@@ -111,7 +111,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                 case "debts":
                                     <td style=text-align:left>
                                         @((MarkupString)bold("Debt:"))
-                                        @if (familyYears.Debts.Count == 0) { <span>&nbsp;no debts</span> } 
+                                        @if (familyYears.Debts.Count == 0 && familyYears.DebtsComplete) { <span>&nbsp;no debts</span> } 
                                         else if (familyYears.Debts.Count >= 1) { 
                                             <br/>
                                             @foreach (var debt in familyYears.Debts)
@@ -163,7 +163,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                             @((MarkupString)bold((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "") + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + " (" + formatPercent(account.Percentage) + ")" ))
                                             <br/>
                                             @foreach (var investment in account.Investments) {
-                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;@formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span><br/>
+                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;@formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@(investment.ExpenseRatio!=null?investment.ExpenseRatio:"??")%)</span><br/>
                                             }
                                         }
                                         <br/>
@@ -297,7 +297,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                 @if (new Uri(Navigation.Uri).Host == "localhost")
                 {
                     <br/>
-                    <label>Load portfolio data file:</label> <InputFile OnChange="@((e) => OnChange(e))" />
+                    <label>Load portfolio data file:</label> <InputFile onchange="@((e) => OnLoadPortfolio(e))" />
                     <br/>
                     <br/>
                     <button @onclick="DownloadPortfolio">
@@ -305,34 +305,26 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                     </button>
                                         <br/>
                     <button @onclick="DownloadEmployer1">
-                    Download employer1 file
+                    Download employer1 benefits file
                     </button>
                                                             <br/>
                     <button @onclick="DownloadEmployer2">
-                    Download employer2 file
+                    Download employer2 beneftis file
                     </button>
                 }
 
                 @code {
                         IReadOnlyList<IBrowserFile>? files = new List<IBrowserFile>();
-                        void OnChange(InputFileChangeEventArgs e)
+                        private async Task OnLoadPortfolio(InputFileChangeEventArgs e)
                         {
-                        files = e.GetMultipleFiles();
-                        }
-                        async Task ReadFiles()
-                        {
-                        if (files != null)
-                        {
-                            foreach (var file in files)
+                            files = e.GetMultipleFiles();
+
+                            if (files != null)
                             {
-                                // get the file size
-                                var buffer = new byte[file.Size];
-                                // read the text file
-                                await file.OpenReadStream().ReadAsync(buffer);
-                                // convert byte array to string
-                                var content = System.Text.Encoding.UTF8.GetString(buffer);
-                                // print results(content of file) to console
-                                Console.WriteLine(content);
+                                foreach (var file in files)
+                                {
+                                    var stream = await file.OpenReadStream();
+                                    familyYears = JsonSerializer.DeserializeAsync<FamilyYears>(stream);
                                 }
                             }
                         }
@@ -441,7 +433,18 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                 <p><b>Worksheet:</b> </p>
                                 <div>
                                     <i>list of debts (all interest rates):</i><br/><br/>
+
+                                    @if (familyYears.DebtFree == TriState.ChoiceNeeded || familyYears.DebtFree == TriState.True) {
+                                        <label style="display:inline" for=debtFree>Debt free:</label> <InputSelect @bind-Value=familyYears.DebtFree id=debtFree>
+                                        @foreach (var option in Enum.GetValues<TriState>()) {
+                                            <option value="@option">@option</option>
+                                        }
+                                        </InputSelect><br/>
+                                        <br/>
+                                    }
+
                                     <EditForm Model="familyYears">
+
                                         <table>
                                             <thead>
                                             <th style="width:150px"><label>name</label></th>
@@ -526,7 +529,8 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                                 @foreach (var taxBracket in taxFiler.TaxBrackets)
                                                 {
                                                     if (lastBracket != null) {
-                                                        <tr><td><InputRadio Value='@lastBracket'/>&nbsp;@lastBracket</td><td style=padding-left:30px>@(lastStartAmount==1?"Up":formatMoney(lastStartAmount)) to @formatMoney(taxBracket.StartAmount)</td></tr>
+                                                        var elName = "bracket"+lastBracket.Substring(0,lastBracket.Length-2);
+                                                        <tr><td><InputRadio id=@elName Value='@lastBracket'/>&nbsp;<label for=@elName>@lastBracket</label></td><td style=padding-left:30px>@(lastStartAmount==1?"Up":formatMoney(lastStartAmount)) to @formatMoney(taxBracket.StartAmount)</td></tr>
                                                     }
                                                     lastBracket = taxBracket.Rate;
                                                     lastStartAmount = taxBracket.StartAmount + 1;
@@ -543,7 +547,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     </select>
                                     <br/><br/>
 
-                                    <label>State Marginal Tax Rate:</label> <input class=dollar type=text @bind-Value="familyYears.StateMarginalTaxBracket" @bind-Value:event="oninput"/>%<br/><br/>
+                                    <label>State Marginal Tax Rate:</label> <input style=width:50px;text-align:right class=dollar type=text @bind-Value="familyYears.StateMarginalTaxBracket" @bind-Value:event="oninput"/>%<br/><br/>
                                     <br/><br/>
                                 </EditForm>
                                 <br/>
@@ -700,6 +704,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                             <option>401k</option>
                                             <option>403b</option>
                                             <option>457b</option>
+                                            <option>HSA</option>
                                             <option>Inherited IRA</option>
                                             <option>Inherited Roth IRA</option>
                                             <option value="Traditional IRA">IRA</option>
@@ -737,9 +742,127 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                 <hr/>
                                 <div>Portfolio Size: @formatMoney(familyYears.Value)</div>
 
+
+                                <br/>
+                                    <label>Import Vanguard/Fidelity CSV file:</label> <InputFile multiple=true accept=".csv" OnChange="@((e) => OnChangeCSV(e))" />
+                                <br/>
+
                                 @code{
                                     private ElementReference tickerN;
                                     private ElementReference accountN;
+                                    private async void OnChangeCSV(InputFileChangeEventArgs e)
+                                    {
+                                        files = e.GetMultipleFiles();
+                                        if (files != null)
+                                        {
+                                            foreach (var file in files)
+                                            {
+                                                string? lastAccountNumber = null;
+
+                                                var buffer = new byte[file.Size];
+                                                await file.OpenReadStream().ReadAsync(buffer);
+                                                var content = System.Text.Encoding.UTF8.GetString(buffer);
+                                                var lines = System.Text.RegularExpressions.Regex.Split(content, "\r\n|\r|\n");
+                                                //Fidelity: Account Number,Account Name,Symbol,Description,Quantity,Last Price,Last Price Change,Current Value
+                                                //Vanguard: Account Number,Investment Name,Symbol,Shares,Share Price,Total Value,
+                                                
+                                                // Process the header
+                                                var headerChunks = lines[0].Split(',');
+
+                                                int accountNumberIndex = 0; // shouldn't hardcode, but for some strange reason it wasn't matching for Fidelity CSV files!?!
+                                                int accountNameIndex = -1;
+                                                int symbolIndex = -1;
+                                                int investmentNameIndex = -1;
+                                                int investmentValueIndex = -1;
+                                                
+
+                                                int chunkIndex = 0;
+                                                foreach (var headerChunk in headerChunks) {
+                                                    switch (headerChunk) {
+                                                        case "Account Name":
+                                                            accountNameIndex = chunkIndex;
+                                                            break;
+                                                        case "Symbol":
+                                                            symbolIndex = chunkIndex;
+                                                            break;
+                                                        case "Investment Name":
+                                                        case "Description":
+                                                            investmentNameIndex = chunkIndex;
+                                                            break;
+                                                        case "Current Value":
+                                                        case "Total Value":
+                                                            investmentValueIndex = chunkIndex;
+                                                            break;
+                                                        case "Account Number":
+                                                            accountNumberIndex = chunkIndex;
+                                                            break;
+                                                        default:
+                                                            break;
+                                                    }
+
+                                                    chunkIndex++;
+                                                }
+
+                                                Account? currentAccount = null;
+                                                for (int lineNum = 1;lineNum < lines.Length; lineNum++) {
+                                                    var line = lines[lineNum];
+                                                    string? accountNumber = null;
+                                                    string? accountName = null;
+                                                    string? symbol = null;
+                                                    string? investmentName = null;
+                                                    string? investmentValue = null;
+                                                    if (line.Length > 0)
+                                                    {
+                                                        if (char.IsDigit(line[0]))
+                                                        {
+                                                            // Process this data
+                                                            var chunks = line.Split(',');
+                                                            
+                                                            for (int i=0; i < chunks.Length; i++) {
+                                                                if (accountNumberIndex == i) {
+                                                                    accountNumber = chunks[i];
+                                                                } else if (accountNameIndex == i) {
+                                                                    accountName = chunks[i];
+                                                                } else if (symbolIndex == i) {
+                                                                    symbol = chunks[i];
+                                                                } else if (investmentNameIndex == i) {
+                                                                    investmentName = chunks[i];
+                                                                } else if (investmentValueIndex == i) {
+                                                                    investmentValue = chunks[i];
+                                                                }
+                                                            }
+
+                                                            if (lastAccountNumber != accountNumber) {
+                                                                currentAccount = new () { Custodian = accountName + " " + accountNumber };
+                                                                familyYears.Accounts.Add(currentAccount);
+                                                                lastAccountNumber = accountNumber;
+                                                            }
+                                                            
+                                                            if (investmentValue[0] == '$')
+                                                            {
+                                                                investmentValue = investmentValue.Substring(1);
+                                                            }
+                                                            double doubleValue = 0.0;
+                                                            double.TryParse(investmentValue, out doubleValue);
+
+
+                                                            if (symbol != null || investmentName != null) {
+                                                                Investment newInvestment = new (Funds) { Ticker = symbol, Name = investmentName, Value = doubleValue };
+                                                                currentAccount.Investments.Add(newInvestment);
+                                                            }
+                                                        }
+
+                                                        if (char.IsLetter(line[0]))
+                                                        {
+                                                            // stop processing file at first line that starts with a letter.
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            updateAccountRendering = true;
+                                        }
+                                    }
 
                                     private async void addInvestment(MouseEventArgs e, int accountIndex)
                                     {
@@ -1037,6 +1160,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                 await accountN.FocusAsync();
                 focusAccount = false;
             }
+
+            if (updateAccountRendering) {
+                await InvokeAsync(StateHasChanged); 
+                updateAccountRendering = false;
+            }
     }
 
     [Parameter]
@@ -1049,6 +1177,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
     private const string folderName = "/portfolio/";
     private bool focusTicker = false;
     private bool focusAccount = false;
+    private bool updateAccountRendering = false;
 
     protected override async Task OnInitializedAsync()
     {

@@ -1,6 +1,6 @@
 public class Investment 
 {
-    private IList<Fund> funds;
+    private IList<Fund>? funds;
     public Investment(IList<Fund> funds) 
     {
         this.funds = funds;
@@ -23,6 +23,7 @@ public class Investment
             return _Ticker;
         }
         set {
+            if (value == null) { _Ticker = value; return; }
             _Ticker = value?.ToUpperInvariant();
             bool found = false;
             foreach (var fund in funds)
