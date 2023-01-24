@@ -1,8 +1,14 @@
 public class Account 
 {
+    public Account() {
+        Investments = new();
+        AvailableFunds = new();
+    }
+
     public string? Identifier { get; set; }
     public string AccountType { get; set; } = "Taxable";
     public string? Custodian { get; set; }
+    public string? Note { get; set; }
     public double Value { 
         get {
             double newValue = 0;
@@ -23,29 +29,10 @@ public class Account
             return (Identifier != null ? Identifier+ " " : "") + AccountType + (Custodian != null ? " at " + Custodian : "");
         }
     }
-    private List<Investment>? _Investments;
-    public List<Investment> Investments {
-        get {
-            if (_Investments == null)
-            {
-                _Investments = new List<Investment>();
-            }
 
-            return _Investments;
-        }
-    }
+    public List<Investment> Investments { get; set; }
 
-    private List<Investment>? _AvailableFunds;
-    public List<Investment> AvailableFunds {
-        get {
-            if (_AvailableFunds == null)
-            {
-                _AvailableFunds = new List<Investment>();
-            }
-
-            return _AvailableFunds;
-        }
-    }
+    public List<Investment> AvailableFunds { get; set; }
 
     public void UpdatePercentages(double totalValue)
     {

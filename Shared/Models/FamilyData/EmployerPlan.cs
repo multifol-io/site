@@ -1,14 +1,15 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 
 public class EmployerPlan : INotifyPropertyChanged {
-    public EmployerPlan(Person person) {
-        this.person = person;
-        this.Employer401k = this.person.FamilyYears.RetirementData.Employer401k;
-    }
 
-    private Person person;
-    private IRS.Employer401k Employer401k;
+    [JsonIgnore]
+    public Person person { get; set; }
+    private IRS.Employer401k Employer401k {
+        get { return this.person.FamilyData.IRSData.RetirementData.Employer401k; }
+        set { this.person.FamilyData.IRSData.RetirementData.Employer401k = value; }
+    }
 
     public TriState Eligible {
         get => person.EmployerBenefits.Employer401k.Offered;
@@ -30,11 +31,13 @@ public class EmployerPlan : INotifyPropertyChanged {
     public int? AnnualSalary { get; set; }
     public int? MatchA { 
         get {
-            if (person.EmployerBenefits.Employer401k.MatchRules.Count >= 1) {
-                return person.EmployerBenefits.Employer401k.MatchRules[0].MatchPercentage;
-            } else {
-                return null;
+            if (person?.EmployerBenefits != null) {
+                if (person.EmployerBenefits.Employer401k.MatchRules.Count >= 1) {
+                    return person.EmployerBenefits.Employer401k.MatchRules[0].MatchPercentage;
+                }
             }
+
+            return null;
         }
     }
     public int? MatchALimit { 

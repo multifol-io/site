@@ -2,23 +2,24 @@ using Employer;
 using System.Text.Json.Serialization;
 
 public class Person {
-    public Person(FamilyYears familyYears, int personIndex) {
-        this.FamilyYears = familyYears;
-        this.EmployerPlan = new EmployerPlan(this);
-        this.EmployerBenefits = new EmployerBenefits() { Year = familyYears.Year };
+    public Person() {
+        this.EmployerPlan = new EmployerPlan() { person = this };
+        this.EmployerBenefits = new EmployerBenefits() { Person = this };
         this.IRA = new IRA(this);
         this.RothIRA = new RothIRA(this);
-        this.HealthSavingsAccount = new HealthSavingsAccount(this);
+        this.HealthSavingsAccount = new HealthSavingsAccount() { person = this };
         this.PersonIndex = personIndex;
         if (this.PersonIndex == 0) { Identifier = "person 1"; }
         else { Identifier = "person 2"; }
     }
 
+    public int personIndex { get; set; }
 
     public int? Age { get; set; }
     public string Identifier { get; set; }
     public string? Employer { get; set; }
     public EmployerPlan EmployerPlan { get; set; }
+    
     public HealthSavingsAccount HealthSavingsAccount { get; set; }
     [JsonIgnore]
     public IRA IRA { get; set; }
@@ -35,11 +36,11 @@ public class Person {
     }
 
 
-    public FamilyYears FamilyYears { private set; get; }
+    public FamilyData? FamilyData { get; set; }
 
     public string? PossessiveID { 
         get {
-            if (FamilyYears.PersonCount > 1) {
+            if (FamilyData.PersonCount > 1) {
                 switch (Identifier)
                 {
                     case "me":
@@ -78,15 +79,15 @@ public class Person {
 
     public Person? Spouse { 
         get {
-            if (FamilyYears.TaxFilingStatus == TaxFilingStatus.MarriedFilingJointly 
-            || FamilyYears.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart 
-            || FamilyYears.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperately)
+            if (FamilyData.TaxFilingStatus == TaxFilingStatus.MarriedFilingJointly 
+            || FamilyData.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart 
+            || FamilyData.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperately)
             {
                 switch (this.PersonIndex) {
                     case 0:
-                        return FamilyYears.People[1];
+                        return FamilyData.People[1];
                     case 1:
-                        return FamilyYears.People[0];
+                        return FamilyData.People[0];
                     default:
                         throw new InvalidDataException("PersonIndex not expected to be " + this.PersonIndex);
                 }
@@ -126,16 +127,16 @@ public class Person {
             int personIndex = PersonIndex;
             switch (personIndex) {
                 case 0:
-                    if (FamilyYears.PersonCount > 1)
+                    if (FamilyData.PersonCount > 1)
                     {
-                        return FamilyYears.People[1];
+                        return FamilyData.People[1];
                     }
                     else
                     {
                         return null;
                     }
                 case 1:
-                    return FamilyYears.People[0];
+                    return FamilyData.People[0];
                 default:
                     return null;
             }
