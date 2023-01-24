@@ -1,10 +1,6 @@
 public class Investment 
 {
-    private IList<Fund>? funds;
-    public Investment(IList<Fund> funds) 
-    {
-        this.funds = funds;
-    }
+    public IList<Fund>? funds { get; set; }
 
     private string? _Name;
     public string? Name { 
@@ -25,20 +21,22 @@ public class Investment
         set {
             if (value == null) { _Ticker = value; return; }
             _Ticker = value?.ToUpperInvariant();
-            bool found = false;
-            foreach (var fund in funds)
-            {
-                if (_Ticker == fund.Ticker)
+            if (funds != null) {
+                bool found = false;
+                foreach (var fund in funds)
                 {
-                    AutoComplete(fund.LongName, fund.ExpenseRatio);
-                    found = true;
+                    if (_Ticker == fund.Ticker)
+                    {
+                        AutoComplete(fund.LongName, fund.ExpenseRatio);
+                        found = true;
+                    }
                 }
-            }
-            if (!found) {
-                if (AutoCompleted) {
-                    ExpenseRatio = null;
-                    Name = null;
-                    AutoCompleted = false;
+                if (!found) {
+                    if (AutoCompleted) {
+                        ExpenseRatio = null;
+                        Name = null;
+                        AutoCompleted = false;
+                    }
                 }
             }
         }

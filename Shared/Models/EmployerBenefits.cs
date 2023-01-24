@@ -60,6 +60,7 @@ namespace Employer {
 
     public class EmployerBenefits : DataDocument
     {
+        public Person Person { get; set; }
         private string? _Company;
         public string? Company { 
             get { return _Company; }
@@ -67,7 +68,16 @@ namespace Employer {
                 _Company = value;
             }
         }
-        public int Year { get; set; }
+        public int Year
+        {
+            get {
+                if (Person?.FamilyData != null) {
+                    return Person.FamilyData.Year;
+                } else {
+                    throw new Exception("EmployerBenefits.Year in unexpected state");
+                }
+            }
+        }
 
         [JsonIgnore]
         public bool Downloaded { get; set; }

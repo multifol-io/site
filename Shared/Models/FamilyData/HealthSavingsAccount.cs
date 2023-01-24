@@ -1,17 +1,18 @@
-using System.ComponentModel.DataAnnotations;
-public class HealthSavingsAccount {
-    public HealthSavingsAccount(Person person)
-    {
-        this.person = person;
-    }
+using System.Text.Json.Serialization;
 
+public class HealthSavingsAccount {
     public IRS.HSA? HSAVariables {
         get {
-            return this.person.FamilyYears.RetirementData.HSA;
+            if (person?.FamilyData?.IRSData != null) {
+                return person.FamilyData.IRSData.RetirementData.HSA;
+            }
+
+            return null;
         }
     }
 
-    private Person person;
+    [JsonIgnore]
+    public Person person { get; set; }
     public TriState Eligible { get; set; }
     public bool? NotEligible {
         get {
@@ -60,7 +61,7 @@ public class HealthSavingsAccount {
                     break;
             }
 
-            if (person.FiftyFiveOrOver) {
+            if (person != null && person.FiftyFiveOrOver) {
                 if (contributionLimit == null) {
                     contributionLimit = HSAVariables?.ContributionLimit?.CatchUp;
                 } else {

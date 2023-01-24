@@ -1,6 +1,6 @@
 using IRS;
 
-public interface IFamilyYears
+public interface IFamilyData
 {
     public EmergencyFund EmergencyFund { get; set; }
     public bool DebtsComplete { get; }
@@ -31,8 +31,7 @@ public interface IFamilyYears
     public int? IncomeTaxPaid { get; set; }
     public int? TaxableToInvest { get; set; }
     public int? PlannedSavings { get; }
+    public IRSData IRSData { get; set; }
 
     public void UpdatePercentages();
-    public RetirementData RetirementData { get; }
-    public TaxRateData TaxRateData { get; }
 }
