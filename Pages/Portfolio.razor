@@ -303,7 +303,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                 <br/>
                  (⚠️ WARNING - this data file has your $$ amounts of investments. Don't share! Keep secure. Use clipboard button above to use the stanard portfolio format, which contains somewhat less info.)
                 <br/>
-                <label>LOAD portfolio data file:</label> <InputFile OnChange="@((e) => OnLoadPortfolio(e))" />
+                <label>LOAD portfolio data file:</label> <InputFile accept=".json" OnChange="@((e) => OnLoadPortfolio(e))" />
                 <br/>
 
                 <br/>
