@@ -11,7 +11,7 @@ public class Person {
     }
 
     public int? Age { get; set; }
-    public string Identifier { get; set; }
+    public string? Identifier { get; set; }
     public string? Employer { get; set; }
     public EmployerPlan EmployerPlan { get; set; }
     

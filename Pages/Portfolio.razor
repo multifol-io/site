@@ -882,6 +882,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     {
                                         familyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
                                         Navigation.NavigateTo("/portfolio/reload");
+                                        familyData.UpdatePercentages();
                                     }
                                     void addAvailableFund(MouseEventArgs e, Account account)
                                     {
@@ -905,6 +906,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     {
                                         familyData.Accounts.RemoveAt(accountIndex);
                                         Navigation.NavigateTo("/portfolio/reload");
+                                        familyData.UpdatePercentages();
                                     }
                                 }
 
