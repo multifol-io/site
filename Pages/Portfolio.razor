@@ -564,14 +564,16 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     <EditForm Model="person" style=margin-left:25px>
                                         <label>Age:</label> <input style=width:60px type=text @bind-Value=person.Age @bind-Value:event=oninput /><br/>
 
-                                        <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
+                                        @if(person?.FamilyData?.PersonCount>1){<label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
                                             <option value="ChoiceNeeded">ChoiceNeeded</option>
                                             <option>person @personIndex</option>
                                             <option>him</option>
                                             <option>her</option>
                                             <option>me</option>
                                             <option>them</option>
-                                        </select><br/><br/>
+                                        </select><br/>}
+                                        
+                                        <br/>
                                     </EditForm><br/>
                                 }
                                 break;
