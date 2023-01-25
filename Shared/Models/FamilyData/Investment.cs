@@ -1,5 +1,8 @@
+using System.Text.Json.Serialization;
+
 public class Investment 
 {
+    [JsonIgnore]
     public IList<Fund>? funds { get; set; }
 
     private string? _Name;
