@@ -35,7 +35,7 @@ public class Person {
         }
     }
 
-
+    [JsonIgnore]
     public FamilyData? FamilyData { get; set; }
 
     public string? PossessiveID { 

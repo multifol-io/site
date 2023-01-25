@@ -1,6 +1,6 @@
 using IRS;
 using System.ComponentModel.DataAnnotations;
-
+using System.Text.Json.Serialization;
 
 public class FamilyData : IFamilyData
 {
@@ -155,6 +155,7 @@ public class FamilyData : IFamilyData
         }
     }
 
+    [JsonIgnore]
     public IRSData? IRSData { get; set; }
 
     public int PersonCount {
