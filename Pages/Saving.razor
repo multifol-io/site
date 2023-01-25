@@ -92,7 +92,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                             var person = familyData.People[i];
                             <span>Person @(i+1):</span><br/>
                             <div style=margin-left:25px>
-                                <label>Age:</label> <input style=width:60px type=number @bind-Value=person.Age @bind-Value:event=oninput /><br/>
+                                <label>Age:</label> <input style=width:60px type=number min=0 max=125 @bind-Value=person.Age @bind-Value:event=oninput /><br/>
                                 @if (familyData.PersonCount > 1) {
                                     <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
                                         <option value="ChoiceNeeded">ChoiceNeeded</option>
@@ -755,7 +755,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                                     var person = familyData.People[i];
                                                     <span>Person @(i+1):</span><br/>
                                                     <div style=margin-left:25px>
-                                                        <label>Age:</label> <input style=width:60px type=number @bind-Value=person.Age @bind-Value:event=oninput /><br/>
+                                                        <label>Age:</label> <input style=width:60px type=number min=0 max=125 @bind-Value=person.Age @bind-Value:event=oninput /><br/>
                                                         <label>Employer:</label> <input style=width:200px type=text @bind-Value=person.EmployerBenefits.Company @bind-Value:event=oninput /><br/>
                                                     </div>
                                                 }
