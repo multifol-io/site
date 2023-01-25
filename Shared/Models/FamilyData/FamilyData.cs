@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 public class FamilyData : IFamilyData
 {
     private FamilyData() {
+        Debts = new();
         Accounts = new();
         People = new();
         Questions = new();
@@ -25,17 +26,7 @@ public class FamilyData : IFamilyData
     }
     
     public TriState DebtFree { get; set; }
-    private List<Debt>? _debts;
-    public List<Debt> Debts
-    {
-        get {
-            if (_debts == null) {
-                _debts = new List<Debt>();
-            }
-
-            return _debts;
-        }
-    }
+    public List<Debt> Debts { get; set; }
     
     private TaxFilingStatus _taxFilingStatus = TaxFilingStatus.Single;
     [Required]
