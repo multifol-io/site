@@ -816,7 +816,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                                     string? investmentValue = null;
                                                     if (line.Length > 0)
                                                     {
-                                                        if (char.IsDigit(line[0]))
+                                                        if (char.IsDigit(line[0]) || char.IsDigit(line[1]))
                                                         {
                                                             // Process this data
                                                             var chunks = line.Split(',');
@@ -837,7 +837,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
 
                                                             if (lastAccountNumber != accountNumber) {
                                                                 currentAccount = new () { 
-                                                                    Note = accountName != null ? "⚠️" + accountName: "",
+                                                                    Note = accountName != null ? "⚠️" + accountName: "⚠️*"+ accountNumber.Substring(accountNumber.Length-4-1,4),
                                                                     Custodian = (accountNameIndex != -1 ? "Fidelity" : "Vanguard")
                                                                  };
                                                                 familyData.Accounts.Add(currentAccount);
@@ -858,7 +858,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                                             }
                                                         }
 
-                                                        if (line.Length > 1 && char.IsLetter(line[1])) // some account numbers 
+                                                        if (line.Length > 1 && char.IsLetter(line[1])) // some account numbers start with a letter
                                                         {
                                                             // stop processing file at first line that starts with a letter.
                                                             break;

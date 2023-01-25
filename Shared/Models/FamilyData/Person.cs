@@ -8,12 +8,7 @@ public class Person {
         this.IRA = new IRA(this);
         this.RothIRA = new RothIRA(this);
         this.HealthSavingsAccount = new HealthSavingsAccount() { person = this };
-        this.PersonIndex = personIndex;
-        if (this.PersonIndex == 0) { Identifier = "person 1"; }
-        else { Identifier = "person 2"; }
     }
-
-    public int personIndex { get; set; }
 
     public int? Age { get; set; }
     public string Identifier { get; set; }
@@ -120,7 +115,7 @@ public class Person {
         }
     }
 
-    public int PersonIndex { private set; get; }
+    public int PersonIndex { set; get; }
     
     public Person? OtherPerson { 
         get {
