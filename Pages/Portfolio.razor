@@ -1000,7 +1000,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
 
     public string getPronoun(Person person)
     {
-        if (person.Identifier != null && person.Identifier != "None") {
+        if (person?.FamilyData != null && person.FamilyData.PersonCount > 1 && person.Identifier != null && person.Identifier != "None") {
             return "(" + person.Identifier + ")";
         }
         else
