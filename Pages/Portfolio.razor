@@ -858,7 +858,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                                             }
                                                         }
 
-                                                        if (char.IsLetter(line[0]))
+                                                        if (line.Length > 1 && char.IsLetter(line[1])) // some account numbers 
                                                         {
                                                             // stop processing file at first line that starts with a letter.
                                                             break;
