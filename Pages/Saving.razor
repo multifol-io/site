@@ -553,9 +553,6 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                 <p><b>Worksheet:</b> </p>
 
                                 <EditForm Model="familyData" style=margin-left:25px>
-                                    <DataAnnotationsValidator />
-                                    <ValidationSummary />
-                                    
                                     <label>Current Emergency Fund:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/><br/><br/>
                                     <label>➗ Monthly Expenses:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /><br/><br/>
                                     <hr style=width:300px />
