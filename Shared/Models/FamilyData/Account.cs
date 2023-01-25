@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 public class Account 
 {
     public Account() {
@@ -21,6 +23,7 @@ public class Account
         }
     }
     public bool Edit { get; set; }
+    [JsonIgnore]
     public double Percentage { get; set; }
 
     public string FullName 
