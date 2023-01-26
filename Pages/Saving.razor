@@ -421,6 +421,11 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                     <h4>@((MarkupString)markupize(step.priority))</h4>
 
                     <p class="article"><b>Summary:</b> @((MarkupString)markupize(step.summary))</p>
+                        <ol>
+                            <li>Look up your company benefits, asking for clarification as needed from your Benefits experts in HR.</li>
+                            <li>Fill out the form above as appropriate based on those benefits.</li>
+                            <li>Consider sharing your work with <a href=#downloadable>Make It Downloadable for others</a></li>
+                        </ol>
                         @switch (step.number) {
                             case 0:
                                 @for (int i = 0; i < familyData.PersonCount; i++) {
@@ -492,20 +497,27 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                     </EditForm>
                                     <br/>
 
-                                    @if (new Uri(Navigation.Uri).Host == "localhost")
-                                        {
-                                            @if (familyData.PersonCount > 0) {
-                                                <button @onclick="DownloadEmployer1">
-                                                Download employer1 benefits file
-                                                </button>
-                                                <br/>
-                                            }
-                                            @if (familyData.PersonCount > 1) {
-                                                <button @onclick="DownloadEmployer2">
-                                                Download employer2 beneftis file
-                                                </button>
-                                            }
-                                        }
+                                    <hr/>
+                                    <a name=MakeItDownloadable><h2>Once complete and correct, share this Employer Benefit Data</h2></a>
+                                    <div>We'd like to collect many companies benefit files and publish them for other users of this Annual SAVINGS tool to have automatically used.</div>
+                                    <ol>
+                                        <li>Press 'Download &lt;EmployerName&gt; benefits file'</li>
+                                        <li>Send file to bogletools@gmail.com -- we'll review and publish to github.com/bogle-tools so that Bogle.Tools/saving can make it easier to use for other employees by <a target=_blank href=https://github.com/bogle-tools/financial-variables/blob/main/data/usa/employers/microsoft/microsoft.retirement.2023.json>posting on github.com</a></li>
+                                    </ol>
+                                    <br/>
+                                    @if (familyData.PersonCount > 0) {
+                                        <button @onclick="DownloadEmployer1">
+                                        Download @familyData.People[0].EmployerBenefits.Company benefits file
+                                        </button> <span>to your device</span>
+                                        <br/>
+                                    }
+
+                                    @if (familyData.PersonCount > 1) {
+                                        <button @onclick="DownloadEmployer2">
+                                        Download @familyData.People[1].EmployerBenefits.Company benefits file
+                                        </button> <span>to your device</span>
+                                    }
+
                                     @code{
                                         private void addContributionLevel(MouseEventArgs e, int personIndex)
                                         {
@@ -532,7 +544,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                                         new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
                                                     }
                                             };
-                                            await DownloadFileFromStream(familyData.People[index].EmployerBenefits, options, "employer-benefits-"+index+".json");
+                                            await DownloadFileFromStream(familyData.People[index].EmployerBenefits, options, familyData.People[index].EmployerBenefits.Company + "-benefits.json");
                                         }
                                         private async Task DownloadFileFromStream(object data, JsonSerializerOptions options, string fileName)
                                         {
