@@ -144,7 +144,6 @@ namespace Employer {
                     MegaBackdoorRoth = employerData.MegaBackdoorRoth;
                     Downloaded = true;
                     Console.WriteLine("employer data was found " + lEmployer);
-
                 }
                 else
                 {
