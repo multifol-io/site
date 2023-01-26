@@ -60,6 +60,7 @@ namespace Employer {
 
     public class EmployerBenefits : DataDocument
     {
+        [JsonIgnore]
         public Person Person { get; set; }
         private string? _Company;
         public string? Company { 

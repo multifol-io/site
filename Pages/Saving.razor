@@ -494,14 +494,17 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
 
                                     @if (new Uri(Navigation.Uri).Host == "localhost")
                                         {
-
-                                            <button @onclick="DownloadEmployer1">
-                                            Download employer1 benefits file
-                                            </button>
-                                                                                    <br/>
-                                            <button @onclick="DownloadEmployer2">
-                                            Download employer2 beneftis file
-                                            </button>
+                                            @if (familyData.PersonCount > 0) {
+                                                <button @onclick="DownloadEmployer1">
+                                                Download employer1 benefits file
+                                                </button>
+                                                <br/>
+                                            }
+                                            @if (familyData.PersonCount > 1) {
+                                                <button @onclick="DownloadEmployer2">
+                                                Download employer2 beneftis file
+                                                </button>
+                                            }
                                         }
                                     @code{
                                         private void addContributionLevel(MouseEventArgs e, int personIndex)
