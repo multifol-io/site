@@ -143,14 +143,17 @@ namespace Employer {
                     HSA = employerData.HSA;
                     MegaBackdoorRoth = employerData.MegaBackdoorRoth;
                     Downloaded = true;
+                    Console.WriteLine("employer data was found " + lEmployer);
+
                 }
                 else
                 {
                     Console.WriteLine("employer data was null for " + lEmployer);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine("employer data load failed for " + lEmployer + "\n" + e.Message);
             }
         }
     }
