@@ -1,5 +1,4 @@
-# bogle.tools
+# See [bogle.tools](https://bogle.tools) site
 
-Tools to help you apply the lessons provided in Bogleheads Prioritizing Investments wiki.
+Helps you plan Annual SAVING and create PORTFOLIO Review posts
 
-See site as it evolves: https://bogle.tools
