@@ -230,11 +230,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                             <span>@familyData.HighDebts in High Debts</span><br/>
                                             @((MarkupString)checkTotal(familyData.HighDebts))
                                         }
-                                        @if (familyData.PersonCount > 0 && familyData.People[0].HealthSavingsAccount.AmountToSave > 0) {
+                                        @if (familyData.PersonCount > 0  && (familyData.People[0].EmployerBenefits.Complete || familyData.People[0].EmployerPlan.AnnualSalary == 0 || familyData.People[0].HealthSavingsAccount.EligibleForHSA  || familyData.People[0].HealthSavingsAccount.EligibleForHSACatchUpOnly) && familyData.People[0].HealthSavingsAccount.AmountToSave > 0) {
                                             <span>@formatMoney(familyData.People[0].HealthSavingsAccount.AmountToSave) in @familyData.People[0].PossessiveID HSA (Employer: @formatMoney(familyData.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
                                             @((MarkupString)checkTotal(familyData.People[0].HealthSavingsAccount.AmountToSave))
                                         }
-                                        @if (familyData.PersonCount > 1 && familyData.People[1].HealthSavingsAccount.AmountToSave > 0) {
+                                        @if (familyData.PersonCount > 1  && (familyData.People[1].EmployerBenefits.Complete || familyData.People[1].EmployerPlan.AnnualSalary == 0 || familyData.People[1].HealthSavingsAccount.EligibleForHSA  || familyData.People[1].HealthSavingsAccount.EligibleForHSACatchUpOnly) && familyData.People[1].HealthSavingsAccount.AmountToSave > 0) {
                                             <span>@formatMoney(familyData.People[1].HealthSavingsAccount.AmountToSave) in @familyData.People[1].PossessiveID HSA (Employer: @formatMoney(familyData.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
                                             @((MarkupString)checkTotal(familyData.People[1].HealthSavingsAccount.AmountToSave))
                                         }

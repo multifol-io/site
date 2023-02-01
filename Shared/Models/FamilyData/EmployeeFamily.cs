@@ -1,5 +1,6 @@
 public enum EmployeeFamily {
-    None = 0,
-    EmployeeOnly,
+    ChoiceNeeded = 0,
+    Individual,
     Family,
+    CatchUp,
 }

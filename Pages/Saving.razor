@@ -251,7 +251,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                                 case "hsa":
                                     <td>
                                         @if (familyData.PersonCount > 0) {
-                                            if ((familyData.People[0].EmployerBenefits.Complete || familyData.People[0].EmployerPlan.AnnualSalary == 0) && familyData.People[0].HealthSavingsAccount.AmountToSave > 0) {
+                                            if ((familyData.People[0].EmployerBenefits.Complete || familyData.People[0].EmployerPlan.AnnualSalary == 0 || familyData.People[0].HealthSavingsAccount.EligibleForHSA || familyData.People[0].HealthSavingsAccount.EligibleForHSACatchUpOnly) && familyData.People[0].HealthSavingsAccount.AmountToSave > 0) {
                                                 runningTotal += addItem(familyData.People[0].HealthSavingsAccount.AmountToSave);
                                                 itemTotal += addItem(familyData.People[0].HealthSavingsAccount.AmountToSave);
                                                 <span>@formatMoney(familyData.People[0].HealthSavingsAccount.AmountToSave) in @familyData.People[0].PossessiveID HSA (Employer: @formatMoney(familyData.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
@@ -262,7 +262,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                                             }
                                         }
                                         @if (familyData.PersonCount > 1) {
-                                            if ((familyData.People[1].EmployerBenefits.Complete || familyData.People[1].EmployerPlan.AnnualSalary == 0) && familyData.People[1].HealthSavingsAccount.AmountToSave > 0) {
+                                            if ((familyData.People[1].EmployerBenefits.Complete || familyData.People[1].EmployerPlan.AnnualSalary == 0 || familyData.People[1].HealthSavingsAccount.EligibleForHSA  || familyData.People[1].HealthSavingsAccount.EligibleForHSACatchUpOnly) && familyData.People[1].HealthSavingsAccount.AmountToSave > 0) {
                                                 runningTotal += addItem(familyData.People[1].HealthSavingsAccount.AmountToSave);
                                                 itemTotal += addItem(familyData.People[1].HealthSavingsAccount.AmountToSave);
                                                 <span>@formatMoney(familyData.People[1].HealthSavingsAccount.AmountToSave) in @familyData.People[1].PossessiveID HSA (Employer: @formatMoney(familyData.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
@@ -656,30 +656,49 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                                 @for (int i = 0; i < familyData.PersonCount; i++) {
                                     var person = familyData.People[i];
                                     var haveHDHPid = "eligible-" + i;
+                                    var haveHDHPOutsideid = "eligibleOutside-" + i;
+                                    var haveHDHPEmployerid = "eligibleEmployer-" + i;
                                     <p><b>Person @(i+1):</b> </p>
 
                                     <EditForm Model="person" style=margin-left:25px>
-
-                                        <label>Eligible for Catchup Contributions (55 or older):</label> @person.FiftyFiveOrOver<br/><br/>
+                                        <p>Employer based HDHP:</p>
+                                        <fieldset style='margin-left:20px'>
                                         @if (person.EmployerBenefits.HSA.HighDeductibleHealthPlanAvailable == TriState.True) {
-                                            <fieldset style='margin-left:20px'>
-                                                <label>Individual/Family:</label>   <select @bind=person.HealthSavingsAccount.Family><option value="ChoiceNeeded">ChoiceNeeded</option><option value=EmployeeOnly>Employee only</option><option>Family</option></select><br/>
+        
+                                                
+                                                <p>Has High Deductible Health Plan (HDHP) available from employer, according to <a href="/saving/benefit-entry">entered benefits</a>.</p>
 
-                                                <label>Contribution Limit:</label> @formatMoney(person.HealthSavingsAccount.Limit)<br/><br/>
+                                                <InputCheckbox id=@haveHDHPEmployerid @bind-Value=person.HealthSavingsAccount.HasEmployerHDHP /> <label for=@haveHDHPEmployerid>Has High Deductivle Health Plan from Employer</label><br/><br/>
+                                                    <label>Employer Contribution Levels:</label>
+                                                    <select @bind=person.HealthSavingsAccount.EmployerContributionString><option>ChoiceNeeded</option>
+                                                    @foreach(var employerContributionLevel in person.EmployerBenefits.HSA.EmployerContributionLevels)
+                                                    {
+                                                        var employerLevelBuffer = employerContributionLevel;
+                                                        <option value=@employerLevelBuffer.Amount>@(employerLevelBuffer.Description == null?"":@employerLevelBuffer.Description + ": ") @formatMoney(employerLevelBuffer.Amount)</option>
+                                                    }
+                                                    </select>
+                                            } else {
+                                                <span>No High Deductible Health Plan is available at employer, according to <a href="/saving/benefit-entry">entered benefits</a>.</span><br/><br/>
+                                            }
+                                        </fieldset>
 
-                                                <label>Employer Contribution Levels:</label>
-                                                <select @bind=person.HealthSavingsAccount.EmployerContributionString><option>ChoiceNeeded</option>
-                                                @foreach(var employerContributionLevel in person.EmployerBenefits.HSA.EmployerContributionLevels)
-                                                {
-                                                    var employerLevelBuffer = employerContributionLevel;
-                                                    <option value=@employerLevelBuffer.Amount>@(employerLevelBuffer.Description == null?"":@employerLevelBuffer.Description + ": ") @formatMoney(employerLevelBuffer.Amount)</option>
-                                                }
-                                                </select>
-                                            </fieldset>
-                                        } else {
-                                            <span>No High Deductible Health Plan is available at employer, according to entered benefits.</span><br/>
-                                        }
+                                        <p>HDHP (not employer based):</p>
+                                        <fieldset style='margin-left:20px'>
+                                            <InputCheckbox id=@haveHDHPOutsideid @bind-Value=person.HealthSavingsAccount.HasExternalHDHP /> <label for=@haveHDHPOutsideid>Has High Deductible Health Plan outside of Employer</label><br/><br/>
+                                        </fieldset>
+                                
+                                        <p>HSA Election:</p>
+                                        <fieldset disabled=@(!person.HealthSavingsAccount.EligibleForHSA && !person.HealthSavingsAccount.EligibleForHSACatchUpOnly) style='margin-left:20px'>
+                                            <label>HSA Level:</label>   <select @bind=person.HealthSavingsAccount.Family><option value="ChoiceNeeded">ChoiceNeeded</option>
+                                            @if(person.HealthSavingsAccount.EligibleForHSA){<option>Individual</option><option>Family</option>}
+                                            @if(person.HealthSavingsAccount.EligibleForHSACatchUpOnly){<option value=CatchUp>Catch up only</option>}
+                                            </select><br/>
+                                            <br/>
+                                            <label>Contribution Limit:</label> @formatMoney(person.HealthSavingsAccount.Limit)<br/>
+                                        </fieldset>
                                         <br/>
+                                        <label>Eligible for Catchup Contributions (55 or older):</label> @yesno(person.FiftyFiveOrOver)<br/><br/>
+                                        <hr/>
                                         <label>Amount to Save:</label> @formatMoney(person.HealthSavingsAccount.AmountToSave)<br/>
                                     </EditForm><br/>
                                 }
@@ -718,7 +737,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                                             }
                                             </InputSelect><br/>
 
-                                            <label>Eligible for Catchup Contributions (50 or older):</label> @person.FiftyOrOver<br/><br/>
+                                            <label>Eligible for Catchup Contributions (50 or older):</label> @yesno(person.FiftyOrOver)<br/><br/>
                                             <InputCheckbox id=@existingIRABalance @bind-Value=person.IRA.HasExistingBalance /> <label for=@existingIRABalance>Has IRA with > $0</label><br/><br/>
 
                                             <label><i>Recommended Option:</i></label><br/>
@@ -1037,6 +1056,10 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
         returnVal += "</span>";
 
         return returnVal;
+    }
+
+    private string yesno(bool yes) {
+        return (yes ? "yes" : "no");
     }
 
     [Parameter]

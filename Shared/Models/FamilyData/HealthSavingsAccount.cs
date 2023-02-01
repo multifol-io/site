@@ -13,10 +13,10 @@ public class HealthSavingsAccount {
 
     [JsonIgnore]
     public Person person { get; set; }
-    public TriState Eligible { get; set; }
-    public bool? NotEligible {
+    public TriState HasHSA { get; set; }
+    public bool? DoesNotHaveHSA {
         get {
-            switch (Eligible) {
+            switch (HasHSA) {
                 case TriState.ChoiceNeeded:
                 case TriState.False:
                     return true;
@@ -26,6 +26,22 @@ public class HealthSavingsAccount {
             }
         }
     }
+
+    public bool EligibleForHSA {
+        get {
+            return (
+                (person?.EmployerBenefits != null && person.EmployerBenefits.HSA.HighDeductibleHealthPlanAvailable == TriState.True)
+                 || person.HealthSavingsAccount.HasExternalHDHP
+                );
+        }
+    }
+
+    public bool EligibleForHSACatchUpOnly {
+        get {
+            return (!EligibleForHSA && person.FiftyFiveOrOver && person?.OtherPerson != null && person.OtherPerson.HealthSavingsAccount.EligibleForHSA);
+        }
+    }
+
     public EmployeeFamily? Family { get; set; }
     private string? _EmployerContributionString; 
     public string? EmployerContributionString { 
@@ -41,11 +57,13 @@ public class HealthSavingsAccount {
      }
     public int? EmployerContribution { get; set; }
 
+    public bool HasEmployerHDHP { get; set; }
+    public bool HasExternalHDHP { get; set; }
     public int? AmountToSave { get { return Limit - (EmployerContribution ?? 0); } }
     
     public int? Limit { 
         get {
-            if (Eligible == TriState.False && person.OtherPerson != null && person.OtherPerson.HealthSavingsAccount.NotEligible.HasValue && person.OtherPerson.HealthSavingsAccount.NotEligible.Value) return null;
+            if (HasHSA == TriState.False && person.OtherPerson != null && person.OtherPerson.HealthSavingsAccount.DoesNotHaveHSA.HasValue && person.OtherPerson.HealthSavingsAccount.DoesNotHaveHSA.Value) return null;
             
             int? contributionLimit = null;
 
@@ -54,8 +72,11 @@ public class HealthSavingsAccount {
                 case EmployeeFamily.Family:
                     contributionLimit = HSAVariables?.ContributionLimit?.Family;
                     break;
-                case EmployeeFamily.EmployeeOnly:
+                case EmployeeFamily.Individual:
                     contributionLimit = HSAVariables?.ContributionLimit?.SelfOnly;
+                    break;
+                case EmployeeFamily.CatchUp:
+                    contributionLimit = 0;
                     break;
                 default:
                     break;
