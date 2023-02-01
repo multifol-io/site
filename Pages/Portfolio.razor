@@ -9,7 +9,7 @@
 @using System.Text.Json.Serialization
 
 <PageTitle>
-Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
+Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
 </PageTitle>
 
 <style>
@@ -318,12 +318,20 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
 
                             if (files != null)
                             {
+                                var options = new JsonSerializerOptions() 
+                                    {
+                                        Converters =
+                                            {
+                                                new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                                            }
+                                    };
+
                                 foreach (var file in files)
                                 {
                                     using (var stream = file.OpenReadStream()) {
                                         if (familyData != null) {
                                             var irsData = familyData.IRSData;
-                                            familyData = await JsonSerializer.DeserializeAsync<FamilyData>(stream);
+                                            familyData = await JsonSerializer.DeserializeAsync<FamilyData>(stream, options);
                                             if (familyData != null) {
                                                 familyData.IRSData = irsData;
                                                 familyData.Year = 2023;
@@ -343,7 +351,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                             {
                                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
                                 IgnoreReadOnlyProperties = true,
-                                WriteIndented = true
+                                WriteIndented = true,
+                                Converters =
+                                    {
+                                        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                                    }
                             };
                             await DownloadFileFromStream(familyData, options, "portfolio.json");
                         }
@@ -841,7 +853,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
 
                                                             if (lastAccountNumber != accountNumber) {
                                                                 currentAccount = new () { 
-                                                                    Note = accountName != null ? "⚠️" + accountName: "⚠️*"+ accountNumber.Substring(accountNumber.Length-4-1,4),
+                                                                    Note = accountName != null ? "⚠️" + accountName: "⚠️*"+ accountNumber.Substring(accountNumber.Length-4,4),
                                                                     Custodian = (accountNameIndex != -1 ? "Fidelity" : "Vanguard")
                                                                  };
                                                                 familyData.Accounts.Add(currentAccount);

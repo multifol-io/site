@@ -21,14 +21,7 @@ public class Person {
     [JsonIgnore]
     public RothIRA RothIRA { get; set; }
 
-    private EmployerBenefits? _employerBenefits;
-    [JsonIgnore]
-    public EmployerBenefits? EmployerBenefits { 
-        get { return _employerBenefits; }
-        set { 
-            _employerBenefits = value;
-        }
-    }
+    public EmployerBenefits? EmployerBenefits { get; set; }
 
     [JsonIgnore]
     public FamilyData? FamilyData { get; set; }

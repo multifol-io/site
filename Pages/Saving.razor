@@ -9,7 +9,7 @@
 @using System.Text.Json.Serialization
 
 <PageTitle>
-Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
+Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
 </PageTitle>
 
 <style>
@@ -677,7 +677,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' '))
                                                 </select>
                                             </fieldset>
                                         } else {
-                                            <span>No High Deductible Health Plan is available at @person.EmployerBenefits.Company, according to entered benefits.</span><br/>
+                                            <span>No High Deductible Health Plan is available at employer, according to entered benefits.</span><br/>
                                         }
                                         <br/>
                                         <label>Amount to Save:</label> @formatMoney(person.HealthSavingsAccount.AmountToSave)<br/>
