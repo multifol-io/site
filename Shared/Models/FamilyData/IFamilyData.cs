@@ -35,4 +35,5 @@ public interface IFamilyData
     public IRSData IRSData { get; set; }
 
     public void UpdatePercentages();
+    public void SetBackPointers();
 }

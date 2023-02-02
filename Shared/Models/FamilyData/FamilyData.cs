@@ -10,12 +10,24 @@ public class FamilyData : IFamilyData
         People = new();
         Questions = new();
     }
+
     public FamilyData(IRSData irsData) : this()
     {
         IRSData = irsData;
         Year = 2023;
         People.Add(new Person() { Identifier = "person 1", FamilyData = this, PersonIndex = 0 });
         People.Add(new Person() { Identifier = "person 2", FamilyData = this, PersonIndex = 1 });
+        SetBackPointers();
+    }
+
+    // set back pointers in familydata
+    public void SetBackPointers()
+    {
+        for (int personIndex = 0; personIndex < this.People.Count; personIndex++) {
+            var person = this.People[personIndex];
+            person.PersonIndex = personIndex;
+            person.SetBackPointers(this);
+        }
     }
 
     public EmergencyFund EmergencyFund { get; set; } = new();

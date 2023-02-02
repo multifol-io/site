@@ -1,6 +1,10 @@
 using System.Text.Json.Serialization;
 
 public class HealthSavingsAccount {
+    // back pointer
+    [JsonIgnore]
+    public Person person { get; set; }
+    
     public IRS.HSA? HSAVariables {
         get {
             if (person?.FamilyData?.IRSData != null) {
@@ -11,8 +15,6 @@ public class HealthSavingsAccount {
         }
     }
 
-    [JsonIgnore]
-    public Person person { get; set; }
     public TriState HasHSA { get; set; }
     public bool? DoesNotHaveHSA {
         get {

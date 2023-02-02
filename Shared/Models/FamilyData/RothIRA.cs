@@ -1,11 +1,10 @@
-using System.ComponentModel.DataAnnotations;
-public class RothIRA {
-    public RothIRA(Person person)
-    {
-        this.person = person;
-    }
+using System.Text.Json.Serialization;
 
-    private Person person;
+public class RothIRA {
+    // back pointer
+    [JsonIgnore]
+    public Person person { get; set; }
+
     private IRS.RothIRA rothIraVariables {
         get { return this.person.FamilyData.IRSData.RetirementData.RothIRA; }
     }

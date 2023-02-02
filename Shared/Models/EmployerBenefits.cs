@@ -60,8 +60,10 @@ namespace Employer {
 
     public class EmployerBenefits : DataDocument
     {
+        // back pointer
         [JsonIgnore]
-        public Person Person { get; set; }
+        public Person person { get; set; }
+
         private string? _Company;
         public string? Company { 
             get { return _Company; }
@@ -72,8 +74,8 @@ namespace Employer {
         public int Year
         {
             get {
-                if (Person?.FamilyData != null) {
-                    return Person.FamilyData.Year;
+                if (person?.FamilyData != null) {
+                    return person.FamilyData.Year;
                 } else {
                     throw new Exception("EmployerBenefits.Year in unexpected state");
                 }

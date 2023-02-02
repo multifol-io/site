@@ -3,9 +3,10 @@ using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 public class EmployerPlan : INotifyPropertyChanged {
-
+    // back pointer
     [JsonIgnore]
     public Person person { get; set; }
+
     private IRS.Employer401k Employer401k {
         get { return this.person.FamilyData.IRSData.RetirementData.Employer401k; }
         set { this.person.FamilyData.IRSData.RetirementData.Employer401k = value; }

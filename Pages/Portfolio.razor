@@ -3,7 +3,7 @@
 @page "/portfolio/topic/{TopicValue}"
 @page "/portfolio/{stepPath}"
 @inject HttpClient Http
-@inject IFamilyData familyData
+@inject IAppData appData
 @inject IJSRuntime JS
 @inject NavigationManager Navigation
 @inject IList<Fund> Funds
@@ -362,10 +362,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                 if (familyData != null) {
                                     familyData.IRSData = irsData;
                                     familyData.Year = 2023;
-                                    for (int personId = 0; personId < familyData.People.Count; personId++) {
-                                        familyData.People[personId].FamilyData = familyData;
-                                        familyData.People[personId].PersonIndex = personId;
-                                    }
+                                    familyData.SetBackPointers();
                                 }
                                 else 
                                 {
@@ -1230,6 +1227,15 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     private bool focusTicker = false;
     private bool focusAccount = false;
 
+    private IFamilyData familyData {
+        get {
+            return appData.FamilyData;
+        }
+        set {
+            appData.FamilyData = value;
+        }
+    }
+    
     protected override async Task OnInitializedAsync()
     {
         steps = await Http.GetFromJsonAsync<Step[]>("data/portfolio-steps.json");

@@ -3,12 +3,27 @@ using System.Text.Json.Serialization;
 
 public class Person {
     public Person() {
-        this.EmployerPlan = new EmployerPlan() { person = this };
-        this.EmployerBenefits = new EmployerBenefits() { Person = this };
-        this.IRA = new IRA(this);
-        this.RothIRA = new RothIRA(this);
-        this.HealthSavingsAccount = new HealthSavingsAccount() { person = this };
+        this.EmployerPlan = new EmployerPlan();
+        this.EmployerBenefits = new EmployerBenefits();
+        this.IRA = new IRA();
+        this.RothIRA = new RothIRA();
+        this.HealthSavingsAccount = new HealthSavingsAccount();
     }
+
+    // set back pointers in person
+    public void SetBackPointers(IFamilyData familyData)
+    {
+        this.FamilyData = familyData;
+        this.EmployerBenefits.person = this;
+        this.EmployerPlan.person = this;
+        this.HealthSavingsAccount.person = this;
+        this.IRA.person = this;
+        this.RothIRA.person = this;
+    }
+
+    // back pointer
+    [JsonIgnore]
+    public IFamilyData? FamilyData { get; set; }
 
     public int? Age { get; set; }
     public string? Identifier { get; set; }
@@ -22,9 +37,6 @@ public class Person {
     public RothIRA RothIRA { get; set; }
 
     public EmployerBenefits? EmployerBenefits { get; set; }
-
-    [JsonIgnore]
-    public IFamilyData? FamilyData { get; set; }
 
     public string? PossessiveID { 
         get {

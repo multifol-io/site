@@ -1,11 +1,10 @@
-using System.ComponentModel.DataAnnotations;
-public class IRA {
-    public IRA(Person person)
-    {
-        this.person = person;
-    }
+using System.Text.Json.Serialization;
 
-    private Person person;
+public class IRA {
+    // back pointer
+    [JsonIgnore]
+    public Person person { get; set; }
+
     private IRS.IRA? iraVariables {
         get {
             return this.person.FamilyData.IRSData.RetirementData.IRA;

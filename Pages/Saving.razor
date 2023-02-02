@@ -2,7 +2,7 @@
 @page "/saving/{stepPath}"
 @page "/portfolio-contributions"
 @inject HttpClient Http
-@inject IFamilyData familyData
+@inject IAppData appData
 @inject IJSRuntime JS
 @using Employer
 @inject NavigationManager Navigation
@@ -1074,6 +1074,15 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
     protected override async Task OnInitializedAsync()
     {
         steps = await Http.GetFromJsonAsync<Step[]>("data/saving-steps.json");
+    }
+
+    private IFamilyData familyData {
+        get {
+            return appData.FamilyData;
+        }
+        set {
+            appData.FamilyData = value;
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

@@ -15,7 +15,8 @@ builder.Services.AddScoped<ISearchModel>(sp => SearchModel.Create());
 IRSData? irsData = await IRSData.Create(httpClient);
 if (irsData != null) {
     builder.Services.AddSingleton<IRSData>(irsData);
-    builder.Services.AddSingleton<IFamilyData>(new FamilyData(irsData));
+    var appData = new AppData(new FamilyData(irsData));
+    builder.Services.AddSingleton<IAppData>(appData);
 } else {
     throw new Exception("irsData is null");
 }
