@@ -15,13 +15,16 @@ public class HealthSavingsAccount {
         }
     }
 
-    public TriState HasHSA { get; set; }
-    public bool? DoesNotHaveHSA {
+    public TriState EmployerOffersHSA { get; set; }
+    public bool? EmployerDoesNotOfferHSA {
         get {
-            switch (HasHSA) {
+            switch (EmployerOffersHSA) {
                 case TriState.ChoiceNeeded:
                 case TriState.False:
-                    return true;
+                    if (person.EmployerPlan.AnnualSalary != 0)
+                        return true;
+                    else
+                        return false;
                 case TriState.True:
                 default:
                     return false;
@@ -65,30 +68,23 @@ public class HealthSavingsAccount {
     
     public int? Limit { 
         get {
-            if (HasHSA == TriState.False && person.OtherPerson != null && person.OtherPerson.HealthSavingsAccount.DoesNotHaveHSA.HasValue && person.OtherPerson.HealthSavingsAccount.DoesNotHaveHSA.Value) return null;
-            
             int? contributionLimit = null;
 
-            switch (Family)
-            {
-                case EmployeeFamily.Family:
-                    contributionLimit = HSAVariables?.ContributionLimit?.Family;
-                    break;
-                case EmployeeFamily.Individual:
-                    contributionLimit = HSAVariables?.ContributionLimit?.SelfOnly;
-                    break;
-                case EmployeeFamily.CatchUp:
-                    contributionLimit = 0;
-                    break;
-                default:
-                    break;
-            }
-
-            if (person != null && person.FiftyFiveOrOver) {
-                if (contributionLimit == null) {
-                    contributionLimit = HSAVariables?.ContributionLimit?.CatchUp;
-                } else {
-                    contributionLimit += HSAVariables?.ContributionLimit?.CatchUp;
+            if (EligibleForHSA || EligibleForHSACatchUpOnly) { 
+                switch (Family)
+                {
+                    case EmployeeFamily.Family:
+                        contributionLimit = HSAVariables?.ContributionLimit?.Family + (person.FiftyFiveOrOver ? HSAVariables?.ContributionLimit?.CatchUp : 0);
+                        break;
+                    case EmployeeFamily.Individual:
+                        contributionLimit = HSAVariables?.ContributionLimit?.SelfOnly + (person.FiftyFiveOrOver ? HSAVariables?.ContributionLimit?.CatchUp : 0);
+                        break;
+                    case EmployeeFamily.CatchUp:
+                        contributionLimit = HSAVariables?.ContributionLimit?.CatchUp;
+                        break;
+                    default:
+                    case EmployeeFamily.ChoiceNeeded:
+                        break;
                 }
             }
 

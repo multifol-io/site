@@ -1240,7 +1240,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     {
         steps = await Http.GetFromJsonAsync<Step[]>("data/portfolio-steps.json");
 
-        Console.WriteLine("TopicValue: " + TopicValue);
         if (!string.IsNullOrEmpty(TopicValue)) {
             await LoadPortfolioForTopic(TopicValue);
         }

@@ -217,6 +217,8 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                 <div><del>@familyData.People[0].PossessiveID @step.title</del></div>
                                             } else if (familyData.People[0].EmployerPlan.AnnualSalary != 0) {
                                                 <div><b>@familyData.People[0].PossessiveID @step.title</b></div>
+                                            } else if (familyData.People[0].EmployerPlan.AnnualSalary == 0) {
+                                                <div><del>@familyData.People[0].PossessiveID @step.title</del></div>
                                             }
                                         }
                                         @if (familyData.PersonCount > 1) {
@@ -233,6 +235,8 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                                             
                                             } else if (familyData.People[1].EmployerPlan.AnnualSalary != 0) {
                                                 <div><b>@familyData.People[1].PossessiveID @step.title</b></div>
+                                            } else if (familyData.People[1].EmployerPlan.AnnualSalary == 0) {
+                                                <div><del>@familyData.People[1].PossessiveID @step.title</del></div>
                                             }
                                         }
                                     </td>
@@ -305,6 +309,8 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                 <div><del>@familyData.People[0].PossessiveID @step.title</del></div>
                                             } else if (familyData.People[0].EmployerPlan.AnnualSalary != 0) {
                                                 <b>@familyData.People[0].PossessiveID @step.title</b><br/>
+                                            } else if (familyData.People[0].EmployerPlan.AnnualSalary == 0) {
+                                                <del>@familyData.People[0].PossessiveID @step.title</del><br/>
                                             }
                                         }
                                         @if (familyData.PersonCount > 1) {
@@ -318,6 +324,8 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                 <div><del>@familyData.People[1].PossessiveID @step.title</del></div>
                                             } else if (familyData.People[1].EmployerPlan.AnnualSalary != 0) {
                                                 <b>@familyData.People[1].PossessiveID @step.title</b>
+                                            } else if (familyData.People[1].EmployerPlan.AnnualSalary == 0) {
+                                                <del>@familyData.People[1].PossessiveID @step.title</del>
                                             }
                                         }
                                     </td>
@@ -334,6 +342,8 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                 <div><del>@familyData.People[0].PossessiveID @step.title</del></div>
                                             } else if (familyData.People[0].EmployerPlan.AnnualSalary != 0) {
                                                 <b>@familyData.People[0].PossessiveID @step.title</b><br/>
+                                            } else if (familyData.People[0].EmployerPlan.AnnualSalary == 0) {
+                                                <del>@familyData.People[0].PossessiveID @step.title</del><br/>
                                             }
                                         }
                                         @if (familyData.PersonCount > 1) {
@@ -345,6 +355,8 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                 <div><del>@familyData.People[1].PossessiveID @step.title</del></div>
                                             } else if (familyData.People[1].EmployerPlan.AnnualSalary != 0) {
                                                 <b>@familyData.People[1].PossessiveID @step.title</b><br/>
+                                            } else if (familyData.People[1].EmployerPlan.AnnualSalary == 0) {
+                                                <del>@familyData.People[1].PossessiveID @step.title</del><br/>
                                             }
                                         }
                                     </td>
@@ -669,17 +681,17 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                 <p>Has High Deductible Health Plan (HDHP) available from employer, according to <a href="/saving/benefit-entry">entered benefits</a>.</p>
 
                                                 <InputCheckbox id=@haveHDHPEmployerid @bind-Value=person.HealthSavingsAccount.HasEmployerHDHP /> <label for=@haveHDHPEmployerid>Has High Deductivle Health Plan from Employer</label><br/><br/>
-                                                    <label>Employer Contribution Levels:</label>
-                                                    <select @bind=person.HealthSavingsAccount.EmployerContributionString><option>ChoiceNeeded</option>
-                                                    @foreach(var employerContributionLevel in person.EmployerBenefits.HSA.EmployerContributionLevels)
-                                                    {
-                                                        var employerLevelBuffer = employerContributionLevel;
-                                                        <option value=@employerLevelBuffer.Amount>@(employerLevelBuffer.Description == null?"":@employerLevelBuffer.Description + ": ") @formatMoney(employerLevelBuffer.Amount)</option>
-                                                    }
-                                                    </select>
-                                            } else {
-                                                <span>No High Deductible Health Plan is available at employer, according to <a href="/saving/benefit-entry">entered benefits</a>.</span><br/><br/>
-                                            }
+                                                <label>Employer Contribution Levels:</label>
+                                                <select @bind=person.HealthSavingsAccount.EmployerContributionString><option>ChoiceNeeded</option>
+                                                @foreach(var employerContributionLevel in person.EmployerBenefits.HSA.EmployerContributionLevels)
+                                                {
+                                                    var employerLevelBuffer = employerContributionLevel;
+                                                    <option value=@employerLevelBuffer.Amount>@(employerLevelBuffer.Description == null?"":@employerLevelBuffer.Description + ": ") @formatMoney(employerLevelBuffer.Amount)</option>
+                                                }
+                                                </select>
+                                        } else {
+                                            <span>No High Deductible Health Plan is available at employer, according to <a href="/saving/benefit-entry">entered benefits</a>.</span><br/><br/>
+                                        }
                                         </fieldset>
 
                                         <p>HDHP (not employer based):</p>
@@ -689,7 +701,10 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                                 
                                         <p>HSA Election:</p>
                                         <fieldset disabled=@(!person.HealthSavingsAccount.EligibleForHSA && !person.HealthSavingsAccount.EligibleForHSACatchUpOnly) style='margin-left:20px'>
-                                            <label>HSA Level:</label>   <select @bind=person.HealthSavingsAccount.Family><option value="ChoiceNeeded">ChoiceNeeded</option>
+                                            <label>HSA Level:</label>   
+                                            <select @bind=person.HealthSavingsAccount.Family>
+                                            @if (person.HealthSavingsAccount.EligibleForHSA || person.HealthSavingsAccount.EligibleForHSACatchUpOnly){<option value="ChoiceNeeded">ChoiceNeeded</option>}
+                                            else{<option value="NotEligible">Not Eligible based on choices above</option>}
                                             @if(person.HealthSavingsAccount.EligibleForHSA){<option>Individual</option><option>Family</option>}
                                             @if(person.HealthSavingsAccount.EligibleForHSACatchUpOnly){<option value=CatchUp>Catch up only</option>}
                                             </select><br/>
