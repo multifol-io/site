@@ -1,6 +1,7 @@
 @page "/portfolio"
-@page "/portfolio/{stepPath}"
 @page "/portfolio/reload"
+@page "/portfolio/topic/{TopicValue}"
+@page "/portfolio/{stepPath}"
 @inject HttpClient Http
 @inject IFamilyData familyData
 @inject IJSRuntime JS
@@ -47,7 +48,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         // reload is a workaround where the correct data seemed to be deleted, but i needed to navigate away and then back to retirement-assets
         Navigation.NavigateTo("/portfolio/retirement-assets");
     }
-
     @if (steps == null || familyData == null)
     {
         <p><em>Loading...</em></p>
@@ -305,16 +305,36 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                 <br/>
                 <br/>
                 <label>LOAD portfolio data file:</label> <InputFile accept=".json" OnChange="@((e) => OnLoadPortfolio(e))" />
+                @* <label>LOAD portfolio data file for Forum Topic#</label><input type=text @bind=@TopicValue /> <button @onclick="OnLoadPortfolioForTopic">Load</button> *@
                 <br/>
 
                 <br/>
 
 
                 @code {
-                        IReadOnlyList<IBrowserFile>? files = new List<IBrowserFile>();
+
+                        private async Task OnLoadPortfolioForTopic() {
+                            await LoadPortfolioForTopic(TopicValue);
+                        }
+
+                        private async Task LoadPortfolioForTopic(string topicStr) {
+                            Console.WriteLine("loading topic: " + topicStr);
+                            var options = new JsonSerializerOptions() 
+                                {
+                                    Converters =
+                                        {
+                                            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                                        }
+                                };
+                            var topicJsonUri = "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/portfolios/" + topicStr + ".json";
+                            var stream = await Http.GetStreamAsync(topicJsonUri);
+                            await loadPortfolioFromStream(stream, options);
+                            Console.WriteLine("loaded " + familyData.People[0].Age);
+                        }
+
                         private async Task OnLoadPortfolio(InputFileChangeEventArgs e)
                         {
-                            files = e.GetMultipleFiles();
+                            var files = e.GetMultipleFiles();
 
                             if (files != null)
                             {
@@ -329,19 +349,27 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                 foreach (var file in files)
                                 {
                                     using (var stream = file.OpenReadStream()) {
-                                        if (familyData != null) {
-                                            var irsData = familyData.IRSData;
-                                            familyData = await JsonSerializer.DeserializeAsync<FamilyData>(stream, options);
-                                            if (familyData != null) {
-                                                familyData.IRSData = irsData;
-                                                familyData.Year = 2023;
-                                            }
-                                            else 
-                                            {
-                                                // error loading
-                                            }
-                                        }
+                                        await loadPortfolioFromStream(stream, options);
                                     }
+                                }
+                            }
+                        }
+
+                        private async Task loadPortfolioFromStream(Stream stream, JsonSerializerOptions options) {
+                            if (familyData != null) {
+                                var irsData = familyData.IRSData;
+                                familyData = await JsonSerializer.DeserializeAsync<FamilyData>(stream, options);
+                                if (familyData != null) {
+                                    familyData.IRSData = irsData;
+                                    familyData.Year = 2023;
+                                    for (int personId = 0; personId < familyData.People.Count; personId++) {
+                                        familyData.People[personId].FamilyData = familyData;
+                                        familyData.People[personId].PersonIndex = personId;
+                                    }
+                                }
+                                else 
+                                {
+                                    // error loading
                                 }
                             }
                         }
@@ -771,7 +799,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                     private ElementReference accountN;
                                     private async void OnChangeCSV(InputFileChangeEventArgs e)
                                     {
-                                        files = e.GetMultipleFiles();
+                                        var files = e.GetMultipleFiles();
                                         if (files != null)
                                         {
                                             foreach (var file in files)
@@ -1189,6 +1217,10 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
 
     [Parameter]
     public string? stepPath { get; set; }
+
+    [Parameter]
+    public string? TopicValue { get; set; }
+
     public bool ShowMarkup { get; set; }
     public string? currentAccountIndex { get; set; }
     private Step[]? steps;
@@ -1201,5 +1233,10 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     protected override async Task OnInitializedAsync()
     {
         steps = await Http.GetFromJsonAsync<Step[]>("data/portfolio-steps.json");
+
+        Console.WriteLine("TopicValue: " + TopicValue);
+        if (!string.IsNullOrEmpty(TopicValue)) {
+            await LoadPortfolioForTopic(TopicValue);
+        }
     }
 }

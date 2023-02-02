@@ -31,14 +31,14 @@ public class HealthSavingsAccount {
         get {
             return (
                 (person?.EmployerBenefits != null && person.EmployerBenefits.HSA.HighDeductibleHealthPlanAvailable == TriState.True)
-                 || person.HealthSavingsAccount.HasExternalHDHP
+                 || (person?.HealthSavingsAccount != null && person.HealthSavingsAccount.HasExternalHDHP)
                 );
         }
     }
 
     public bool EligibleForHSACatchUpOnly {
         get {
-            return (!EligibleForHSA && person.FiftyFiveOrOver && person?.OtherPerson != null && person.OtherPerson.HealthSavingsAccount.EligibleForHSA);
+            return (!EligibleForHSA && person != null && person.FiftyFiveOrOver && person?.OtherPerson != null && person.OtherPerson.HealthSavingsAccount.EligibleForHSA);
         }
     }
 

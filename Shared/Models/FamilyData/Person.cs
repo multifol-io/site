@@ -24,7 +24,7 @@ public class Person {
     public EmployerBenefits? EmployerBenefits { get; set; }
 
     [JsonIgnore]
-    public FamilyData? FamilyData { get; set; }
+    public IFamilyData? FamilyData { get; set; }
 
     public string? PossessiveID { 
         get {
@@ -108,6 +108,7 @@ public class Person {
         }
     }
 
+    [JsonIgnore]
     public int PersonIndex { set; get; }
     
     public Person? OtherPerson { 

@@ -9,14 +9,15 @@ public class FamilyData : IFamilyData
         Accounts = new();
         People = new();
         Questions = new();
-        People.Add(new Person() { Identifier = "person 1", FamilyData = this, PersonIndex = 0 });
-        People.Add(new Person() { Identifier = "person 2", FamilyData = this, PersonIndex = 1 });
     }
     public FamilyData(IRSData irsData) : this()
     {
         IRSData = irsData;
         Year = 2023;
+        People.Add(new Person() { Identifier = "person 1", FamilyData = this, PersonIndex = 0 });
+        People.Add(new Person() { Identifier = "person 2", FamilyData = this, PersonIndex = 1 });
     }
+
     public EmergencyFund EmergencyFund { get; set; } = new();
 
     public bool DebtsComplete {
