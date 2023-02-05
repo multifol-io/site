@@ -318,7 +318,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                         }
 
                         private async Task LoadPortfolioForTopic(string topicStr) {
-                            Console.WriteLine("loading topic: " + topicStr);
                             var options = new JsonSerializerOptions() 
                                 {
                                     Converters =
@@ -329,7 +328,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                             var topicJsonUri = "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/portfolios/" + topicStr + ".json";
                             var stream = await Http.GetStreamAsync(topicJsonUri);
                             await loadPortfolioFromStream(stream, options);
-                            Console.WriteLine("loaded " + familyData.People[0].Age);
                         }
 
                         private async Task OnLoadPortfolio(InputFileChangeEventArgs e)
@@ -779,13 +777,14 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                         @if(showImport){<span>Hide</span>}
                                         Import Accounts
                                     </button> to import Account info from a CSV file.
+                                    @if(showError){<br/><br/><span style=color:red>ERROR: must be a CSV file from Fidelity, Schwab, or Vanguard.</span><br/>}
                                     @if(showImport){
                                         <br/>
                                         <fieldset style=margin-left:20px>
                                             <span>Download portfolio details from custodian website, and then "choose file", to import: </span><br/>
                                             <InputFile accept=".csv" OnChange="@((e) => OnCSVImport(e))" /><br/>
                                             <ul>
-                                                <li>Currently supports importing Fidelity or Vanguard CSV files</li>
+                                                <li>Currently supports importing Fidelity, Schwab, or Vanguard CSV files</li>
                                                 <li>CAUTION: only share personal info (like these files) to apps worthy of your trust!</li>
                                             </ul>
                                         </fieldset>
@@ -797,9 +796,13 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                     private ElementReference tickerN;
                                     private ElementReference accountN;
                                     private bool showImport = false;
+                                    private bool showError  = false;
 
                                     private void ShowImport() {
                                         showImport = !showImport;
+                                        if (!showImport) {
+                                            showError = false;
+                                        }
                                     }
                                     private async void OnCSVImport(InputFileChangeEventArgs e)
                                     {
@@ -809,22 +812,24 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                             foreach (var file in files)
                                             {
                                                 string? content = null;
-                                                var buffer = new byte[file.Size];
-                                                using (var stream = file.OpenReadStream())
-                                                {
-                                                    await stream.ReadAsync(buffer);
-                                                    content = System.Text.Encoding.UTF8.GetString(buffer);
+                                                try {
+                                                    var buffer = new byte[file.Size];
+                                                    using (var stream = file.OpenReadStream())
+                                                    {
+                                                        await stream.ReadAsync(buffer);
+                                                        content = System.Text.Encoding.UTF8.GetString(buffer);
+                                                    }
+
+                                                    var lines = System.Text.RegularExpressions.Regex.Split(content, "\r\n|\r|\n");
+                                                    var importedAccounts = Account.ImportCSV(lines, Funds);
+                                                    familyData.Accounts.AddRange(importedAccounts);
+                                                    showImport = false;
+                                                    Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
+                                                } catch (Exception) {
+                                                    showError = true;
+                                                    Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
                                                 }
-
-                                                var lines = System.Text.RegularExpressions.Regex.Split(content, "\r\n|\r|\n");
-
-                                                var importedAccounts = Account.ImportCSV(lines, Funds);
-
-                                                familyData.Accounts.AddRange(importedAccounts);
                                             }
-    
-                                            showImport = false;
-                                            Navigation.NavigateTo("/portfolio/reload");
                                         }
                                     }
 
