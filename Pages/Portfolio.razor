@@ -767,147 +767,63 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                     <div style=margin-left:40px>Account Total: @formatMoney(account.Value)</div>
                                 }
                                 <br/>
-                                <div><button @onclick=addAccount>➕ Account</button></div>
                                 <hr/>
                                 <div>Portfolio Size: @formatMoney(familyData.Value)</div>
                                 <br/>
                                 <div>
-                                    Above, is the manual data entry technique. Below is an ADVANCED FEATURE (faster way) to import some data, but be careful, and make sure you trust any site you do that kind of thing with!!!
+                                    <button @onclick=addAccount>➕ Account</button> to manually enter another Account's info.
                                 </div>
                                 <br/>
-                                <hr/>
-                                    <div>⚠️ Advanced Feature: Import Vanguard/Fidelity CSV file</div>
-                                    <ol>
-                                        <li>Download .csv file from Vanguard or Fidelity to your downloads folder (or other location).</li>
-                                        <li>Press "Choose files" button and select one or more files in your downloads folder: 
-                                            <InputFile multiple=true accept=".csv" OnChange="@((e) => OnChangeCSV(e))" />
-                                        </li>
-                                        <li>Portfolio Review tool will attempt to load your account balances from the .csv file(s), including tickers and $$ of each stock/fund.</li>
-                                        <li>Once you do the import, you likely want to delete the file from your downloads folder (that you downloaded it to in step 1).</li>
-                                    </ol>
-                                    <span>
-                                    ⚠️ WARNING: uploading csv files from vanguard/fidelity is exposing information to this site.<br/>
-                                    Only do this to a site you trust to not harvest this data. Bogle.tools runs on your machine only, even though it is a web site, and will not send data off of your device without your explicit permission.
-                                    </span>
+                                <div>
+                                    <button @onclick=ShowImport>
+                                        @if(showImport){<span>Hide</span>}
+                                        Import Accounts
+                                    </button> to import Account info from a CSV file.
+                                    @if(showImport){
+                                        <br/>
+                                        <fieldset style=margin-left:20px>
+                                            <span>Download portfolio details from custodian website, and then "choose file", to import: </span><br/>
+                                            <InputFile accept=".csv" OnChange="@((e) => OnCSVImport(e))" /><br/>
+                                            <ul>
+                                                <li>Currently supports importing Fidelity or Vanguard CSV files</li>
+                                                <li>CAUTION: only share personal info (like these files) to apps worthy of your trust!</li>
+                                            </ul>
+                                        </fieldset>
+                                    }
+                                </div>
                                 <br/>
 
                                 @code{
                                     private ElementReference tickerN;
                                     private ElementReference accountN;
-                                    private async void OnChangeCSV(InputFileChangeEventArgs e)
+                                    private bool showImport = false;
+
+                                    private void ShowImport() {
+                                        showImport = !showImport;
+                                    }
+                                    private async void OnCSVImport(InputFileChangeEventArgs e)
                                     {
                                         var files = e.GetMultipleFiles();
                                         if (files != null)
                                         {
                                             foreach (var file in files)
                                             {
-                                                string? lastAccountNumber = null;
-
+                                                string? content = null;
                                                 var buffer = new byte[file.Size];
-                                                await file.OpenReadStream().ReadAsync(buffer);
-                                                var content = System.Text.Encoding.UTF8.GetString(buffer);
+                                                using (var stream = file.OpenReadStream())
+                                                {
+                                                    await stream.ReadAsync(buffer);
+                                                    content = System.Text.Encoding.UTF8.GetString(buffer);
+                                                }
+
                                                 var lines = System.Text.RegularExpressions.Regex.Split(content, "\r\n|\r|\n");
-                                                //Fidelity: Account Number,Account Name,Symbol,Description,Quantity,Last Price,Last Price Change,Current Value
-                                                //Vanguard: Account Number,Investment Name,Symbol,Shares,Share Price,Total Value,
-                                                
-                                                // Process the header
-                                                var headerChunks = lines[0].Split(',');
 
-                                                int accountNumberIndex = 0; // shouldn't hardcode, but for some strange reason it wasn't matching for Fidelity CSV files!?!
-                                                int accountNameIndex = -1;
-                                                int symbolIndex = -1;
-                                                int investmentNameIndex = -1;
-                                                int investmentValueIndex = -1;
-                                                
+                                                var importedAccounts = Account.ImportCSV(lines, Funds);
 
-                                                int chunkIndex = 0;
-                                                foreach (var headerChunk in headerChunks) {
-                                                    switch (headerChunk) {
-                                                        case "Account Name":
-                                                            accountNameIndex = chunkIndex;
-                                                            break;
-                                                        case "Symbol":
-                                                            symbolIndex = chunkIndex;
-                                                            break;
-                                                        case "Investment Name":
-                                                        case "Description":
-                                                            investmentNameIndex = chunkIndex;
-                                                            break;
-                                                        case "Current Value":
-                                                        case "Total Value":
-                                                            investmentValueIndex = chunkIndex;
-                                                            break;
-                                                        case "Account Number":
-                                                            accountNumberIndex = chunkIndex;
-                                                            break;
-                                                        default:
-                                                            break;
-                                                    }
-
-                                                    chunkIndex++;
-                                                }
-
-                                                Account? currentAccount = null;
-                                                for (int lineNum = 1;lineNum < lines.Length; lineNum++) {
-                                                    var line = lines[lineNum];
-                                                    string? accountNumber = null;
-                                                    string? accountName = null;
-                                                    string? symbol = null;
-                                                    string? investmentName = null;
-                                                    string? investmentValue = null;
-                                                    if (line.Length > 0)
-                                                    {
-                                                        if (char.IsDigit(line[0]) || char.IsDigit(line[1]))
-                                                        {
-                                                            // Process this data
-                                                            var chunks = line.Split(',');
-                                                            
-                                                            for (int i=0; i < chunks.Length; i++) {
-                                                                if (accountNumberIndex == i) {
-                                                                    accountNumber = chunks[i];
-                                                                } else if (accountNameIndex == i) {
-                                                                    accountName = chunks[i];
-                                                                } else if (symbolIndex == i) {
-                                                                    symbol = chunks[i];
-                                                                } else if (investmentNameIndex == i) {
-                                                                    investmentName = chunks[i];
-                                                                } else if (investmentValueIndex == i) {
-                                                                    investmentValue = chunks[i];
-                                                                }
-                                                            }
-
-                                                            if (lastAccountNumber != accountNumber) {
-                                                                currentAccount = new () { 
-                                                                    Note = accountName != null ? "⚠️" + accountName: "⚠️*"+ accountNumber.Substring(accountNumber.Length-4,4),
-                                                                    Custodian = (accountNameIndex != -1 ? "Fidelity" : "Vanguard")
-                                                                 };
-                                                                familyData.Accounts.Add(currentAccount);
-                                                                lastAccountNumber = accountNumber;
-                                                            }
-                                                            
-                                                            if (investmentValue[0] == '$')
-                                                            {
-                                                                investmentValue = investmentValue.Substring(1);
-                                                            }
-                                                            double doubleValue = 0.0;
-                                                            double.TryParse(investmentValue, out doubleValue);
-
-
-                                                            if (symbol != null || investmentName != null) {
-                                                                Investment newInvestment = new () { funds = Funds, Ticker = symbol, Name = investmentName, Value = doubleValue };
-                                                                currentAccount.Investments.Add(newInvestment);
-                                                            }
-                                                        }
-
-                                                        if (line.Length > 1 && char.IsLetter(line[1])) // some account numbers start with a letter
-                                                        {
-                                                            // stop processing file at first line that starts with a letter.
-                                                            break;
-                                                        }
-                                                    }
-                                                }
+                                                familyData.Accounts.AddRange(importedAccounts);
                                             }
-
+    
+                                            showImport = false;
                                             Navigation.NavigateTo("/portfolio/reload");
                                         }
                                     }
