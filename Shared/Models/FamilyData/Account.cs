@@ -46,6 +46,12 @@ public class Account
         }
     }
 
+    private void GuessAccountType() 
+    {
+        if (Note.Contains("401K") || Note.Contains("401k")) { AccountType = "401k"; }
+        else if (Note.Contains("HSA") || Note.Contains("Health Savings Account")) { AccountType = "HSA"; }
+    }
+    
     public static List<Account> ImportCSV(string[] lines, IList<Fund> funds)
     {
         List<Account> importedAccounts = new();
@@ -83,7 +89,6 @@ public class Account
                                             NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
                                             CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
                                             out doubleValue);
-                    Console.WriteLine(investmentValue + " ==> " + doubleValue);
 
                     if (lastAccountNumber != accountNumber)
                     {
@@ -91,6 +96,7 @@ public class Account
                             Custodian = "Fidelity",
                             Note = "⚠️*"+ accountNumber.Substring(accountNumber.Length-4,4) + " " + accountName
                         };
+                        newAccount.GuessAccountType();
                         importedAccounts.Add(newAccount);
                         lastAccountNumber = accountNumber;
                     }
