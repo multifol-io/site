@@ -1,5 +1,7 @@
 using System.Globalization;
 using System.Text.Json.Serialization;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 public class Account 
 {
@@ -51,7 +53,89 @@ public class Account
         if (Note.Contains("401K") || Note.Contains("401k")) { AccountType = "401k"; }
         else if (Note.Contains("HSA") || Note.Contains("Health Savings Account")) { AccountType = "HSA"; }
     }
-    
+
+    public static async Task<List<Account>> ImportXLSX(Stream stream, IList<Fund> funds) {
+        List<Account> importedAccounts = new();
+
+        MemoryStream ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+
+        using (var document = SpreadsheetDocument.Open(ms, false))
+        {
+
+            // Retrieve a reference to the workbook part.
+            WorkbookPart wbPart = document.WorkbookPart;
+
+            // Find the sheet with the supplied name, and then use that 
+            // Sheet object to retrieve a reference to the first worksheet.
+            Sheet theSheet = wbPart?.Workbook.Descendants<Sheet>().Where(s => s?.Name == "Holdings Ungrouped").FirstOrDefault();
+
+            // Throw an exception if there is no sheet.
+            if (theSheet == null)
+            {
+                throw new ArgumentException("sheetName");
+            }
+
+            WorksheetPart wsPart = (WorksheetPart)(wbPart.GetPartById(theSheet.Id));
+            // For shared strings, look up the value in the
+            // shared strings table.
+            var stringTable = 
+                wbPart.GetPartsOfType<SharedStringTablePart>()
+                .FirstOrDefault();
+
+            int row = 11;
+            bool contentOver = false;
+            Dictionary<string,Account> accountLookup = new();
+            while (!contentOver) {
+                    var accountNameCell = GetCell(wsPart, "A" + row.ToString());
+                    var accountName = GetValue(accountNameCell, stringTable);
+                    if (string.IsNullOrEmpty(accountName)) {
+                        contentOver = true;
+                        break;
+                    }
+                    var investmentNameCell = GetCell(wsPart, "B" + row.ToString());
+                    var investmentName = GetValue(investmentNameCell, stringTable);
+                    var symbolCell = GetCell(wsPart, "D" + row.ToString());
+                    var symbol = GetValue(symbolCell, stringTable);
+                    var marketValue = GetCell(wsPart, "J" + row.ToString()).InnerText;
+                    double doubleValue = 0.0;
+                    double.TryParse(marketValue,
+                                            NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
+                                            CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
+                                            out doubleValue);
+                    Account? newAccount = null;
+                    accountLookup.TryGetValue(accountName, out newAccount);
+                    if (newAccount == null)
+                    {
+                        newAccount = new() {
+                            Custodian = "Morgan Stanley",
+                            Note = "⚠️*" + accountName
+                        };
+                        newAccount.GuessAccountType();
+                        accountLookup.Add(accountName, newAccount);
+                        importedAccounts.Add(newAccount);
+                    }
+
+                    Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Value = doubleValue };
+                    newAccount?.Investments.Add(newInvestment);
+                    row++;
+            }
+        }
+
+        return importedAccounts;
+    }
+
+    private static string? GetValue(Cell cell, SharedStringTablePart stringTable) {
+        try {
+            return stringTable.SharedStringTable.ElementAt(int.Parse(cell.InnerText)).InnerText;
+        } catch (Exception) {
+            return null;
+        }
+    }
+    private static Cell GetCell(WorksheetPart wsPart, string cellReference) {
+        return wsPart.Worksheet.Descendants<Cell>().Where(c => c.CellReference.Value == cellReference)?.FirstOrDefault();
+    }
+
     public static List<Account> ImportCSV(string[] lines, IList<Fund> funds)
     {
         List<Account> importedAccounts = new();

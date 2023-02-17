@@ -777,14 +777,14 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                         @if(showImport){<span>Hide</span>}
                                         Import Accounts
                                     </button> to import Account info from a CSV file.
-                                    @if(showError){<br/><br/><span style=color:red>ERROR: must be a CSV file from Fidelity, Schwab, or Vanguard.</span><br/>}
+                                    @if(showError){<br/><br/><span style=color:red>ERROR: must be a CSV file from Fidelity, Schwab, or Vanguard or a XLSX file from Morgan Stanley.</span><br/>}
                                     @if(showImport){
                                         <br/>
                                         <fieldset style=margin-left:20px>
                                             <span>Download portfolio details from custodian website, and then "choose file", to import: </span><br/>
-                                            <InputFile accept=".csv" OnChange="@((e) => OnCSVImport(e))" /><br/>
+                                            <InputFile accept=".csv,.xlsx" OnChange="@((e) => OnCSVImport(e))" /><br/>
                                             <ul>
-                                                <li>Currently supports importing Fidelity, Schwab, or Vanguard CSV files</li>
+                                                <li>Currently supports importing Fidelity, Schwab, or Vanguard CSV files and Morgan Stanley XLSX files</li>
                                                 <li>CAUTION: only share personal info (like these files) to apps worthy of your trust!</li>
                                             </ul>
                                         </fieldset>
@@ -811,23 +811,40 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                         {
                                             foreach (var file in files)
                                             {
-                                                string? content = null;
-                                                try {
+                                                if (file.Name.ToLower().EndsWith(".csv"))
+                                                {
+                                                    string? content = null;
+                                                    try {
+                                                        var buffer = new byte[file.Size];
+                                                        using (var stream = file.OpenReadStream())
+                                                        {
+                                                            await stream.ReadAsync(buffer);
+                                                            content = System.Text.Encoding.UTF8.GetString(buffer);
+                                                        }
+
+                                                        var lines = System.Text.RegularExpressions.Regex.Split(content, "\r\n|\r|\n");
+                                                        var importedAccounts = Account.ImportCSV(lines, Funds);
+                                                        familyData.Accounts.AddRange(importedAccounts);
+                                                        showImport = false;
+                                                        Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
+                                                    } catch (Exception) {
+                                                        showError = true;
+                                                        Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
+                                                    }
+                                                } else if (file.Name.ToLower().EndsWith(".xlsx")) {
                                                     var buffer = new byte[file.Size];
                                                     using (var stream = file.OpenReadStream())
                                                     {
-                                                        await stream.ReadAsync(buffer);
-                                                        content = System.Text.Encoding.UTF8.GetString(buffer);
+                                                        try {
+                                                            var importedAccounts = await Account.ImportXLSX(stream, Funds);
+                                                            familyData.Accounts.AddRange(importedAccounts);
+                                                            showImport = false;
+                                                            Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
+                                                        } catch (Exception) {
+                                                            showError = true;
+                                                            Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
+                                                        }
                                                     }
-
-                                                    var lines = System.Text.RegularExpressions.Regex.Split(content, "\r\n|\r|\n");
-                                                    var importedAccounts = Account.ImportCSV(lines, Funds);
-                                                    familyData.Accounts.AddRange(importedAccounts);
-                                                    showImport = false;
-                                                    Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
-                                                } catch (Exception) {
-                                                    showError = true;
-                                                    Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
                                                 }
                                             }
                                         }
