@@ -58,27 +58,33 @@ public class Account
         if (headerChunks.Length > 2) {
             if (headerChunks[0].StartsWith("Account Number") && headerChunks[1] == "Account Name")
             {
-                // FIDELITY - blank line ends investment listings.
+                // FIDELITY - blank line ends investment listings or ",,,,,,,,,,,,,,,"
                 // Line 0: Account Number,Account Name,Symbol,Description,Quantity,Last Price,Last Price Change,Current Value
                 string lastAccountNumber = "";
                 line = lines[lineIndex++];
                 Account? newAccount = null;
-                while (line != "")
+                while (line != "" && line != ",,,,,,,,,,,,,,,")
                 {
-                    var chunks = line.Split(',');
+                    List<string> chunks = Account.SplitCsvLine(line);
                     var accountNumber = chunks[0];
                     var accountName = chunks[1];
                     var symbol = chunks[2];
                     var investmentName = chunks[3];
 
-                    var investmentValue = chunks[7];
+                    var investmentValue = Account.TrimQuotes(chunks[7]);
+
                     if (investmentValue[0] == '$')
                     {
                         investmentValue = investmentValue.Substring(1);
                     }
 
                     double doubleValue = 0.0;
-                    double.TryParse(investmentValue, out doubleValue);
+                    double.TryParse(investmentValue,
+                                            NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
+                                            CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
+                                            out doubleValue);
+                    Console.WriteLine(investmentValue + " ==> " + doubleValue);
+
                     if (lastAccountNumber != accountNumber)
                     {
                         newAccount = new() {
@@ -201,5 +207,42 @@ public class Account
         }
 
         return importedAccounts;
+    }
+
+    public static string TrimQuotes(string input) {
+        if (input == null) { return input; }
+        int start = 0;
+        int end = input.Length - 1;
+
+        if (end > 1 && input[end] == '"') {
+            end--;
+        }
+
+        if (input[0] == '"') {
+            start++;
+        }
+
+        return input.Substring(start, end);
+    }
+
+    public static List<string> SplitCsvLine(string s) {
+        int i;
+        int a = 0;
+        int count = 0;
+        List<string> str = new List<string>();
+        for (i = 0; i < s.Length; i++) {
+            switch (s[i]) {
+                case ',':
+                    if ((count & 1) == 0) {
+                        str.Add(s.Substring(a, i - a));
+                        a = i + 1;
+                    }
+                    break;
+                case '"':
+                case '\'': count++; break;
+            }
+        }
+        str.Add(s.Substring(a));
+        return str;
     }
 }
