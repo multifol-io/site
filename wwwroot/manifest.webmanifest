@@ -1,6 +1,6 @@
 {
-  "name": "ComponentsWebAssembly-CSharp",
-  "short_name": "ComponentsWebAssembly-CSharp",
+  "name": "bogle.tools",
+  "short_name": "bogle.tools",
   "id": "./",
   "start_url": "./",
   "display": "standalone",
