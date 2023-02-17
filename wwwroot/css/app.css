@@ -14,19 +14,19 @@ a, .btn-link {
 
 a:link {
     text-decoration: none;
-  }
+}
   
-  a:visited {
+a:visited {
     text-decoration: none;
-  }
-  
-  a:hover {
+}
+
+a:hover {
     text-decoration: underline;
-  }
-  
-  a:active {
+}
+
+a:active {
     text-decoration: underline;
-  }
+}
   
 .btn-primary {
     color: #fff;
