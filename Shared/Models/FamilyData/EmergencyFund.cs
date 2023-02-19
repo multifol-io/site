@@ -22,7 +22,6 @@ public class EmergencyFund {
         get { return (double?)CurrentBalance / (double?)MonthlyExpenses; }
     }
 
-    [DefaultValue(3)]
     public int TargetMonths {get;set;} = 3;
 
     [DefaultValue(false)]
