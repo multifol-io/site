@@ -231,6 +231,43 @@ public class Account
                     }
                 }
             }
+            else if (headerChunks[0].StartsWith("Account Summary"))
+            {
+                var chunks = Account.SplitCsvLine(lines[lineIndex++]); // account header line
+                chunks = Account.SplitCsvLine(lines[lineIndex++]); // accountInfo
+                Account newAccount = new() {
+                        Custodian = "ETrade",
+                        Note = "⚠️"+ TrimQuotes(chunks[0])
+                    };
+                importedAccounts.Add(newAccount);
+
+                chunks = Account.SplitCsvLine(lines[lineIndex++]);
+                while (chunks[0] != "Symbol" && chunks[1] != "Last Price $") {
+                    chunks = Account.SplitCsvLine(lines[lineIndex++]);
+                }
+
+                    chunks = Account.SplitCsvLine(lines[lineIndex++]);
+                    chunks = Account.SplitCsvLine(lines[lineIndex++]);
+                    chunks = Account.SplitCsvLine(lines[lineIndex++]);
+
+                chunks = Account.SplitCsvLine(lines[lineIndex++]);
+                while (chunks[0] != "TOTAL") {
+                    var symbol = chunks[0];
+                    string? investmentName = null;
+                    string investmentValue = chunks[9];
+                    if (investmentValue != null) {
+                        double doubleValue = 0.0;
+                        double.TryParse(investmentValue,
+                            NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
+                            CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
+                            out doubleValue);
+                        Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null) , Value = doubleValue };
+                        newAccount?.Investments.Add(newInvestment);
+                    }
+
+                    chunks = Account.SplitCsvLine(lines[lineIndex++]);
+                }
+            }
             else if (headerChunks[0].StartsWith("\"Positions for "))
             {
                 // SCHWAB - line with blank cells divides accounts
