@@ -146,8 +146,45 @@ public class Account
         var headerChunks = line.Split(',');
 
         if (headerChunks.Length > 2) {
-            if (headerChunks[0].StartsWith("Account Number") && headerChunks[1] == "Account Name")
-            {
+            if (TrimQuotes(headerChunks[0]) == ("COB Date") && TrimQuotes(headerChunks[1]) == "Security #") {
+                //MERRILL EDGE
+                Dictionary<string,Account> accountLookup = new();
+
+                var chunks = SplitCsvLine(lines[lineIndex++]);
+                while (chunks.Count > 0 && chunks[0] != "")
+                {
+                    var accountNum = TrimQuotes(chunks[7]);
+                    var accountRegistration = TrimQuotes(chunks[6]);
+                    var accountNickname = TrimQuotes(chunks[5]);
+                    var symbol = TrimQuotes(chunks[2]);
+                    string? investmentName = TrimQuotes(chunks[4]);
+                    string? investmentValue = TrimQuotes(chunks[10]);
+
+                    Account? newAccount = null;
+                    accountLookup.TryGetValue(accountNum, out newAccount);
+                    if (newAccount == null)
+                    {
+                        newAccount = new() {
+                            Custodian = "Merrill Edge",
+                            Note = "⚠️ "+ accountNickname + " " + accountRegistration + " --" + accountNum.Substring(accountNum.Length - 4)
+                        };
+                        importedAccounts.Add(newAccount);
+                        accountLookup.Add(accountNum, newAccount);
+                    }
+
+                    if (investmentValue != null) {
+                        double doubleValue = 0.0;
+                        double.TryParse(investmentValue,
+                                                NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
+                                                CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
+                                                out doubleValue);
+                        Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null) , Value = doubleValue };
+                        newAccount?.Investments.Add(newInvestment);
+                    }
+
+                    chunks = SplitCsvLine(lines[lineIndex++]);
+                }
+            } else if (headerChunks[0].StartsWith("Account Number") && headerChunks[1] == "Account Name") {
                 // FIDELITY - blank line ends investment listings or ",,,,,,,,,,,,,,,"
                 // Line 0: Account Number,Account Name,Symbol,Description,Quantity,Last Price,Last Price Change,Current Value
                 string lastAccountNumber = "";
