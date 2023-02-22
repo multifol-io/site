@@ -138,15 +138,16 @@ public class Account
 
     public static List<Account> ImportCSV(string[] lines, IList<Fund> funds)
     {
-        List<Account> importedAccounts = new();
+        try {
+            List<Account> importedAccounts = new();
 
-        // Process the header
-        int lineIndex = 0;
-        string? line = lines[lineIndex++];
-        var headerChunks = line.Split(',');
+            // Process the header
+            int lineIndex = 0;
+            string? line = lines[lineIndex++];
+            var headerChunks = line.Split(',');
+            var headerChunksLen = headerChunks.Length;
 
-        if (headerChunks.Length > 2) {
-            if (TrimQuotes(headerChunks[0]) == ("COB Date") && TrimQuotes(headerChunks[1]) == "Security #") {
+            if (headerChunksLen > 1 && TrimQuotes(headerChunks[0]) == ("COB Date") && TrimQuotes(headerChunks[1]) == "Security #") {
                 //MERRILL EDGE
                 Dictionary<string,Account> accountLookup = new();
 
@@ -184,7 +185,7 @@ public class Account
 
                     chunks = SplitCsvLine(lines[lineIndex++]);
                 }
-            } else if (headerChunks[0].StartsWith("Account Number") && headerChunks[1] == "Account Name") {
+            } else if (headerChunksLen > 1 && headerChunks[0].StartsWith("Account Number") && headerChunks[1] == "Account Name") {
                 // FIDELITY - blank line ends investment listings or ",,,,,,,,,,,,,,,"
                 // Line 0: Account Number,Account Name,Symbol,Description,Quantity,Last Price,Last Price Change,Current Value
                 string lastAccountNumber = "";
@@ -227,7 +228,7 @@ public class Account
                     line = lines[lineIndex++];
                 }
             } 
-            else if (headerChunks[0] == "Account Number" && headerChunks[1] == "Investment Name")
+            else if (headerChunksLen > 1 && headerChunks[0] == "Account Number" && headerChunks[1] == "Investment Name")
             {
                 // VANGUARD - blank lines seperates accounts. two blank lines end investment listing.
                 // Line 0: Account Number,Investment Name,Symbol,Shares,Share Price,Total Value,
@@ -268,26 +269,33 @@ public class Account
                     }
                 }
             }
-            else if (headerChunks[0].StartsWith("Account Summary"))
+            else if (headerChunks[0].StartsWith("Account Summary")) // sometimes headerChunksLen == 1, sometimes more.
             {
-                var chunks = Account.SplitCsvLine(lines[lineIndex++]); // account header line
-                chunks = Account.SplitCsvLine(lines[lineIndex++]); // accountInfo
+                var chunks = SplitCsvLine(lines[lineIndex++]); // account header line
+                chunks = SplitCsvLine(lines[lineIndex++]); // accountInfo
                 Account newAccount = new() {
                         Custodian = "ETrade",
                         Note = "⚠️"+ TrimQuotes(chunks[0])
                     };
                 importedAccounts.Add(newAccount);
 
-                chunks = Account.SplitCsvLine(lines[lineIndex++]);
-                while (chunks[0] != "Symbol" && chunks[1] != "Last Price $") {
-                    chunks = Account.SplitCsvLine(lines[lineIndex++]);
+                chunks = SplitCsvLine(lines[lineIndex]);
+                bool foundHeader = false;
+                while (!foundHeader) {
+                    if (chunks.Count == 7 && chunks[0] == "Symbol" && chunks[1] == "Last Price $")
+                    {
+                        foundHeader = true;
+                        lineIndex = lineIndex + 1;
+                    }
+                    else
+                    {
+                        lineIndex++;
+                        chunks = SplitCsvLine(lines[lineIndex]);
+                    }
                 }
 
-                    chunks = Account.SplitCsvLine(lines[lineIndex++]);
-                    chunks = Account.SplitCsvLine(lines[lineIndex++]);
-                    chunks = Account.SplitCsvLine(lines[lineIndex++]);
-
                 chunks = Account.SplitCsvLine(lines[lineIndex++]);
+
                 while (chunks[0] != "TOTAL") {
                     var symbol = chunks[0];
                     string? investmentName = null;
@@ -366,11 +374,12 @@ public class Account
             {
                 throw new InvalidDataException("CSV file doesn't appear to be Fidelity, Schwab, or Vanguard");
             }
-        } else {
-            throw new InvalidDataException("CSV file doesn't appear to be Fidelity, Schwab, or Vanguard");
-        }
 
-        return importedAccounts;
+            return importedAccounts;
+        } catch (Exception e) {
+            Console.WriteLine(e.Message + "\n" + e.InnerException + "\n" + e.Source + "\n" + e.StackTrace);
+            throw e;
+        }
     }
 
     public static string TrimQuotes(string input) {
@@ -389,6 +398,8 @@ public class Account
         return input.Substring(start, end);
     }
 
+    // TODO: testing ETrade scenarios, i don't think this routine works well...a string split with commas, and no spaces, returns a list with 1 item.
+    // don't fix without doing a full walkthrough to make sure all file formats work.
     public static List<string> SplitCsvLine(string s) {
         int i;
         int a = 0;
