@@ -30,27 +30,39 @@ public class Investment
                 {
                     if (_Ticker == fund.Ticker)
                     {
-                        AutoComplete(fund.LongName, fund.ExpenseRatio);
+                        AutoComplete(fund);
                         found = true;
                     }
                 }
                 if (!found) {
                     if (AutoCompleted) {
-                        ExpenseRatio = null;
-                        Name = null;
-                        AutoCompleted = false;
+                        AutoComplete(null);
                     }
                 }
             }
         }
     }
 
-    private void AutoComplete(string? name, double? expenseRatio) {
-        Name = name;
-        ExpenseRatio = expenseRatio;
-        AutoCompleted = true;
+    private void AutoComplete(Fund fund) {
+        if (fund == null) {
+            Name = null;
+            ExpenseRatio = null;
+            AssetType = null;
+            VanguardFundId = null;
+            AutoCompleted = false;
+        }
+        else 
+        {
+            Name = fund.LongName;
+            ExpenseRatio = fund.ExpenseRatio;
+            AssetType = fund.AssetType;
+            VanguardFundId = fund.VanguardFundId;
+            AutoCompleted = true;
+        }
     }
 
+    public string? VanguardFundId { get; set;  }
+    public AssetType? AssetType { get; set; }
     private double? _ExpenseRatio;
     public double? ExpenseRatio {
         get {

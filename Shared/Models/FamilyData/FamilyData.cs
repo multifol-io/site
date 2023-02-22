@@ -82,6 +82,84 @@ public class FamilyData : IFamilyData
     public double? Bonds { get; set; }
     public int? International { get; set; }
 
+    public double? StockBalance { get; set; }
+    public double? InternationalStockBalance { get; set; }
+    public double? BondBalance { get; set; }
+    public double? CashBalance { get; set; }
+    public double? OtherBalance { get; set; }
+
+    public double ActualStockAllocation {
+        get {
+            var overallTotal = (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0) + (BondBalance ?? 0.0) + (OtherBalance ?? 0.0) + (CashBalance ?? 0.0);
+            if (overallTotal > 0.0)
+            {
+                return ( (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0) ) / overallTotal;
+            }
+            else
+            {
+                return double.NaN;
+            }
+        }
+    }
+
+    public double ActualInternationalStockAllocation {
+        get {
+            var stockTotal = (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0);
+            if (stockTotal > 0.0)
+            {
+                return (InternationalStockBalance ?? 0.0) / stockTotal;
+            }
+            else
+            {
+                return double.NaN;
+            }
+        }
+    }
+    
+    public double ActualBondAllocation {
+        get {
+            var overallTotal = (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0) + (BondBalance ?? 0.0) + (OtherBalance ?? 0.0) + (CashBalance ?? 0.0);
+
+            if (overallTotal > 0.0)
+            {
+                return (BondBalance ?? 0.0) / overallTotal;
+            }
+            else
+            {
+                return double.NaN;
+            }
+        }
+    }
+
+    public double ActualCashAllocation {
+        get {
+            var overallTotal = (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0) + (BondBalance ?? 0.0) + (OtherBalance ?? 0.0) + (CashBalance ?? 0.0);
+
+            if (overallTotal > 0.0)
+            {
+                return (CashBalance ?? 0.0) / overallTotal;
+            }
+            else
+            {
+                return double.NaN;
+            }
+        }
+    }
+
+    public double ActualOtherAllocation {
+        get {
+            var overallTotal = (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0) + (BondBalance ?? 0.0) + (OtherBalance ?? 0.0) + (CashBalance ?? 0.0);
+
+            if (overallTotal > 0.0)
+            {
+                return (OtherBalance ?? 0.0) / overallTotal;
+            }
+            else
+            {
+                return double.NaN;
+            }
+        }
+    }
     public List<Person> People { get; set; }
 
     public double Value { 
@@ -144,11 +222,17 @@ public class FamilyData : IFamilyData
 
     public void UpdatePercentages()
     {
+        StockBalance = 0.0;
+        InternationalStockBalance = 0.0;
+        BondBalance = 0.0;
+        CashBalance = 0.0;
+        OtherBalance = 0.0;
+
         double totalValue = this.Value;
         foreach (var account in Accounts)
         {
             account.Percentage = account.Value / totalValue * 100;
-            account.UpdatePercentages(totalValue);
+            account.UpdatePercentages(totalValue, this);
         }
     }
 

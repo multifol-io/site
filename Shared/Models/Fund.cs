@@ -8,4 +8,8 @@ public class Fund
     public string? LongName { get; set; }
     [JsonPropertyName("expenseRatio")]
     public double? ExpenseRatio { get; set; }
+    [JsonPropertyName("assetType")]
+    public AssetType? AssetType { get; set; }
+    [JsonPropertyName("vanguardFundId")]
+    public string? VanguardFundId { get; set;  }
 }

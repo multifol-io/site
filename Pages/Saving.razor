@@ -1091,7 +1091,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
         steps = await Http.GetFromJsonAsync<Step[]>("data/saving-steps.json");
     }
 
-    private IFamilyData familyData {
+    private FamilyData familyData {
         get {
             return appData.FamilyData;
         }

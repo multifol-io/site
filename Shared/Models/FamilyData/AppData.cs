@@ -1,8 +1,8 @@
 public class AppData : IAppData
 {
-    public AppData(IFamilyData familyData) {
+    public AppData(FamilyData familyData) {
         FamilyData = familyData;
     }
 
-    public IFamilyData FamilyData { get; set; }
+    public FamilyData FamilyData { get; set; }
 }

@@ -40,11 +40,34 @@ public class Account
 
     public List<Investment> AvailableFunds { get; set; }
 
-    public void UpdatePercentages(double totalValue)
+    public void UpdatePercentages(double totalValue, FamilyData familyData)
     {
         foreach (var investment in Investments)
         {
             investment.Percentage = (investment.Value ?? 0) / totalValue * 100;
+            if (investment.AssetType == null)
+            {
+                familyData.OtherBalance += investment.Value;
+            } 
+            else
+            {
+                switch (investment.AssetType) {
+                    case AssetType.Stock:
+                        familyData.StockBalance += investment.Value;
+                        break;
+                    case AssetType.InternationalStock:
+                        familyData.InternationalStockBalance += investment.Value;
+                        break;
+                    case AssetType.Bond:
+                        familyData.BondBalance += investment.Value;
+                        break;
+                    case AssetType.Cash:
+                        familyData.CashBalance += investment.Value;
+                        break;
+                    default:
+                        throw new InvalidDataException("unexpected case");
+                }
+            }
         }
     }
 

@@ -150,6 +150,24 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                             <span>@familyData.International%</span>
                                         }
                                         <br/><br/>
+                                        @if (!double.IsNaN(familyData.ActualStockAllocation) || !double.IsNaN(familyData.ActualBondAllocation) || !double.IsNaN(familyData.ActualInternationalStockAllocation)) {
+                                            <InputCheckbox id=showActualAA @bind-Value=showActualAssetAllocation /> <label for=showActualAA>Show Actual Asset Allocation (experimental)</label><br/>
+                                            @if (showActualAssetAllocation) {
+                                                <span>[Experimental: works with some Fidelity and Vanguard funds, right now]</span><br/>
+                                                @((MarkupString)bold("Actual Asset allocation: "))
+                                                <span>&nbsp;@formatPercent(familyData.ActualStockAllocation*100.0) stocks / @formatPercent(familyData.ActualBondAllocation*100.0) bonds</span><br/>
+                                                <span>&nbsp;&nbsp;Actual International allocation: </span>
+                                                <span>@formatPercent(familyData.ActualInternationalStockAllocation*100.0)</span><br/>
+                                                <span>&nbsp;&nbsp;Actual Cash allocation: </span>
+                                                <span>@formatPercent(familyData.ActualCashAllocation*100.0)</span><br/>
+                                                @if(familyData.ActualOtherAllocation > 0.0) {
+                                                    <span>&nbsp;&nbsp;Actual Unclassified allocation: </span>
+                                                    <span>@formatPercent(familyData.ActualOtherAllocation*100.0)</span>
+                                                }
+                                                <br/>
+                                            }
+                                            <br/>
+                                        }
                                     </td>
                                     break;
                                 case "retirement-assets":
@@ -1165,8 +1183,9 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     private const string folderName = "/portfolio/";
     private bool focusTicker = false;
     private bool focusAccount = false;
+    private bool showActualAssetAllocation = false;
 
-    private IFamilyData familyData {
+    private FamilyData familyData {
         get {
             return appData.FamilyData;
         }

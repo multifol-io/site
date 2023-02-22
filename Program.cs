@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using src;
 using IRS;
 
@@ -23,7 +24,14 @@ if (irsData != null) {
 
 
 var fundsJson = await httpClient.GetAsync("https://raw.githubusercontent.com/bogle-tools/site/main/wwwroot/data/funds.json");
-var Funds = await JsonSerializer.DeserializeAsync<List<Fund>>(fundsJson.Content.ReadAsStream());
+JsonSerializerOptions options = new() {
+    Converters =
+        {
+            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+        }
+};
+
+var Funds = await JsonSerializer.DeserializeAsync<List<Fund>>(fundsJson.Content.ReadAsStream(), options);
 if (Funds != null) {
     builder.Services.AddSingleton<IList<Fund>>(Funds);
 }
