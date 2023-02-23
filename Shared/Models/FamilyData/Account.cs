@@ -298,48 +298,56 @@ public class Account
                 // Line 0: Fund Account Number,Fund Name,Price,Shares,Total Value,
                 Dictionary<string,Account> accountLookup = new();
 
-                var chunks = SplitCsvLine(lines[lineIndex++]);
-                while (chunks.Count > 0 && chunks[0] != "")
+                var chunks = SplitCsvLine(lines[lineIndex]);
+                int consecutiveBlanks = 0;
+
+                while (chunks.Count > 0 && consecutiveBlanks != 2)
                 {
-                    var fundAndAccountNum = TrimQuotes(chunks[0]).Split('-');
-                    var fundNumber = fundAndAccountNum[0];
-                    var accountNum = fundAndAccountNum[1];
-                    string? investmentValue = TrimQuotes(chunks[4]);
-                    string? symbol = null;
-                    string? investmentName = null;
-                    foreach (var fund in funds)
-                    {
-                        if (fundNumber == fund.VanguardFundId) 
+                    if (chunks.Count == 1) {
+                        consecutiveBlanks++;
+                    } else {
+                        consecutiveBlanks = 0;
+                        var fundAndAccountNum = TrimQuotes(chunks[0]).Split('-');
+                        var fundNumber = fundAndAccountNum[0];
+                        var accountNum = fundAndAccountNum[1];
+                        string? investmentValue = TrimQuotes(chunks[4]);
+                        string? symbol = null;
+                        string? investmentName = null;
+                        foreach (var fund in funds)
                         {
-                            symbol = fund.Ticker;
-                            investmentName = fund.LongName;
-                            break;
+                            if (fundNumber == fund.VanguardFundId) 
+                            {
+                                symbol = fund.Ticker;
+                                investmentName = fund.LongName;
+                                break;
+                            }
+                        }                    
+
+                        Account? newAccount = null;
+                        accountLookup.TryGetValue(accountNum, out newAccount);
+                        if (newAccount == null)
+                        {
+                            newAccount = new() {
+                                Custodian = "Vanguard",
+                                Note = "⚠️  --" + accountNum.Substring(accountNum.Length - 4)
+                            };
+                            importedAccounts.Add(newAccount);
+                            accountLookup.Add(accountNum, newAccount);
                         }
-                    }                    
 
-                    Account? newAccount = null;
-                    accountLookup.TryGetValue(accountNum, out newAccount);
-                    if (newAccount == null)
-                    {
-                        newAccount = new() {
-                            Custodian = "Vanguard",
-                            Note = "⚠️  --" + accountNum.Substring(accountNum.Length - 4)
-                        };
-                        importedAccounts.Add(newAccount);
-                        accountLookup.Add(accountNum, newAccount);
+                        if (investmentValue != null) {
+                            double doubleValue = 0.0;
+                            double.TryParse(investmentValue,
+                                                    NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
+                                                    CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
+                                                    out doubleValue);
+                            Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null) , Value = doubleValue };
+                            newAccount?.Investments.Add(newInvestment);
+                        }
                     }
 
-                    if (investmentValue != null) {
-                        double doubleValue = 0.0;
-                        double.TryParse(investmentValue,
-                                                NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
-                                                CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                                                out doubleValue);
-                        Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null) , Value = doubleValue };
-                        newAccount?.Investments.Add(newInvestment);
-                    }
-
-                    chunks = SplitCsvLine(lines[lineIndex++]);
+                    lineIndex++;
+                    chunks = SplitCsvLine(lines[lineIndex]);
                 }
             }
             else if (headerChunks[0].StartsWith("Account Summary")) // sometimes headerChunksLen == 1, sometimes more.
