@@ -126,21 +126,24 @@ public class Account
                                             NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
                                             CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
                                             out doubleValue);
-                    Account? newAccount = null;
-                    accountLookup.TryGetValue(accountName, out newAccount);
-                    if (newAccount == null)
-                    {
-                        newAccount = new() {
-                            Custodian = "Morgan Stanley",
-                            Note = "⚠️*" + accountName
-                        };
-                        newAccount.GuessAccountType();
-                        accountLookup.Add(accountName, newAccount);
-                        importedAccounts.Add(newAccount);
-                    }
 
-                    Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Value = doubleValue };
-                    newAccount?.Investments.Add(newInvestment);
+                    if (doubleValue < 0.0 || doubleValue > 1.0) {
+                        Account? newAccount = null;
+                        accountLookup.TryGetValue(accountName, out newAccount);
+                        if (newAccount == null)
+                        {
+                            newAccount = new() {
+                                Custodian = "Morgan Stanley",
+                                Note = "⚠️*" + accountName
+                            };
+                            newAccount.GuessAccountType();
+                            accountLookup.Add(accountName, newAccount);
+                            importedAccounts.Add(newAccount);
+                        }
+
+                        Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Value = doubleValue };
+                        newAccount?.Investments.Add(newInvestment);
+                    }
                     row++;
             }
         }
@@ -184,24 +187,25 @@ public class Account
                     string? investmentName = TrimQuotes(chunks[4]);
                     string? investmentValue = TrimQuotes(chunks[10]);
 
-                    Account? newAccount = null;
-                    accountLookup.TryGetValue(accountNum, out newAccount);
-                    if (newAccount == null)
-                    {
-                        newAccount = new() {
-                            Custodian = "Merrill Edge",
-                            Note = "⚠️ "+ accountNickname + " " + accountRegistration + " --" + accountNum.Substring(accountNum.Length - 4)
-                        };
-                        importedAccounts.Add(newAccount);
-                        accountLookup.Add(accountNum, newAccount);
-                    }
+                    double doubleValue = 0.0;
+                    double.TryParse(investmentValue ?? "0.0",
+                                    NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
+                                    CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
+                                    out doubleValue);
 
-                    if (investmentValue != null) {
-                        double doubleValue = 0.0;
-                        double.TryParse(investmentValue,
-                                                NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
-                                                CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                                                out doubleValue);
+                    if (doubleValue < 0.0 || doubleValue > 1.0) {
+                        Account? newAccount = null;
+                        accountLookup.TryGetValue(accountNum, out newAccount);
+                        if (newAccount == null)
+                        {
+                            newAccount = new() {
+                                Custodian = "Merrill Edge",
+                                Note = "⚠️ "+ accountNickname + " " + accountRegistration + " --" + accountNum.Substring(accountNum.Length - 4)
+                            };
+                            importedAccounts.Add(newAccount);
+                            accountLookup.Add(accountNum, newAccount);
+                        }
+                        
                         Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null) , Value = doubleValue };
                         newAccount?.Investments.Add(newInvestment);
                     }
@@ -231,23 +235,26 @@ public class Account
 
                     double doubleValue = 0.0;
                     double.TryParse(investmentValue,
-                                            NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
-                                            CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                                            out doubleValue);
+                                    NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
+                                    CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
+                                    out doubleValue);
 
-                    if (lastAccountNumber != accountNumber)
-                    {
-                        newAccount = new() {
-                            Custodian = "Fidelity",
-                            Note = "⚠️*"+ accountNumber.Substring(accountNumber.Length-4,4) + " " + accountName
-                        };
-                        newAccount.GuessAccountType();
-                        importedAccounts.Add(newAccount);
-                        lastAccountNumber = accountNumber;
+                    if (doubleValue < 0.0 || doubleValue > 1.0) {
+                        if (lastAccountNumber != accountNumber)
+                        {
+                            newAccount = new() {
+                                Custodian = "Fidelity",
+                                Note = "⚠️*"+ accountNumber.Substring(accountNumber.Length-4,4) + " " + accountName
+                            };
+                            newAccount.GuessAccountType();
+                            importedAccounts.Add(newAccount);
+                            lastAccountNumber = accountNumber;
+                        }
+
+                        Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Value = doubleValue };
+                        newAccount?.Investments.Add(newInvestment);
                     }
 
-                    Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Value = doubleValue };
-                    newAccount?.Investments.Add(newInvestment);
                     line = lines[lineIndex++];
                 }
             } 
@@ -276,17 +283,24 @@ public class Account
                             }
 
                             double doubleValue = 0.0;
-                            double.TryParse(investmentValue, out doubleValue);
-                            if (newAccount == null) {
-                                newAccount = new() {
-                                    Custodian = "Vanguard",
-                                    Note = "⚠️*"+ accountNumber.Substring(accountNumber.Length-4,4)
-                                };
-                                importedAccounts.Add(newAccount);
+                            double.TryParse(investmentValue ?? "0.0",
+                                            NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
+                                            CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
+                                            out doubleValue);
+
+                            if (doubleValue < 0.0 || doubleValue > 1.0) {
+                                if (newAccount == null) {
+                                    newAccount = new() {
+                                        Custodian = "Vanguard",
+                                        Note = "⚠️*"+ accountNumber.Substring(accountNumber.Length-4,4)
+                                    };
+                                    importedAccounts.Add(newAccount);
+                                }
+
+                                Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Value = doubleValue };
+                                newAccount?.Investments.Add(newInvestment);
                             }
 
-                            Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Value = doubleValue };
-                            newAccount?.Investments.Add(newInvestment);
                             line = lines[lineIndex++];
                         }
                     }
@@ -321,26 +335,27 @@ public class Account
                                 investmentName = fund.LongName;
                                 break;
                             }
-                        }                    
-
-                        Account? newAccount = null;
-                        accountLookup.TryGetValue(accountNum, out newAccount);
-                        if (newAccount == null)
-                        {
-                            newAccount = new() {
-                                Custodian = "Vanguard",
-                                Note = "⚠️  --" + accountNum.Substring(accountNum.Length - 4)
-                            };
-                            importedAccounts.Add(newAccount);
-                            accountLookup.Add(accountNum, newAccount);
                         }
 
-                        if (investmentValue != null) {
-                            double doubleValue = 0.0;
-                            double.TryParse(investmentValue,
-                                                    NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
-                                                    CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                                                    out doubleValue);
+                        double doubleValue = 0.0;
+                        double.TryParse(investmentValue ?? "0.0",
+                                        NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
+                                        CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
+                                        out doubleValue);
+
+                        if (doubleValue < 0.0 || doubleValue > 1.0) {
+                            Account? newAccount = null;
+                            accountLookup.TryGetValue(accountNum, out newAccount);
+                            if (newAccount == null)
+                            {
+                                newAccount = new() {
+                                    Custodian = "Vanguard",
+                                    Note = "⚠️  --" + accountNum.Substring(accountNum.Length - 4)
+                                };
+                                importedAccounts.Add(newAccount);
+                                accountLookup.Add(accountNum, newAccount);
+                            }
+                                                    
                             Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null) , Value = doubleValue };
                             newAccount?.Investments.Add(newInvestment);
                         }
@@ -381,12 +396,13 @@ public class Account
                     var symbol = chunks[0];
                     string? investmentName = null;
                     string investmentValue = chunks[9];
-                    if (investmentValue != null) {
-                        double doubleValue = 0.0;
-                        double.TryParse(investmentValue,
-                            NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
-                            CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                            out doubleValue);
+                    double doubleValue = 0.0;
+                    double.TryParse(investmentValue ?? "0.0",
+                                    NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
+                                    CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
+                                    out doubleValue);
+
+                    if (doubleValue < 0.0 || doubleValue > 1.0) {
                         Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null) , Value = doubleValue };
                         newAccount?.Investments.Add(newInvestment);
                     }
@@ -436,12 +452,13 @@ public class Account
                                     break;
                             }
 
-                            if (investmentValue != null) {
-                                double doubleValue = 0.0;
-                                double.TryParse(investmentValue,
-                                                        NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
-                                                        CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                                                        out doubleValue);
+                            double doubleValue = 0.0;
+                            double.TryParse(investmentValue ?? "0.0",
+                                            NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
+                                            CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
+                                            out doubleValue);
+                            
+                            if (doubleValue < 0.0 || doubleValue > 1.0) {
                                 Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null) , Value = doubleValue };
                                 newAccount?.Investments.Add(newInvestment);
                             }
@@ -453,7 +470,7 @@ public class Account
             }
             else
             {
-                throw new InvalidDataException("CSV file doesn't appear to be Fidelity, Schwab, or Vanguard");
+                throw new InvalidDataException("CSV file doesn't appear to be supported.");
             }
 
             return importedAccounts;
