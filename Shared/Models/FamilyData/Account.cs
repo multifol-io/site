@@ -85,12 +85,10 @@ public class Account
 
         using (var document = SpreadsheetDocument.Open(ms, false))
         {
-
             // Retrieve a reference to the workbook part.
             WorkbookPart wbPart = document.WorkbookPart;
 
-            // Find the sheet with the supplied name, and then use that 
-            // Sheet object to retrieve a reference to the first worksheet.
+            // Find the sheet with the supplied name, and then use that to retrieve a reference to the first worksheet.
             Sheet theSheet = wbPart?.Workbook.Descendants<Sheet>().Where(s => s?.Name == "Holdings Ungrouped").FirstOrDefault();
 
             // Throw an exception if there is no sheet.
@@ -100,8 +98,7 @@ public class Account
             }
 
             WorksheetPart wsPart = (WorksheetPart)(wbPart.GetPartById(theSheet.Id));
-            // For shared strings, look up the value in the
-            // shared strings table.
+            // For shared strings, look up the value in the shared strings table.
             var stringTable = 
                 wbPart.GetPartsOfType<SharedStringTablePart>()
                 .FirstOrDefault();
@@ -110,30 +107,19 @@ public class Account
             bool contentOver = false;
             Dictionary<string,Account> accountLookup = new();
             while (!contentOver) {
-                    var accountNameCell = GetCell(wsPart, "A" + row.ToString());
-                    var accountName = GetValue(accountNameCell, stringTable);
+                    string? accountName = GetValue(GetCell(wsPart, "A" + row.ToString()), stringTable);
                     if (string.IsNullOrEmpty(accountName)) {
                         contentOver = true;
                         break;
                     }
-                    var investmentNameCell = GetCell(wsPart, "B" + row.ToString());
-                    var investmentName = GetValue(investmentNameCell, stringTable);
-                    var symbolCell = GetCell(wsPart, "D" + row.ToString());
-                    var symbol = GetValue(symbolCell, stringTable);
-                    var marketValue = GetCell(wsPart, "J" + row.ToString()).InnerText;
-                    double doubleValue = 0.0;
-                    double.TryParse(marketValue,
-                                            NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
-                                            CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                                            out doubleValue);
 
-                    var sharesCount = GetCell(wsPart, "I" + row.ToString()).InnerText;
-                    double shares;
-                    double.TryParse(sharesCount, NumberStyles.Float | NumberStyles.AllowThousands,
-                                    CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                                    out shares);
+                    string? investmentName = GetValue(GetCell(wsPart, "B" + row.ToString()), stringTable);
+                    string? symbol = GetValue(GetCell(wsPart, "D" + row.ToString()), stringTable);
+                    double shares = ParseDouble(GetCell(wsPart, "I" + row.ToString()).InnerText, allowCurrency:false);
+                    double value = ParseDouble(GetCell(wsPart, "J" + row.ToString()).InnerText, allowCurrency:true);
+                    double costBasis = ParseDouble(GetCell(wsPart, "N" + row.ToString()).InnerText, allowCurrency:true);
 
-                    if (doubleValue < 0.0 || doubleValue > 1.0) {
+                    if (value < 0.0 || value > 1.0) {
                         Account? newAccount = null;
                         accountLookup.TryGetValue(accountName, out newAccount);
                         if (newAccount == null)
@@ -147,7 +133,7 @@ public class Account
                             importedAccounts.Add(newAccount);
                         }
 
-                        Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Value = doubleValue, Shares = shares };
+                        Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Value = value, Shares = shares, CostBasis = costBasis };
                         newAccount?.Investments.Add(newInvestment);
                     }
                     row++;
@@ -166,6 +152,18 @@ public class Account
     }
     private static Cell GetCell(WorksheetPart wsPart, string cellReference) {
         return wsPart.Worksheet.Descendants<Cell>().Where(c => c.CellReference.Value == cellReference)?.FirstOrDefault();
+    }
+
+    private static NumberStyles numbers = NumberStyles.Float | NumberStyles.AllowThousands;
+    private static NumberStyles currency = NumberStyles.AllowCurrencySymbol | numbers;
+
+    private static double ParseDouble(string value, bool allowCurrency = false) {
+        double doubleValue;
+        var numberStyles = (allowCurrency ? currency : numbers);
+        double.TryParse(TrimQuotes(value), numberStyles,
+                        CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
+                        out doubleValue);
+        return doubleValue;
     }
 
     public static List<Account> ImportCSV(string[] lines, IList<Fund> funds)
@@ -191,21 +189,11 @@ public class Account
                     var accountNickname = TrimQuotes(chunks[5]);
                     var symbol = TrimQuotes(chunks[2]);
                     string? investmentName = TrimQuotes(chunks[4]);
+                    double shares = ParseDouble(chunks[8]);
+                    double value = ParseDouble(chunks[10] ?? "0.0", allowCurrency:true);
+                    double costBasis = value - ParseDouble(chunks[11] ?? "0.0", allowCurrency:true);
 
-                    string? investmentValue = TrimQuotes(chunks[10]);
-                    double doubleValue = 0.0;
-                    double.TryParse(investmentValue ?? "0.0",
-                                    NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
-                                    CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                                    out doubleValue);
-
-                    string? sharesCount = TrimQuotes(chunks[8]);
-                    double shares;
-                    double.TryParse(sharesCount, NumberStyles.Float | NumberStyles.AllowThousands,
-                                    CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                                    out shares);
-
-                    if (doubleValue < 0.0 || doubleValue > 1.0) {
+                    if (value < 0.0 || value > 1.0) {
                         Account? newAccount = null;
                         accountLookup.TryGetValue(accountNum, out newAccount);
                         if (newAccount == null)
@@ -218,7 +206,7 @@ public class Account
                             accountLookup.Add(accountNum, newAccount);
                         }
                         
-                        Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null), Value = doubleValue, Shares = shares };
+                        Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null), Value = value, Shares = shares, CostBasis = costBasis };
                         newAccount?.Investments.Add(newInvestment);
                     }
 
@@ -237,21 +225,11 @@ public class Account
                     var accountName = chunks[1];
                     var symbol = chunks[2];
                     var investmentName = chunks[3];
+                    double shares = ParseDouble(chunks[4]);
+                    double value = ParseDouble(chunks[7], allowCurrency:true);
+                    double costBasis = ParseDouble(chunks[13], allowCurrency:true);
 
-                    var investmentValue = TrimQuotes(chunks[7]);
-                    double doubleValue = 0.0;
-                    double.TryParse(investmentValue,
-                                    NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
-                                    CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                                    out doubleValue);
-
-                    string? sharesCount = TrimQuotes(chunks[4]);
-                    double shares;
-                    double.TryParse(sharesCount, NumberStyles.Float | NumberStyles.AllowThousands,
-                                    CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                                    out shares);
-
-                    if (doubleValue < 0.0 || doubleValue > 1.0) {
+                    if (value < 0.0 || value > 1.0) {
                         if (lastAccountNumber != accountNumber)
                         {
                             newAccount = new() {
@@ -263,7 +241,7 @@ public class Account
                             lastAccountNumber = accountNumber;
                         }
 
-                        Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Value = doubleValue, Shares = shares };
+                        Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Value = value, Shares = shares, CostBasis = costBasis };
                         newAccount?.Investments.Add(newInvestment);
                     }
 
@@ -288,21 +266,11 @@ public class Account
                             var accountNumber = chunks[0];
                             var symbol = chunks[2];
                             var investmentName = chunks[1];
-
-                            var investmentValue = chunks[5];
-                            double doubleValue = 0.0;
-                            double.TryParse(investmentValue ?? "0.0",
-                                            NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
-                                            CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                                            out doubleValue);
-
-                            string? sharesCount = TrimQuotes(chunks[3]);
-                            double shares;
-                            double.TryParse(sharesCount, NumberStyles.Float | NumberStyles.AllowThousands,
-                                            CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                                            out shares);
+                            double shares = ParseDouble(chunks[3]);
+                            double value = ParseDouble(chunks[5], allowCurrency:true);
+                            // costBasis not available in CSV
                                             
-                            if (doubleValue < 0.0 || doubleValue > 1.0) {
+                            if (value < 0.0 || value > 1.0) {
                                 if (newAccount == null) {
                                     newAccount = new() {
                                         Custodian = "Vanguard",
@@ -311,7 +279,7 @@ public class Account
                                     importedAccounts.Add(newAccount);
                                 }
 
-                                Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Value = doubleValue, Shares = shares };
+                                Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Value = value, Shares = shares };
                                 newAccount?.Investments.Add(newInvestment);
                             }
 
@@ -350,20 +318,12 @@ public class Account
                             }
                         }
 
-                        string? investmentValue = TrimQuotes(chunks[4]);
-                        double doubleValue = 0.0;
-                        double.TryParse(investmentValue ?? "0.0",
-                                        NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
-                                        CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                                        out doubleValue);
+                        double shares = ParseDouble(chunks[3]);
+                        double value = ParseDouble(chunks[4], allowCurrency:true);
+                        // costBasis not available in CSV
 
-                        string? sharesCount = TrimQuotes(chunks[3]);
-                        double shares;
-                        double.TryParse(sharesCount, NumberStyles.Float | NumberStyles.AllowThousands,
-                                        CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                                        out shares);
                                         
-                        if (doubleValue < 0.0 || doubleValue > 1.0) {
+                        if (value < 0.0 || value > 1.0) {
                             Account? newAccount = null;
                             accountLookup.TryGetValue(accountNum, out newAccount);
                             if (newAccount == null)
@@ -376,7 +336,7 @@ public class Account
                                 accountLookup.Add(accountNum, newAccount);
                             }
                                                     
-                            Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null) , Value = doubleValue, Shares = shares };
+                            Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null) , Value = value, Shares = shares };
                             newAccount?.Investments.Add(newInvestment);
                         }
                     }
@@ -415,24 +375,17 @@ public class Account
                 while (chunks[0] != "TOTAL") {
                     var symbol = chunks[0];
                     string? investmentName = null;
-                    string investmentValue = chunks[9];
-                    double doubleValue = 0.0;
-                    double.TryParse(investmentValue ?? "0.0",
-                                    NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
-                                    CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                                    out doubleValue);
 
-                    string? sharesCount = TrimQuotes(chunks[4]);
+                    double shares = ParseDouble(chunks[4]);
+                    double value = ParseDouble(chunks[9], allowCurrency:true);
+                    double costBasis = value - ParseDouble(chunks[7], allowCurrency:true);
+
                     if (chunks[0] == "CASH") {
-                        sharesCount = investmentValue;
+                        shares = value;
                     }
-                    double shares;
-                    double.TryParse(sharesCount, NumberStyles.Float | NumberStyles.AllowThousands,
-                                    CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                                    out shares);
 
-                    if (doubleValue < 0.0 || doubleValue > 1.0) {
-                        Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null), Value = doubleValue, Shares = shares };
+                    if (value < 0.0 || value > 1.0) {
+                        Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null), Value = value, Shares = shares, CostBasis = costBasis };
                         newAccount?.Investments.Add(newInvestment);
                     }
 
@@ -466,37 +419,25 @@ public class Account
                         while (lineIndex < lines.Length - 1 && chunks[0] != "\"") {
                             var symbol = chunks[0].Substring(1); // front quote wasn't removed by split.
                             string? investmentName = null;
-                            string? investmentValue;
-                            string? sharesCount = null;
+                            double shares = ParseDouble(chunks[2]);
+                            double value = ParseDouble(chunks[6], allowCurrency:true);
+                            double costBasis = ParseDouble(chunks[9], allowCurrency:true);
                             switch (symbol) {
                                 case "Cash & Cash Investments":
                                     symbol = "CASH";
-                                    investmentValue = chunks[6];
-                                    sharesCount = investmentValue;
+                                    shares = value;
                                     break;
                                 case "Account Total":
-                                    investmentValue = null;
+                                    value = 0.0;
+                                    shares = 0.0;
                                     break;
                                 default:
                                     investmentName = chunks[1];
-                                    investmentValue = chunks[6];
-                                    sharesCount = TrimQuotes(chunks[2]);
                                     break;
                             }
 
-                            double doubleValue = 0.0;
-                            double.TryParse(investmentValue ?? "0.0",
-                                            NumberStyles.AllowCurrencySymbol | NumberStyles.Float | NumberStyles.AllowThousands,
-                                            CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                                            out doubleValue);
-
-                            double shares;
-                            double.TryParse(sharesCount, NumberStyles.Float | NumberStyles.AllowThousands,
-                                            CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                                            out shares);
-                            
-                            if (doubleValue < 0.0 || doubleValue > 1.0) {
-                                Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null), Value = doubleValue, Shares = shares };
+                            if (value < 0.0 || value > 1.0) {
+                                Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null), Value = value, Shares = shares, CostBasis = costBasis };
                                 newAccount?.Investments.Add(newInvestment);
                             }
 

@@ -73,6 +73,7 @@ public class Investment
         }
      }
     public double? Shares { get; set; }
+    public double? CostBasis { get; set; }
     public double? Price { get; set; }
     public double? Value { get; set; }
     [JsonIgnore]
