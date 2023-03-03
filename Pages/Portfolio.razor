@@ -842,7 +842,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                         }
 
                                                         var lines = System.Text.RegularExpressions.Regex.Split(content, "\r\n|\r|\n");
-                                                        var importedAccounts = Account.ImportCSV(lines, Funds);
+                                                        var importedAccounts = await Importer.ImportCSV(lines, Funds);
                                                         familyData.Accounts.AddRange(importedAccounts);
                                                         showImport = false;
                                                         Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
@@ -855,7 +855,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                     using (var stream = file.OpenReadStream())
                                                     {
                                                         try {
-                                                            var importedAccounts = await Account.ImportXLSX(stream, Funds);
+                                                            var importedAccounts = await Importer.ImportXLSX(stream, Funds);
                                                             familyData.Accounts.AddRange(importedAccounts);
                                                             showImport = false;
                                                             Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
