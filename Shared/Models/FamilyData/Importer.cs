@@ -385,7 +385,6 @@ public class Importer {
     }
 
 
-
     private static Account? StoreInvestment(Dictionary<string,Account> accountLookup, List<Account> importedAccounts, IList<Fund> funds, string custodian, double? value, string account, string? symbol, string? investmentName, double? shares, double? costBasis)
     {
         Account? newAccount = null;
