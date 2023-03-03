@@ -283,6 +283,95 @@ public class Importer {
                     }
                 }
             }
+            else if (headerChunks[0] == "\"All Accounts\"")
+            {
+                // Ameriprise
+                Dictionary<string,Account> accountLookup = new();
+                bool processing = false;
+
+                int? accountNameCol = null;
+                int? accountDescriptionCol = null;
+                int? valueCol = null;
+                int? typeCol = null;
+                int? quantityCol = null;
+                int? symbolCol = null;
+                int? descriptionCol = null;
+                foreach (var line2 in lines)
+                {
+                    var chunks = await SplitCsvLine(line2);
+
+                    if (!processing)
+                    {
+                        int i = 0;
+                        int count = 0;
+                        foreach (var chunk in chunks)
+                        {
+                            switch (TrimQuotes(chunk))
+                            {
+                                case "Mkt. Value":
+                                    valueCol = i;
+                                    count++;
+                                    break;
+                                case "Account Name":
+                                    accountNameCol = i;
+                                    count++;
+                                    break;
+                                case "Account Description":
+                                    accountDescriptionCol = i;
+                                    count++;
+                                    break;
+                                case "Symbol":
+                                    symbolCol = i;
+                                    count++;
+                                    break;
+                                case "Type":
+                                    typeCol = i;
+                                    count++;
+                                    break;
+                                case "Description":
+                                    descriptionCol = i;
+                                    count++;
+                                    break;
+                                case "Quantity":
+                                    quantityCol = i;
+                                    count++;
+                                    break;
+                            }
+
+                            i++;
+                        }
+
+                        if (count > 0) {
+                            processing = true;
+                        }
+                    } else {
+                        if (chunks[0].StartsWith("\"Total "))
+                        {
+                            processing = false;
+                            continue;
+                        }
+
+                        var type = GetValue(chunks, typeCol);
+                        string? symbol;
+                        if (type != null)
+                        {
+                            symbol = type;
+                        }
+                        else 
+                        {
+                            symbol = GetValue(chunks, symbolCol);
+                        }
+
+                        var investmentName = GetValue(chunks, descriptionCol);
+                        var accountName = GetValue(chunks, accountNameCol)!;
+                        var accountDescription = GetValue(chunks, accountDescriptionCol)!;
+                        var quantity = ParseDoubleOrNull(GetValue(chunks, quantityCol));
+                        var value = ParseDoubleOrNull(GetValue(chunks, valueCol), allowCurrency:true);
+                        
+                        var newAccount = StoreInvestment(accountLookup, importedAccounts, funds, "Ameriprise", value, accountDescription!.Substring(accountDescription.Length-4), symbol, investmentName, quantity, costBasis:null);
+                    }
+                }
+            }
             else
             {
                 throw new InvalidDataException("CSV file doesn't appear to be supported.");
@@ -293,6 +382,37 @@ public class Importer {
             Console.WriteLine(e.Message + "\n" + e.InnerException + "\n" + e.Source + "\n" + e.StackTrace);
             throw e;
         }
+    }
+
+
+
+    private static Account? StoreInvestment(Dictionary<string,Account> accountLookup, List<Account> importedAccounts, IList<Fund> funds, string custodian, double? value, string account, string? symbol, string? investmentName, double? shares, double? costBasis)
+    {
+        Account? newAccount = null;
+
+        if (value < 0.0 || value > 1.0) {
+            accountLookup.TryGetValue(account, out newAccount);
+            if (newAccount == null)
+            {
+                newAccount = new() {
+                    Custodian = custodian,
+                    Note = "⚠️*" + account
+                };
+                newAccount.GuessAccountType();
+                importedAccounts.Add(newAccount);
+                accountLookup.Add(account, newAccount);
+            }
+
+            Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Value = value, Shares = shares, CostBasis = costBasis };
+            newAccount?.Investments.Add(newInvestment);
+        }
+
+        return newAccount;
+    }
+
+    private static string? GetValue(List<string> chunks, int? columnIndex)
+    {
+        return (columnIndex.HasValue ? TrimQuotes(chunks[columnIndex.Value]) : null);
     }
 
     public static async Task<List<Account>> ImportXLSX(Stream stream, IList<Fund> funds) {
@@ -416,6 +536,10 @@ public class Importer {
         return str;
     }
 
+    private static double? ParseDoubleOrNull(string? value, bool allowCurrency = false) {
+        return (value == null ? null : ParseDouble(value, allowCurrency));
+    }
+    
     private static double ParseDouble(string value, bool allowCurrency = false) {
         double doubleValue;
         var numberStyles = (allowCurrency ? currency : numbers);
@@ -424,7 +548,7 @@ public class Importer {
                         out doubleValue);
         return doubleValue;
     }
-    
+
     private static NumberStyles numbers = NumberStyles.Float | NumberStyles.AllowThousands;
     private static NumberStyles currency = NumberStyles.AllowCurrencySymbol | numbers;
 }
