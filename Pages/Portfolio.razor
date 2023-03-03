@@ -800,7 +800,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                         <br/>
                                         <fieldset style=margin-left:20px>
                                             <span>Download portfolio details from custodian website, and then "choose file", to import: </span><br/>
-                                            <InputFile accept=".csv,.xlsx" OnChange="@((e) => OnCSVImport(e))" /><br/>
+                                            <InputFile multiple accept=".csv,.xlsx" OnChange="@((e) => OnDataFilesImport(e))" /><br/>
                                             <ul>
                                                 <li>Currently supports importing Ameriprise, eTrade, Fidelity, Merrill Edge, Morgan Stanley, Schwab, or Vanguard data files</li>
                                                 <li>If your custodian's format isn't supported yet, we're happy to try to add support. If you can share your custodian's downloaded CSV file format (feel free to anonymize/change the data), please email it to suggestions@bogle.tools with details on what custodian it is from.</li>
@@ -823,8 +823,12 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                             showError = false;
                                         }
                                     }
-                                    private async void OnCSVImport(InputFileChangeEventArgs e)
+
+                                    private async void OnDataFilesImport(InputFileChangeEventArgs e)
                                     {
+                                        List<Account> importedAccounts = new();
+                                        int filesImported = 0;
+
                                         var files = e.GetMultipleFiles();
                                         if (files != null)
                                         {
@@ -842,31 +846,34 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                         }
 
                                                         var lines = System.Text.RegularExpressions.Regex.Split(content, "\r\n|\r|\n");
-                                                        var importedAccounts = await Importer.ImportCSV(lines, Funds);
-                                                        familyData.Accounts.AddRange(importedAccounts);
+                                                        var importedAccountsCSV = await Importer.ImportCSV(lines, Funds);
+                                                        importedAccounts.AddRange(importedAccountsCSV);
                                                         showImport = false;
-                                                        Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
+                                                        filesImported++;
                                                     } catch (Exception) {
                                                         showError = true;
-                                                        Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
                                                     }
                                                 } else if (file.Name.ToLower().EndsWith(".xlsx")) {
                                                     var buffer = new byte[file.Size];
                                                     using (var stream = file.OpenReadStream())
                                                     {
                                                         try {
-                                                            var importedAccounts = await Importer.ImportXLSX(stream, Funds);
-                                                            familyData.Accounts.AddRange(importedAccounts);
+                                                            var importedAccountsXLSX = await Importer.ImportXLSX(stream, Funds);
+                                                            importedAccounts.AddRange(importedAccountsXLSX);
                                                             showImport = false;
-                                                            Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
+                                                            filesImported++;
                                                         } catch (Exception) {
                                                             showError = true;
-                                                            Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
                                                         }
                                                     }
                                                 }
                                             }
                                         }
+
+                                        Console.WriteLine($"{filesImported} files imported with {importedAccounts.Count} accounts");
+                                        
+                                        familyData.Accounts.AddRange(importedAccounts);
+                                        Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
                                     }
 
                                     private async void addInvestment(MouseEventArgs e, int accountIndex)

@@ -61,10 +61,23 @@ public class Importer {
                     var accountNumber = chunks[0];
                     var accountName = chunks[1];
                     var symbol = chunks[2];
-                    var investmentName = chunks[3];
-                    double shares = ParseDouble(chunks[4]);
-                    double value = ParseDouble(chunks[7], allowCurrency:true);
-                    double costBasis = ParseDouble(chunks[13], allowCurrency:true);
+                    string? investmentName;
+                    double value;
+                    double? shares = null;
+                    double? costBasis = null;
+                    if (symbol == "Pending Activity")
+                    {
+                        investmentName = symbol;
+                        value = ParseDouble(chunks[6], allowCurrency:true);
+                        symbol = null;
+                    }
+                    else
+                    {
+                        investmentName = chunks[3];
+                        value = ParseDouble(chunks[7], allowCurrency:true);
+                        shares = ParseDouble(chunks[4]);
+                        costBasis = ParseDouble(chunks[13], allowCurrency:true);
+                    }
 
                     if (value < 0.0 || value > 1.0) {
                         if (lastAccountNumber != accountNumber)
@@ -283,7 +296,7 @@ public class Importer {
                     }
                 }
             }
-            else if (headerChunks[0] == "\"All Accounts\"")
+            else if (headerChunks[0] == "\"AMERIPRISE BROKERAGE\"")
             {
                 // Ameriprise
                 Dictionary<string,Account> accountLookup = new();
