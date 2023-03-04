@@ -37,6 +37,12 @@ public class Account
 
     public List<Investment> AvailableFunds { get; set; }
 
+    [JsonIgnore]
+    public Account? ReplaceAccount { get; set; }
+
+    [JsonIgnore]
+    public bool Import { get; set; }
+
     public void UpdatePercentages(double totalValue, FamilyData familyData)
     {
         foreach (var investment in Investments)

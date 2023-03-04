@@ -424,9 +424,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
             <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
         }
-        else if (stepPath == "tax-filing-info") {
-
-        }
         else
         {
             @foreach (var step in steps) {
@@ -704,225 +701,152 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                 </td>
                                 break;                                
                             case "retirement-assets":
-                                <p><b>Prerequisites:</b> </p>
+                                @if(ImportResult == null) {
+                                    <p><b>Prerequisites:</b> </p>
 
-                                <label style=margin-left:25px>Tax Filing Status:</label>
-                                <select @bind=familyData.TaxFilingStatus>
-                                    <option value="ChoiceNeeded">ChoiceNeeded</option>
-                                    <option>Single</option>
-                                    <option value=MarriedFilingJointly>Married filing jointly</option>
-                                    <option value=MarriedFilingSeperately>Married filing seperately</option>
-                                    <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
-                                    <option value=HeadOfHousehold>Head of Household</option>
-                                </select><br/>
-                                <br/>
-
-                                <u><b>Current Retirement Assets:</b></u><br/>
-
-                                @code{
-                                    void editAccount(MouseEventArgs e, int index)
-                                    {
-                                        familyData.Accounts[index].Edit = true;
-                                    }
-                                }
-
-                                accountIndex = 0;
-                                @foreach (var account in familyData.Accounts) {
-                                    int accBuffer = accountIndex;
-                                    accountIndex++;
-                                    var accountId = "account"+accBuffer;
+                                    <label style=margin-left:25px>Tax Filing Status:</label>
+                                    <select @bind=familyData.TaxFilingStatus>
+                                        <option value="ChoiceNeeded">ChoiceNeeded</option>
+                                        <option>Single</option>
+                                        <option value=MarriedFilingJointly>Married filing jointly</option>
+                                        <option value=MarriedFilingSeperately>Married filing seperately</option>
+                                        <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                                        <option value=HeadOfHousehold>Head of Household</option>
+                                    </select><br/>
                                     <br/>
-                                    <div style=padding-left:3em;text-indent:-3em;>
-                                        <button @onclick='@(e=>deleteAccount(e,accBuffer))'>❌</button>
-                                        @if (familyData.PersonCount == 2) {
-                                        <select @ref=accountN @bind=account.Identifier>
-                                            <option>our</option>
-                                            @for(int p=0;p<familyData.PersonCount;p++)
-                                            {
-                                                <option>@familyData.People[p].PossessiveID</option>
-                                            }
-                                        </select>
-                                        }
-                                        <select @ref=accountN @bind=account.AccountType>
-                                            <option>Account Type...</option>
-                                            <option>401k</option>
-                                            <option>403b</option>
-                                            <option>457b</option>
-                                            <option>HSA</option>
-                                            <option>Inherited IRA</option>
-                                            <option>Inherited Roth IRA</option>
-                                            <option value="Traditional IRA">IRA</option>
-                                            <option>Rollover IRA</option>
-                                            <option>Roth IRA</option>
-                                            <option>SIMPLE IRA</option>
-                                            <option>Traditional IRA</option>
-                                            <option>Taxable</option>
-                                        </select>
-                                        <span> at <input style="width:140px" type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' /></span><br/>
-                                        <span><label for=@accountId>Note: </label><input id=@accountId type=text @bind-value=account.Note @bind-value:event=oninput placeholder='account note'/></span>
-                                    </div>
-                                    
-                                    investmentIndex = 0;
-                                    @foreach (var investment in account.Investments) {
-                                        int invBuffer = investmentIndex;
-                                        investmentIndex++;
-                                        <div style=margin-top:10px;margin-left:20px;padding-left:3em;text-indent:-3em;>
-                                            <button @onclick='@(e=>deleteInvestment(e,accBuffer,invBuffer))'>❌</button>
-                                            <input @ref=tickerN style="width:70px;text-transform: uppercase;" type=text @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/>
-                                            Balance 🟰 $<input style=width:100px type=text @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/>
-                                        </div>
-                                        <div style=margin-left:85px>
-                                            <input type=text @bind-Value=investment.Name @bind-Value:event=oninput placeholder='investment fullname' />
-                                            &nbsp;(
-                                                <input style="width:70px" type=text @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput placeholder='expense ratio'/>
-                                            %)
-                                        </div>
-                                    }
-                                    <button style=margin-left:20px @onclick='@(e=>addInvestment(e,accBuffer))'>➕</button>
-                                    <hr style=margin-left:40px/>
-                                    <div style=margin-left:40px>Account Total: @formatMoney(account.Value)</div>
-                                }
-                                <br/>
-                                <hr/>
-                                <div>Portfolio Size: @formatMoney(familyData.Value)</div>
-                                <br/>
-                                <div>
-                                    <button @onclick=addAccount>➕ Account</button> to manually enter another Account's info.
-                                </div>
-                                <br/>
-                                <div>
-                                    <button @onclick=ShowImport>
-                                        @if(showImport){<span>Hide</span>}
-                                        Import Accounts
-                                    </button> to import Account info from a CSV/XLSX file.
-                                    @if(showError){<br/><br/><span style=color:red>ERROR: must be a CSV file from Ameriprise, eTrade, Fidelity, Merrill Edge, Schwab, or Vanguard or a XLSX file from Morgan Stanley.</span><br/>}
-                                    @if(showImport){
+
+                                    <u><b>Current Retirement Assets:</b></u><br/>
+
+                                    accountIndex = 0;
+                                    @foreach (var account in familyData.Accounts) {
+                                        int accBuffer = accountIndex;
+                                        accountIndex++;
+                                        var accountId = "account"+accBuffer;
                                         <br/>
-                                        <fieldset style=margin-left:20px>
-                                            <span>Download portfolio details from custodian website, and then "choose file", to import: </span><br/>
-                                            <InputFile multiple accept=".csv,.xlsx" OnChange="@((e) => OnDataFilesImport(e))" /><br/>
-                                            <ul>
-                                                <li>Currently supports importing Ameriprise, eTrade, Fidelity, Merrill Edge, Morgan Stanley, Schwab, or Vanguard data files</li>
-                                                <li>If your custodian's format isn't supported yet, we're happy to try to add support. If you can share your custodian's downloaded CSV file format (feel free to anonymize/change the data), please email it to suggestions@bogle.tools with details on what custodian it is from.</li>
-                                                <li>CAUTION: only share personal info (like these files) to apps worthy of your trust!</li>
-                                            </ul>
-                                        </fieldset>
-                                    }
-                                </div>
-                                <br/>
-
-                                @code{
-                                    private ElementReference tickerN;
-                                    private ElementReference accountN;
-                                    private bool showImport = false;
-                                    private bool showError  = false;
-
-                                    private void ShowImport() {
-                                        showImport = !showImport;
-                                        if (!showImport) {
-                                            showError = false;
-                                        }
-                                    }
-
-                                    private async void OnDataFilesImport(InputFileChangeEventArgs e)
-                                    {
-                                        List<Account> importedAccounts = new();
-                                        int filesImported = 0;
-
-                                        var files = e.GetMultipleFiles();
-                                        if (files != null)
-                                        {
-                                            foreach (var file in files)
-                                            {
-                                                if (file.Name.ToLower().EndsWith(".csv"))
+                                        <div style=padding-left:3em;text-indent:-3em;>
+                                            <button @onclick='@(e=>deleteAccount(e,accBuffer))'>❌</button>
+                                            @if (familyData.PersonCount == 2) {
+                                            <select @ref=accountN @bind=account.Identifier>
+                                                <option>our</option>
+                                                @for(int p=0;p<familyData.PersonCount;p++)
                                                 {
-                                                    string? content = null;
-                                                    try {
-                                                        var buffer = new byte[file.Size];
-                                                        using (var stream = file.OpenReadStream())
-                                                        {
-                                                            await stream.ReadAsync(buffer);
-                                                            content = System.Text.Encoding.UTF8.GetString(buffer);
-                                                        }
-
-                                                        var lines = System.Text.RegularExpressions.Regex.Split(content, "\r\n|\r|\n");
-                                                        var importedAccountsCSV = await Importer.ImportCSV(lines, Funds);
-                                                        importedAccounts.AddRange(importedAccountsCSV);
-                                                        showImport = false;
-                                                        filesImported++;
-                                                    } catch (Exception) {
-                                                        showError = true;
-                                                    }
-                                                } else if (file.Name.ToLower().EndsWith(".xlsx")) {
-                                                    var buffer = new byte[file.Size];
-                                                    using (var stream = file.OpenReadStream())
-                                                    {
-                                                        try {
-                                                            var importedAccountsXLSX = await Importer.ImportXLSX(stream, Funds);
-                                                            importedAccounts.AddRange(importedAccountsXLSX);
-                                                            showImport = false;
-                                                            filesImported++;
-                                                        } catch (Exception) {
-                                                            showError = true;
-                                                        }
-                                                    }
+                                                    <option>@familyData.People[p].PossessiveID</option>
                                                 }
+                                            </select>
+                                            }
+                                            <select @ref=accountN @bind=account.AccountType>
+                                                <option>Account Type...</option>
+                                                <option>401k</option>
+                                                <option>403b</option>
+                                                <option>457b</option>
+                                                <option>HSA</option>
+                                                <option>Inherited IRA</option>
+                                                <option>Inherited Roth IRA</option>
+                                                <option value="Traditional IRA">IRA</option>
+                                                <option>Rollover IRA</option>
+                                                <option>Roth IRA</option>
+                                                <option>SIMPLE IRA</option>
+                                                <option>Traditional IRA</option>
+                                                <option>Taxable</option>
+                                            </select>
+                                            <span> at <input style="width:140px" type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' /></span><br/>
+                                            <span><label for=@accountId>Note: </label><input id=@accountId type=text @bind-value=account.Note @bind-value:event=oninput placeholder='account note'/></span>
+                                        </div>
+                                        
+                                        investmentIndex = 0;
+                                        @foreach (var investment in account.Investments) {
+                                            int invBuffer = investmentIndex;
+                                            investmentIndex++;
+                                            <div style=margin-top:10px;margin-left:20px;padding-left:3em;text-indent:-3em;>
+                                                <button @onclick='@(e=>deleteInvestment(e,accBuffer,invBuffer))'>❌</button>
+                                                <input @ref=tickerN style="width:70px;text-transform: uppercase;" type=text @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/>
+                                                Balance 🟰 $<input style=width:100px type=text @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/>
+                                            </div>
+                                            <div style=margin-left:85px>
+                                                <input type=text @bind-Value=investment.Name @bind-Value:event=oninput placeholder='investment fullname' />
+                                                &nbsp;(
+                                                    <input style="width:70px" type=text @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput placeholder='expense ratio'/>
+                                                %)
+                                            </div>
+                                        }
+                                        <button style=margin-left:20px @onclick='@(e=>addInvestment(e,accBuffer))'>➕</button>
+                                        <hr style=margin-left:40px/>
+                                        <div style=margin-left:40px>Account Total: @formatMoney(account.Value)</div>
+                                    }
+                                    <br/>
+                                    <hr/>
+                                    <div>Portfolio Size: @formatMoney(familyData.Value)</div>
+                                    <br/>
+                                    <div>
+                                        <button @onclick=addAccount>➕ Account</button> to manually enter another Account's info.
+                                    </div>
+                                    <br/>
+                                    <div>
+                                        <button @onclick=ShowImport>
+                                            @if(showImport){<span>Hide</span>}
+                                            Import Accounts
+                                        </button> to import Account info from a CSV/XLSX file.
+                                        @if(showError){<br/><br/><span style=color:red>ERROR: must be a CSV file from Ameriprise, eTrade, Fidelity, Merrill Edge, Schwab, or Vanguard or a XLSX file from Morgan Stanley.</span><br/>}
+                                        @if(showImport){
+                                            <br/>
+                                            <fieldset style=margin-left:20px>
+                                                <span>Download portfolio details from custodian website, and then "choose file", to import: </span><br/>
+                                                <InputFile multiple accept=".csv,.xlsx" OnChange="@((e) => OnDataFilesImport(e))" /><br/>
+                                                <ul>
+                                                    <li>Currently supports importing Ameriprise, eTrade, Fidelity, Merrill Edge, Morgan Stanley, Schwab, or Vanguard data files</li>
+                                                    <li>If your custodian's format isn't supported yet, we're happy to try to add support. If you can share your custodian's downloaded CSV file format (feel free to anonymize/change the data), please email it to suggestions@bogle.tools with details on what custodian it is from.</li>
+                                                    <li>CAUTION: only share personal info (like these files) to apps worthy of your trust!</li>
+                                                </ul>
+                                            </fieldset>
+                                        }
+                                    </div>
+                                    <br/>
+
+                                    @if(familyData.Value > 0) {
+                                    <br/>
+                                    <div>Preferred technique to represent the approximate size of your total portfolio (in <NavLink href="/portfolio">portfolio review</NavLink>):</div>
+                                    <InputRadioGroup @bind-Value=familyData.ValueStyle>
+                                        <InputRadio id=rounded Value='0' /> <label for=rounded>@formatMoneyThousands(familyData.Value)</label> <br/>
+                                        <InputRadio id=estimate Value='1' /> <label for=estimate>@estimatePortfolio(familyData)</label> <br/>
+                                        <InputRadio id=dollar Value='2' /> <label for=dollar>@formatMoney(familyData.Value)</label> <br/>
+                                    </InputRadioGroup>
+                                    }
+                                } else {
+                                    <EditForm Model=@ImportResult>
+                                        <div>Data Files Contains These Accounts/Investments - Choose Which to Import:</div>
+                                        <br/>
+                                        <button @onclick=finishImport>Import selected accounts</button>
+                                        <button @onclick=cancelImport>Cancel Import</button>
+                                        <br/>
+                                        <br/>
+
+                                        @foreach (var error in ImportResult.Errors)
+                                        {
+                                            <div style=font-weight:bold>Error: @error.Exception.Message</div>
+                                            @if(error.Exception.InnerException!=null){ <div>Failure location: <br/>@error.Exception.InnerException.StackTrace<br/><br/></div>};
+                                        }
+
+                                        <div><InputCheckbox @bind-Value=ImportResult.ImportUpdatedAccounts /> UPDATE these EXISTING accounts in your data file:</div>
+                                        @foreach (var account in ImportResult.UpdatedAccounts)
+                                        {
+                                            <div style=margin-left:40px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @formatMoney(account.Value)</div>
+                                            @foreach (var investment in account.Investments)
+                                            {
+                                                <div style=margin-left:80px>@investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @formatMoney(investment.Value)</div>
                                             }
                                         }
 
-                                        Console.WriteLine($"{filesImported} files imported with {importedAccounts.Count} accounts");
-                                        
-                                        familyData.Accounts.AddRange(importedAccounts);
-                                        Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
-                                    }
-
-                                    private async void addInvestment(MouseEventArgs e, int accountIndex)
-                                    {
-                                        var newInvestment = new Investment() { funds = Funds };
-                                        familyData.Accounts[accountIndex].Investments.Add(newInvestment);
-                                        focusTicker = true;
-                                    }
-
-                                    void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
-                                    {
-                                        familyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
-                                        Navigation.NavigateTo("/portfolio/reload");
-                                        familyData.UpdatePercentages();
-                                    }
-                                    void addAvailableFund(MouseEventArgs e, Account account)
-                                    {
-                                        var newFund = new Investment() { funds = Funds };
-                                        account.AvailableFunds.Add(newFund);
-                                        focusTicker = true;
-                                    }
-                                    void deleteAvailableFund(MouseEventArgs e, Account account, int investmentIndex)
-                                    {
-                                        account.AvailableFunds.RemoveAt(investmentIndex);
-                                    }
-                                    void addAccount()
-                                    {
-                                        var newAccount = new Account();
-                                        var newInvestment = new Investment() { funds = Funds };
-                                        newAccount.Investments.Add(newInvestment);
-                                        familyData?.Accounts.Add(newAccount);
-                                        focusAccount = true;
-                                    }
-                                    void deleteAccount(MouseEventArgs e, int accountIndex)
-                                    {
-                                        familyData.Accounts.RemoveAt(accountIndex);
-                                        Navigation.NavigateTo("/portfolio/reload");
-                                        familyData.UpdatePercentages();
-                                    }
-                                }
-
-                                @if(familyData.Value > 0) {
-                                <br/>
-                                <div>Preferred technique to represent the approximate size of your total portfolio (in <NavLink href="/portfolio">portfolio review</NavLink>):</div>
-                                <InputRadioGroup @bind-Value=familyData.ValueStyle>
-                                    <InputRadio id=rounded Value='0' /> <label for=rounded>@formatMoneyThousands(familyData.Value)</label> <br/>
-                                    <InputRadio id=estimate Value='1' /> <label for=estimate>@estimatePortfolio(familyData)</label> <br/>
-                                    <InputRadio id=dollar Value='2' /> <label for=dollar>@formatMoney(familyData.Value)</label> <br/>
-                                </InputRadioGroup>
+                                        <br/>
+                                        <div><InputCheckbox @bind-Value=ImportResult.ImportNewAccounts /> ADD these NEW accounts in your data file:</div>
+                                        @foreach (var account in ImportResult.NewAccounts)
+                                        {
+                                            <div style=margin-left:40px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @formatMoney(account.Value)</div>
+                                            @foreach (var investment in account.Investments)
+                                            {
+                                                <div style=margin-left:80px>@investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @formatMoney(investment.Value)</div>
+                                            }
+                                        }
+                                    </EditForm>
                                 }
                                 break;
                             case "contributions":
@@ -1079,7 +1003,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         }
     }
 
-
     public string markupize(string? wikiText) {
         if (wikiText == null) return "";
         string returnVal = "<span>";
@@ -1164,6 +1087,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
 
         return returnVal;
     }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (focusTicker)
@@ -1208,5 +1132,106 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         if (!string.IsNullOrEmpty(TopicValue)) {
             await LoadPortfolioForTopic(TopicValue);
         }
+    }
+
+    private ElementReference tickerN;
+    private ElementReference accountN;
+    private bool showImport = false;
+    private bool showError  = false;
+
+    private void ShowImport() {
+        showImport = !showImport;
+        if (!showImport) {
+            showError = false;
+        }
+    }
+
+    private ImportResult? ImportResult = null;
+
+    private async Task OnDataFilesImport(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles();
+        ImportResult = await Importer.ImportDataFiles(files, Funds, familyData.Accounts);
+        foreach (var account in ImportResult.ImportedAccounts) 
+        {
+            account.Import = true;
+        }
+
+        Console.WriteLine($"{ImportResult.DataFilesImported} files imported with {ImportResult.ImportedAccounts.Count} accounts");
+        showImport = false;
+
+        Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
+    }
+
+    private void finishImport()
+    {
+        if (ImportResult == null) { return; }
+
+        foreach (var updatedAccount in ImportResult.UpdatedAccounts)
+        {
+            if (updatedAccount.Import && updatedAccount.ReplaceAccount != null)
+            {
+                updatedAccount.ReplaceAccount.Investments.Clear();
+                updatedAccount.ReplaceAccount.Investments.AddRange(updatedAccount.Investments);
+            }
+        }
+
+        foreach (var newAccount in ImportResult.NewAccounts)
+        {
+            if (newAccount.Import)
+            {
+                familyData.Accounts.Add(newAccount);
+            }
+        }
+
+        ImportResult = null;
+    }
+
+    private void cancelImport()
+    {
+        ImportResult = null;
+    }
+
+    private async void addInvestment(MouseEventArgs e, int accountIndex)
+    {
+        var newInvestment = new Investment() { funds = Funds };
+        familyData.Accounts[accountIndex].Investments.Add(newInvestment);
+        focusTicker = true;
+    }
+
+    void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
+    {
+        familyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
+        Navigation.NavigateTo("/portfolio/reload");
+        familyData.UpdatePercentages();
+    }
+    void addAvailableFund(MouseEventArgs e, Account account)
+    {
+        var newFund = new Investment() { funds = Funds };
+        account.AvailableFunds.Add(newFund);
+        focusTicker = true;
+    }
+    void deleteAvailableFund(MouseEventArgs e, Account account, int investmentIndex)
+    {
+        account.AvailableFunds.RemoveAt(investmentIndex);
+    }
+    void addAccount()
+    {
+        var newAccount = new Account();
+        var newInvestment = new Investment() { funds = Funds };
+        newAccount.Investments.Add(newInvestment);
+        familyData?.Accounts.Add(newAccount);
+        focusAccount = true;
+    }
+    void deleteAccount(MouseEventArgs e, int accountIndex)
+    {
+        familyData.Accounts.RemoveAt(accountIndex);
+        Navigation.NavigateTo("/portfolio/reload");
+        familyData.UpdatePercentages();
+    }
+
+    void editAccount(MouseEventArgs e, int index)
+    {
+        familyData.Accounts[index].Edit = true;
     }
 }

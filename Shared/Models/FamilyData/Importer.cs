@@ -1,8 +1,113 @@
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System.Globalization;
+using Microsoft.AspNetCore.Components.Forms;
+
+
+public class ImportResult {
+
+    public List<Account> ImportedAccounts { get; set; } = new();
+    private bool _ImportUpdatedAccounts;
+    public bool ImportUpdatedAccounts {
+        get { return _ImportUpdatedAccounts; }
+        set {
+            _ImportUpdatedAccounts = value;
+            foreach (var account in UpdatedAccounts)
+            {
+                account.Import = _ImportUpdatedAccounts;
+            }
+        }
+    }
+    public List<Account> UpdatedAccounts { get; set; } = new();
+    private bool _ImportNewAccounts;
+    public bool ImportNewAccounts {
+        get { return _ImportNewAccounts; }
+        set {
+            _ImportNewAccounts = value;
+            foreach (var account in NewAccounts)
+            {
+                account.Import = _ImportNewAccounts;
+            }
+        }
+    }
+    public List<Account> NewAccounts { get; set; } = new();
+    public List<ImportError> Errors { get; set; } = new();
+    public int DataFilesImported { get; set; }
+}
+
+public class ImportError
+{
+    public Exception? Exception { get; set; }
+}
 
 public class Importer {
+    public static async Task<ImportResult> ImportDataFiles(IReadOnlyList<IBrowserFile> files, IList<Fund> funds, List<Account> existingAccounts)
+    {
+        ImportResult result = new();
+
+        if (files != null)
+        {
+            foreach (var file in files)
+            {
+                if (file.Name.ToLower().EndsWith(".csv"))
+                {
+                    string? content = null;
+                    try {
+                        var buffer = new byte[file.Size];
+                        using (var stream = file.OpenReadStream())
+                        {
+                            await stream.ReadAsync(buffer);
+                            content = System.Text.Encoding.UTF8.GetString(buffer);
+                        }
+
+                        var lines = System.Text.RegularExpressions.Regex.Split(content, "\r\n|\r|\n");
+                        var importedAccountsCSV = await Importer.ImportCSV(lines, funds);
+                        result.ImportedAccounts.AddRange(importedAccountsCSV);
+                        result.DataFilesImported++;
+                    } catch (Exception e) {
+                        result.Errors.Add(new ImportError() { Exception = e });
+                    }
+                } else if (file.Name.ToLower().EndsWith(".xlsx")) {
+                    var buffer = new byte[file.Size];
+                    using (var stream = file.OpenReadStream())
+                    {
+                        try {
+                            var importedAccountsXLSX = await Importer.ImportXLSX(stream, funds);
+                            result.ImportedAccounts.AddRange(importedAccountsXLSX);
+                            result.DataFilesImported++;
+                        } catch (Exception e) {
+                            result.Errors.Add(new ImportError() { Exception = e });
+                        }
+                    }
+                }
+            }
+        }
+
+        foreach (var importedAccount in result.ImportedAccounts) 
+        {
+            bool foundMatch = false;
+            foreach (var existingAccount in existingAccounts)
+            {
+                if (existingAccount.Note == importedAccount.Note && existingAccount.Custodian == importedAccount.Custodian)
+                {
+                    result.UpdatedAccounts.Add(importedAccount);
+                    importedAccount.ReplaceAccount = existingAccount;
+                    foundMatch = true;
+                    break;
+                }
+            }
+
+            if (!foundMatch)
+            {
+                result.NewAccounts.Add(importedAccount);
+            }
+        }
+
+        result.ImportedAccounts.Clear();
+
+        return result;
+    }
+    
     public static async Task<List<Account>> ImportCSV(string[] lines, IList<Fund> funds)
     {
         try {
@@ -37,7 +142,7 @@ public class Importer {
                         {
                             newAccount = new() {
                                 Custodian = "Merrill Edge",
-                                Note = "⚠️ "+ accountNickname + " " + accountRegistration + " --" + accountNum.Substring(accountNum.Length - 4)
+                                Note = "*" + accountNum.Substring(accountNum.Length - 4) + " " + accountNickname + " " + accountRegistration
                             };
                             importedAccounts.Add(newAccount);
                             accountLookup.Add(accountNum, newAccount);
@@ -84,7 +189,7 @@ public class Importer {
                         {
                             newAccount = new() {
                                 Custodian = "Fidelity",
-                                Note = "⚠️*"+ accountNumber.Substring(accountNumber.Length-4,4) + " " + accountName
+                                Note = "*"+ accountNumber.Substring(accountNumber.Length-4,4) + " " + accountName
                             };
                             newAccount.GuessAccountType();
                             importedAccounts.Add(newAccount);
@@ -124,7 +229,7 @@ public class Importer {
                                 if (newAccount == null) {
                                     newAccount = new() {
                                         Custodian = "Vanguard",
-                                        Note = "⚠️*"+ accountNumber.Substring(accountNumber.Length-4,4)
+                                        Note = "*"+ accountNumber.Substring(accountNumber.Length-4,4)
                                     };
                                     importedAccounts.Add(newAccount);
                                 }
@@ -180,7 +285,7 @@ public class Importer {
                             {
                                 newAccount = new() {
                                     Custodian = "Vanguard",
-                                    Note = "⚠️  --" + accountNum.Substring(accountNum.Length - 4)
+                                    Note = "*" + accountNum.Substring(accountNum.Length - 4)
                                 };
                                 importedAccounts.Add(newAccount);
                                 accountLookup.Add(accountNum, newAccount);
@@ -201,7 +306,7 @@ public class Importer {
                 chunks = await SplitCsvLine(lines[lineIndex++]); // accountInfo
                 Account newAccount = new() {
                         Custodian = "ETrade",
-                        Note = "⚠️"+ TrimQuotes(chunks[0])
+                        Note = TrimQuotes(chunks[0])
                     };
                 importedAccounts.Add(newAccount);
 
@@ -259,7 +364,7 @@ public class Importer {
                     var accountNameChunks = lines[lineIndex++].Split(',');
                     newAccount = new() {
                         Custodian = "Schwab",
-                        Note = "⚠️"+ accountNameChunks[0].Substring(1, accountNameChunks[0].Length - 2)
+                        Note = "*"+ accountNameChunks[0].Substring(1, accountNameChunks[0].Length - 2)
                     };
 
                     if (newAccount != null) {  // TODO: only doing to prove to compiler that ctor won't throw ... best way?
@@ -387,13 +492,19 @@ public class Importer {
             }
             else
             {
-                throw new InvalidDataException("CSV file doesn't appear to be supported.");
+                throw new InvalidDataException("Importing this CSV file failed. We currently support importing CSV files from Ameriprise, eTrade, Fidelity, Merrill Edge, Schwab, or Vanguard");
             }
 
             return importedAccounts;
         } catch (Exception e) {
-            Console.WriteLine(e.Message + "\n" + e.InnerException + "\n" + e.Source + "\n" + e.StackTrace);
-            throw e;
+            if (e is InvalidDataException) 
+            {
+                throw e;
+            }
+            else 
+            {
+                throw new InvalidDataException("Importing this CSV file failed, even though we think it should have worked (we think it was from Ameriprise, eTrade, Fidelity, Merrill Edge, Schwab, or Vanguard).", e);
+            }
         }
     }
 
@@ -408,7 +519,7 @@ public class Importer {
             {
                 newAccount = new() {
                     Custodian = custodian,
-                    Note = "⚠️*" + account
+                    Note = "*" + account
                 };
                 newAccount.GuessAccountType();
                 importedAccounts.Add(newAccount);
@@ -476,7 +587,7 @@ public class Importer {
                         {
                             newAccount = new() {
                                 Custodian = "Morgan Stanley",
-                                Note = "⚠️*" + accountName
+                                Note = "*" + accountName
                             };
                             newAccount.GuessAccountType();
                             accountLookup.Add(accountName, newAccount);
