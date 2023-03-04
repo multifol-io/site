@@ -680,7 +680,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                 
                                                 <p>Has High Deductible Health Plan (HDHP) available from employer, according to <a href="/saving/benefit-entry">entered benefits</a>.</p>
 
-                                                <InputCheckbox id=@haveHDHPEmployerid @bind-Value=person.HealthSavingsAccount.HasEmployerHDHP /> <label for=@haveHDHPEmployerid>Has High Deductivle Health Plan from Employer</label><br/><br/>
+                                                <InputCheckbox id=@haveHDHPEmployerid @bind-Value=person.HealthSavingsAccount.HasEmployerHDHP /> <label for=@haveHDHPEmployerid>Has High-Deductible Health Plan from Employer</label><br/><br/>
                                                 <label>Employer Contribution Levels:</label>
                                                 <select @bind=person.HealthSavingsAccount.EmployerContributionString><option>ChoiceNeeded</option>
                                                 @foreach(var employerContributionLevel in person.EmployerBenefits.HSA.EmployerContributionLevels)

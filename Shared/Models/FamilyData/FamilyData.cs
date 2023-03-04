@@ -59,7 +59,17 @@ public class FamilyData : IFamilyData
         get {
             int? annualExpenses = EmergencyFund.MonthlyExpenses * 12;
             int investFromTaxable = TaxableToInvest ?? 0;
-            return AdjustedGrossIncome - (IncomeTaxPaid ?? 0) - annualExpenses + investFromTaxable;
+            int totalSalaries = 0;
+            for (int i = 0; i < PersonCount; i++)
+            {
+                var person = People[i];
+                if (person.EmployerPlan.AnnualSalary != null)
+                {
+                    totalSalaries += person.EmployerPlan.AnnualSalary.Value;
+                }
+            }
+            
+            return totalSalaries - (IncomeTaxPaid ?? 0) - annualExpenses + investFromTaxable;
         }
     }
     public string? FederalMarginalTaxBracket { get; set; }
