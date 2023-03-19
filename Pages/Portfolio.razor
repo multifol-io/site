@@ -742,15 +742,18 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                 <option>Annuity (Non-Qualified)</option>
                                                 <option>Annuity (Qualified)</option>
                                                 <option>HSA</option>
-                                                <option>I Bonds</option>
                                                 <option>Inherited IRA</option>
                                                 <option>Inherited Roth IRA</option>
                                                 <option value="Traditional IRA">IRA</option>
                                                 <option>Rollover IRA</option>
+                                                <option>Roth 401k</option>
                                                 <option>Roth IRA</option>
+                                                <option>SEP IRA</option>
                                                 <option>SIMPLE IRA</option>
-                                                <option>Traditional IRA</option>
+                                                <option>Solo 401k</option>
                                                 <option>Taxable</option>
+                                                <option>Traditional IRA</option>
+                                                <option>Treasury Direct</option>
                                             </select>
                                             <span> at <input style="width:140px" type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' /></span><br/>
                                             <span><label for=@accountId>Note: </label><input id=@accountId type=text @bind-value=account.Note @bind-value:event=oninput placeholder='account note'/></span>
