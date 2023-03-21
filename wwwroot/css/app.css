@@ -124,3 +124,12 @@ input[type="number"] {
     .loading-progress-text:after {
         content: var(--blazor-load-percentage-text, "Loading");
     }
+
+legend {
+    font-size: 12px;
+}
+
+fieldset {
+    background-color: #eeeeee;
+    border: black 1px;
+  }

@@ -158,29 +158,35 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                         @((MarkupString)bold("Portfolio Size:"))&nbsp;@(familyData.ValueStyle==0?formatMoneyThousands(familyData.Value):(familyData.ValueStyle==1?estimatePortfolio(familyData):formatMoney(familyData.Value)))<br/>
                                         <br/>
                                         @if (familyData.Accounts.Count > 0) {
-                                            <InputCheckbox id=showPortfolioAnalysis @bind-Value=showPortfolioAnalysis /> <label for=showPortfolioAnalysis>Show Portfolio Analysis</label><br/>
-                                            @if (showPortfolioAnalysis) {
-                                                @if (!double.IsNaN(familyData.ActualStockAllocation) || !double.IsNaN(familyData.ActualBondAllocation) || !double.IsNaN(familyData.ActualInternationalStockAllocation)) {
-                                                    @((MarkupString)bold("Actual Asset allocation: "))
-                                                    <span>&nbsp;@formatPercent(familyData.ActualStockAllocation*100.0) stocks / @formatPercent(familyData.ActualBondAllocation*100.0) bonds</span><br/>
-                                                    <span>&nbsp;&nbsp;Actual International allocation: </span>
-                                                    <span>@formatPercent(familyData.ActualInternationalStockAllocation*100.0)</span><br/>
-                                                    <span>&nbsp;&nbsp;Actual Cash allocation: </span>
-                                                    <span>@formatPercent(familyData.ActualCashAllocation*100.0)</span><br/>
-                                                    @if(familyData.ActualOtherAllocation > 0.0) {
-                                                        <span>&nbsp;&nbsp;Actual Unclassified allocation: </span>
-                                                        <span>@formatPercent(familyData.ActualOtherAllocation*100.0)</span>
+ 
+                                            <legend>
+                                                <InputCheckbox id=showPortfolioAnalysis @bind-Value=showPortfolioAnalysis /> 
+                                                <label for=showPortfolioAnalysis>Show Portfolio Analysis</label>
+                                            </legend>
+                                           <fieldset>
+ 
+                                                @if (showPortfolioAnalysis) {
+                                                    @if (!double.IsNaN(familyData.ActualStockAllocation) || !double.IsNaN(familyData.ActualBondAllocation) || !double.IsNaN(familyData.ActualInternationalStockAllocation)) {
+                                                        @((MarkupString)bold("Actual Asset allocation: "))
+                                                        <span>&nbsp;@formatPercent(familyData.ActualStockAllocation*100.0) stocks / @formatPercent(familyData.ActualBondAllocation*100.0) bonds</span><br/>
+                                                        <span>&nbsp;&nbsp;Actual International allocation: </span>
+                                                        <span>@formatPercent(familyData.ActualInternationalStockAllocation*100.0)</span><br/>
+                                                        <span>&nbsp;&nbsp;Actual Cash allocation: </span>
+                                                        <span>@formatPercent(familyData.ActualCashAllocation*100.0)</span><br/>
+                                                        @if(familyData.ActualOtherAllocation > 0.0) {
+                                                            <span>&nbsp;&nbsp;Actual Unclassified allocation: </span>
+                                                            <span>@formatPercent(familyData.ActualOtherAllocation*100.0)</span><br/>
+                                                        }
+                                                        <br/>
                                                     }
-                                                    <br/>
+
+                                                    @((MarkupString)bold("Weighted Expense Ratio: "))
+                                                    <span>&nbsp;@formatPercent3(familyData.OverallER) or @formatMoney(familyData.ExpensesTotal) per year</span>
+                                                    @if (familyData.InvestmentsMissingER > 0){<span>&nbsp;(@familyData.InvestmentsMissingER investments missing ER)</span><br/>}
                                                 }
-
-                                                @((MarkupString)bold("Weighted Expense Ratio: "))
-                                                <span>&nbsp;@formatPercent3(familyData.OverallER) or @formatMoney(familyData.ExpensesTotal) per year</span>
-                                                @if (familyData.InvestmentsMissingER > 0){<span>&nbsp;(@familyData.InvestmentsMissingER investments missing ER)</span>}<br/>
-                                            }
+                                            </fieldset>
+                                            <br/>
                                         }
-
-                                        <br/>
 
                                         @((MarkupString)boldUnderline("Current Retirement Assets:"))<br/>
 
