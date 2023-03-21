@@ -128,6 +128,7 @@ public class FamilyData : IFamilyData
 
     public double OverallER { get; set; }
     public int InvestmentsMissingER { get; set; }
+    public double ExpensesTotal { get; set; }
     
     public double ActualBondAllocation {
         get {
@@ -242,6 +243,7 @@ public class FamilyData : IFamilyData
         OtherBalance = 0.0;
         OverallER = 0.0;
         InvestmentsMissingER = 0;
+        ExpensesTotal = 0;
 
         double totalValue = this.Value;
         foreach (var account in Accounts)

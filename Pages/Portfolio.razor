@@ -157,29 +157,30 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                     <td>
                                         @((MarkupString)bold("Portfolio Size:"))&nbsp;@(familyData.ValueStyle==0?formatMoneyThousands(familyData.Value):(familyData.ValueStyle==1?estimatePortfolio(familyData):formatMoney(familyData.Value)))<br/>
                                         <br/>
-                                        @if (!double.IsNaN(familyData.ActualStockAllocation) || !double.IsNaN(familyData.ActualBondAllocation) || !double.IsNaN(familyData.ActualInternationalStockAllocation)) {
-                                            <InputCheckbox id=showActualAA @bind-Value=showActualAssetAllocation /> <label for=showActualAA>Show Actual Asset Allocation (experimental)</label><br/>
-                                            @if (showActualAssetAllocation) {
-                                                @((MarkupString)bold("Actual Asset allocation: "))
-                                                <span>&nbsp;@formatPercent(familyData.ActualStockAllocation*100.0) stocks / @formatPercent(familyData.ActualBondAllocation*100.0) bonds</span><br/>
-                                                <span>&nbsp;&nbsp;Actual International allocation: </span>
-                                                <span>@formatPercent(familyData.ActualInternationalStockAllocation*100.0)</span><br/>
-                                                <span>&nbsp;&nbsp;Actual Cash allocation: </span>
-                                                <span>@formatPercent(familyData.ActualCashAllocation*100.0)</span><br/>
-                                                @if(familyData.ActualOtherAllocation > 0.0) {
-                                                    <span>&nbsp;&nbsp;Actual Unclassified allocation: </span>
-                                                    <span>@formatPercent(familyData.ActualOtherAllocation*100.0)</span>
+                                        @if (familyData.Accounts.Count > 0) {
+                                            <InputCheckbox id=showPortfolioAnalysis @bind-Value=showPortfolioAnalysis /> <label for=showPortfolioAnalysis>Show Portfolio Analysis</label><br/>
+                                            @if (showPortfolioAnalysis) {
+                                                @if (!double.IsNaN(familyData.ActualStockAllocation) || !double.IsNaN(familyData.ActualBondAllocation) || !double.IsNaN(familyData.ActualInternationalStockAllocation)) {
+                                                    @((MarkupString)bold("Actual Asset allocation: "))
+                                                    <span>&nbsp;@formatPercent(familyData.ActualStockAllocation*100.0) stocks / @formatPercent(familyData.ActualBondAllocation*100.0) bonds</span><br/>
+                                                    <span>&nbsp;&nbsp;Actual International allocation: </span>
+                                                    <span>@formatPercent(familyData.ActualInternationalStockAllocation*100.0)</span><br/>
+                                                    <span>&nbsp;&nbsp;Actual Cash allocation: </span>
+                                                    <span>@formatPercent(familyData.ActualCashAllocation*100.0)</span><br/>
+                                                    @if(familyData.ActualOtherAllocation > 0.0) {
+                                                        <span>&nbsp;&nbsp;Actual Unclassified allocation: </span>
+                                                        <span>@formatPercent(familyData.ActualOtherAllocation*100.0)</span>
+                                                    }
+                                                    <br/>
+                                                    <br/>
                                                 }
-                                                <br/>
+
+                                                @((MarkupString)bold("Weighted Expense Ratio: "))
+                                                <span>&nbsp;@formatPercent3(familyData.OverallER) or @formatMoney(familyData.ExpensesTotal) per year</span>
+                                                @if (familyData.InvestmentsMissingER > 0){<span>&nbsp;(@familyData.InvestmentsMissingER investments missing ER)</span>}<br/>
                                             }
                                         }
 
-                                        <InputCheckbox id=showOverallER @bind-Value=showOverallER /> <label for=showOverallER>Show Weighted ER</label><br/>
-                                        @if (showOverallER) {
-                                            @((MarkupString)bold("Weighted Expense Ratio: "))
-                                            <span>&nbsp;@formatPercent3(familyData.OverallER)</span>
-                                            @if (familyData.InvestmentsMissingER > 0){<span>&nbsp;(@familyData.InvestmentsMissingER missing)</span>}<br/>
-                                        }
                                         <br/>
 
                                         @((MarkupString)boldUnderline("Current Retirement Assets:"))<br/>
@@ -428,8 +429,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                             var text = await JS.InvokeAsync<string>("getTableInnerText");
                             text = text.Replace("\n✏️\t","");
                             text = text.Replace("✏️\t","");
-                            text = text.Replace("Show Actual Asset Allocation (experimental)\n", "");
-                            text = text.Replace("Show Weighted ER\n", "");
+                            text = text.Replace("Show Portfolio Analysis\n", "");
                             await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
                         }
                     }
@@ -1137,8 +1137,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     private const string folderName = "/portfolio/";
     private bool focusTicker = false;
     private bool focusAccount = false;
-    private bool showActualAssetAllocation = true;
-    private bool showOverallER = true;
+    private bool showPortfolioAnalysis = true;
 
     private FamilyData familyData {
         get {

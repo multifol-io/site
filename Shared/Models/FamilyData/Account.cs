@@ -72,8 +72,9 @@ public class Account
                 }
             }
 
-            if (investment.ExpenseRatio != null) {
+            if (investment.ExpenseRatio.HasValue && investment.Value.HasValue) {
                 familyData.OverallER += investment.Percentage / 100.0 * investment.ExpenseRatio.Value;
+                familyData.ExpensesTotal += investment.Value.Value * investment.ExpenseRatio.Value / 100.0;
             } else {
                 familyData.InvestmentsMissingER++;
             }
