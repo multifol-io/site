@@ -4,6 +4,7 @@
 @page "/portfolio/{stepPath}"
 @inject HttpClient Http
 @inject IAppData appData
+@inject IRSData irsData
 @inject IJSRuntime JS
 @inject NavigationManager Navigation
 @inject IList<Fund> Funds
@@ -329,10 +330,9 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                  (⚠️ WARNING - this data file has your $$ amounts of investments. Don't share! Keep secure. Use clipboard button above to use the standard portfolio format, which contains somewhat less info.)
                 <br/>
                 <br/>
-                <label>LOAD portfolio data file:</label> <InputFile accept=".json" OnChange="@((e) => OnLoadPortfolio(e))" />
-                @* <label>LOAD portfolio data file for Forum Topic#</label><input type=text @bind=@TopicValue /> <button @onclick="OnLoadPortfolioForTopic">Load</button> *@
+                <label>LOAD portfolio data file:</label> <InputFile accept=".json" OnChange="@((e) => OnLoadPortfolio(e))" /><br/><br/>
+                <label>CLEAR portfolio data:</label> <button @onclick="OnClearPortfolio">Clear!</button> (⚠️ Will clear all current data. If you want to save first, "Download" it with button above.)
                 <br/>
-
                 <br/>
 
 
@@ -340,6 +340,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
 
                         private async Task OnLoadPortfolioForTopic() {
                             await LoadPortfolioForTopic(TopicValue);
+                        }
+
+                        private async Task OnClearPortfolio() {
+                            familyData = new FamilyData(irsData);
+                            Navigation.NavigateTo("/portfolio");
                         }
 
                         private async Task LoadPortfolioForTopic(string topicStr) {
