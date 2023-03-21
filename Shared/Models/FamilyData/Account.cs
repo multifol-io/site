@@ -71,6 +71,13 @@ public class Account
                         throw new InvalidDataException("unexpected case");
                 }
             }
+
+            if (investment.ExpenseRatio != null) {
+                familyData.OverallER += investment.Percentage / 100.0 * investment.ExpenseRatio.Value;
+            } else {
+                familyData.InvestmentsMissingER++;
+            }
+
         }
     }
 

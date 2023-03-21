@@ -150,10 +150,15 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                             <span>@familyData.International%</span>
                                         }
                                         <br/><br/>
+                                    </td>
+                                    break;
+                                case "retirement-assets":
+                                    <td>
+                                        @((MarkupString)bold("Portfolio Size:"))&nbsp;@(familyData.ValueStyle==0?formatMoneyThousands(familyData.Value):(familyData.ValueStyle==1?estimatePortfolio(familyData):formatMoney(familyData.Value)))<br/>
+                                        <br/>
                                         @if (!double.IsNaN(familyData.ActualStockAllocation) || !double.IsNaN(familyData.ActualBondAllocation) || !double.IsNaN(familyData.ActualInternationalStockAllocation)) {
                                             <InputCheckbox id=showActualAA @bind-Value=showActualAssetAllocation /> <label for=showActualAA>Show Actual Asset Allocation (experimental)</label><br/>
                                             @if (showActualAssetAllocation) {
-                                                <span>[Experimental: works with some Fidelity and Vanguard funds, right now]</span><br/>
                                                 @((MarkupString)bold("Actual Asset allocation: "))
                                                 <span>&nbsp;@formatPercent(familyData.ActualStockAllocation*100.0) stocks / @formatPercent(familyData.ActualBondAllocation*100.0) bonds</span><br/>
                                                 <span>&nbsp;&nbsp;Actual International allocation: </span>
@@ -166,14 +171,16 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                 }
                                                 <br/>
                                             }
-                                            <br/>
                                         }
-                                    </td>
-                                    break;
-                                case "retirement-assets":
-                                    <td>
-                                        @((MarkupString)bold("Portfolio Size:"))&nbsp;@(familyData.ValueStyle==0?formatMoneyThousands(familyData.Value):(familyData.ValueStyle==1?estimatePortfolio(familyData):formatMoney(familyData.Value)))<br/>
+
+                                        <InputCheckbox id=showOverallER @bind-Value=showOverallER /> <label for=showOverallER>Show Weighted ER</label><br/>
+                                        @if (showOverallER) {
+                                            @((MarkupString)bold("Overall Expense Ratio: "))
+                                            <span>&nbsp;@formatPercent3(familyData.OverallER)</span>
+                                            @if (familyData.InvestmentsMissingER > 0){<span>&nbsp;(@familyData.InvestmentsMissingER missing)</span>}<br/>
+                                        }
                                         <br/>
+
                                         @((MarkupString)boldUnderline("Current Retirement Assets:"))<br/>
 
                                         @foreach (var account in familyData.Accounts) {
@@ -416,6 +423,8 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                             var text = await JS.InvokeAsync<string>("getTableInnerText");
                             text = text.Replace("\n✏️\t","");
                             text = text.Replace("✏️\t","");
+                            text = text.Replace("Show Actual Asset Allocation (experimental)\n", "");
+                            text = text.Replace("Show Weighted ER\n", "");
                             await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
                         }
                     }
@@ -961,7 +970,10 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     {
         return String.Format("{0:#,0.#}%", amount);
     }
-
+    public string formatPercent3(double? amount)
+    {
+        return String.Format("{0:#,0.###}%", amount);
+    }
     public string estimatePortfolio(IFamilyData familyData) 
     {
         if (familyData.Value >= 10000000) {
@@ -1121,6 +1133,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     private bool focusTicker = false;
     private bool focusAccount = false;
     private bool showActualAssetAllocation = true;
+    private bool showOverallER = true;
 
     private FamilyData familyData {
         get {
