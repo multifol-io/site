@@ -176,7 +176,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
 
                                         <InputCheckbox id=showOverallER @bind-Value=showOverallER /> <label for=showOverallER>Show Weighted ER</label><br/>
                                         @if (showOverallER) {
-                                            @((MarkupString)bold("Overall Expense Ratio: "))
+                                            @((MarkupString)bold("Weighted Expense Ratio: "))
                                             <span>&nbsp;@formatPercent3(familyData.OverallER)</span>
                                             @if (familyData.InvestmentsMissingER > 0){<span>&nbsp;(@familyData.InvestmentsMissingER missing)</span>}<br/>
                                         }
