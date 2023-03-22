@@ -7,5 +7,14 @@
         "priority": "",
         "returns": "",
         "description": ""
+    },
+    {
+        "step": "social-security",
+        "title": "Social Security",
+        "number": 2,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
     }
 ]

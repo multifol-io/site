@@ -71,29 +71,39 @@ Retirement - bogle.tools
                 <table id=_reviewTable>
                     @foreach (var step in steps) {
                         var href = folderName + @step.step;
+                        Console.WriteLine(step.title);
                         <tr>
                             <td style=vertical-align:top>
                                 <span>
                                     <a href="@href" style="background:blue" class="m-1 btn" >✏️</a>
                                 </span>
                             </td>
-                            @switch (step.step) {
-                                case "time-frame": 
-                                    <td>
-                                        @((MarkupString)bold("Time Frame:"))
+                            <td>
+                                @((MarkupString)bold(step.title + ":"))
+                                @switch (step.step) {
+                                    case "time-frame": 
                                         @if(familyData.PersonCount > 0 && familyData.People[0].Age != null) {
-                                            <span>&nbsp;@familyData.People[0].Age @getPronoun(familyData.People[0])</span>
+                                            <br/><span>&nbsp;@familyData.People[0].Age @getPronoun(familyData.People[0]) retire at @familyData.People[0].RetirementAge</span><br/>
                                         }
                                         @if(familyData.PersonCount > 1 && familyData.People[1].Age != null) {
-                                            <span>&nbsp;and @familyData.People[1].Age @getPronoun(familyData.People[1])</span>
+                                            <span>&nbsp;@familyData.People[1].Age @getPronoun(familyData.People[1]) retire at @familyData.People[1].RetirementAge</span><br/>
                                         }
-                                        <br/><br/>
-                                    </td>
-                                   break;
-                                default:
-                                    <td style=text-align:center>NYI</td><td></td>
-                                    break;
-                            }
+                                        <br/>
+                                        break;
+                                    case "social-security": 
+                                        @if(familyData.PersonCount > 0 && familyData.People[0].Age != null) {
+                                            <br/><span>&nbsp;@getPronoun(familyData.People[0]) @formatMoneyThousands(familyData.People[0].SSAnnual) start at @familyData.People[0].SSAge</span><br/>
+                                        }
+                                        @if(familyData.PersonCount > 1 && familyData.People[1].Age != null) {
+                                            <span>&nbsp;@getPronoun(familyData.People[1]) @formatMoneyThousands(familyData.People[1].SSAnnual) start at @familyData.People[1].SSAge</span><br/>
+                                        }
+                                        <br/>
+                                        break;
+                                    default:
+                                        <span>NYI</span>
+                                        break;
+                                }
+                            </td>
                         </tr>
                     }          
                 </table>
@@ -138,19 +148,53 @@ Retirement - bogle.tools
 
                         @switch (step.step) {
                             case "time-frame":
+                                <p><b>Prerequisities:</b></p>
+                                <label>Tax Filing Status:</label>
+                                <select @bind=familyData.TaxFilingStatus>
+                                    <option value="ChoiceNeeded">ChoiceNeeded</option>
+                                    <option>Single</option>
+                                    <option value=MarriedFilingJointly>Married filing jointly</option>
+                                    <option value=MarriedFilingSeperately>Married filing seperately</option>
+                                    <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                                    <option value=HeadOfHousehold>Head of Household</option>
+                                </select><br/><br/>
+                                
                                 <p><b>Worksheet:</b> </p>
 
-                                <EditForm Model="familyData" style=margin-left:25px>
-                                    <label>Current Emergency Fund:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/><br/><br/>
-                                    <label>➗ Monthly Expenses:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /><br/><br/>
-                                    <hr style=width:300px />
-                                    <div style=text-align:right;width:275px>@familyData.EmergencyFund.CurrentMonthsString months</div>
-                                    @if(familyData.EmergencyFund.CurrentMonths == null && familyData.EmergencyFund.CurrentBalance != null) {
-                                        <br/><br/>
-                                        <InputCheckbox id=ShowDollars @bind-Value=familyData.EmergencyFund.ShowDollars /> <label for=ShowDollars>Only publish amount, since I haven't yet estimated monthly expenses</label><br/>
-                                        <span>(Months is MORE useful than a dollar amount.)</span>
-                                    }
-                                </EditForm><br/>
+                                @for (int i = 0; i < familyData.PersonCount; i++) {
+                                    var person = familyData.People[i];
+                                    int personIndex = i + 1;
+                                    <p><b>Person @personIndex:</b> </p>
+                                    <EditForm Model="person" style=margin-left:25px>
+                                        <label>Age:</label> <input type=text @bind-Value="person.Age" @bind-Value:event="oninput"/><br/><br/>
+                                        <label>Retirement Age:</label> <input type=text @bind-Value="person.RetirementAge" @bind-Value:event="oninput"/><br/><br/>
+                                    </EditForm><br/>
+                                }
+                                break;
+                            case "social-security":
+                                <p><b>Prerequisities:</b></p>
+                                <label>Tax Filing Status:</label>
+                                <select @bind=familyData.TaxFilingStatus>
+                                    <option value="ChoiceNeeded">ChoiceNeeded</option>
+                                    <option>Single</option>
+                                    <option value=MarriedFilingJointly>Married filing jointly</option>
+                                    <option value=MarriedFilingSeperately>Married filing seperately</option>
+                                    <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                                    <option value=HeadOfHousehold>Head of Household</option>
+                                </select><br/><br/>
+                                
+                                <p><b>Worksheet:</b> </p>
+
+                                @for (int i = 0; i < familyData.PersonCount; i++) {
+                                    var person = familyData.People[i];
+                                    int personIndex = i + 1;
+                                    <p><b>Person @personIndex:</b> </p>
+                                    <EditForm Model="person" style=margin-left:25px>
+                                        <label>Age:</label> <input type=text @bind-Value="person.Age" @bind-Value:event="oninput"/><br/><br/>
+                                        <label>Social Security Age:</label> <input type=text @bind-Value="person.SSAge" @bind-Value:event="oninput"/><br/><br/>
+                                        <label>Social Security Amount:</label> <span>$</span><input type=text @bind-Value="person.SSAnnual" @bind-Value:event="oninput"/><br/><br/>
+                                    </EditForm><br/>
+                                }
                                 break;
                         }
                     <p>

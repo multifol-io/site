@@ -337,7 +337,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                 };
                             var topicJsonUri = "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/portfolios/" + topicStr + ".json";
                             var stream = await Http.GetStreamAsync(topicJsonUri);
-                            await FamilyData.LoadFromStream(familyData, stream, options);
+                            familyData = await FamilyData.LoadFromStream(familyData.IRSData, stream, options);
                         }
 
                         private async Task CopyTextToClipboard()

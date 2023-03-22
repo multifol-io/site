@@ -281,20 +281,17 @@ public class FamilyData : IFamilyData
         } 
     }
 
-    public static async Task LoadFromStream(FamilyData familyData, Stream stream, JsonSerializerOptions options) {
-        if (familyData != null) {
-            var irsData = familyData.IRSData;
-            var loadedData = await JsonSerializer.DeserializeAsync<FamilyData>(stream, options);
-            if (loadedData != null) {
-                familyData = loadedData;
-                familyData.IRSData = irsData;
-                familyData.Year = 2023;
-                familyData.SetBackPointers();
-            }
-            else 
-            {
-                // error loading
-            }
+    public static async Task<FamilyData> LoadFromStream(IRSData irsData, Stream stream, JsonSerializerOptions options) {
+        var loadedData = await JsonSerializer.DeserializeAsync<FamilyData>(stream, options);
+        if (loadedData != null) {
+            loadedData.IRSData = irsData;
+            loadedData.Year = 2023;
+            loadedData.SetBackPointers();
         }
+        else 
+        {
+            // error loading
+        }
+        return loadedData;
     }
 }
