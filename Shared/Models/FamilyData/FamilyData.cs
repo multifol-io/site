@@ -40,6 +40,25 @@ public class FamilyData : IFamilyData
         }
     }
     
+    public double RetirementIncomeNeeded {
+        get {
+            double pensionTotal = 0.0;
+            foreach (var pension in Pensions)
+            {
+                pensionTotal += pension.Income;
+            }
+            double socialSecurityTotal = 0.0;
+            for (var i = 0; i < PersonCount; i++) {
+                if (People[i].SSAnnual.HasValue) {
+                    socialSecurityTotal += People[i].SSAnnual.Value;
+                }
+            }
+            var monthlyExpenses = EmergencyFund.MonthlyExpenses.HasValue ? EmergencyFund.MonthlyExpenses.Value * 12 : 0;
+            var incomeNeeded = monthlyExpenses - pensionTotal - socialSecurityTotal;
+            return incomeNeeded;
+        }
+    }
+
     public TriState DebtFree { get; set; }
     public List<Debt> Debts { get; set; }
     

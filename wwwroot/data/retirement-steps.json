@@ -34,5 +34,14 @@
         "priority": "",
         "returns": "",
         "description": ""
+    },
+    {
+        "step": "income-needed",
+        "title": "Income Needed",
+        "number": 5,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
     }
 ]

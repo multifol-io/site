@@ -101,15 +101,15 @@ Retirement - bogle.tools
                                         break;
                                     case "social-security": 
                                         @if(familyData.PersonCount > 0 && familyData.People[0].Age != null) {
-                                            <br/><span>&nbsp;@getPronoun(familyData.People[0]) @formatMoneyThousands(familyData.People[0].SSAnnual) start at @familyData.People[0].SSAge</span><br/>
+                                            <br/><span>&nbsp;@getPronoun(familyData.People[0]) @formatMoneyThousands(familyData.People[0].SSAnnual) start at @familyData.People[0].SSAge (with COLA)</span><br/>
                                         }
                                         @if(familyData.PersonCount > 1 && familyData.People[1].Age != null) {
-                                            <span>&nbsp;@getPronoun(familyData.People[1]) @formatMoneyThousands(familyData.People[1].SSAnnual) start at @familyData.People[1].SSAge</span><br/>
+                                            <span>&nbsp;@getPronoun(familyData.People[1]) @formatMoneyThousands(familyData.People[1].SSAnnual) start at @familyData.People[1].SSAge (with COLA)</span><br/>
                                         }
                                         <br/>
                                         break;
                                     case "spending": 
-                                        <br/><span>&nbsp;@formatMoneyThousands(familyData.EmergencyFund.MonthlyExpenses) per month or @formatMoneyThousands(familyData.EmergencyFund.MonthlyExpenses*12) per year</span><br/>
+                                        <br/><span>&nbsp;@formatMoneyThousands(familyData.EmergencyFund.MonthlyExpenses*12) per year or @formatMoneyThousands(familyData.EmergencyFund.MonthlyExpenses) per month</span><br/>
                                         <br/>
                                         break;
                                     case "pensions":
@@ -122,7 +122,13 @@ Retirement - bogle.tools
                                             <br/>
                                         }
                                         <br/>
-                                        break;                                        
+                                        break;
+                                    case "income-needed":
+                                        <br/>
+                                        <span>&nbsp;@formatMoneyThousands(familyData.RetirementIncomeNeeded) or @formatPercent3(familyData.RetirementIncomeNeeded / familyData.Value * 100.0) of investments</span>
+                                        <br/>
+                                        <br/>
+                                        break;
                                     default:
                                         <span>NYI</span><br/><br/>
                                         break;
