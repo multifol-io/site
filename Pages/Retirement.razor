@@ -99,9 +99,20 @@ Retirement - bogle.tools
                                         <br/>
                                         break;
                                     case "spending": 
-                                        <br/><span>&nbsp;@formatMoneyThousands(familyData.EmergencyFund.MonthlyExpenses)</span><br/>
+                                        <br/><span>&nbsp;@formatMoneyThousands(familyData.EmergencyFund.MonthlyExpenses) per month or @formatMoneyThousands(familyData.EmergencyFund.MonthlyExpenses*12) per year</span><br/>
                                         <br/>
                                         break;
+                                    case "pensions":
+                                        <br/> 
+                                        @foreach (var pension in familyData.Pensions) {
+                                            <span>&nbsp;@pension.Identifier: @formatMoneyThousands(pension.Income)
+                                                @if(!pension.OneTime) {<span>&nbsp;start at @pension.BeginningAge</span>} else {<span>&nbsp;lump sum at @pension.BeginningAge</span>}
+                                                @if(pension.HasCola) {<span>&nbsp;(with COLA)</span>} else {<span>&nbsp;(no COLA)</span>}
+                                            </span>
+                                            <br/>
+                                        }
+                                        <br/>
+                                        break;                                        
                                     default:
                                         <span>NYI</span><br/><br/>
                                         break;
