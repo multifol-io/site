@@ -323,32 +323,8 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                 <InputCheckbox id=showMarkup style=margin-left:20px @bind-Value=ShowMarkup /> <label for=showMarkup>Use forum post markup: [b]bold[/b]</label><br/>
                 <br/>
                 <button style=margin-left:20px @onclick=CopyTextToClipboard>Copy to clipboard</button><br/>
-
                 <hr/>
 
-                @code {
-                        private async Task LoadPortfolioForTopic(string topicStr) {
-                            var options = new JsonSerializerOptions() 
-                                {
-                                    Converters =
-                                        {
-                                            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                                        }
-                                };
-                            var topicJsonUri = "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/portfolios/" + topicStr + ".json";
-                            var stream = await Http.GetStreamAsync(topicJsonUri);
-                            familyData = await FamilyData.LoadFromStream(familyData.IRSData, stream, options);
-                        }
-
-                        private async Task CopyTextToClipboard()
-                        {
-                            var text = await JS.InvokeAsync<string>("getTableInnerText");
-                            text = text.Replace("\n✏️\t","");
-                            text = text.Replace("✏️\t","");
-                            text = text.Replace("Show Portfolio Analysis\n", "");
-                            await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
-                        }
-                    }
             </div>
             
             <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
@@ -1172,5 +1148,26 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     void editAccount(MouseEventArgs e, int index)
     {
         familyData.Accounts[index].Edit = true;
+    }
+    private async Task LoadPortfolioForTopic(string topicStr) {
+        var options = new JsonSerializerOptions() 
+            {
+                Converters =
+                    {
+                        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                    }
+            };
+        var topicJsonUri = "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/portfolios/" + topicStr + ".json";
+        var stream = await Http.GetStreamAsync(topicJsonUri);
+        familyData = await FamilyData.LoadFromStream(familyData.IRSData, stream, options);
+    }
+
+    private async Task CopyTextToClipboard()
+    {
+        var text = await JS.InvokeAsync<string>("getTableInnerText");
+        text = text.Replace("\n✏️\t","");
+        text = text.Replace("✏️\t","");
+        text = text.Replace("Show Portfolio Analysis\n", "");
+        await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
     }
 }
