@@ -16,5 +16,23 @@
         "priority": "",
         "returns": "",
         "description": ""
+    },
+    {
+        "step": "pensions",
+        "title": "Pensions",
+        "number": 3,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
+        "step": "spending",
+        "title": "Spending",
+        "number": 4,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
     }
 ]

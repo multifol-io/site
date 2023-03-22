@@ -71,7 +71,6 @@ Retirement - bogle.tools
                 <table id=_reviewTable>
                     @foreach (var step in steps) {
                         var href = folderName + @step.step;
-                        Console.WriteLine(step.title);
                         <tr>
                             <td style=vertical-align:top>
                                 <span>
@@ -99,8 +98,12 @@ Retirement - bogle.tools
                                         }
                                         <br/>
                                         break;
+                                    case "spending": 
+                                        <br/><span>&nbsp;@formatMoneyThousands(familyData.EmergencyFund.MonthlyExpenses)</span><br/>
+                                        <br/>
+                                        break;
                                     default:
-                                        <span>NYI</span>
+                                        <span>NYI</span><br/><br/>
                                         break;
                                 }
                             </td>
@@ -195,6 +198,12 @@ Retirement - bogle.tools
                                         <label>Social Security Amount:</label> <span>$</span><input type=text @bind-Value="person.SSAnnual" @bind-Value:event="oninput"/><br/><br/>
                                     </EditForm><br/>
                                 }
+                                break;
+                            case "spending":
+                                <p><b>Worksheet:</b> </p>
+                                <EditForm Model="familyData" style=margin-left:25px>
+                                    <label>Monthly Spending:</label> <input type=text @bind-Value="familyData.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput"/><br/><br/>
+                                </EditForm><br/>
                                 break;
                         }
                     <p>
