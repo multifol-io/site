@@ -109,7 +109,10 @@ Retirement - bogle.tools
                                         <br/>
                                         break;
                                     case "spending": 
-                                        <br/><span>&nbsp;@formatMoneyThousands(familyData.EmergencyFund.MonthlyExpenses*12) per year or @formatMoneyThousands(familyData.EmergencyFund.MonthlyExpenses) per month</span><br/>
+                                        <br/>
+                                        @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
+                                            <span>&nbsp;@formatMoneyThousands(familyData.EmergencyFund.MonthlyExpenses*12) per year or @formatMoneyThousands(familyData.EmergencyFund.MonthlyExpenses) per month</span><br/>
+                                        }
                                         <br/>
                                         break;
                                     case "pensions":
@@ -125,8 +128,9 @@ Retirement - bogle.tools
                                         break;
                                     case "income-needed":
                                         <br/>
-                                        <span>&nbsp;@formatMoneyThousands(familyData.RetirementIncomeNeeded) or @formatPercent3(familyData.RetirementIncomeNeeded / familyData.Value * 100.0) of investments</span>
-                                        <br/>
+                                        @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
+                                            <span>&nbsp;@formatMoneyThousands(familyData.RetirementIncomeNeeded) or @formatPercent3(familyData.RetirementIncomeNeeded / familyData.Value * 100.0) of investments</span><br/>
+                                        }
                                         <br/>
                                         break;
                                     default:
