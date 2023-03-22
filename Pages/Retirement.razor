@@ -82,10 +82,20 @@ Retirement - bogle.tools
                                 @switch (step.step) {
                                     case "time-frame": 
                                         @if(familyData.PersonCount > 0 && familyData.People[0].Age != null) {
-                                            <br/><span>&nbsp;@familyData.People[0].Age @getPronoun(familyData.People[0]) retire at @familyData.People[0].RetirementAge</span><br/>
+                                            <br/>
+                                            <span>
+                                                &nbsp;@familyData.People[0].Age @getPronoun(familyData.People[0]) 
+                                                @if(familyData.People[0].Age >= familyData.People[0].RetirementAge) { <span>retired at</span> } else { <span>retire at</span>} &nbsp;@familyData.People[0].RetirementAge
+                                            </span>
+                                            <br/>
                                         }
                                         @if(familyData.PersonCount > 1 && familyData.People[1].Age != null) {
-                                            <span>&nbsp;@familyData.People[1].Age @getPronoun(familyData.People[1]) retire at @familyData.People[1].RetirementAge</span><br/>
+                                            <br/>
+                                            <span>
+                                                &nbsp;@familyData.People[1].Age @getPronoun(familyData.People[1]) 
+                                                @if(familyData.People[1].Age >= familyData.People[1].RetirementAge) { <span>retired at</span> } else { <span>retire at</span>} &nbsp;@familyData.People[1].RetirementAge
+                                            </span>
+                                            <br/>
                                         }
                                         <br/>
                                         break;
@@ -210,6 +220,36 @@ Retirement - bogle.tools
                                     </EditForm><br/>
                                 }
                                 break;
+                            case "pensions":
+                                    accountIndex = 0;
+                                    @foreach (var pension in familyData.Pensions) {
+                                        int accBuffer = accountIndex;
+                                        accountIndex++;
+                                        var accountId = "account"+accBuffer;
+                                        <br/>
+                                        <EditForm Model="pension" style=margin-left:.25in>
+                                            <button @onclick='@(e=>deletePension(e,accBuffer))'>❌</button>
+                                            @if (familyData.PersonCount == 2) {
+                                            <select @bind=pension.Identifier>
+                                                <option>our</option>
+                                                @for(int p=0;p<familyData.PersonCount;p++)
+                                                {
+                                                    <option>@familyData.People[p].PossessiveID</option>
+                                                }
+                                            </select>
+                                            }
+                                            <span>pension at <input style="width:140px" type=text @bind-Value=pension.Custodian @bind-Value:event=oninput placeholder='custodian' /></span><br/>
+                                            <label>Income:</label> <span>$</span><input style="width:140px" type=text @bind-Value=pension.Income @bind-Value:event=oninput placeholder='custodian' /><br/>
+                                            <label>Begins at Age:</label> <input style="width:140px" type=text @bind-Value=pension.BeginningAge @bind-Value:event=oninput placeholder='begins at' /><br/>
+                                            <InputCheckbox style="width:140px" type=text @bind-Value=pension.OneTime /><label>&nbsp;OneTime</label><br/>
+                                            <InputCheckbox style="width:140px" type=text @bind-Value=pension.HasCola /><label>&nbsp;Has Cost of Living Adjustment (COLA)</label><br/>
+                                        </EditForm>
+                                    }
+                                    <br/>
+                                        <button @onclick=addPension>➕ Pension</button>
+                                    <br/>
+                                    <br/>
+                                    break;
                             case "spending":
                                 <p><b>Worksheet:</b> </p>
                                 <EditForm Model="familyData" style=margin-left:25px>
@@ -323,35 +363,18 @@ Retirement - bogle.tools
     {
         return String.Format("{0:#,0.###}%", amount);
     }
-    public string estimatePortfolio(IFamilyData familyData) 
+    
+    void addPension()
     {
-        if (familyData.Value >= 10000000) {
-            return "8-figures";
-        } else if (familyData.Value >= 6666666) {
-            return "high 7-figures";
-        } else if (familyData.Value >= 3333333) {
-            return "mid 7-figures";
-        } else if (familyData.Value >= 1000000) {
-            return "low 7-figures";
-        } else if (familyData.Value >= 666666) {
-            return "high 6-figures";
-        } else if (familyData.Value >= 333333) {
-            return "mid 6-figures";
-        } else if (familyData.Value >= 100000) {
-            return "low 6-figures";
-        } else if (familyData.Value >= 66666) {
-            return "high 5-figures";
-        } else if (familyData.Value >= 33333) {
-            return "mid 5-figures";
-        } else if (familyData.Value >= 10000) {
-            return "low 5-figures";
-        } else if (familyData.Value >= 1000) {
-            return "4-figures";
-        } else if (familyData.Value == 0) {
-            return "-";
-        } else {
-            return "less than $1,000";
-        }
+        var newPension = new Pension();
+        familyData?.Pensions.Add(newPension);
+        focusAccount = true;
+    }
+    void deletePension(MouseEventArgs e, int accountIndex)
+    {
+        familyData.Pensions.RemoveAt(accountIndex);
+        Navigation.NavigateTo("/portfolio/reload");
+        familyData.UpdatePercentages();
     }
 
     public string bold(string text) {
@@ -455,18 +478,6 @@ Retirement - bogle.tools
         return returnVal;
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (focusTicker)
-            {
-                await tickerN.FocusAsync();
-                focusTicker = false;
-            } else if (focusAccount) {
-                await accountN.FocusAsync();
-                focusAccount = false;
-            }
-    }
-
     [Parameter]
     public string? stepPath { get; set; }
 
@@ -501,8 +512,6 @@ Retirement - bogle.tools
         }
     }
 
-    private ElementReference tickerN;
-    private ElementReference accountN;
     private bool showImport = false;
     private bool showError  = false;
 

@@ -10,10 +10,7 @@ public class FamilyData : IFamilyData
         Accounts = new();
         People = new();
         Questions = new();
-
         Pensions = new();
-        Pensions.Add(new Pension() {Identifier="his",Income = 5000,HasCola=true,OneTime=false,BeginningAge=65});
-        Pensions.Add(new Pension() {Identifier="her",Income = 5000,HasCola=false,OneTime=false,BeginningAge=60});
     }
 
     public FamilyData(IRSData irsData) : this()
