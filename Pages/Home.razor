@@ -18,9 +18,9 @@ bogle.tools
 <br/>
 
 <label style=font-weight:bold>Your Info:</label><br/>
-<button @onclick="OnClearPortfolio" style=margin:2px>Clear Data⚠️</button><br/>
-<button @onclick="DownloadPortfolio" style=margin:2px>Save Data to downloads</button> (before a refresh or closing site/browser)<br/> 
-<label>Load Data from file:</label> <InputFile id=inputFile accept=".json" OnChange="@((e) => OnLoadPortfolio(e))" /><br/>
+<button @onclick="OnClearPortfolio" style=margin:2px,0px,2px,0px><b>Clear Data</b>⚠️</button><br/>
+<button @onclick="DownloadPortfolio" style=margin:2px,0px,2px,0px><b>Save Data</b> to downloads</button> (before a refresh or closing site/browser)<br/>
+<label style=margin:2px,0px,0px,0px><b>Load Data</b> from file:</label> <InputFile id=inputFile accept=".json" OnChange="@((e) => OnLoadPortfolio(e))" /><br/>
 @code {
     private async Task OnClearPortfolio() {
         familyData = new FamilyData(irsData);
