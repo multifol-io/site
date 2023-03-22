@@ -65,8 +65,6 @@ Retirement - bogle.tools
             </h3>
 
             <p>Getting all your information in one place to help others give you feedback is the idea behind Bogleheads.org's <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Asking Portfolio Questions</a> ↗️. This tool will make it easy to post to bogleheads.org forum with the correct format.</p>
-            <p>[ <b>News:</b> Read/subscribe to updates at <a target=_blank href=https://bogletools.substack.com>bogletools.substack.com</a> ]</p>
-            <p><b>Feedback Welcome:</b> via email to <a href="mailto:suggestions@bogle.tools">suggestions@bogle.tools</a> or on <a target=_blank href='https://www.bogleheads.org/forum/viewtopic.php?t=394456'>this bogleheads.org forum post</a></p>
             <div>
                 <p ><b>Press edit (✏️) to complete each step:</b></p>
 
@@ -106,19 +104,6 @@ Retirement - bogle.tools
                 <button style=margin-left:20px @onclick=CopyTextToClipboard>Copy to clipboard</button><br/>
 
                 <hr/>
-                <br/>
-                <label>SAVE to your device via a </label>
-                <button @onclick="DownloadPortfolio">
-                "Download" of your portfolio data file
-                </button>
-                <br/>
-                 (⚠️ WARNING - this data file has your $$ amounts of investments. Don't share! Keep secure. Use clipboard button above to use the standard portfolio format, which contains somewhat less info.)
-                <br/>
-                <br/>
-                <label>LOAD portfolio data file:</label> <InputFile accept=".json" OnChange="@((e) => OnLoadPortfolio(e))" /><br/><br/>
-                <label>CLEAR portfolio data:</label> <button @onclick="OnClearPortfolio">Clear!</button> (⚠️ Will clear all current data. If you want to save first, "Download" it with button above.)
-                <br/>
-                <br/>
             </div>
             
             <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
@@ -136,7 +121,7 @@ Retirement - bogle.tools
                     string nextPage = folderName + nextStep?.step;
 
                     <h3 style="max-width:350px">
-                        <NavLink href=/retirement>Retirement</NavLink>
+                        <NavLink href=/retirement>Retirement Plan</NavLink>
                         <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
                         <span style=text-align:center>@step.number</span>
                         <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>

@@ -1,4 +1,11 @@
 @page "/"
+@inject HttpClient Http
+@inject IAppData appData
+@inject IRSData irsData
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+@inject IList<Fund> Funds
+@using System.Text.Json.Serialization
 
 <PageTitle>
 bogle.tools
@@ -7,8 +14,72 @@ bogle.tools
 <p><a href='saving'><span style="margin:3;font-Size:24pt">💰</span> Saving Plan</a> - plan your annual savings</p>
 <p><a href='portfolio'><span style="margin:3;font-Size:24pt">📈</span> Portfolio</a> - organize your portfolio</p>
 <p><a href='retirement'><span style="margin:3;font-Size:24pt">🎉</span> Retirement Plan</a> - plan your retirement</p>
-<br/>
 <hr/>
-<p>[ <b>News:</b> Read/subscribe to updates at <a target=_blank href=https://bogletools.substack.com>bogletools.substack.com</a> ]</p>
+<br/>
 
+<label style=font-weight:bold>Your Info:</label><br/>
+<button @onclick="OnClearPortfolio" style=margin:2px>Clear Data⚠️</button><br/>
+<button @onclick="DownloadPortfolio" style=margin:2px>Save Data to downloads</button> (before a refresh or closing site/browser)<br/> 
+<label>Load Data from file:</label> <InputFile id=inputFile accept=".json" OnChange="@((e) => OnLoadPortfolio(e))" /><br/>
+@code {
+    private async Task OnClearPortfolio() {
+        familyData = new FamilyData(irsData);
+    }
+    
+    private async Task OnLoadPortfolio(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles();
 
+        if (files != null)
+        {
+            var options = new JsonSerializerOptions() 
+                {
+                    Converters =
+                        {
+                            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                        }
+                };
+
+            foreach (var file in files)
+            {
+                using (var stream = file.OpenReadStream()) {
+                    await FamilyData.LoadFromStream(familyData, stream, options);
+                }
+            }
+        }
+    }
+
+    private async Task DownloadPortfolio() {
+        var options = new JsonSerializerOptions() 
+        {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+            IgnoreReadOnlyProperties = true,
+            WriteIndented = true,
+            Converters =
+                {
+                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                }
+        };
+        await DownloadFileFromStream(familyData, options, "bogle-tools-data.json");
+    }
+
+    private async Task DownloadFileFromStream(object data, JsonSerializerOptions options, string fileName)
+    {
+        var jsonOut = System.Text.Json.JsonSerializer.Serialize(data, options);
+
+        using (MemoryStream ms = new MemoryStream(System.Text.Encoding.ASCII.GetBytes(jsonOut)))
+        {
+            using var streamRef = new DotNetStreamReference(stream: ms);
+            await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+        }
+    }
+
+    private FamilyData familyData {
+        get {
+            return appData.FamilyData;
+        }
+        set {
+            appData.FamilyData = value;
+        }
+    }
+}

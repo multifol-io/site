@@ -1,5 +1,6 @@
 using IRS;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 public class FamilyData : IFamilyData
@@ -278,5 +279,22 @@ public class FamilyData : IFamilyData
                     return 0;
             }
         } 
+    }
+
+    public static async Task LoadFromStream(FamilyData familyData, Stream stream, JsonSerializerOptions options) {
+        if (familyData != null) {
+            var irsData = familyData.IRSData;
+            var loadedData = await JsonSerializer.DeserializeAsync<FamilyData>(stream, options);
+            if (loadedData != null) {
+                familyData = loadedData;
+                familyData.IRSData = irsData;
+                familyData.Year = 2023;
+                familyData.SetBackPointers();
+            }
+            else 
+            {
+                // error loading
+            }
+        }
     }
 }
