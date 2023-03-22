@@ -180,7 +180,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
 
                                                     @((MarkupString)bold("Weighted Expense Ratio: "))
                                                     <span>&nbsp;@formatPercent3(familyData.OverallER) or @formatMoney(familyData.ExpensesTotal) per year</span>
-                                                    @if (familyData.InvestmentsMissingER > 0){<span>&nbsp;(@familyData.InvestmentsMissingER investments missing ER)</span><br/>}
+                                                    @if (familyData.InvestmentsMissingER > 0){<span>&nbsp;(@familyData.InvestmentsMissingER investment(s) missing ER)</span><br/>}
                                                 }
                                             </fieldset>
                                             <br/>
