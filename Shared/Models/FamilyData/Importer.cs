@@ -170,6 +170,12 @@ public class Importer {
                     double value;
                     double? shares = null;
                     double? costBasis = null;
+
+                    // many tickers have "**" at end, signifying money market fund.
+                    if (symbol.Length >= 2 && symbol.Substring(symbol.Length-2) == "**") { 
+                        symbol = symbol.Substring(0, symbol.Length - 2);
+                    }
+
                     if (symbol == "Pending Activity")
                     {
                         investmentName = symbol;
