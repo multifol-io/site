@@ -80,53 +80,61 @@ Retirement - bogle.tools
                             <td>
                                 @((MarkupString)bold(step.title + ":"))
                                 @switch (step.step) {
-                                    case "time-frame": 
+                                    case "time-frame":
+                                        <br/>
                                         @if(familyData.PersonCount > 0 && familyData.People[0].Age != null) {
-                                            <br/>
                                             <span>
-                                                &nbsp;@familyData.People[0].Age @getPronoun(familyData.People[0]) 
-                                                @if(familyData.People[0].Age >= familyData.People[0].RetirementAge) { <span>&nbsp;retired at</span> } else { <span>&nbsp;retire at</span>} &nbsp;@familyData.People[0].RetirementAge
+                                                &nbsp;@getPronoun(familyData.People[0]) @familyData.People[0].Age 
+                                                @if(familyData.People[0].Age >= familyData.People[0].RetirementAge) { <span>, retired</span> }
+                                                else { <span>, retiring at @familyData.People[0].RetirementAge</span> }
                                             </span>
                                             <br/>
                                         }
                                         @if(familyData.PersonCount > 1 && familyData.People[1].Age != null) {
-                                            <br/>
                                             <span>
-                                                &nbsp;@familyData.People[1].Age @getPronoun(familyData.People[1]) 
-                                                @if(familyData.People[1].Age >= familyData.People[1].RetirementAge) { <span>&nbsp;retired at</span> } else { <span>&nbsp;retire at</span>} &nbsp;@familyData.People[1].RetirementAge
+                                                &nbsp;@getPronoun(familyData.People[1]) @familyData.People[1].Age 
+                                                @if(familyData.People[1].Age >= familyData.People[1].RetirementAge) { <span>, retired</span> }
+                                                else { <span>, retiring at @familyData.People[1].RetirementAge</span> }
                                             </span>
                                             <br/>
                                         }
                                         <br/>
                                         break;
                                     case "social-security": 
+                                        <br/>
                                         @if(familyData.PersonCount > 0 && familyData.People[0].Age != null) {
-                                            <br/><span>&nbsp;@getPronoun(familyData.People[0]) @formatMoneyThousands(familyData.People[0].SSAnnual) start at @familyData.People[0].SSAge (with COLA)</span><br/>
+                                            <span>&nbsp;@getPronoun(familyData.People[0]) @formatMoneyThousands(familyData.People[0].SSAnnual) 
+                                                @if(familyData.People[0].Age < familyData.People[0].RetirementAge) { <span>&nbsp;at @familyData.People[0].SSAge </span> }
+                                            (with COLA)</span><br/>
                                         }
                                         @if(familyData.PersonCount > 1 && familyData.People[1].Age != null) {
-                                            <span>&nbsp;@getPronoun(familyData.People[1]) @formatMoneyThousands(familyData.People[1].SSAnnual) start at @familyData.People[1].SSAge (with COLA)</span><br/>
-                                        }
-                                        <br/>
-                                        break;
-                                    case "spending": 
-                                        <br/>
-                                        @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
-                                            <span>&nbsp;@formatMoneyThousands(familyData.EmergencyFund.MonthlyExpenses*12) per year or @formatMoneyThousands(familyData.EmergencyFund.MonthlyExpenses) per month</span><br/>
+                                            <span>&nbsp;@getPronoun(familyData.People[1]) @formatMoneyThousands(familyData.People[1].SSAnnual) 
+                                                @if(familyData.People[1].Age < familyData.People[1].RetirementAge) { <span>&nbsp;at @familyData.People[1].SSAge </span> }
+                                            (with COLA)</span><br/>
                                         }
                                         <br/>
                                         break;
                                     case "pensions":
                                         <br/> 
                                         @foreach (var pension in familyData.Pensions) {
-                                            <span>&nbsp;@pension.Identifier: @formatMoneyThousands(pension.Income)
-                                                @if(!pension.OneTime) {<span>&nbsp;start at @pension.BeginningAge</span>} else {<span>&nbsp;lump sum at @pension.BeginningAge</span>}
+                                            <span>&nbsp;@pension.Identifier @formatMoneyThousands(pension.Income)
+                                                @if(!pension.OneTime) {
+                                                    <span>&nbsp;start at @pension.BeginningAge</span>
+                                                } else {<span>&nbsp;lump sum at @pension.BeginningAge</span>}
                                                 @if(pension.HasCola) {<span>&nbsp;(with COLA)</span>} else {<span>&nbsp;(no COLA)</span>}
                                             </span>
                                             <br/>
                                         }
                                         <br/>
                                         break;
-                                    case "income-needed":
+                                    case "spending": 
+                                        <br/>
+                                        @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
+                                            <span>&nbsp;@formatMoneyThousands(familyData.EmergencyFund.MonthlyExpenses*12)</span><br/>
+                                        }
+                                        <br/>
+                                        break;
+                                    case "money-needed":
                                         <br/>
                                         @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
                                             <span>&nbsp;@formatMoneyThousands(familyData.RetirementIncomeNeeded) or @formatPercent3(familyData.RetirementIncomeNeeded / familyData.Value * 100.0) of investments</span><br/>

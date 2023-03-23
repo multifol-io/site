@@ -1,7 +1,7 @@
 [
     {
         "step": "time-frame",
-        "title": "Time Frame",
+        "title": "Retirement Time Frame",
         "number": 1,
         "summary": "",
         "priority": "",
@@ -28,7 +28,7 @@
     },
     {
         "step": "spending",
-        "title": "Spending",
+        "title": "Annual Spending",
         "number": 4,
         "summary": "",
         "priority": "",
@@ -36,8 +36,8 @@
         "description": ""
     },
     {
-        "step": "income-needed",
-        "title": "Income Needed",
+        "step": "money-needed",
+        "title": "Needed from Investments",
         "number": 5,
         "summary": "",
         "priority": "",
