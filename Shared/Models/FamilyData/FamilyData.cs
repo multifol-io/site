@@ -10,7 +10,6 @@ public class FamilyData : IFamilyData
         Accounts = new();
         People = new();
         Questions = new();
-        Pensions = new();
     }
 
     public FamilyData(IRSData irsData) : this()
@@ -43,14 +42,16 @@ public class FamilyData : IFamilyData
     public double RetirementIncomeNeeded {
         get {
             double pensionTotal = 0.0;
-            foreach (var pension in Pensions)
-            {
-                pensionTotal += pension.Income;
-            }
+
             double socialSecurityTotal = 0.0;
             for (var i = 0; i < PersonCount; i++) {
                 if (People[i].SSAnnual.HasValue) {
                     socialSecurityTotal += People[i].SSAnnual.Value;
+                }
+
+                foreach (var pension in People[i].Pensions)
+                {
+                    pensionTotal += pension.Income;
                 }
             }
             var monthlyExpenses = EmergencyFund.MonthlyExpenses.HasValue ? EmergencyFund.MonthlyExpenses.Value * 12 : 0;
@@ -212,7 +213,6 @@ public class FamilyData : IFamilyData
     public int ValueStyle { get; set; } = 0;
 
     public List<Account> Accounts { get; set; }
-    public List<Pension> Pensions { get; set; }
 
     public string? AdditionalBackground { get; set; }
     public List<string> Questions { get; set; }

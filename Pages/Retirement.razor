@@ -116,14 +116,16 @@ Retirement - bogle.tools
                                         break;
                                     case "pensions":
                                         <br/> 
-                                        @foreach (var pension in familyData.Pensions) {
-                                            <span>&nbsp;@pension.Identifier @formatMoneyThousands(pension.Income)
-                                                @if(!pension.OneTime) {
-                                                    <span>&nbsp;start at @pension.BeginningAge</span>
-                                                } else {<span>&nbsp;lump sum at @pension.BeginningAge</span>}
-                                                @if(pension.HasCola) {<span>&nbsp;(with COLA)</span>} else {<span>&nbsp;(no COLA)</span>}
-                                            </span>
-                                            <br/>
+                                        @for (int i = 0; i < familyData.PersonCount; i++) {
+                                            foreach (var pension in familyData.People[i].Pensions) {
+                                                <span>&nbsp;@pension.Identifier @formatMoneyThousands(pension.Income)
+                                                    @if(!pension.OneTime) {
+                                                        <span>&nbsp;start at @pension.BeginningAge</span>
+                                                    } else {<span>&nbsp;lump sum at @pension.BeginningAge</span>}
+                                                    @if(pension.HasCola) {<span>&nbsp;(with COLA)</span>} else {<span>&nbsp;(no COLA)</span>}
+                                                </span>
+                                                <br/>
+                                            }
                                         }
                                         <br/>
                                         break;
@@ -240,32 +242,30 @@ Retirement - bogle.tools
                                 break;
                             case "pensions":
                                     accountIndex = 0;
-                                    @foreach (var pension in familyData.Pensions) {
-                                        int accBuffer = accountIndex;
-                                        accountIndex++;
-                                        var accountId = "account"+accBuffer;
+                                    @for (int i = 0; i < familyData.PersonCount; i++) {
+                                        int personBuffer = i;
+                                        foreach (var pension in familyData.People[i].Pensions) {
+                                            int accBuffer = accountIndex;
+                                            accountIndex++;
+                                            var accountId = "account"+accBuffer;
+                                            <br/>
+                                            <EditForm Model="pension" style=margin-left:.25in>
+                                                <button @onclick='@(e=>deletePension(e,personBuffer,accBuffer))'>❌</button>
+                                                <span>pension at <input style="width:140px" type=text @bind-Value=pension.Custodian @bind-Value:event=oninput placeholder='custodian' /></span><br/>
+                                                <label>Income:</label> <span>$</span><input style="width:140px" type=text @bind-Value=pension.Income @bind-Value:event=oninput placeholder='custodian' /><br/>
+                                                <label>Begins at Age:</label> <input style="width:140px" type=text @bind-Value=pension.BeginningAge @bind-Value:event=oninput placeholder='begins at' /><br/>
+                                                <InputCheckbox style="width:140px" type=text @bind-Value=pension.OneTime /><label>&nbsp;OneTime</label><br/>
+                                                <InputCheckbox style="width:140px" type=text @bind-Value=pension.HasCola /><label>&nbsp;Has Cost of Living Adjustment (COLA)</label><br/>
+                                            </EditForm>
+                                        }
+
                                         <br/>
-                                        <EditForm Model="pension" style=margin-left:.25in>
-                                            <button @onclick='@(e=>deletePension(e,accBuffer))'>❌</button>
-                                            @if (familyData.PersonCount == 2) {
-                                            <select @bind=pension.Identifier>
-                                                <option>our</option>
-                                                @for(int p=0;p<familyData.PersonCount;p++)
-                                                {
-                                                    <option>@familyData.People[p].PossessiveID</option>
-                                                }
-                                            </select>
-                                            }
-                                            <span>pension at <input style="width:140px" type=text @bind-Value=pension.Custodian @bind-Value:event=oninput placeholder='custodian' /></span><br/>
-                                            <label>Income:</label> <span>$</span><input style="width:140px" type=text @bind-Value=pension.Income @bind-Value:event=oninput placeholder='custodian' /><br/>
-                                            <label>Begins at Age:</label> <input style="width:140px" type=text @bind-Value=pension.BeginningAge @bind-Value:event=oninput placeholder='begins at' /><br/>
-                                            <InputCheckbox style="width:140px" type=text @bind-Value=pension.OneTime /><label>&nbsp;OneTime</label><br/>
-                                            <InputCheckbox style="width:140px" type=text @bind-Value=pension.HasCola /><label>&nbsp;Has Cost of Living Adjustment (COLA)</label><br/>
-                                        </EditForm>
+                                        <button @onclick='@(e=>addPension(personBuffer))'>
+                                            ➕ Pension 
+                                            @if (familyData.PersonCount > 1) { <span>&nbsp;(@familyData.People[i].Identifier)</span> }
+                                        </button>
+                                        <br/>
                                     }
-                                    <br/>
-                                        <button @onclick=addPension>➕ Pension</button>
-                                    <br/>
                                     <br/>
                                     break;
                             case "spending":
@@ -382,17 +382,15 @@ Retirement - bogle.tools
         return String.Format("{0:#,0.###}%", amount);
     }
     
-    void addPension()
+    void addPension(int personIndex)
     {
         var newPension = new Pension();
-        familyData?.Pensions.Add(newPension);
+        familyData?.People[personIndex].Pensions.Add(newPension);
         focusAccount = true;
     }
-    void deletePension(MouseEventArgs e, int accountIndex)
+    void deletePension(MouseEventArgs e, int personIndex, int accountIndex)
     {
-        familyData.Pensions.RemoveAt(accountIndex);
-        Navigation.NavigateTo("/portfolio/reload");
-        familyData.UpdatePercentages();
+        familyData.People[personIndex].Pensions.RemoveAt(accountIndex);
     }
 
     public string bold(string text) {
