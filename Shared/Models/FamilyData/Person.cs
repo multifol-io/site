@@ -30,6 +30,7 @@ public class Person {
 
     public int? Age { get; set; }
     public int? RetirementAge { get; set; }
+    public int? ForecastEndAge { get; set; } = 95;
     public int? SSAge { get; set; }
     public double? SSAnnual { get; set; }
     public string? Identifier { get; set; }

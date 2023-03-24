@@ -9,9 +9,18 @@
         "description": ""
     },
     {
+        "step": "portfolio",
+        "title": "Portfolio",
+        "number": 2,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
         "step": "social-security",
         "title": "Social Security",
-        "number": 2,
+        "number": 3,
         "summary": "",
         "priority": "",
         "returns": "",
@@ -20,7 +29,7 @@
     {
         "step": "adjustments",
         "title": "Income / Expenses / Pensions",
-        "number": 3,
+        "number": 4,
         "summary": "",
         "priority": "",
         "returns": "",
@@ -29,16 +38,16 @@
     {
         "step": "spending",
         "title": "Annual Spending",
-        "number": 4,
+        "number": 5,
         "summary": "",
         "priority": "",
         "returns": "",
         "description": ""
     },
     {
-        "step": "money-needed",
-        "title": "Needed from Investments",
-        "number": 5,
+        "step": "forecast",
+        "title": "Annual Forecast",
+        "number": 6,
         "summary": "",
         "priority": "",
         "returns": "",

@@ -74,13 +74,15 @@ public class FamilyData : IFamilyData
                     }
                 }
             }
-
+            
+            bool?[] forecastDone = { null, null };
             while (!done) {
                 double adjustBack = 0.0;
                 string significantYear = null;
                 string yearNote = null;
                 for (var i = 0; i < PersonCount; i++) {
                     var ageThisYear = People[i].Age + yearIndex;
+                    forecastDone[i] = People[i].ForecastEndAge <= ageThisYear;
                     if (People[i].RetirementAge == ageThisYear) {
                         // TODO: what happens when ages don't both retire in same year? (1/2 income for both now)
                         incomeNeeded += monthlyExpenses / PersonCount;
@@ -117,7 +119,7 @@ public class FamilyData : IFamilyData
                         }
                     }
                 }
-
+                done = forecastDone[0].Value && (forecastDone[1] == null || forecastDone[1].Value);
                 var earnings = .04 * portfolioRunningBalance;
                 portfolioRunningBalance -= incomeNeeded + inflationAffectedIncome;
                 if (significantYear != null) {
@@ -129,7 +131,6 @@ public class FamilyData : IFamilyData
 
                 yearIndex++;
                 incomeNeeded += adjustBack;
-                if (yearIndex == 50) return outStr;
             }
 
             return outStr;

@@ -64,7 +64,7 @@ Retirement - bogle.tools
                 <br/>
             </h3>
 
-            <p>Getting all your information in one place to help others give you feedback is the idea behind Bogleheads.org's <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Asking Portfolio Questions</a> ↗️. This tool will make it easy to post to bogleheads.org forum with the correct format.</p>
+            <p>If your still working, maximize <a href="/saving">savings with a plan</a>. After you've collected <a href="/portfolio">your Portfolio</a> information, collect some of the information that will impact your retirement.</p>
             <div>
                 <p ><b>Press edit (✏️) to complete each step:</b></p>
 
@@ -99,6 +99,10 @@ Retirement - bogle.tools
                                             <br/>
                                         }
                                         <br/>
+                                        break;
+                                    case "portfolio":
+                                        <span>@formatMoneyThousands(familyData.Value + (familyData.EmergencyFund.CurrentBalance ?? 0.0)) (includes EF)</span>
+                                        <br/><br/>
                                         break;
                                     case "social-security": 
                                         <br/>
@@ -136,7 +140,7 @@ Retirement - bogle.tools
                                         }
                                         <br/>
                                         break;
-                                    case "money-needed":
+                                    case "forecast":
                                         <br/>
                                         @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
                                             <span>@((MarkupString)familyData.RetirementIncomeNeeded)</span><br/>
@@ -215,6 +219,9 @@ Retirement - bogle.tools
                                     </EditForm><br/>
                                 }
                                 break;
+                            case "portfolio":
+                                Navigation.NavigateTo("/portfolio/retirement-assets");
+                                break;
                             case "social-security":
                                 <p><b>Prerequisities:</b></p>
                                 <label>Tax Filing Status:</label>
@@ -274,7 +281,7 @@ Retirement - bogle.tools
                                     <label>Monthly Spending:</label> <input type=text @bind-Value="familyData.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput"/><br/><br/>
                                 </EditForm><br/>
                                 break;
-                            case "money-needed":
+                            case "forecast":
                                 <br/>
                                 @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
                                     <span>@((MarkupString)familyData.RetirementIncomeNeeded)</span><br/>
