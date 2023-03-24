@@ -45,8 +45,8 @@
         "description": ""
     },
     {
-        "step": "forecast",
-        "title": "Annual Forecast",
+        "step": "spending-forecast",
+        "title": "Spending Forecast",
         "number": 6,
         "summary": "",
         "priority": "",

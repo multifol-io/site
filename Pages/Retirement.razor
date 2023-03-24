@@ -139,7 +139,7 @@ Retirement - bogle.tools
                                         }
                                         <br/>
                                         break;
-                                    case "forecast":
+                                    case "spending-forecast":
                                         <br/>
                                         @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
                                             <span>@((MarkupString)familyData.RetirementIncomeNeeded)</span><br/>
@@ -277,7 +277,7 @@ Retirement - bogle.tools
                                     <label>Monthly Spending:</label> <input type=text @bind-Value="familyData.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput"/><br/><br/>
                                 </EditForm><br/>
                                 break;
-                            case "forecast":
+                            case "spending-forecast":
                                 <br/>
                                 @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
                                     <span>@((MarkupString)familyData.RetirementIncomeNeeded)</span><br/>
