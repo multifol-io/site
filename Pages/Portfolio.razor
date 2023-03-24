@@ -62,13 +62,12 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             string nextPage = folderName + nextStep?.step;
             familyData.UpdatePercentages();
             
-            <h3 style="max-width:350px">
-                Portfolio
+            <h4 style="max-width:450px">
+                Portfolio &gt; Home (0)<br/>
                 <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-                <span style=text-align:center>Top</span>
                 <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                 <br/>
-            </h3>
+            </h4>
 
             <p>Getting all your information in one place to help others give you feedback is the idea behind Bogleheads.org's <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Asking Portfolio Questions</a> ↗️. This tool will make it easy to post to bogleheads.org forum with the correct format.</p>
             <div>
@@ -328,7 +327,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             </div>
             
             <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-            <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
+            <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
         }
         else
         {
@@ -341,16 +340,12 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                     string prevPage = folderName + prevStep?.step;
                     string nextPage = folderName + nextStep?.step;
 
-                    <h3 style="max-width:350px">
-                        <NavLink href=/portfolio>Portfolio</NavLink>
+                    <h4 style="max-width:450px">
+                        <NavLink href=/portfolio>Portfolio</NavLink> &gt; @step.title (@step.number)<br/>
                         <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-                        <span style=text-align:center>@step.number</span>
                         <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                         <br/>
-                    </h3>
-                    <h2>
-                        @step.title
-                    </h2>
+                    </h4>
                     <hr/>
 
                     <h4>@((MarkupString)markupize(step.priority))</h4>
@@ -772,7 +767,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                     </p>
 
                     <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-                    <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
+                    <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
                 }
             }
         }
