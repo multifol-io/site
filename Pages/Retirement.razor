@@ -57,7 +57,7 @@ Retirement - bogle.tools
             familyData.UpdatePercentages();
             
             <h4 style="max-width:450px">
-                Retirement Plan &gt; Home (0)<br/>
+                Retirement Plan <br/>
                 <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                 <br/>
             </h4>
@@ -213,7 +213,10 @@ Retirement - bogle.tools
                                 }
                                 break;
                             case "portfolio":
-                                Navigation.NavigateTo("/portfolio/retirement-assets");
+                                <span>Retirement Assets: @formatMoneyThousands(familyData.Value) (edit at <a href="/portfolio/retirement-assets">/portfolio/retirement-assets</a>)
+                                </span><br/>
+                                <label>Current Emergency Fund:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/>
+                                <br/><br/>
                                 break;
                             case "social-security":
                                 <p><b>Prerequisities:</b></p>

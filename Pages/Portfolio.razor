@@ -63,7 +63,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             familyData.UpdatePercentages();
             
             <h4 style="max-width:450px">
-                Portfolio &gt; Home (0)<br/>
+                Portfolio <br/>
                 <br/>
             </h4>
 
@@ -753,7 +753,84 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                 }
                                 break;
                             case "contributions":
-                                Navigation.NavigateTo("/portfolio-contributions");        
+                                <div>
+                                    Edit Savings Contribution at: <a href="/saving">/saving</a><br/><br/>
+
+                                    <span>
+                                        @((MarkupString)boldUnderline("Contributions:"))
+                                    </span><br/>
+                                    @if (familyData.PlannedSavings > 0) {
+                                        <span>Planned savings: @formatMoney(familyData.PlannedSavings)</span><br/><br/>
+                                    }
+
+                                    <span>Prioritized Investments:</span><br/>
+
+                                    @if (familyData.EmergencyFund.AmountToSave > 0) {
+                                        <span>@formatMoney(familyData.EmergencyFund.AmountToSave) in Emergency Fund</span><br/>
+                                        @((MarkupString)checkTotal(familyData.EmergencyFund.AmountToSave))
+                                    }
+                                    @if (familyData.PersonCount > 0 && familyData.People[0].EmployerPlan.AmountToSaveForMatch > 0) {
+                                        <span>@formatMoney(familyData.People[0].EmployerPlan.AmountToSaveForMatch) in @familyData.People[0].PossessiveID 401k (Match: @formatMoney(familyData.People[0].EmployerPlan.MatchAmount))</span><br/>
+                                        @((MarkupString)checkTotal(familyData.People[0].EmployerPlan.AmountToSaveForMatch))
+                                    }
+                                    @if (familyData.PersonCount > 1 && familyData.People[1].EmployerPlan.AmountToSaveForMatch > 0) {
+                                        <span>@formatMoney(familyData.People[1].EmployerPlan.AmountToSaveForMatch) in @familyData.People[1].PossessiveID 401k (Match: @formatMoney(familyData.People[1].EmployerPlan.MatchAmount))</span><br/>
+                                        @((MarkupString)checkTotal(familyData.People[1].EmployerPlan.AmountToSaveForMatch))
+                                    }
+                                    @if (familyData.HighDebts > 0) {
+                                        <span>@familyData.HighDebts in High Debts</span><br/>
+                                        @((MarkupString)checkTotal(familyData.HighDebts))
+                                    }
+                                    @if (familyData.PersonCount > 0  && (familyData.People[0].EmployerBenefits.Complete || familyData.People[0].EmployerPlan.AnnualSalary == 0 || familyData.People[0].HealthSavingsAccount.EligibleForHSA  || familyData.People[0].HealthSavingsAccount.EligibleForHSACatchUpOnly) && familyData.People[0].HealthSavingsAccount.AmountToSave > 0) {
+                                        <span>@formatMoney(familyData.People[0].HealthSavingsAccount.AmountToSave) in @familyData.People[0].PossessiveID HSA (Employer: @formatMoney(familyData.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
+                                        @((MarkupString)checkTotal(familyData.People[0].HealthSavingsAccount.AmountToSave))
+                                    }
+                                    @if (familyData.PersonCount > 1  && (familyData.People[1].EmployerBenefits.Complete || familyData.People[1].EmployerPlan.AnnualSalary == 0 || familyData.People[1].HealthSavingsAccount.EligibleForHSA  || familyData.People[1].HealthSavingsAccount.EligibleForHSACatchUpOnly) && familyData.People[1].HealthSavingsAccount.AmountToSave > 0) {
+                                        <span>@formatMoney(familyData.People[1].HealthSavingsAccount.AmountToSave) in @familyData.People[1].PossessiveID HSA (Employer: @formatMoney(familyData.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
+                                        @((MarkupString)checkTotal(familyData.People[1].HealthSavingsAccount.AmountToSave))
+                                    }
+                                    @if (familyData.AdjustedGrossIncome != null) {
+                                        if (familyData.PersonCount > 0) {
+                                            <span>@((MarkupString)GetRecommendedIRAMarkup(familyData.People[0]))</span><br/>
+                                            @((MarkupString)checkTotal(GetRecommdedIRAAmount(familyData.People[0])))
+                                        }
+                                        if(familyData.PersonCount > 1) {
+                                            <span>@((MarkupString)GetRecommendedIRAMarkup(familyData.People[1]))</span><br/>
+                                            @((MarkupString)checkTotal(GetRecommdedIRAAmount(familyData.People[1])))
+                                        }
+                                    }
+                                    @if (familyData.PersonCount > 0 && familyData.People[0].EmployerPlan.AmountToSaveForNonMatched > 0) {
+                                        <span>@formatMoney(familyData.People[0].EmployerPlan.AmountToSaveForNonMatched) in @familyData.People[0].PossessiveID 401k</span><br/>
+                                        @((MarkupString)checkTotal(familyData.People[0].EmployerPlan.AmountToSaveForNonMatched))
+                                    }
+                                    @if (familyData.PersonCount > 1 && familyData.People[1].EmployerPlan.AmountToSaveForNonMatched > 0) {
+                                        <span>@formatMoney(familyData.People[1].EmployerPlan.AmountToSaveForNonMatched) in @familyData.People[1].PossessiveID 401k</span><br/>
+                                        @((MarkupString)checkTotal(familyData.People[1].EmployerPlan.AmountToSaveForNonMatched))
+                                    }
+                                    @if (familyData.PersonCount > 0 && familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
+                                        <span>@formatMoney(familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyData.People[0].PossessiveID mega backdoor roth</span><br/>
+                                        @((MarkupString)checkTotal(familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
+                                    }
+                                    @if (familyData.PersonCount > 1 && familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
+                                        <span>@formatMoney(familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyData.People[1].PossessiveID mega backdoor roth</span><br/>
+                                        @((MarkupString)checkTotal(familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
+                                    }
+                                    @if (familyData.MediumDebts > 0) {
+                                        <span>@formatMoney(familyData.MediumDebts) in Medium Debts</span><br/>
+                                        @((MarkupString)checkTotal(familyData.MediumDebts))
+                                    }
+                                    @if (familyData.PlannedSavings > runningTotal) {
+                                        <span>@formatMoney(familyData.PlannedSavings-runningTotal) in Taxable</span><br/>
+                                        @((MarkupString)checkTotal(familyData.PlannedSavings-runningTotal))
+                                    } else {
+                                        <span>@formatMoney(0) in Taxable</span><br/>
+                                    }
+                                    @if (familyData.LowDebts > 0) {
+                                        <span>@formatMoney(familyData.LowDebts) in Low Debts</span><br/>
+                                        @((MarkupString)checkTotal(familyData.LowDebts))
+                                    }
+                                    <br/>
+                                </div>
                                 break;
                         }
                     <p>
