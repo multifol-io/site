@@ -105,8 +105,7 @@ public class FamilyData : IFamilyData
                     {
                         if (People[i].SSAnnual.HasValue && (pension.BeginningAge == ageThisYear)) {
                             if (pension.OneTime) {
-                                // incomeNeeded -= pension.Income;
-                                // adjustBack += pension.Income;
+                                portfolioRunningBalance += pension.Income;
                                 yearNote += " "+(pension.Title != null?pension.Title:"adj.")+" (1 time)";
                             }
                             else
@@ -124,19 +123,16 @@ public class FamilyData : IFamilyData
                 }
 
                 done = forecastDone[0].Value && (forecastDone[1] == null || forecastDone[1].Value);
-                var earnings = .04 * portfolioRunningBalance;
-                portfolioRunningBalance -= incomeNeeded + inflationAffectedIncome;
 
                 if (retired[0].Value && (retired[1] == null || retired[1].Value)) {
                     if (significantYear != null) {
                         outStr += "<b>========= "+significantYear+"</b><br/>";
                     }
 
-                    outStr += (yearIndex+DateTime.Now.Year) + " " + formatMoneyThousands(+incomeNeeded+inflationAffectedIncome) + " " + formatPercent((incomeNeeded+inflationAffectedIncome)/Value*100.0) +"<b>" + (yearNote!=null?" &lt;== ":"") + yearNote + "</b><br/>";
+                    outStr += (yearIndex+DateTime.Now.Year) + " " + formatMoneyThousands(+incomeNeeded+inflationAffectedIncome) + " " + formatPercent((incomeNeeded+inflationAffectedIncome)/portfolioRunningBalance*100.0) +"<b>" + (yearNote!=null?" &lt;== ":"") + yearNote + "</b><br/>";
                 }
                 
                 inflationAffectedIncome *= .97;
-                portfolioRunningBalance += earnings;
 
                 yearIndex++;
                 incomeNeeded += adjustBack;

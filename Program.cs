@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using src;
 using IRS;
+using Microsoft.AspNetCore.Components;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -22,8 +23,8 @@ if (irsData != null) {
     throw new Exception("irsData is null");
 }
 
-
-var fundsJson = await httpClient.GetAsync("https://raw.githubusercontent.com/bogle-tools/site/main/wwwroot/data/funds.json");
+var fundsUri = new Uri(builder.HostEnvironment.BaseAddress + "/data/funds.json");
+var fundsJson = await httpClient.GetAsync(fundsUri.AbsoluteUri);
 JsonSerializerOptions options = new() {
     Converters =
         {
