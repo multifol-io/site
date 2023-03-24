@@ -18,8 +18,8 @@
         "description": ""
     },
     {
-        "step": "pensions",
-        "title": "Pensions",
+        "step": "adjustments",
+        "title": "Income / Expenses / Pensions",
         "number": 3,
         "summary": "",
         "priority": "",

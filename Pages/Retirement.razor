@@ -114,7 +114,7 @@ Retirement - bogle.tools
                                         }
                                         <br/>
                                         break;
-                                    case "pensions":
+                                    case "adjustments":
                                         <br/> 
                                         @for (int i = 0; i < familyData.PersonCount; i++) {
                                             foreach (var pension in familyData.People[i].Pensions) {
@@ -132,14 +132,14 @@ Retirement - bogle.tools
                                     case "spending": 
                                         <br/>
                                         @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
-                                            <span>&nbsp;@formatMoneyThousands(familyData.EmergencyFund.MonthlyExpenses*12)</span><br/>
+                                            <span style=font-family:monospace>&nbsp;@formatMoneyThousands(familyData.EmergencyFund.MonthlyExpenses*12)</span><br/>
                                         }
                                         <br/>
                                         break;
                                     case "money-needed":
                                         <br/>
                                         @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
-                                            <span>&nbsp;@formatMoneyThousands(familyData.RetirementIncomeNeeded) or @formatPercent3(familyData.RetirementIncomeNeeded / familyData.Value * 100.0)</span><br/>
+                                            <span>@((MarkupString)familyData.RetirementIncomeNeeded)</span><br/>
                                         }
                                         <br/>
                                         break;
@@ -240,7 +240,7 @@ Retirement - bogle.tools
                                     </EditForm><br/>
                                 }
                                 break;
-                            case "pensions":
+                            case "adjustments":
                                     accountIndex = 0;
                                     @for (int i = 0; i < familyData.PersonCount; i++) {
                                         int personBuffer = i;
@@ -273,6 +273,13 @@ Retirement - bogle.tools
                                 <EditForm Model="familyData" style=margin-left:25px>
                                     <label>Monthly Spending:</label> <input type=text @bind-Value="familyData.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput"/><br/><br/>
                                 </EditForm><br/>
+                                break;
+                            case "money-needed":
+                                <br/>
+                                @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
+                                    <span>@((MarkupString)familyData.RetirementIncomeNeeded)</span><br/>
+                                }
+                                <br/>
                                 break;
                         }
                     <p>

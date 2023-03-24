@@ -39,24 +39,113 @@ public class FamilyData : IFamilyData
         }
     }
     
-    public double RetirementIncomeNeeded {
+    public string RetirementIncomeNeeded {
         get {
-            double pensionTotal = 0.0;
+            string outStr = "";
+            var monthlyExpenses = EmergencyFund.MonthlyExpenses.HasValue ? EmergencyFund.MonthlyExpenses.Value * 12 : 0;
+            double incomeNeeded = 0.0;
+            double inflationAffectedIncome = 0.0;
+            double portfolioRunningBalance = Value + (EmergencyFund.CurrentBalance ?? 0.0);
+            int yearIndex = 0;
+            bool done = false;
+            outStr += "<br/><b>YEAR -SPENT +EARNED = BALANCE</b><br/>";
+            outStr +=         "START................ " + formatMoneyThousands(portfolioRunningBalance) + "<br/>";
 
-            double socialSecurityTotal = 0.0;
             for (var i = 0; i < PersonCount; i++) {
-                if (People[i].SSAnnual.HasValue) {
-                    socialSecurityTotal += People[i].SSAnnual.Value;
+                var ageThisYear = People[i].Age + yearIndex;
+                if (People[i].RetirementAge < ageThisYear) {
+                    incomeNeeded = monthlyExpenses;
+                }
+
+                if (People[i].SSAnnual.HasValue && (People[i].SSAge < ageThisYear)) {
+                    incomeNeeded -= People[i].SSAnnual.Value;
                 }
 
                 foreach (var pension in People[i].Pensions)
                 {
-                    pensionTotal += pension.Income;
+                    if (People[i].SSAnnual.HasValue && (pension.BeginningAge < ageThisYear)) {
+                        if (!pension.OneTime) {
+                            if (pension.HasCola) {
+                                incomeNeeded -= pension.Income;
+                            } else {
+                                inflationAffectedIncome -= pension.Income;
+                            }
+                        }                        
+                    }
                 }
             }
-            var monthlyExpenses = EmergencyFund.MonthlyExpenses.HasValue ? EmergencyFund.MonthlyExpenses.Value * 12 : 0;
-            var incomeNeeded = monthlyExpenses - pensionTotal - socialSecurityTotal;
-            return incomeNeeded;
+
+            while (!done) {
+                double adjustBack = 0.0;
+                string significantYear = null;
+                string yearNote = null;
+                for (var i = 0; i < PersonCount; i++) {
+                    var ageThisYear = People[i].Age + yearIndex;
+                    if (People[i].RetirementAge == ageThisYear) {
+                        // TODO: what happens when ages don't both retire in same year? (1/2 income for both now)
+                        incomeNeeded += monthlyExpenses / PersonCount;
+                        significantYear = (significantYear != null ? " " : "") + "retirement";
+                    }
+                    if (People[i].RetirementAge > ageThisYear) {
+                        incomeNeeded -= (this.PlannedSavings ?? 0.0) / PersonCount;
+                        adjustBack += (this.PlannedSavings ?? 0.0) / PersonCount;
+                    }
+
+                    if (People[i].SSAnnual.HasValue && (People[i].SSAge == ageThisYear)) {
+                        incomeNeeded -= People[i].SSAnnual.Value;
+                        significantYear += (significantYear != null ? " " : "") + "social security ("+People[i].Identifier+")";
+                    }
+
+                    foreach (var pension in People[i].Pensions)
+                    {
+                        if (People[i].SSAnnual.HasValue && (pension.BeginningAge == ageThisYear)) {
+                            if (pension.OneTime) {
+                                incomeNeeded -= pension.Income;
+                                adjustBack += pension.Income;
+                                yearNote += " "+(pension.Custodian != null?pension.Custodian:"pension")+" (1 time)";
+                            }
+                            else
+                            {
+                                if (pension.HasCola) {
+                                    incomeNeeded -= pension.Income;
+                                } else {
+                                    inflationAffectedIncome -= pension.Income;
+                                }
+                            
+                                significantYear += (significantYear != null ? " " : "") + (pension.Custodian != null?pension.Custodian:"pension");
+                            }                        
+                        }
+                    }
+                }
+
+                var earnings = .04 * portfolioRunningBalance;
+                portfolioRunningBalance -= incomeNeeded + inflationAffectedIncome;
+                if (significantYear != null) {
+                    outStr += "<b>=============================="+significantYear+"</b><br/>";
+                }
+                outStr += (yearIndex+DateTime.Now.Year) + " " + formatMoneyThousands(-incomeNeeded-inflationAffectedIncome) +" "+ formatMoneyThousands(earnings) + " = " + formatMoneyThousands(portfolioRunningBalance) + "<b>" + (yearNote!=null?" &lt;======== ":"") + yearNote + "</b><br/>";
+                inflationAffectedIncome *= .97;
+                portfolioRunningBalance += earnings;
+
+                yearIndex++;
+                incomeNeeded += adjustBack;
+                if (yearIndex == 50) return outStr;
+            }
+
+            return outStr;
+        }
+    }
+
+    public string formatMoneyThousands(double? amount) 
+    {
+        if (amount == null) return "";
+
+        if (amount >= 1000000 || amount <= -1000000) {
+            return String.Format("${0:#,0.##M}", Math.Round((double)amount / 10000.0)/100.0);
+        } else if (amount >= 1000 || amount <= -1000) {
+            return String.Format("${0:#,0.##K}", Math.Round((double)amount / 1000.0));
+        } else {
+            return String.Format("${0:#,0.##}", amount);
         }
     }
 
