@@ -123,9 +123,9 @@ public class FamilyData : IFamilyData
                 var earnings = .04 * portfolioRunningBalance;
                 portfolioRunningBalance -= incomeNeeded + inflationAffectedIncome;
                 if (significantYear != null) {
-                    outStr += "<b>=============================="+significantYear+"</b><br/>";
+                    outStr += "<b>========= "+significantYear+"</b><br/>";
                 }
-                outStr += (yearIndex+DateTime.Now.Year) + " " + formatMoneyThousands(-incomeNeeded-inflationAffectedIncome) +" "+ formatMoneyThousands(earnings) + " = " + formatMoneyThousands(portfolioRunningBalance) + "<b>" + (yearNote!=null?" &lt;======== ":"") + yearNote + "</b><br/>";
+                outStr += (yearIndex+DateTime.Now.Year) + " " + formatMoneyThousands(-incomeNeeded-inflationAffectedIncome) +" "+ formatMoneyThousands(earnings) + " = " + formatMoneyThousands(portfolioRunningBalance) + "<b>" + (yearNote!=null?" &lt;== ":"") + yearNote + "</b><br/>";
                 inflationAffectedIncome *= .97;
                 portfolioRunningBalance += earnings;
 
