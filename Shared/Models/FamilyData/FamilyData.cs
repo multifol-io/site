@@ -104,7 +104,7 @@ public class FamilyData : IFamilyData
                             if (pension.OneTime) {
                                 incomeNeeded -= pension.Income;
                                 adjustBack += pension.Income;
-                                yearNote += " "+(pension.Custodian != null?pension.Custodian:"pension")+" (1 time)";
+                                yearNote += " "+(pension.Title != null?pension.Title:"adj.")+" (1 time)";
                             }
                             else
                             {
@@ -114,7 +114,7 @@ public class FamilyData : IFamilyData
                                     inflationAffectedIncome -= pension.Income;
                                 }
                             
-                                significantYear += (significantYear != null ? " " : "") + (pension.Custodian != null?pension.Custodian:"pension");
+                                significantYear += (significantYear != null ? " " : "") + (pension.Title != null?pension.Title:"adj.");
                             }                        
                         }
                     }
