@@ -132,7 +132,7 @@ public class FamilyData : IFamilyData
                         outStr += "<b>========= "+significantYear+"</b><br/>";
                     }
 
-                    outStr += (yearIndex+DateTime.Now.Year) + " " + formatMoneyThousands(+incomeNeeded+inflationAffectedIncome) + "<b>" + (yearNote!=null?" &lt;== ":"") + yearNote + "</b><br/>";
+                    outStr += (yearIndex+DateTime.Now.Year) + " " + formatMoneyThousands(+incomeNeeded+inflationAffectedIncome) + " " + formatPercent((incomeNeeded+inflationAffectedIncome)/Value*100.0) +"<b>" + (yearNote!=null?" &lt;== ":"") + yearNote + "</b><br/>";
                 }
                 
                 inflationAffectedIncome *= .97;
@@ -144,6 +144,11 @@ public class FamilyData : IFamilyData
 
             return outStr;
         }
+    }
+
+    public string formatPercent(double? amount)
+    {
+        return String.Format("{0:#,0.#}%", amount);
     }
 
     public string formatMoneyThousands(double? amount) 
