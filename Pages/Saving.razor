@@ -60,7 +60,6 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
 
             <h4 style="max-width:450px">
                 Saving Plan &gt; Home (0)<br/>
-                <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
                 <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                 <br/>
             </h4>
@@ -396,7 +395,6 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                 </table>
             </div>
             
-            <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
             <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
         }
         else if (stepPath == "tax-filing-info") {
@@ -415,7 +413,6 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
 
                     <h4 style="max-width:450px">
                         <NavLink href=/saving>Saving Plan</NavLink> &gt; @step.title (@step.number)<br/>
-                        <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
                         <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                         <br/>
                     </h4>
@@ -918,7 +915,6 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                     @if(step.returns != "N/A") {<p><b>Approximate Return:</b> @step.returns</p>}
                     @if(step.description != "") {<p class="article"><b>Details:</b> @((MarkupString)markupize(step.description))</p>}
 
-                    <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
                     <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
                 }
             }
