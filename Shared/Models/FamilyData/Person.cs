@@ -8,6 +8,7 @@ public class Person {
         this.IRA = new IRA();
         this.RothIRA = new RothIRA();
         this.HealthSavingsAccount = new HealthSavingsAccount();
+        this.Retirement = new();
         this.Pensions = new();
     }
 
@@ -29,10 +30,8 @@ public class Person {
     public List<Pension> Pensions { get; set; }
 
     public int? Age { get; set; }
-    public int? RetirementAge { get; set; }
-    public int? ForecastEndAge { get; set; } = 95;
-    public int? SSAge { get; set; }
-    public double? SSAnnual { get; set; }
+    public Retirement Retirement { get; set; }
+
     public string? Identifier { get; set; }
     public string? Employer { get; set; }
     public EmployerPlan EmployerPlan { get; set; }

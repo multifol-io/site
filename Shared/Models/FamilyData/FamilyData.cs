@@ -52,20 +52,20 @@ public class FamilyData : IFamilyData
 
             for (var i = 0; i < PersonCount; i++) {
                 var ageThisYear = People[i].Age + yearIndex;
-                if (People[i].RetirementAge < ageThisYear) {
+                if (People[i].Retirement.RetirementAge < ageThisYear) {
                     retired[i] = true;
                     incomeNeeded = monthlyExpenses;
                 } else {
                     retired[i] = false;
                 }
 
-                if (People[i].SSAnnual.HasValue && (People[i].SSAge < ageThisYear)) {
-                    incomeNeeded -= People[i].SSAnnual.Value;
+                if (People[i].Retirement.SSAnnual.HasValue && (People[i].Retirement.SSAge < ageThisYear)) {
+                    incomeNeeded -= People[i].Retirement.SSAnnual.Value;
                 }
 
                 foreach (var pension in People[i].Pensions)
                 {
-                    if (People[i].SSAnnual.HasValue && (pension.BeginningAge < ageThisYear)) {
+                    if (People[i].Retirement.SSAnnual.HasValue && (pension.BeginningAge < ageThisYear)) {
                         if (!pension.OneTime) {
                             if (pension.HasCola) {
                                 incomeNeeded -= pension.Income;
@@ -84,26 +84,26 @@ public class FamilyData : IFamilyData
                 string yearNote = null;
                 for (var i = 0; i < PersonCount; i++) {
                     var ageThisYear = People[i].Age + yearIndex;
-                    forecastDone[i] = People[i].ForecastEndAge <= ageThisYear;
-                    if (People[i].RetirementAge == ageThisYear) {
+                    forecastDone[i] = People[i].Retirement.ForecastEndAge <= ageThisYear;
+                    if (People[i].Retirement.RetirementAge == ageThisYear) {
                         // TODO: what happens when ages don't both retire in same year? (1/2 income for both now)
                         retired[i] = true;
                         incomeNeeded += monthlyExpenses / PersonCount;
                         significantYear = (significantYear != null ? " " : "") + "retirement";
                     }
-                    if (People[i].RetirementAge > ageThisYear) {
+                    if (People[i].Retirement.RetirementAge > ageThisYear) {
                         incomeNeeded -= (this.PlannedSavings ?? 0.0) / PersonCount;
                         adjustBack += (this.PlannedSavings ?? 0.0) / PersonCount;
                     }
 
-                    if (People[i].SSAnnual.HasValue && (People[i].SSAge == ageThisYear)) {
-                        incomeNeeded -= People[i].SSAnnual.Value;
+                    if (People[i].Retirement.SSAnnual.HasValue && (People[i].Retirement.SSAge == ageThisYear)) {
+                        incomeNeeded -= People[i].Retirement.SSAnnual.Value;
                         significantYear += (significantYear != null ? " " : "") + "social security ("+People[i].Identifier+")";
                     }
 
                     foreach (var pension in People[i].Pensions)
                     {
-                        if (People[i].SSAnnual.HasValue && (pension.BeginningAge == ageThisYear)) {
+                        if (People[i].Retirement.SSAnnual.HasValue && (pension.BeginningAge == ageThisYear)) {
                             if (pension.OneTime) {
                                 portfolioRunningBalance += pension.Income;
                                 yearNote += " "+(pension.Title != null?pension.Title:"adj.")+" (1 time)";

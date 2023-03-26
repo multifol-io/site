@@ -83,16 +83,16 @@ Retirement - bogle.tools
                                         @if(familyData.PersonCount > 0 && familyData.People[0].Age != null) {
                                             <span>
                                                 &nbsp;@getPronoun(familyData.People[0]) @familyData.People[0].Age 
-                                                @if(familyData.People[0].Age >= familyData.People[0].RetirementAge) { <span>, retired</span> }
-                                                else { <span>, retiring at @familyData.People[0].RetirementAge</span> }
+                                                @if(familyData.People[0].Age >= familyData.People[0].Retirement.RetirementAge) { <span>, retired</span> }
+                                                else { <span>, retiring at @familyData.People[0].Retirement.RetirementAge</span> }
                                             </span>
                                             <br/>
                                         }
                                         @if(familyData.PersonCount > 1 && familyData.People[1].Age != null) {
                                             <span>
                                                 &nbsp;@getPronoun(familyData.People[1]) @familyData.People[1].Age 
-                                                @if(familyData.People[1].Age >= familyData.People[1].RetirementAge) { <span>, retired</span> }
-                                                else { <span>, retiring at @familyData.People[1].RetirementAge</span> }
+                                                @if(familyData.People[1].Age >= familyData.People[1].Retirement.RetirementAge) { <span>, retired</span> }
+                                                else { <span>, retiring at @familyData.People[1].Retirement.RetirementAge</span> }
                                             </span>
                                             <br/>
                                         }
@@ -106,13 +106,13 @@ Retirement - bogle.tools
                                     case "social-security": 
                                         <br/>
                                         @if(familyData.PersonCount > 0 && familyData.People[0].Age != null) {
-                                            <span>&nbsp;@getPronoun(familyData.People[0]) @formatMoneyThousands(familyData.People[0].SSAnnual) 
-                                                @if(familyData.People[0].Age < familyData.People[0].RetirementAge) { <span>&nbsp;at @familyData.People[0].SSAge </span> }
+                                            <span>&nbsp;@getPronoun(familyData.People[0]) @formatMoneyThousands(familyData.People[0].Retirement.SSAnnual) 
+                                                @if(familyData.People[0].Age < familyData.People[0].Retirement.RetirementAge) { <span>&nbsp;at @familyData.People[0].Retirement.SSAge </span> }
                                             (with COLA)</span><br/>
                                         }
                                         @if(familyData.PersonCount > 1 && familyData.People[1].Age != null) {
-                                            <span>&nbsp;@getPronoun(familyData.People[1]) @formatMoneyThousands(familyData.People[1].SSAnnual) 
-                                                @if(familyData.People[1].Age < familyData.People[1].RetirementAge) { <span>&nbsp;at @familyData.People[1].SSAge </span> }
+                                            <span>&nbsp;@getPronoun(familyData.People[1]) @formatMoneyThousands(familyData.People[1].Retirement.SSAnnual) 
+                                                @if(familyData.People[1].Age < familyData.People[1].Retirement.RetirementAge) { <span>&nbsp;at @familyData.People[1].Retirement.SSAge </span> }
                                             (with COLA)</span><br/>
                                         }
                                         <br/>
@@ -208,7 +208,7 @@ Retirement - bogle.tools
                                     <p><b>Person @personIndex:</b> </p>
                                     <EditForm Model="person" style=margin-left:25px>
                                         <label>Age:</label> <input type=text @bind-Value="person.Age" @bind-Value:event="oninput"/><br/><br/>
-                                        <label>Retirement Age:</label> <input type=text @bind-Value="person.RetirementAge" @bind-Value:event="oninput"/><br/><br/>
+                                        <label>Retirement Age:</label> <input type=text @bind-Value="person.Retirement.RetirementAge" @bind-Value:event="oninput"/><br/><br/>
                                     </EditForm><br/>
                                 }
                                 break;
@@ -238,8 +238,8 @@ Retirement - bogle.tools
                                     <p><b>Person @personIndex:</b> </p>
                                     <EditForm Model="person" style=margin-left:25px>
                                         <label>Age:</label> <input type=text @bind-Value="person.Age" @bind-Value:event="oninput"/><br/><br/>
-                                        <label>Social Security Age:</label> <input type=text @bind-Value="person.SSAge" @bind-Value:event="oninput"/><br/><br/>
-                                        <label>Social Security Amount:</label> <span>$</span><input type=text @bind-Value="person.SSAnnual" @bind-Value:event="oninput"/><br/><br/>
+                                        <label>Social Security Age:</label> <input type=text @bind-Value="person.Retirement.SSAge" @bind-Value:event="oninput"/><br/><br/>
+                                        <label>Social Security Amount:</label> <span>$</span><input type=text @bind-Value="person.Retirement.SSAnnual" @bind-Value:event="oninput"/><br/><br/>
                                     </EditForm><br/>
                                 }
                                 break;
