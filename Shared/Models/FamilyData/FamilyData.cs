@@ -32,6 +32,7 @@ public class FamilyData : IFamilyData
         }
     }
 
+    public string Title { get; set; }
     public RetirementData RetirementData { get; set; }
     public EmergencyFund EmergencyFund { get; set; } = new();
 
@@ -76,8 +77,6 @@ public class FamilyData : IFamilyData
                     }
                 }
             }
-
-
             
             bool?[] forecastDone = { null, null };
             while (!done) {
@@ -91,7 +90,7 @@ public class FamilyData : IFamilyData
                         // TODO: what happens when ages don't both retire in same year? (1/2 income for both now)
                         retired[i] = true;
                         incomeNeeded += RetirementData.AnnualExpenses / PersonCount;
-                        significantYear = (significantYear != null ? " " : "") + "retirement";
+                        significantYear += (significantYear != null ? " " : "") + People[i].Identifier + " retirement";
                     }
                     if (People[i].Retirement.RetirementAge > ageThisYear) {
                         incomeNeeded -= (this.PlannedSavings ?? 0.0) / PersonCount;
@@ -105,7 +104,7 @@ public class FamilyData : IFamilyData
 
                     foreach (var pension in People[i].Retirement.Pensions)
                     {
-                        if (People[i].Retirement.SSAnnual.HasValue && (pension.BeginningAge == ageThisYear)) {
+                        if (pension.BeginningAge == ageThisYear) {
                             if (pension.OneTime) {
                                 portfolioRunningBalance += pension.Income;
                                 yearNote += " "+(pension.Title != null?pension.Title:"adj.")+" (1 time)";
@@ -118,7 +117,7 @@ public class FamilyData : IFamilyData
                                     inflationAffectedIncome -= pension.Income;
                                 }
                             
-                                significantYear += (significantYear != null ? " " : "") + (pension.Title != null?pension.Title:"adj.");
+                                significantYear += (significantYear != null ? "; " : "") + (pension.Title != null?pension.Title:"adj.");
                             }                        
                         }
                     }
@@ -138,14 +137,14 @@ public class FamilyData : IFamilyData
                                 inflationAffectedIncome -= incomeExpense.Income;
                             }
 
-                            significantYear += (significantYear != null ? " " : "") + (incomeExpense.Title != null?incomeExpense.Title:"adj.");
+                            significantYear += (significantYear != null ? "; " : "") + (incomeExpense.Title != null?incomeExpense.Title:"adj.");
                         }
                     }
                 }
 
                 done = forecastDone[0].Value && (forecastDone[1] == null || forecastDone[1].Value);
 
-                if (retired[0].Value && (retired[1] == null || retired[1].Value)) {
+                if (retired[0].Value || (retired[1] == null || retired[1].Value)) {
                     if (significantYear != null) {
                         outStr += "<b>========= "+significantYear+"</b><br/>";
                     }

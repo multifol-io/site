@@ -126,6 +126,7 @@ Retirement - bogle.tools
                                                         <span>&nbsp;start at @pension.BeginningAge</span>
                                                     } else {<span>&nbsp;lump sum at @pension.BeginningAge</span>}
                                                     @if(pension.HasCola) {<span>&nbsp;(with COLA)</span>} else {<span>&nbsp;(no COLA)</span>}
+                                                    @if(!string.IsNullOrEmpty(pension.Title)) {<span>&nbsp;- @pension.Title</span>}
                                                 </span>
                                                 <br/>
                                             }
