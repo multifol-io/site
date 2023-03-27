@@ -117,11 +117,11 @@ Retirement - bogle.tools
                                         }
                                         <br/>
                                         break;
-                                    case "adjustments":
+                                    case "pensions-annuities":
                                         <br/> 
                                         @for (int i = 0; i < familyData.PersonCount; i++) {
-                                            foreach (var pension in familyData.People[i].Pensions) {
-                                                <span>&nbsp;@pension.Identifier @formatMoneyThousands(pension.Income)
+                                            foreach (var pension in familyData.People[i].Retirement.Pensions) {
+                                                <span>&nbsp;@formatMoneyThousands(pension.Income)
                                                     @if(!pension.OneTime) {
                                                         <span>&nbsp;start at @pension.BeginningAge</span>
                                                     } else {<span>&nbsp;lump sum at @pension.BeginningAge</span>}
@@ -131,11 +131,24 @@ Retirement - bogle.tools
                                             }
                                         }
                                         <br/>
-                                        break;
+                                        break;                                        
                                     case "spending": 
                                         <br/>
                                         @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
-                                            <span style=font-family:monospace>&nbsp;@formatMoneyThousands(familyData.EmergencyFund.MonthlyExpenses*12)</span><br/>
+                                            <span style=font-family:monospace>&nbsp;@formatMoneyThousands(familyData.RetirementData.AnnualExpenses)</span><br/>
+                                        }
+                                        <br/>
+                                        break;                                        
+                                    case "income-expenses":
+                                        <br/> 
+                                        foreach (var pension in familyData.RetirementData.IncomeExpenses) {
+                                            <span>&nbsp;@formatMoneyThousands(pension.Income)
+                                                @if(!pension.OneTime) {
+                                                    <span>&nbsp;start at @pension.BeginningYear</span>
+                                                } else {<span>&nbsp;lump sum at @pension.BeginningYear</span>}
+                                                @if(pension.HasCola) {<span>&nbsp;(with COLA)</span>} else {<span>&nbsp;(no COLA)</span>}
+                                            </span>
+                                            <br/>
                                         }
                                         <br/>
                                         break;
@@ -243,11 +256,11 @@ Retirement - bogle.tools
                                     </EditForm><br/>
                                 }
                                 break;
-                            case "adjustments":
+                            case "pensions-annuities":
                                     accountIndex = 0;
                                     @for (int i = 0; i < familyData.PersonCount; i++) {
                                         int personBuffer = i;
-                                        foreach (var pension in familyData.People[i].Pensions) {
+                                        foreach (var pension in familyData.People[i].Retirement.Pensions) {
                                             int accBuffer = accountIndex;
                                             accountIndex++;
                                             var accountId = "account"+accBuffer;
@@ -255,26 +268,50 @@ Retirement - bogle.tools
                                             <EditForm Model="pension" style=margin-left:.25in>
                                                 <button @onclick='@(e=>deletePension(e,personBuffer,accBuffer))'>❌</button>
                                                 <label>Title:</label><input style="width:140px" type=text @bind-Value=pension.Title @bind-Value:event=oninput placeholder='title' /><br/>
-                                                <label>Income:</label> <span>$</span><input style="width:140px" type=text @bind-Value=pension.Income @bind-Value:event=oninput placeholder='custodian' /><br/>
-                                                <label>Begins at:</label> <input style="width:140px" type=text @bind-Value=pension.BeginningAge @bind-Value:event=oninput placeholder='age' /><br/>
+                                                <label>Annual Income:</label> <span>$</span><input style="width:140px" type=text @bind-Value=pension.Income @bind-Value:event=oninput placeholder='custodian' /><br/>
+                                                <label>Begins at Age:</label> <input style="width:140px" type=text @bind-Value=pension.BeginningAge @bind-Value:event=oninput placeholder='age' /><br/>
                                                 <InputCheckbox @bind-Value=pension.OneTime /><label>&nbsp;OneTime</label><br/>
                                                 <InputCheckbox @bind-Value=pension.HasCola /><label>&nbsp;Has Cost of Living Adjustment (COLA)</label><br/>
                                             </EditForm>
                                         }
 
                                         <br/>
-                                        <button @onclick='@(e=>addPension(personBuffer))'>
+                                        <button @onclick='@(e=>addPensionAnnuity(personBuffer))'>
                                             ➕ 
                                             @if (familyData.PersonCount > 1) { <span>&nbsp;(@familyData.People[i].Identifier)</span> }
                                         </button>
                                         <br/>
                                     }
                                     <br/>
+                                    break;                                
+                            case "income-expenses":
+                                    accountIndex = 0;
+                                    foreach (var pension in familyData.RetirementData.IncomeExpenses) {
+                                        int accBuffer = accountIndex;
+                                        accountIndex++;
+                                        var accountId = "account"+accBuffer;
+                                        <br/>
+                                        <EditForm Model="pension" style=margin-left:.25in>
+                                            <button @onclick='@(e=>deleteIncomeExpense(e,accBuffer))'>❌</button>
+                                            <label>Title:</label><input style="width:140px" type=text @bind-Value=pension.Title @bind-Value:event=oninput placeholder='title' /><br/>
+                                            <label>Annual Income:</label> <span>$</span><input style="width:140px" type=text @bind-Value=pension.Income @bind-Value:event=oninput placeholder='custodian' /><br/>
+                                            <label>Year Begins:</label> <input style="width:140px" type=text @bind-Value=pension.BeginningYear @bind-Value:event=oninput placeholder='year' /><br/>
+                                            <InputCheckbox @bind-Value=pension.OneTime /><label>&nbsp;OneTime</label><br/>
+                                            <InputCheckbox @bind-Value=pension.HasCola /><label>&nbsp;Has Cost of Living Adjustment (COLA)</label><br/>
+                                        </EditForm>
+                                    }
+
+                                    <br/>
+                                    <button @onclick='@(e=>addIncomeExpense())'>
+                                        ➕ 
+                                    </button>
+                                    <br/>
+                                    <br/>
                                     break;
                             case "spending":
                                 <p><b>Worksheet:</b> </p>
                                 <EditForm Model="familyData" style=margin-left:25px>
-                                    <label>Monthly Spending:</label> <input type=text @bind-Value="familyData.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput"/><br/><br/>
+                                    <label>Annual Spending:</label> <input type=text @bind-Value="familyData.RetirementData.AnnualExpenses" @bind-Value:event="oninput"/><br/><br/>
                                 </EditForm><br/>
                                 break;
                             case "spending-forecast":
@@ -391,15 +428,28 @@ Retirement - bogle.tools
         return String.Format("{0:#,0.###}%", amount);
     }
     
-    void addPension(int personIndex)
+    void addPensionAnnuity(int personIndex)
     {
-        var newPension = new Pension();
-        familyData?.People[personIndex].Pensions.Add(newPension);
+        var newPension = new Pension() { };
+        familyData?.People[personIndex].Retirement.Pensions.Add(newPension);
         focusAccount = true;
     }
+
+    void addIncomeExpense()
+    {
+        var newPension = new Pension() { };
+        familyData?.RetirementData.IncomeExpenses.Add(newPension);
+        focusAccount = true;
+    }
+
     void deletePension(MouseEventArgs e, int personIndex, int accountIndex)
     {
-        familyData.People[personIndex].Pensions.RemoveAt(accountIndex);
+        familyData.People[personIndex].Retirement.Pensions.RemoveAt(accountIndex);
+    }
+
+    void deleteIncomeExpense(MouseEventArgs e, int accountIndex)
+    {
+        familyData.RetirementData.IncomeExpenses.RemoveAt(accountIndex);
     }
 
     public string bold(string text) {

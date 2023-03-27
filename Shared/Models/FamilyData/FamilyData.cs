@@ -10,6 +10,7 @@ public class FamilyData : IFamilyData
         Accounts = new();
         People = new();
         Questions = new();
+        RetirementData = new();
     }
 
     public FamilyData(IRSData irsData) : this()
@@ -31,6 +32,7 @@ public class FamilyData : IFamilyData
         }
     }
 
+    public RetirementData RetirementData { get; set; }
     public EmergencyFund EmergencyFund { get; set; } = new();
 
     public bool DebtsComplete {
@@ -42,7 +44,6 @@ public class FamilyData : IFamilyData
     public string RetirementIncomeNeeded {
         get {
             string outStr = "";
-            var monthlyExpenses = EmergencyFund.MonthlyExpenses.HasValue ? EmergencyFund.MonthlyExpenses.Value * 12 : 0;
             double incomeNeeded = 0.0;
             double inflationAffectedIncome = 0.0;
             double portfolioRunningBalance = Value + (EmergencyFund.CurrentBalance ?? 0.0);
@@ -54,7 +55,7 @@ public class FamilyData : IFamilyData
                 var ageThisYear = People[i].Age + yearIndex;
                 if (People[i].Retirement.RetirementAge < ageThisYear) {
                     retired[i] = true;
-                    incomeNeeded = monthlyExpenses;
+                    incomeNeeded = RetirementData.AnnualExpenses;
                 } else {
                     retired[i] = false;
                 }
@@ -63,9 +64,8 @@ public class FamilyData : IFamilyData
                     incomeNeeded -= People[i].Retirement.SSAnnual.Value;
                 }
 
-                foreach (var pension in People[i].Pensions)
-                {
-                    if (People[i].Retirement.SSAnnual.HasValue && (pension.BeginningAge < ageThisYear)) {
+                foreach (var pension in People[i].Retirement.Pensions) {
+                    if (pension.BeginningAge < ageThisYear) {
                         if (!pension.OneTime) {
                             if (pension.HasCola) {
                                 incomeNeeded -= pension.Income;
@@ -76,6 +76,8 @@ public class FamilyData : IFamilyData
                     }
                 }
             }
+
+
             
             bool?[] forecastDone = { null, null };
             while (!done) {
@@ -88,7 +90,7 @@ public class FamilyData : IFamilyData
                     if (People[i].Retirement.RetirementAge == ageThisYear) {
                         // TODO: what happens when ages don't both retire in same year? (1/2 income for both now)
                         retired[i] = true;
-                        incomeNeeded += monthlyExpenses / PersonCount;
+                        incomeNeeded += RetirementData.AnnualExpenses / PersonCount;
                         significantYear = (significantYear != null ? " " : "") + "retirement";
                     }
                     if (People[i].Retirement.RetirementAge > ageThisYear) {
@@ -101,7 +103,7 @@ public class FamilyData : IFamilyData
                         significantYear += (significantYear != null ? " " : "") + "social security ("+People[i].Identifier+")";
                     }
 
-                    foreach (var pension in People[i].Pensions)
+                    foreach (var pension in People[i].Retirement.Pensions)
                     {
                         if (People[i].Retirement.SSAnnual.HasValue && (pension.BeginningAge == ageThisYear)) {
                             if (pension.OneTime) {
@@ -118,6 +120,25 @@ public class FamilyData : IFamilyData
                             
                                 significantYear += (significantYear != null ? " " : "") + (pension.Title != null?pension.Title:"adj.");
                             }                        
+                        }
+                    }
+                }
+                
+                int year = yearIndex + DateTime.Now.Year;
+                foreach (var incomeExpense in this.RetirementData.IncomeExpenses) {
+                    if (incomeExpense.BeginningYear == year) {
+                        if (incomeExpense.OneTime) {
+                            portfolioRunningBalance += incomeExpense.Income;
+                            yearNote += " "+(incomeExpense.Title != null?incomeExpense.Title:"adj.")+" (1 time)";
+                        }
+                        else {
+                            if (incomeExpense.HasCola) {
+                                incomeNeeded -= incomeExpense.Income;
+                            } else {
+                                inflationAffectedIncome -= incomeExpense.Income;
+                            }
+
+                            significantYear += (significantYear != null ? " " : "") + (incomeExpense.Title != null?incomeExpense.Title:"adj.");
                         }
                     }
                 }

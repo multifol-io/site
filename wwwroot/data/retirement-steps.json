@@ -27,8 +27,8 @@
         "description": ""
     },
     {
-        "step": "adjustments",
-        "title": "Income / Expenses / Pensions",
+        "step": "pensions-annuities",
+        "title": "Pensions / Annuities",
         "number": 4,
         "summary": "",
         "priority": "",
@@ -45,9 +45,18 @@
         "description": ""
     },
     {
+        "step": "income-expenses",
+        "title": "Income / Expenses",
+        "number": 6,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
         "step": "spending-forecast",
         "title": "Spending Forecast",
-        "number": 6,
+        "number": 7,
         "summary": "",
         "priority": "",
         "returns": "",
