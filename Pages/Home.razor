@@ -5,7 +5,6 @@
 @inject IJSRuntime JS
 @inject NavigationManager Navigation
 @inject IList<Fund> Funds
-@using System.Text.Json.Serialization
 
 <PageTitle>
 bogle.tools
@@ -17,69 +16,8 @@ bogle.tools
 <hr/>
 <br/>
 
-<label style=font-weight:bold>Your Info:</label><br/>
-<button @onclick="OnClearPortfolio" style=margin:2px,0px,2px,0px><b>Clear Data</b>⚠️</button><br/>
+
+
+@* <button @onclick="OnClearPortfolio" style=margin:2px,0px,2px,0px><b>Clear Data</b>⚠️</button><br/>
 <button @onclick="DownloadPortfolio" style=margin:2px,0px,2px,0px><b>Save Data</b> to downloads</button> (before a refresh or closing site/browser)<br/>
-<label style=margin:2px,0px,0px,0px><b>Load Data</b> from file:</label> <InputFile id=inputFile accept=".json" OnChange="@((e) => OnLoadPortfolio(e))" /><br/>
-@code {
-    private async Task OnClearPortfolio() {
-        familyData = new FamilyData(irsData);
-    }
-    
-    private async Task OnLoadPortfolio(InputFileChangeEventArgs e)
-    {
-        var files = e.GetMultipleFiles();
-
-        if (files != null)
-        {
-            var options = new JsonSerializerOptions() 
-                {
-                    Converters =
-                        {
-                            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                        }
-                };
-
-            foreach (var file in files)
-            {
-                using (var stream = file.OpenReadStream()) {
-                    familyData = await FamilyData.LoadFromStream(familyData.IRSData, stream, options);
-                }
-            }
-        }
-    }
-
-    private async Task DownloadPortfolio() {
-        var options = new JsonSerializerOptions() 
-        {
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
-            IgnoreReadOnlyProperties = true,
-            WriteIndented = true,
-            Converters =
-                {
-                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                }
-        };
-        await DownloadFileFromStream(familyData, options, "bogle-tools-data.json");
-    }
-
-    private async Task DownloadFileFromStream(object data, JsonSerializerOptions options, string fileName)
-    {
-        var jsonOut = System.Text.Json.JsonSerializer.Serialize(data, options);
-
-        using (MemoryStream ms = new MemoryStream(System.Text.Encoding.ASCII.GetBytes(jsonOut)))
-        {
-            using var streamRef = new DotNetStreamReference(stream: ms);
-            await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
-        }
-    }
-
-    private FamilyData familyData {
-        get {
-            return appData.FamilyData;
-        }
-        set {
-            appData.FamilyData = value;
-        }
-    }
-}
+<label style=margin:2px,0px,0px,0px><b>Load Data</b> from file:</label> <InputFile id=inputFile accept=".json" OnChange="@((e) => OnLoadPortfolio(e))" /><br/> *@

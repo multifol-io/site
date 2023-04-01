@@ -36,4 +36,10 @@ var Funds = await JsonSerializer.DeserializeAsync<List<Fund>>(fundsJson.Content.
 if (Funds != null) {
     builder.Services.AddSingleton<IList<Fund>>(Funds);
 }
+
+builder.Services.AddScoped<LocalStorageAccessor>();
+builder.Services.AddMsalAuthentication(options =>
+{
+    builder.Configuration.Bind("AzureAd", options.ProviderOptions.Authentication);
+});
 await builder.Build().RunAsync();

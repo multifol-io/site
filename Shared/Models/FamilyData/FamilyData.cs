@@ -1,5 +1,6 @@
 using IRS;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -90,7 +91,7 @@ public class FamilyData : IFamilyData
                         // TODO: what happens when ages don't both retire in same year? (1/2 income for both now)
                         retired[i] = true;
                         incomeNeeded += RetirementData.AnnualExpenses / PersonCount;
-                        significantYear += (significantYear != null ? " " : "") + People[i].Identifier + " retirement";
+                        significantYear += (significantYear != null ? ", " : "") + "retirement (" + People[i].Identifier + ")";
                     }
                     if (People[i].Retirement.RetirementAge > ageThisYear) {
                         incomeNeeded -= (this.PlannedSavings ?? 0.0) / PersonCount;
@@ -99,7 +100,7 @@ public class FamilyData : IFamilyData
 
                     if (People[i].Retirement.SSAnnual.HasValue && (People[i].Retirement.SSAge == ageThisYear)) {
                         incomeNeeded -= People[i].Retirement.SSAnnual.Value;
-                        significantYear += (significantYear != null ? " " : "") + "social security ("+People[i].Identifier+")";
+                        significantYear += (significantYear != null ? ", " : "") + "social security ("+People[i].Identifier+")";
                     }
 
                     foreach (var pension in People[i].Retirement.Pensions)
@@ -422,8 +423,21 @@ public class FamilyData : IFamilyData
         } 
     }
 
-    public static async Task<FamilyData> LoadFromStream(IRSData irsData, Stream stream, JsonSerializerOptions options) {
-        var loadedData = await JsonSerializer.DeserializeAsync<FamilyData>(stream, options);
+    public static async Task<FamilyData> LoadFromJson(IRSData irsData, string json, JsonSerializerOptions options) {
+        var loadedData = JsonSerializer.Deserialize<FamilyData>(json, options);
+        if (loadedData != null) {
+            loadedData.IRSData = irsData;
+            loadedData.Year = 2023;
+            loadedData.SetBackPointers();
+        }
+        else 
+        {
+            // error loading
+        }
+        return loadedData;
+    }
+    public static async Task<FamilyData> LoadFromJsonStream(IRSData irsData, Stream jsonStream, JsonSerializerOptions options) {
+        var loadedData = await JsonSerializer.DeserializeAsync<FamilyData>(jsonStream, options);
         if (loadedData != null) {
             loadedData.IRSData = irsData;
             loadedData.Year = 2023;
