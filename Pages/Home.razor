@@ -1,10 +1,4 @@
 @page "/"
-@inject HttpClient Http
-@inject IAppData appData
-@inject IRSData irsData
-@inject IJSRuntime JS
-@inject NavigationManager Navigation
-@inject IList<Fund> Funds
 
 <PageTitle>
 bogle.tools
@@ -18,6 +12,3 @@ bogle.tools
 
 
 
-@* <button @onclick="OnClearPortfolio" style=margin:2px,0px,2px,0px><b>Clear Data</b>⚠️</button><br/>
-<button @onclick="DownloadPortfolio" style=margin:2px,0px,2px,0px><b>Save Data</b> to downloads</button> (before a refresh or closing site/browser)<br/>
-<label style=margin:2px,0px,0px,0px><b>Load Data</b> from file:</label> <InputFile id=inputFile accept=".json" OnChange="@((e) => OnLoadPortfolio(e))" /><br/> *@
