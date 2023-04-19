@@ -1,19 +1,10 @@
-﻿@inject HttpClient Http
+﻿@inject HttpClient httpClient
 @inject NavigationManager NavigationManager
-@inject IJSRuntime JSRuntime
-@inject IAppData appData
-@inject LocalStorageAccessor LocalStorageAccessor
-@using System.Text.Json.Serialization
-@inject IRSData irsData
-@inject IJSRuntime JS
 
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="/"><span class="oi oi-home" aria-hidden="true"></span>bogle.tools</a>
-        <input type=text style=color:white;background:black @bind-value=@appData.FamilyData.Title placeholder="title"/>
-        <button @onclick=@Load>Load</button>
-        <button @onclick=@Save>Save</button>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -32,23 +23,20 @@
                 <span style="margin:3;font-Size:24pt">💰</span>&nbsp;Saving Plan
             </NavLink>
         </div>
-        <div class="nav-item px-2">
+        <!--<div class="nav-item px-2">
             <NavLink class="nav-link" href="/retirement">
                 <span style="margin:3;font-Size:24pt">🎉</span>&nbsp;Retirement Plan
             </NavLink>
         </div>
+        -->
         <div class="nav-item px-2">
             <NavLink class="nav-link" href="/about">
                 <span style="margin:3;font-Size:24pt">❔</span>&nbsp;About bogle.tools
             </NavLink>
         </div>
     </nav>
-</div>
 
-        @foreach (var key in keys)
-        {
-            <div>@key</div>
-        }
+</div>
 
 @code {
     private bool collapseNavMenu = true;
@@ -58,119 +46,5 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
-    }
-
-    public string Key { get; set; } = "json";
-    public string Value { get; set; } = "";
-    public string storedJson { get; set; } = "";
-
-    public async Task Save()
-    {
-        var options = new JsonSerializerOptions() 
-        {
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
-            IgnoreReadOnlyProperties = true,
-            WriteIndented = true,
-            Converters =
-                {
-                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                }
-        };
-        var jsonOut = System.Text.Json.JsonSerializer.Serialize(familyData, options);
-
-        await LocalStorageAccessor.SetValueAsync(Key, jsonOut);
-    }
-
-    public async Task Load()
-    {
-        storedJson = await LocalStorageAccessor.GetValueAsync<string>(Key);
-        var options = new JsonSerializerOptions() 
-        {
-            Converters =
-                {
-                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                }
-        };
-
-        familyData = await FamilyData.LoadFromJson(familyData.IRSData, storedJson, options);
-    }
-
-    public async Task Clear()
-    {
-        familyData = new FamilyData(irsData);
-        await LocalStorageAccessor.RemoveAsync(Key);
-    }
-
-    public async Task ClearAllAsync()
-    {
-        await LocalStorageAccessor.Clear();
-    }
-    
-    private async Task OnLoadPortfolio(InputFileChangeEventArgs e)
-    {
-        var files = e.GetMultipleFiles();
-
-        if (files != null)
-        {
-            var options = new JsonSerializerOptions() 
-                {
-                    Converters =
-                        {
-                            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                        }
-                };
-
-            foreach (var file in files)
-            {
-                using (var stream = file.OpenReadStream()) {
-                    familyData = await FamilyData.LoadFromJsonStream(familyData.IRSData, stream, options);
-                }
-            }
-        }
-    }
-
-    private async Task DownloadPortfolio() {
-        var options = new JsonSerializerOptions() 
-        {
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
-            IgnoreReadOnlyProperties = true,
-            WriteIndented = true,
-            Converters =
-                {
-                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                }
-        };
-        await DownloadFileFromStream(familyData, options, "bogle-tools-data.json");
-    }
-
-    private async Task DownloadFileFromStream(object data, JsonSerializerOptions options, string fileName)
-    {
-        var jsonOut = System.Text.Json.JsonSerializer.Serialize(data, options);
-
-        using (MemoryStream ms = new MemoryStream(System.Text.Encoding.ASCII.GetBytes(jsonOut)))
-        {
-            using var streamRef = new DotNetStreamReference(stream: ms);
-            await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
-        }
-    }
-
-    private FamilyData familyData {
-        get {
-            return appData.FamilyData;
-        }
-        set {
-            appData.FamilyData = value;
-        }
-    }
-
-    List<string> keys = new();
-
-    protected override async Task OnInitializedAsync()
-    {
-        System.Text.Json.JsonElement result = await LocalStorageAccessor.GetKeys();
-        foreach (var key in result.EnumerateArray())
-        {
-            keys.Add(key.GetString());
-        }
     }
 }

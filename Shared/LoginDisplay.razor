@@ -1,14 +1,25 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @inject NavigationManager Navigation
+@using System.Text.Json.Serialization
+@inject IJSRuntime JSRuntime
+@inject IAppData appData
+@inject LocalStorageAccessor LocalStorageAccessor
+@inject IRSData irsData
+@inject IJSRuntime JS
 
 <AuthorizeView>
     <Authorized>
-        Hello, @context.User.Identity?.Name!
+        <!--Hello, @context.User.Identity?.Name!
         <button class="nav-link btn btn-link" @onclick="BeginLogOut">Log out</button>
+        -->
     </Authorized>
     <NotAuthorized>
-        <a href="authentication/login">Log in</a>
+        <!--<a href="authentication/login">Log in</a>-->
+        <div style=position:absolute;right:0px;padding:10px>
+            <button @onclick=@Save>Save</button>
+            <button @onclick=@Clear>Clear</button>
+        </div>
     </NotAuthorized>
 </AuthorizeView>
 
@@ -17,4 +28,119 @@
     {
         Navigation.NavigateToLogout("authentication/logout");
     }
+    
+    public string Key { get; set; } = "localSave";
+    public string Value { get; set; } = "";
+    public string storedJson { get; set; } = "";
+
+    public async Task Save()
+    {
+        var options = new JsonSerializerOptions() 
+        {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+            IgnoreReadOnlyProperties = true,
+            WriteIndented = true,
+            Converters =
+                {
+                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                }
+        };
+        var jsonOut = System.Text.Json.JsonSerializer.Serialize(familyData, options);
+
+        await LocalStorageAccessor.SetValueAsync(Key, jsonOut);
+    }
+
+    public async Task Load()
+    {
+        try {
+            storedJson = await LocalStorageAccessor.GetValueAsync<string>(Key);
+            var options = new JsonSerializerOptions() 
+            {
+                Converters =
+                    {
+                        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                    }
+            };
+
+            familyData = await FamilyData.LoadFromJson(familyData.IRSData, storedJson, options);
+        } 
+        catch (Exception)
+        {
+            // Key + " in local storage not found...loading default."
+        }
+    }
+
+    public async Task Clear()
+    {
+        familyData = new FamilyData(irsData);
+        await LocalStorageAccessor.RemoveAsync(Key);
+    }
+
+    public async Task ClearAllAsync()
+    {
+        await LocalStorageAccessor.Clear();
+    }
+    
+    private async Task OnLoadPortfolio(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles();
+
+        if (files != null)
+        {
+            var options = new JsonSerializerOptions() 
+                {
+                    Converters =
+                        {
+                            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                        }
+                };
+
+            foreach (var file in files)
+            {
+                using (var stream = file.OpenReadStream()) {
+                    familyData = await FamilyData.LoadFromJsonStream(familyData.IRSData, stream, options);
+                }
+            }
+        }
+    }
+
+    private async Task DownloadPortfolio() {
+        var options = new JsonSerializerOptions() 
+        {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+            IgnoreReadOnlyProperties = true,
+            WriteIndented = true,
+            Converters =
+                {
+                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                }
+        };
+        await DownloadFileFromStream(familyData, options, "bogle-tools-data.json");
+    }
+
+    private async Task DownloadFileFromStream(object data, JsonSerializerOptions options, string fileName)
+    {
+        var jsonOut = System.Text.Json.JsonSerializer.Serialize(data, options);
+
+        using (MemoryStream ms = new MemoryStream(System.Text.Encoding.ASCII.GetBytes(jsonOut)))
+        {
+            using var streamRef = new DotNetStreamReference(stream: ms);
+            await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+        }
+    }
+
+    private FamilyData familyData {
+        get {
+            return appData.FamilyData;
+        }
+        set {
+            appData.FamilyData = value;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Load();
+    }
+
 }

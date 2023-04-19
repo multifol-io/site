@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using src;
 using IRS;
-using Microsoft.AspNetCore.Components;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -25,6 +25,7 @@ if (irsData != null) {
 
 var fundsUri = new Uri(builder.HostEnvironment.BaseAddress + "/data/funds.json");
 var fundsJson = await httpClient.GetAsync(fundsUri.AbsoluteUri);
+
 JsonSerializerOptions options = new() {
     Converters =
         {
@@ -38,8 +39,21 @@ if (Funds != null) {
 }
 
 builder.Services.AddScoped<LocalStorageAccessor>();
-builder.Services.AddMsalAuthentication(options =>
-{
-    builder.Configuration.Bind("AzureAd", options.ProviderOptions.Authentication);
-});
+
+var baseUrl = builder.Configuration
+    .GetSection("MicrosoftGraph")["BaseUrl"];
+var scopes = builder.Configuration.GetSection("MicrosoftGraph:Scopes")
+    .Get<List<string>>();
+
+builder.Services.AddGraphClient(baseUrl, scopes);
+
+builder.Services.AddMsalAuthentication<RemoteAuthenticationState,
+    RemoteUserAccount>(options =>
+    {
+        builder.Configuration.Bind("AzureAd", 
+            options.ProviderOptions.Authentication);
+    })
+    .AddAccountClaimsPrincipalFactory<RemoteAuthenticationState, RemoteUserAccount,
+        CustomAccountFactory>();
+
 await builder.Build().RunAsync();
