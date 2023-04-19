@@ -1,0 +1,65 @@
+[
+    {
+        "step": "time-frame",
+        "title": "Time Frame",
+        "number": 1,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
+        "step": "portfolio",
+        "title": "Portfolio",
+        "number": 2,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
+        "step": "social-security",
+        "title": "Social Security",
+        "number": 3,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
+        "step": "pensions-annuities",
+        "title": "Pensions / Annuities",
+        "number": 4,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
+        "step": "spending",
+        "title": "Annual Spending",
+        "number": 5,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
+        "step": "income-expenses",
+        "title": "Income / Expenses",
+        "number": 6,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
+        "step": "spending-forecast",
+        "title": "Spending Forecast",
+        "number": 7,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    }
+]

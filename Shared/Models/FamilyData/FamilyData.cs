@@ -1,5 +1,7 @@
 using IRS;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 public class FamilyData : IFamilyData
@@ -9,6 +11,7 @@ public class FamilyData : IFamilyData
         Accounts = new();
         People = new();
         Questions = new();
+        RetirementData = new();
     }
 
     public FamilyData(IRSData irsData) : this()
@@ -30,6 +33,8 @@ public class FamilyData : IFamilyData
         }
     }
 
+    public string Title { get; set; }
+    public RetirementData RetirementData { get; set; }
     public EmergencyFund EmergencyFund { get; set; } = new();
 
     public bool DebtsComplete {
@@ -38,6 +43,144 @@ public class FamilyData : IFamilyData
         }
     }
     
+    public string RetirementIncomeNeeded {
+        get {
+            string outStr = "";
+            double incomeNeeded = 0.0;
+            double inflationAffectedIncome = 0.0;
+            double portfolioRunningBalance = Value + (EmergencyFund.CurrentBalance ?? 0.0);
+            int yearIndex = 0;
+            bool done = false;
+            bool?[] retired = { null, null };
+
+            for (var i = 0; i < PersonCount; i++) {
+                var ageThisYear = People[i].Age + yearIndex;
+                if (People[i].Retirement.RetirementAge < ageThisYear) {
+                    retired[i] = true;
+                    incomeNeeded = RetirementData.AnnualExpenses;
+                } else {
+                    retired[i] = false;
+                }
+
+                if (People[i].Retirement.SSAnnual.HasValue && (People[i].Retirement.SSAge < ageThisYear)) {
+                    incomeNeeded -= People[i].Retirement.SSAnnual.Value;
+                }
+
+                foreach (var pension in People[i].Retirement.Pensions) {
+                    if (pension.BeginningAge < ageThisYear) {
+                        if (!pension.OneTime) {
+                            if (pension.HasCola) {
+                                incomeNeeded -= pension.Income;
+                            } else {
+                                inflationAffectedIncome -= pension.Income;
+                            }
+                        }                        
+                    }
+                }
+            }
+            
+            bool?[] forecastDone = { null, null };
+            while (!done) {
+                double adjustBack = 0.0;
+                string significantYear = null;
+                string yearNote = null;
+                for (var i = 0; i < PersonCount; i++) {
+                    var ageThisYear = People[i].Age + yearIndex;
+                    forecastDone[i] = People[i].Retirement.ForecastEndAge <= ageThisYear;
+                    if (People[i].Retirement.RetirementAge == ageThisYear) {
+                        // TODO: what happens when ages don't both retire in same year? (1/2 income for both now)
+                        retired[i] = true;
+                        incomeNeeded += RetirementData.AnnualExpenses / PersonCount;
+                        significantYear += (significantYear != null ? ", " : "") + "retirement (" + People[i].Identifier + ")";
+                    }
+                    if (People[i].Retirement.RetirementAge > ageThisYear) {
+                        incomeNeeded -= (this.PlannedSavings ?? 0.0) / PersonCount;
+                        adjustBack += (this.PlannedSavings ?? 0.0) / PersonCount;
+                    }
+
+                    if (People[i].Retirement.SSAnnual.HasValue && (People[i].Retirement.SSAge == ageThisYear)) {
+                        incomeNeeded -= People[i].Retirement.SSAnnual.Value;
+                        significantYear += (significantYear != null ? ", " : "") + "social security ("+People[i].Identifier+")";
+                    }
+
+                    foreach (var pension in People[i].Retirement.Pensions)
+                    {
+                        if (pension.BeginningAge == ageThisYear) {
+                            if (pension.OneTime) {
+                                portfolioRunningBalance += pension.Income;
+                                yearNote += " "+(pension.Title != null?pension.Title:"adj.")+" (1 time)";
+                            }
+                            else
+                            {
+                                if (pension.HasCola) {
+                                    incomeNeeded -= pension.Income;
+                                } else {
+                                    inflationAffectedIncome -= pension.Income;
+                                }
+                            
+                                significantYear += (significantYear != null ? "; " : "") + (pension.Title != null?pension.Title:"adj.");
+                            }                        
+                        }
+                    }
+                }
+                
+                int year = yearIndex + DateTime.Now.Year;
+                foreach (var incomeExpense in this.RetirementData.IncomeExpenses) {
+                    if (incomeExpense.BeginningYear == year) {
+                        if (incomeExpense.OneTime) {
+                            portfolioRunningBalance += incomeExpense.Income;
+                            yearNote += " "+(incomeExpense.Title != null?incomeExpense.Title:"adj.")+" (1 time)";
+                        }
+                        else {
+                            if (incomeExpense.HasCola) {
+                                incomeNeeded -= incomeExpense.Income;
+                            } else {
+                                inflationAffectedIncome -= incomeExpense.Income;
+                            }
+
+                            significantYear += (significantYear != null ? "; " : "") + (incomeExpense.Title != null?incomeExpense.Title:"adj.");
+                        }
+                    }
+                }
+
+                done = forecastDone[0].Value && (forecastDone[1] == null || forecastDone[1].Value);
+
+                if (retired[0].Value || (retired[1] == null || retired[1].Value)) {
+                    if (significantYear != null) {
+                        outStr += "<b>========= "+significantYear+"</b><br/>";
+                    }
+
+                    outStr += (yearIndex+DateTime.Now.Year) + " " + formatMoneyThousands(+incomeNeeded+inflationAffectedIncome) + " " + formatPercent((incomeNeeded+inflationAffectedIncome)/portfolioRunningBalance*100.0) +"<b>" + (yearNote!=null?" &lt;== ":"") + yearNote + "</b><br/>";
+                }
+                
+                inflationAffectedIncome *= .97;
+
+                yearIndex++;
+                incomeNeeded += adjustBack;
+            }
+
+            return outStr;
+        }
+    }
+
+    public string formatPercent(double? amount)
+    {
+        return String.Format("{0:#,0.#}%", amount);
+    }
+
+    public string formatMoneyThousands(double? amount) 
+    {
+        if (amount == null) return "";
+
+        if (amount >= 1000000 || amount <= -1000000) {
+            return String.Format("${0:#,0.##M}", Math.Round((double)amount / 10000.0)/100.0);
+        } else if (amount >= 1000 || amount <= -1000) {
+            return String.Format("${0:#,0.##K}", Math.Round((double)amount / 1000.0));
+        } else {
+            return String.Format("${0:#,0.##}", amount);
+        }
+    }
+
     public TriState DebtFree { get; set; }
     public List<Debt> Debts { get; set; }
     
@@ -278,5 +421,32 @@ public class FamilyData : IFamilyData
                     return 0;
             }
         } 
+    }
+
+    public static async Task<FamilyData> LoadFromJson(IRSData irsData, string json, JsonSerializerOptions options) {
+        var loadedData = JsonSerializer.Deserialize<FamilyData>(json, options);
+        if (loadedData != null) {
+            loadedData.IRSData = irsData;
+            loadedData.Year = 2023;
+            loadedData.SetBackPointers();
+        }
+        else 
+        {
+            // error loading
+        }
+        return loadedData;
+    }
+    public static async Task<FamilyData> LoadFromJsonStream(IRSData irsData, Stream jsonStream, JsonSerializerOptions options) {
+        var loadedData = await JsonSerializer.DeserializeAsync<FamilyData>(jsonStream, options);
+        if (loadedData != null) {
+            loadedData.IRSData = irsData;
+            loadedData.Year = 2023;
+            loadedData.SetBackPointers();
+        }
+        else 
+        {
+            // error loading
+        }
+        return loadedData;
     }
 }

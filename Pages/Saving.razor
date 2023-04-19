@@ -58,19 +58,13 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
             int? runningTotal = 0;
             int itemTotal = 0;
 
-            <h3 style="max-width:350px">
-                Annual Saving
-                <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-                <span style=text-align:center>Top</span>
+            <h4 style="max-width:450px">
+                Saving Plan <br/>
                 <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                 <br/>
-            </h3>
+            </h4>
 
             <p>To save money efficiently, you should prioritize the most efficient techniques. This tool helps you apply the <a target=_blank href="https://www.bogleheads.org/wiki/Prioritizing_investments">Bogleheads Prioritizing Investments wiki</a> ↗️. Review and complete the steps that apply to you.</p>
-
-            <p>[ <b>News:</b> Read/subscribe to updates at <a target=_blank href=https://bogletools.substack.com>bogletools.substack.com</a> ]</p>
-
-            <p><b>Feedback Welcome:</b> via email to <a href="mailto:suggestions@bogle.tools">suggestions@bogle.tools</a> or on <a target=_blank href='https://www.bogleheads.org/forum/viewtopic.php?t=393724'>this bogleheads.org forum post</a></p>
 
             <div>
                 <p ><b>Prerequisities:</b></p>
@@ -401,8 +395,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                 </table>
             </div>
             
-            <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-            <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
+            <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
         }
         else if (stepPath == "tax-filing-info") {
 
@@ -418,16 +411,11 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                     string prevPage = folderName + prevStep?.step;
                     string nextPage = folderName + nextStep?.step;
 
-                    <h3 style="max-width:350px">
-                        <NavLink href=/saving>Annual Saving</NavLink>
-                        <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-                        <span style=text-align:center>@step.number</span>
+                    <h4 style="max-width:450px">
+                        <NavLink href=/saving>Saving Plan</NavLink> &gt; @step.title (@step.number)<br/>
                         <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                         <br/>
-                    </h3>
-                    <h2>
-                        @step.title
-                    </h2>
+                    </h4>
                     <hr/>
 
                     <h4>@((MarkupString)markupize(step.priority))</h4>
@@ -927,8 +915,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                     @if(step.returns != "N/A") {<p><b>Approximate Return:</b> @step.returns</p>}
                     @if(step.description != "") {<p class="article"><b>Details:</b> @((MarkupString)markupize(step.description))</p>}
 
-                    <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-                    <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
+                    <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
                 }
             }
         }

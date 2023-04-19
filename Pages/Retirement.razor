@@ -1,0 +1,783 @@
+@page "/retirement"
+@page "/retirement/{stepPath}"
+
+@inject HttpClient Http
+@inject IAppData appData
+@inject IRSData irsData
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+@inject IList<Fund> Funds
+@using System.Text.Json.Serialization
+
+<PageTitle>
+Retirement - bogle.tools
+</PageTitle>
+
+<style>
+    .btn {
+        color: white;
+        padding: 10px 10px;
+        text-decoration: none;
+        display:inline-block;
+        text-align:center;
+        width:60px;
+        border-radius: 10px;
+    }
+    .dollar {
+        width: 100px;
+    }
+    .percent {
+        width: 50px;
+    }
+    .article a[href^="http"]::after,
+    .article a[href^="https://"]::after
+    {
+        content: "";
+        width: 11px;
+        height: 11px;
+        margin-left: 4px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z'/%3E%3Cpath fill-rule='evenodd' d='M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z'/%3E%3C/svg%3E");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        display: inline-block;
+    }
+</style>
+    @if (steps == null || familyData == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        @if (stepPath == null) {
+            var prevStep = steps[steps.Length - 1];
+            var nextStep = steps[0];
+            string prevPage = folderName + prevStep?.step;
+            string nextPage = folderName + nextStep?.step;
+            familyData.UpdatePercentages();
+            
+            <h4 style="max-width:450px">
+                Retirement Plan <br/>
+                <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
+                <br/>
+            </h4>
+
+            <p>If you're still working, maximize <a href="/saving">savings with a plan</a>. After you've collected <a href="/portfolio">your Portfolio</a> information, enter the information that will impact your retirement.</p>
+            <div>
+                <p ><b>Press edit (✏️) to complete each step:</b></p>
+
+                <table id=_reviewTable>
+                    @foreach (var step in steps) {
+                        var href = folderName + @step.step;
+                        <tr>
+                            <td style=vertical-align:top>
+                                <span>
+                                    <a href="@href" style="background:blue" class="m-1 btn" >✏️</a>
+                                </span>
+                            </td>
+                            <td>
+                                @((MarkupString)bold(step.title + ":"))
+                                @switch (step.step) {
+                                    case "time-frame":
+                                        <br/>
+                                        @if(familyData.PersonCount > 0 && familyData.People[0].Age != null) {
+                                            <span>
+                                                &nbsp;@getPronoun(familyData.People[0]) @familyData.People[0].Age 
+                                                @if(familyData.People[0].Age >= familyData.People[0].Retirement.RetirementAge) { <span>, retired</span> }
+                                                else { <span>, retiring at @familyData.People[0].Retirement.RetirementAge</span> }
+                                            </span>
+                                            <br/>
+                                        }
+                                        @if(familyData.PersonCount > 1 && familyData.People[1].Age != null) {
+                                            <span>
+                                                &nbsp;@getPronoun(familyData.People[1]) @familyData.People[1].Age 
+                                                @if(familyData.People[1].Age >= familyData.People[1].Retirement.RetirementAge) { <span>, retired</span> }
+                                                else { <span>, retiring at @familyData.People[1].Retirement.RetirementAge</span> }
+                                            </span>
+                                            <br/>
+                                        }
+                                        <br/>
+                                        break;
+                                    case "portfolio":
+                                        <br/>
+                                        <span>@formatMoneyThousands(familyData.Value + (familyData.EmergencyFund.CurrentBalance ?? 0.0)) (includes EF)</span>
+                                        <br/><br/>
+                                        break;
+                                    case "social-security": 
+                                        <br/>
+                                        @if(familyData.PersonCount > 0 && familyData.People[0].Age != null) {
+                                            <span>&nbsp;@getPronoun(familyData.People[0]) @formatMoneyThousands(familyData.People[0].Retirement.SSAnnual) 
+                                                @if(familyData.People[0].Age < familyData.People[0].Retirement.RetirementAge) { <span>&nbsp;at @familyData.People[0].Retirement.SSAge </span> }
+                                            (with COLA)</span><br/>
+                                        }
+                                        @if(familyData.PersonCount > 1 && familyData.People[1].Age != null) {
+                                            <span>&nbsp;@getPronoun(familyData.People[1]) @formatMoneyThousands(familyData.People[1].Retirement.SSAnnual) 
+                                                @if(familyData.People[1].Age < familyData.People[1].Retirement.RetirementAge) { <span>&nbsp;at @familyData.People[1].Retirement.SSAge </span> }
+                                            (with COLA)</span><br/>
+                                        }
+                                        <br/>
+                                        break;
+                                    case "pensions-annuities":
+                                        <br/> 
+                                        @for (int i = 0; i < familyData.PersonCount; i++) {
+                                            foreach (var pension in familyData.People[i].Retirement.Pensions) {
+                                                <span>&nbsp;@formatMoneyThousands(pension.Income)
+                                                    @if(!pension.OneTime) {
+                                                        <span>&nbsp;start at @pension.BeginningAge</span>
+                                                    } else {<span>&nbsp;lump sum at @pension.BeginningAge</span>}
+                                                    @if(pension.HasCola) {<span>&nbsp;(with COLA)</span>} else {<span>&nbsp;(no COLA)</span>}
+                                                    @if(!string.IsNullOrEmpty(pension.Title)) {<span>&nbsp;- @pension.Title</span>}
+                                                </span>
+                                                <br/>
+                                            }
+                                        }
+                                        <br/>
+                                        break;                                        
+                                    case "spending": 
+                                        <br/>
+                                        @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
+                                            <span style=font-family:monospace>&nbsp;@formatMoneyThousands(familyData.RetirementData.AnnualExpenses)</span><br/>
+                                        }
+                                        <br/>
+                                        break;                                        
+                                    case "income-expenses":
+                                        <br/> 
+                                        foreach (var pension in familyData.RetirementData.IncomeExpenses) {
+                                            <span>&nbsp;@formatMoneyThousands(pension.Income)
+                                                @if(!pension.OneTime) {
+                                                    <span>&nbsp;start at @pension.BeginningYear</span>
+                                                } else {<span>&nbsp;lump sum at @pension.BeginningYear</span>}
+                                                @if(pension.HasCola) {<span>&nbsp;(with COLA)</span>} else {<span>&nbsp;(no COLA)</span>}
+                                            </span>
+                                            <br/>
+                                        }
+                                        <br/>
+                                        break;
+                                    case "spending-forecast":
+                                        <br/>
+                                        @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
+                                            <span>@((MarkupString)familyData.RetirementIncomeNeeded)</span><br/>
+                                        }
+                                        <br/>
+                                        break;
+                                    default:
+                                        <span>NYI</span><br/><br/>
+                                        break;
+                                }
+                            </td>
+                        </tr>
+                    }          
+                </table>
+                <br/>
+
+                <InputCheckbox id=showMarkup style=margin-left:20px @bind-Value=ShowMarkup /> <label for=showMarkup>Use forum post markup: [b]bold[/b]</label><br/>
+                <br/>
+                <button style=margin-left:20px @onclick=CopyTextToClipboard>Copy to clipboard</button><br/>
+
+                <hr/>
+            </div>
+            
+            <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
+        }
+        else
+        {
+            @foreach (var step in steps) {
+                @if (step.step == stepPath) {
+                    var firstStepIndex = 0;
+                    var lastStepIndex = steps.Length-1;
+                    var prevStep = step.number - 2 >= firstStepIndex ? steps[step.number - 2] : null;
+                    var nextStep = step.number <= lastStepIndex ? steps[step.number] : null;
+                    string prevPage = folderName + prevStep?.step;
+                    string nextPage = folderName + nextStep?.step;
+
+                    <h4 style="max-width:450px">
+                        <NavLink href=/retirement>Retirement Plan</NavLink> &gt; @step.title (@step.number)<br/>
+                        <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
+                        <br/>
+                    </h4>
+                    <hr/>
+
+                    <h4>@((MarkupString)markupize(step.priority))</h4>
+
+                    <p class="article">@((MarkupString)markupize(step.summary))</p>
+
+                        @switch (step.step) {
+                            case "time-frame":
+                                <p><b>Prerequisities:</b></p>
+                                <label>Tax Filing Status:</label>
+                                <select @bind=familyData.TaxFilingStatus>
+                                    <option value="ChoiceNeeded">ChoiceNeeded</option>
+                                    <option>Single</option>
+                                    <option value=MarriedFilingJointly>Married filing jointly</option>
+                                    <option value=MarriedFilingSeperately>Married filing seperately</option>
+                                    <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                                    <option value=HeadOfHousehold>Head of Household</option>
+                                </select><br/><br/>
+                                
+                                <p><b>Worksheet:</b> </p>
+
+                                @for (int i = 0; i < familyData.PersonCount; i++) {
+                                    var person = familyData.People[i];
+                                    int personIndex = i + 1;
+                                    <p><b>Person @personIndex:</b> </p>
+                                    <EditForm Model="person" style=margin-left:25px>
+                                        <label>Age:</label> <input type=text @bind-Value="person.Age" @bind-Value:event="oninput"/><br/><br/>
+                                        <label>Retirement Age:</label> <input type=text @bind-Value="person.Retirement.RetirementAge" @bind-Value:event="oninput"/><br/><br/>
+                                    </EditForm><br/>
+                                }
+                                break;
+                            case "portfolio":
+                                <span>Retirement Assets: @formatMoneyThousands(familyData.Value) (edit at <a href="/portfolio/retirement-assets">/portfolio/retirement-assets</a>)
+                                </span><br/>
+                                <label>Current Emergency Fund:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/>
+                                <br/><br/>
+                                break;
+                            case "social-security":
+                                <p><b>Prerequisities:</b></p>
+                                <label>Tax Filing Status:</label>
+                                <select @bind=familyData.TaxFilingStatus>
+                                    <option value="ChoiceNeeded">ChoiceNeeded</option>
+                                    <option>Single</option>
+                                    <option value=MarriedFilingJointly>Married filing jointly</option>
+                                    <option value=MarriedFilingSeperately>Married filing seperately</option>
+                                    <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                                    <option value=HeadOfHousehold>Head of Household</option>
+                                </select><br/><br/>
+                                
+                                <p><b>Worksheet:</b> </p>
+
+                                @for (int i = 0; i < familyData.PersonCount; i++) {
+                                    var person = familyData.People[i];
+                                    int personIndex = i + 1;
+                                    <p><b>Person @personIndex:</b> </p>
+                                    <EditForm Model="person" style=margin-left:25px>
+                                        <label>Age:</label> <input type=text @bind-Value="person.Age" @bind-Value:event="oninput"/><br/><br/>
+                                        <label>Social Security Age:</label> <input type=text @bind-Value="person.Retirement.SSAge" @bind-Value:event="oninput"/><br/><br/>
+                                        <label>Social Security Amount:</label> <span>$</span><input type=text @bind-Value="person.Retirement.SSAnnual" @bind-Value:event="oninput"/><br/><br/>
+                                    </EditForm><br/>
+                                }
+                                break;
+                            case "pensions-annuities":
+                                    accountIndex = 0;
+                                    @for (int i = 0; i < familyData.PersonCount; i++) {
+                                        int personBuffer = i;
+                                        foreach (var pension in familyData.People[i].Retirement.Pensions) {
+                                            int accBuffer = accountIndex;
+                                            accountIndex++;
+                                            var accountId = "account"+accBuffer;
+                                            <br/>
+                                            <EditForm Model="pension" style=margin-left:.25in>
+                                                <button @onclick='@(e=>deletePension(e,personBuffer,accBuffer))'>❌</button>
+                                                <label>Title:</label><input style="width:140px" type=text @bind-Value=pension.Title @bind-Value:event=oninput placeholder='title' /><br/>
+                                                <label>Annual Income:</label> <span>$</span><input style="width:140px" type=text @bind-Value=pension.Income @bind-Value:event=oninput placeholder='custodian' /><br/>
+                                                <label>Begins at Age:</label> <input style="width:140px" type=text @bind-Value=pension.BeginningAge @bind-Value:event=oninput placeholder='age' /><br/>
+                                                <InputCheckbox @bind-Value=pension.OneTime /><label>&nbsp;OneTime</label><br/>
+                                                <InputCheckbox @bind-Value=pension.HasCola /><label>&nbsp;Has Cost of Living Adjustment (COLA)</label><br/>
+                                            </EditForm>
+                                        }
+
+                                        <br/>
+                                        <button @onclick='@(e=>addPensionAnnuity(personBuffer))'>
+                                            ➕ 
+                                            @if (familyData.PersonCount > 1) { <span>&nbsp;(@familyData.People[i].Identifier)</span> }
+                                        </button>
+                                        <br/>
+                                    }
+                                    <br/>
+                                    break;                                
+                            case "income-expenses":
+                                    accountIndex = 0;
+                                    foreach (var pension in familyData.RetirementData.IncomeExpenses) {
+                                        int accBuffer = accountIndex;
+                                        accountIndex++;
+                                        var accountId = "account"+accBuffer;
+                                        <br/>
+                                        <EditForm Model="pension" style=margin-left:.25in>
+                                            <button @onclick='@(e=>deleteIncomeExpense(e,accBuffer))'>❌</button>
+                                            <label>Title:</label><input style="width:140px" type=text @bind-Value=pension.Title @bind-Value:event=oninput placeholder='title' /><br/>
+                                            <label>Annual Income:</label> <span>$</span><input style="width:140px" type=text @bind-Value=pension.Income @bind-Value:event=oninput placeholder='custodian' /><br/>
+                                            <label>Year Begins:</label> <input style="width:140px" type=text @bind-Value=pension.BeginningYear @bind-Value:event=oninput placeholder='year' /><br/>
+                                            <InputCheckbox @bind-Value=pension.OneTime /><label>&nbsp;OneTime</label><br/>
+                                            <InputCheckbox @bind-Value=pension.HasCola /><label>&nbsp;Has Cost of Living Adjustment (COLA)</label><br/>
+                                        </EditForm>
+                                    }
+
+                                    <br/>
+                                    <button @onclick='@(e=>addIncomeExpense())'>
+                                        ➕ 
+                                    </button>
+                                    <br/>
+                                    <br/>
+                                    break;
+                            case "spending":
+                                <p><b>Worksheet:</b> </p>
+                                <EditForm Model="familyData" style=margin-left:25px>
+                                    <label>Annual Spending:</label> <input type=text @bind-Value="familyData.RetirementData.AnnualExpenses" @bind-Value:event="oninput"/><br/><br/>
+                                </EditForm><br/>
+                                break;
+                            case "spending-forecast":
+                                <br/>
+                                @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
+                                    <span>@((MarkupString)familyData.RetirementIncomeNeeded)</span><br/>
+                                }
+                                <br/>
+                                break;
+                        }
+                    <p>
+                        @if(step.description != "") {
+                            <b>Details:</b> <span>@((MarkupString)markupize(step.description))</span>
+                        }
+                    </p>
+
+                    <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
+                }
+            }
+        }
+    }
+
+@code {
+    public enum Mode {
+        normal = 0,
+        href,
+        text,
+    }
+    public bool pastTotal = false;
+    public int runningTotal = 0;
+
+    public string checkTotal(int? itemTotal) {
+        runningTotal += itemTotal ?? 0;
+        if (!pastTotal) {
+            pastTotal = familyData.PlannedSavings <= runningTotal;
+
+            if (pastTotal) {
+                return "<div>-------<br/><div>Planned savings " + (familyData.PlannedSavings==runningTotal?"met":"exceeded") + " after " + formatMoney(itemTotal+(familyData.PlannedSavings-runningTotal)) + " towards previous step</div>-------<br/></div>";
+            }
+        }
+
+        return null;
+    }
+
+    public int? GetRecommdedIRAAmount(Person person) {
+        switch(person.IRATypeRecommendation) {
+            case IRAType.DeductibleIRAThenBackdoorRoth:
+            case IRAType.DeductibleIRA:
+                return person.IRA.AmountToSave;
+            case IRAType.Roth:
+                return person.RothIRA.AmountToSave;
+            case IRAType.NondeductibleIRAThenBackdoorRoth:
+            case IRAType.NondeductibleIRA:
+                return person.IRA.AmountToSave;
+            default:
+                return null;
+        }
+    }
+
+    public string GetRecommendedIRAMarkup(Person person) {
+        switch(person.IRATypeRecommendation) {
+            case IRAType.DeductibleIRAThenBackdoorRoth:
+                return "<span>" + formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + formatMoney(person.IRA.DeductionAllowed) + " Deductible), then backdoor roth</span>";
+            case IRAType.DeductibleIRA:
+                return "<span>" + formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + formatMoney(person.IRA.DeductionAllowed) + " Deductible)</span>";
+            case IRAType.Roth:
+                return "<span>" + formatMoney(person.RothIRA.AmountToSave) + " in " + person.PossessiveID + " Roth IRA</span>";
+            case IRAType.NondeductibleIRAThenBackdoorRoth:
+                return "<span>" + formatMoney(person.IRA.AmountToSave) + " (nondeductible), then backdoor roth</span>";
+            case IRAType.NondeductibleIRA:
+                return "<span>$" + formatMoney(person.IRA.AmountToSave) + " (nondeductible)</span>";
+            default:
+                return "<p>do nothing</p>";
+        }
+    }
+
+    public string getPronoun(Person person)
+    {
+        if (person?.FamilyData != null && person.FamilyData.PersonCount > 1 && person.Identifier != null && person.Identifier != "None") {
+            return "(" + person.Identifier + ")";
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+    public string formatMoney(int? amount) 
+    {
+        return String.Format("${0:#,0.##}", amount);
+    }
+    public string formatMoney(double? amount) 
+    {
+        return String.Format("${0:#,0.##}", amount);
+    }
+    public string formatMoneyThousands(double? amount) 
+    {
+        if (amount == null) return "";
+
+        if (amount >= 1000000) {
+            return String.Format("${0:#,0.##M}", Math.Round((double)amount / 10000.0)/100.0);
+        } else if (amount >= 1000) {
+            return String.Format("${0:#,0.##K}", Math.Round((double)amount / 1000.0));
+        } else {
+            return String.Format("${0:#,0.##}", amount);
+        }
+    }
+    public string formatPercent(double? amount)
+    {
+        return String.Format("{0:#,0.#}%", amount);
+    }
+    public string formatPercent3(double? amount)
+    {
+        return String.Format("{0:#,0.###}%", amount);
+    }
+    
+    void addPensionAnnuity(int personIndex)
+    {
+        var newPension = new Pension() { };
+        familyData?.People[personIndex].Retirement.Pensions.Add(newPension);
+        focusAccount = true;
+    }
+
+    void addIncomeExpense()
+    {
+        var newPension = new Pension() { };
+        familyData?.RetirementData.IncomeExpenses.Add(newPension);
+        focusAccount = true;
+    }
+
+    void deletePension(MouseEventArgs e, int personIndex, int accountIndex)
+    {
+        familyData.People[personIndex].Retirement.Pensions.RemoveAt(accountIndex);
+    }
+
+    void deleteIncomeExpense(MouseEventArgs e, int accountIndex)
+    {
+        familyData.RetirementData.IncomeExpenses.RemoveAt(accountIndex);
+    }
+
+    public string bold(string text) {
+        if (ShowMarkup) {
+            return "[b]<b>" + text + "</b>[/b]";
+        } else {
+            return "<b>" + text + "</b>";
+        }
+    }
+
+    public string boldUnderline(string text) {
+        if (ShowMarkup) {
+            return "[b][u]<b><u>" + text + "</u></b>[/u][/b]";
+        } else {
+            return "<b><u>" + text + "</u></b>";
+        }
+    }
+
+    public string markupize(string? wikiText) {
+        if (wikiText == null) return "";
+        string returnVal = "<span>";
+        char lastChar = 'x';
+        var mode = Mode.normal;
+        string href = "";
+        string text = "";
+        foreach (var c in wikiText) {
+            switch (c) {
+                case '[':
+                    if (lastChar == '[') {
+                        mode = Mode.href;
+                    }
+                    break;
+                case ']':
+                    if (lastChar == ']') {
+                        if (text == "") { text = href; }
+                        if (href.StartsWith("https://bogle.tools/")) 
+                        {
+                            returnVal += "<a href='" + href.Substring(19) + "'>" + text + "</a>";
+                        }
+                        else if (href.StartsWith("https://"))
+                        {
+                            returnVal += "<a target=_blank href='" + href + "'>" + text + "</a>";
+                        } 
+                        else
+                        {
+                            returnVal += "<a target=_blank href='https://www.bogleheads.org/wiki/" + href + "'>" + text + "</a>";
+                        }
+                        href = "";
+                        text = "";
+                        mode = Mode.normal;
+                    }
+                    break;
+                case '|':
+                    if (mode == Mode.href) {
+                        mode = Mode.text;
+                    }
+                    break;
+            }
+
+            switch (mode) {
+                case Mode.href:
+                    switch (c) {
+                        case '[':
+                        case ']':
+                            break;
+                        default:
+                            href += c;
+                            break;
+                    }
+                    break;
+                case Mode.text:
+                    switch (c) {
+                        case '[':
+                        case ']':
+                        case '|':
+                            break;
+                        default:
+                            text += c;
+                            break;
+                    }
+                    break;
+                default:
+                    switch (c) {
+                        case '[':
+                        case ']':
+                            break;
+                        case '\n':
+                            returnVal += "<br/>";
+                            break;
+                        default:
+                            returnVal += c;
+                            break;
+                    }
+                    break;
+            }
+
+            lastChar = c;
+        }
+        returnVal += "</span>";
+
+        return returnVal;
+    }
+
+    [Parameter]
+    public string? stepPath { get; set; }
+
+    [Parameter]
+    public string? TopicValue { get; set; }
+
+    public bool ShowMarkup { get; set; }
+    public string? currentAccountIndex { get; set; }
+    private Step[]? steps;
+    public int accountIndex = 0;
+    public int investmentIndex = 0;
+    private const string folderName = "/retirement/";
+    private bool focusTicker = false;
+    private bool focusAccount = false;
+    private bool showPortfolioAnalysis = true;
+
+    private FamilyData familyData {
+        get {
+            return appData.FamilyData;
+        }
+        set {
+            appData.FamilyData = value;
+        }
+    }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        steps = await Http.GetFromJsonAsync<Step[]>("data/retirement-steps.json");
+
+        if (!string.IsNullOrEmpty(TopicValue)) {
+            await LoadPortfolioForTopic(TopicValue);
+        }
+    }
+
+    private bool showImport = false;
+    private bool showError  = false;
+
+    private void ShowImport() {
+        showImport = !showImport;
+        if (!showImport) {
+            showError = false;
+        }
+    }
+
+    private ImportResult? ImportResult = null;
+
+    private async Task OnDataFilesImport(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles();
+        ImportResult = await Importer.ImportDataFiles(files, Funds, familyData.Accounts);
+        foreach (var account in ImportResult.ImportedAccounts) 
+        {
+            account.Import = true;
+        }
+
+        Console.WriteLine($"{ImportResult.DataFilesImported} files imported with {ImportResult.ImportedAccounts.Count} accounts");
+        showImport = false;
+
+        Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
+    }
+
+    private void finishImport()
+    {
+        if (ImportResult == null) { return; }
+
+        foreach (var updatedAccount in ImportResult.UpdatedAccounts)
+        {
+            if (updatedAccount.Import && updatedAccount.ReplaceAccount != null)
+            {
+                updatedAccount.ReplaceAccount.Investments.Clear();
+                updatedAccount.ReplaceAccount.Investments.AddRange(updatedAccount.Investments);
+            }
+        }
+
+        foreach (var newAccount in ImportResult.NewAccounts)
+        {
+            if (newAccount.Import)
+            {
+                familyData.Accounts.Add(newAccount);
+            }
+        }
+
+        ImportResult = null;
+    }
+
+    private void cancelImport()
+    {
+        ImportResult = null;
+    }
+
+    private async void addInvestment(MouseEventArgs e, int accountIndex)
+    {
+        var newInvestment = new Investment() { funds = Funds };
+        familyData.Accounts[accountIndex].Investments.Add(newInvestment);
+        focusTicker = true;
+    }
+
+    void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
+    {
+        familyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
+        Navigation.NavigateTo("/portfolio/reload");
+        familyData.UpdatePercentages();
+    }
+    void addAvailableFund(MouseEventArgs e, Account account)
+    {
+        var newFund = new Investment() { funds = Funds };
+        account.AvailableFunds.Add(newFund);
+        focusTicker = true;
+    }
+    void deleteAvailableFund(MouseEventArgs e, Account account, int investmentIndex)
+    {
+        account.AvailableFunds.RemoveAt(investmentIndex);
+    }
+    void addAccount()
+    {
+        var newAccount = new Account();
+        var newInvestment = new Investment() { funds = Funds };
+        newAccount.Investments.Add(newInvestment);
+        familyData?.Accounts.Add(newAccount);
+        focusAccount = true;
+    }
+    void deleteAccount(MouseEventArgs e, int accountIndex)
+    {
+        familyData.Accounts.RemoveAt(accountIndex);
+        Navigation.NavigateTo("/portfolio/reload");
+        familyData.UpdatePercentages();
+    }
+
+    void editAccount(MouseEventArgs e, int index)
+    {
+        familyData.Accounts[index].Edit = true;
+    }
+
+    private async Task OnLoadPortfolioForTopic() {
+        await LoadPortfolioForTopic(TopicValue);
+    }
+
+    private async Task OnClearPortfolio() {
+        familyData = new FamilyData(irsData);
+        Navigation.NavigateTo("/portfolio");
+    }
+
+    private async Task LoadPortfolioForTopic(string topicStr) {
+        var options = new JsonSerializerOptions() 
+            {
+                Converters =
+                    {
+                        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                    }
+            };
+        var topicJsonUri = "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/portfolios/" + topicStr + ".json";
+        var stream = await Http.GetStreamAsync(topicJsonUri);
+        await loadPortfolioFromStream(stream, options);
+    }
+
+    private async Task OnLoadPortfolio(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles();
+
+        if (files != null)
+        {
+            var options = new JsonSerializerOptions() 
+                {
+                    Converters =
+                        {
+                            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                        }
+                };
+
+            foreach (var file in files)
+            {
+                using (var stream = file.OpenReadStream()) {
+                    await loadPortfolioFromStream(stream, options);
+                }
+            }
+        }
+    }
+
+    private async Task loadPortfolioFromStream(Stream stream, JsonSerializerOptions options) {
+        if (familyData != null) {
+            var irsData = familyData.IRSData;
+            familyData = await JsonSerializer.DeserializeAsync<FamilyData>(stream, options);
+            if (familyData != null) {
+                familyData.IRSData = irsData;
+                familyData.Year = 2023;
+                familyData.SetBackPointers();
+            }
+            else 
+            {
+                // error loading
+            }
+        }
+    }
+
+    private async Task DownloadPortfolio() {
+        var options = new JsonSerializerOptions() 
+        {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+            IgnoreReadOnlyProperties = true,
+            WriteIndented = true,
+            Converters =
+                {
+                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                }
+        };
+        await DownloadFileFromStream(familyData, options, "portfolio.json");
+    }
+    private async Task DownloadFileFromStream(object data, JsonSerializerOptions options, string fileName)
+    {
+        var jsonOut = System.Text.Json.JsonSerializer.Serialize(data, options);
+
+        using (MemoryStream ms = new MemoryStream(System.Text.Encoding.ASCII.GetBytes(jsonOut)))
+        {
+            using var streamRef = new DotNetStreamReference(stream: ms);
+            await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+        }
+    }
+
+    private async Task CopyTextToClipboard()
+    {
+        var text = await JS.InvokeAsync<string>("getTableInnerText");
+        text = text.Replace("\n✏️\t","");
+        text = text.Replace("✏️\t","");
+        text = text.Replace("Show Portfolio Analysis\n", "");
+        await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
+    }
+}

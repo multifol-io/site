@@ -1,7 +1,8 @@
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using System.Globalization;
 using Microsoft.AspNetCore.Components.Forms;
+using System.Globalization;
+
 
 
 public class ImportResult {
@@ -166,6 +167,12 @@ public class Importer {
                     var accountNumber = chunks[0];
                     var accountName = chunks[1];
                     var symbol = chunks[2];
+
+                    // many tickers have "**" at end, signifying money market fund.
+                    if (symbol.Length >= 2 && symbol.Substring(symbol.Length-2) == "**") { 
+                        symbol = symbol.Substring(0, symbol.Length - 2);
+                    }
+
                     string? investmentName;
                     double value;
                     double? shares = null;

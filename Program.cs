@@ -22,8 +22,9 @@ if (irsData != null) {
     throw new Exception("irsData is null");
 }
 
+var fundsUri = new Uri(builder.HostEnvironment.BaseAddress + "/data/funds.json");
+var fundsJson = await httpClient.GetAsync(fundsUri.AbsoluteUri);
 
-var fundsJson = await httpClient.GetAsync("https://raw.githubusercontent.com/bogle-tools/site/main/wwwroot/data/funds.json");
 JsonSerializerOptions options = new() {
     Converters =
         {
@@ -35,4 +36,7 @@ var Funds = await JsonSerializer.DeserializeAsync<List<Fund>>(fundsJson.Content.
 if (Funds != null) {
     builder.Services.AddSingleton<IList<Fund>>(Funds);
 }
+
+builder.Services.AddScoped<LocalStorageAccessor>();
+
 await builder.Build().RunAsync();

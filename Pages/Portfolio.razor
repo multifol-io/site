@@ -62,17 +62,12 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             string nextPage = folderName + nextStep?.step;
             familyData.UpdatePercentages();
             
-            <h3 style="max-width:350px">
-                Portfolio Review
-                <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-                <span style=text-align:center>Top</span>
-                <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
+            <h4 style="max-width:450px">
+                Portfolio <br/>
                 <br/>
-            </h3>
+            </h4>
 
-            <p>Getting all your information in one place to help others give you feedback is the idea behind Bogleheads.org's <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Asking Portfolio Questions</a> ↗️. This tool will make it easy to post to bogleheads.org forum with the correct format.</p>
-            <p>[ <b>News:</b> Read/subscribe to updates at <a target=_blank href=https://bogletools.substack.com>bogletools.substack.com</a> ]</p>
-            <p><b>Feedback Welcome:</b> via email to <a href="mailto:suggestions@bogle.tools">suggestions@bogle.tools</a> or on <a target=_blank href='https://www.bogleheads.org/forum/viewtopic.php?t=394456'>this bogleheads.org forum post</a></p>
+            <p>Organizing information about you and your portfolio will help you optimize your finances.</p>
             <div>
                 <p ><b>Press edit (✏️) to complete each step:</b></p>
 
@@ -182,7 +177,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
 
                                                     @((MarkupString)bold("Weighted Expense Ratio: "))
                                                     <span>&nbsp;@formatPercent3(familyData.OverallER) or @formatMoney(familyData.ExpensesTotal) per year</span>
-                                                    @if (familyData.InvestmentsMissingER > 0){<span>&nbsp;(@familyData.InvestmentsMissingER investments missing ER)</span><br/>}
+                                                    @if (familyData.InvestmentsMissingER > 0){<span>&nbsp;(@familyData.InvestmentsMissingER investment(s) missing ER)</span><br/>}
                                                 }
                                             </fieldset>
                                             <br/>
@@ -322,126 +317,15 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                 </table>
                 <br/>
 
+                <p> Bogleheads.org forum enables you to <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Ask Portfolio Questions</a> ↗️. This tool makes it easy to copy the correct format for your post:</p>
                 <InputCheckbox id=showMarkup style=margin-left:20px @bind-Value=ShowMarkup /> <label for=showMarkup>Use forum post markup: [b]bold[/b]</label><br/>
                 <br/>
                 <button style=margin-left:20px @onclick=CopyTextToClipboard>Copy to clipboard</button><br/>
-
                 <hr/>
-                <br/>
-                <label>SAVE to your device via a </label>
-                <button @onclick="DownloadPortfolio">
-                "Download" of your portfolio data file
-                </button>
-                <br/>
-                 (⚠️ WARNING - this data file has your $$ amounts of investments. Don't share! Keep secure. Use clipboard button above to use the standard portfolio format, which contains somewhat less info.)
-                <br/>
-                <br/>
-                <label>LOAD portfolio data file:</label> <InputFile accept=".json" OnChange="@((e) => OnLoadPortfolio(e))" /><br/><br/>
-                <label>CLEAR portfolio data:</label> <button @onclick="OnClearPortfolio">Clear!</button> (⚠️ Will clear all current data. If you want to save first, "Download" it with button above.)
-                <br/>
-                <br/>
 
-
-                @code {
-
-                        private async Task OnLoadPortfolioForTopic() {
-                            await LoadPortfolioForTopic(TopicValue);
-                        }
-
-                        private async Task OnClearPortfolio() {
-                            familyData = new FamilyData(irsData);
-                            Navigation.NavigateTo("/portfolio");
-                        }
-
-                        private async Task LoadPortfolioForTopic(string topicStr) {
-                            var options = new JsonSerializerOptions() 
-                                {
-                                    Converters =
-                                        {
-                                            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                                        }
-                                };
-                            var topicJsonUri = "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/portfolios/" + topicStr + ".json";
-                            var stream = await Http.GetStreamAsync(topicJsonUri);
-                            await loadPortfolioFromStream(stream, options);
-                        }
-
-                        private async Task OnLoadPortfolio(InputFileChangeEventArgs e)
-                        {
-                            var files = e.GetMultipleFiles();
-
-                            if (files != null)
-                            {
-                                var options = new JsonSerializerOptions() 
-                                    {
-                                        Converters =
-                                            {
-                                                new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                                            }
-                                    };
-
-                                foreach (var file in files)
-                                {
-                                    using (var stream = file.OpenReadStream()) {
-                                        await loadPortfolioFromStream(stream, options);
-                                    }
-                                }
-                            }
-                        }
-
-                        private async Task loadPortfolioFromStream(Stream stream, JsonSerializerOptions options) {
-                            if (familyData != null) {
-                                var irsData = familyData.IRSData;
-                                familyData = await JsonSerializer.DeserializeAsync<FamilyData>(stream, options);
-                                if (familyData != null) {
-                                    familyData.IRSData = irsData;
-                                    familyData.Year = 2023;
-                                    familyData.SetBackPointers();
-                                }
-                                else 
-                                {
-                                    // error loading
-                                }
-                            }
-                        }
-
-                        private async Task DownloadPortfolio() {
-                            var options = new JsonSerializerOptions() 
-                            {
-                                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
-                                IgnoreReadOnlyProperties = true,
-                                WriteIndented = true,
-                                Converters =
-                                    {
-                                        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                                    }
-                            };
-                            await DownloadFileFromStream(familyData, options, "portfolio.json");
-                        }
-                        private async Task DownloadFileFromStream(object data, JsonSerializerOptions options, string fileName)
-                        {
-                            var jsonOut = System.Text.Json.JsonSerializer.Serialize(data, options);
-
-                            using (MemoryStream ms = new MemoryStream(System.Text.Encoding.ASCII.GetBytes(jsonOut)))
-                            {
-                                using var streamRef = new DotNetStreamReference(stream: ms);
-                                await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
-                            }
-                        }
-
-                        private async Task CopyTextToClipboard()
-                        {
-                            var text = await JS.InvokeAsync<string>("getTableInnerText");
-                            text = text.Replace("\n✏️\t","");
-                            text = text.Replace("✏️\t","");
-                            text = text.Replace("Show Portfolio Analysis\n", "");
-                            await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
-                        }
-                    }
             </div>
             
-            <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-            <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
+            <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
         }
         else
         {
@@ -454,16 +338,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                     string prevPage = folderName + prevStep?.step;
                     string nextPage = folderName + nextStep?.step;
 
-                    <h3 style="max-width:350px">
-                        <NavLink href=/portfolio>Portfolio Review</NavLink>
-                        <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-                        <span style=text-align:center>@step.number</span>
+                    <h4 style="max-width:450px">
+                        <NavLink href=/portfolio>Portfolio</NavLink> &gt; @step.title (@step.number)<br/>
                         <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                         <br/>
-                    </h3>
-                    <h2>
-                        @step.title
-                    </h2>
+                    </h4>
                     <hr/>
 
                     <h4>@((MarkupString)markupize(step.priority))</h4>
@@ -875,7 +754,84 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                 }
                                 break;
                             case "contributions":
-                                Navigation.NavigateTo("/portfolio-contributions");        
+                                <div>
+                                    Edit Savings Contribution at: <a href="/saving">/saving</a><br/><br/>
+
+                                    <span>
+                                        @((MarkupString)boldUnderline("Contributions:"))
+                                    </span><br/>
+                                    @if (familyData.PlannedSavings > 0) {
+                                        <span>Planned savings: @formatMoney(familyData.PlannedSavings)</span><br/><br/>
+                                    }
+
+                                    <span>Prioritized Investments:</span><br/>
+
+                                    @if (familyData.EmergencyFund.AmountToSave > 0) {
+                                        <span>@formatMoney(familyData.EmergencyFund.AmountToSave) in Emergency Fund</span><br/>
+                                        @((MarkupString)checkTotal(familyData.EmergencyFund.AmountToSave))
+                                    }
+                                    @if (familyData.PersonCount > 0 && familyData.People[0].EmployerPlan.AmountToSaveForMatch > 0) {
+                                        <span>@formatMoney(familyData.People[0].EmployerPlan.AmountToSaveForMatch) in @familyData.People[0].PossessiveID 401k (Match: @formatMoney(familyData.People[0].EmployerPlan.MatchAmount))</span><br/>
+                                        @((MarkupString)checkTotal(familyData.People[0].EmployerPlan.AmountToSaveForMatch))
+                                    }
+                                    @if (familyData.PersonCount > 1 && familyData.People[1].EmployerPlan.AmountToSaveForMatch > 0) {
+                                        <span>@formatMoney(familyData.People[1].EmployerPlan.AmountToSaveForMatch) in @familyData.People[1].PossessiveID 401k (Match: @formatMoney(familyData.People[1].EmployerPlan.MatchAmount))</span><br/>
+                                        @((MarkupString)checkTotal(familyData.People[1].EmployerPlan.AmountToSaveForMatch))
+                                    }
+                                    @if (familyData.HighDebts > 0) {
+                                        <span>@familyData.HighDebts in High Debts</span><br/>
+                                        @((MarkupString)checkTotal(familyData.HighDebts))
+                                    }
+                                    @if (familyData.PersonCount > 0  && (familyData.People[0].EmployerBenefits.Complete || familyData.People[0].EmployerPlan.AnnualSalary == 0 || familyData.People[0].HealthSavingsAccount.EligibleForHSA  || familyData.People[0].HealthSavingsAccount.EligibleForHSACatchUpOnly) && familyData.People[0].HealthSavingsAccount.AmountToSave > 0) {
+                                        <span>@formatMoney(familyData.People[0].HealthSavingsAccount.AmountToSave) in @familyData.People[0].PossessiveID HSA (Employer: @formatMoney(familyData.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
+                                        @((MarkupString)checkTotal(familyData.People[0].HealthSavingsAccount.AmountToSave))
+                                    }
+                                    @if (familyData.PersonCount > 1  && (familyData.People[1].EmployerBenefits.Complete || familyData.People[1].EmployerPlan.AnnualSalary == 0 || familyData.People[1].HealthSavingsAccount.EligibleForHSA  || familyData.People[1].HealthSavingsAccount.EligibleForHSACatchUpOnly) && familyData.People[1].HealthSavingsAccount.AmountToSave > 0) {
+                                        <span>@formatMoney(familyData.People[1].HealthSavingsAccount.AmountToSave) in @familyData.People[1].PossessiveID HSA (Employer: @formatMoney(familyData.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
+                                        @((MarkupString)checkTotal(familyData.People[1].HealthSavingsAccount.AmountToSave))
+                                    }
+                                    @if (familyData.AdjustedGrossIncome != null) {
+                                        if (familyData.PersonCount > 0) {
+                                            <span>@((MarkupString)GetRecommendedIRAMarkup(familyData.People[0]))</span><br/>
+                                            @((MarkupString)checkTotal(GetRecommdedIRAAmount(familyData.People[0])))
+                                        }
+                                        if(familyData.PersonCount > 1) {
+                                            <span>@((MarkupString)GetRecommendedIRAMarkup(familyData.People[1]))</span><br/>
+                                            @((MarkupString)checkTotal(GetRecommdedIRAAmount(familyData.People[1])))
+                                        }
+                                    }
+                                    @if (familyData.PersonCount > 0 && familyData.People[0].EmployerPlan.AmountToSaveForNonMatched > 0) {
+                                        <span>@formatMoney(familyData.People[0].EmployerPlan.AmountToSaveForNonMatched) in @familyData.People[0].PossessiveID 401k</span><br/>
+                                        @((MarkupString)checkTotal(familyData.People[0].EmployerPlan.AmountToSaveForNonMatched))
+                                    }
+                                    @if (familyData.PersonCount > 1 && familyData.People[1].EmployerPlan.AmountToSaveForNonMatched > 0) {
+                                        <span>@formatMoney(familyData.People[1].EmployerPlan.AmountToSaveForNonMatched) in @familyData.People[1].PossessiveID 401k</span><br/>
+                                        @((MarkupString)checkTotal(familyData.People[1].EmployerPlan.AmountToSaveForNonMatched))
+                                    }
+                                    @if (familyData.PersonCount > 0 && familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
+                                        <span>@formatMoney(familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyData.People[0].PossessiveID mega backdoor roth</span><br/>
+                                        @((MarkupString)checkTotal(familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
+                                    }
+                                    @if (familyData.PersonCount > 1 && familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
+                                        <span>@formatMoney(familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyData.People[1].PossessiveID mega backdoor roth</span><br/>
+                                        @((MarkupString)checkTotal(familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
+                                    }
+                                    @if (familyData.MediumDebts > 0) {
+                                        <span>@formatMoney(familyData.MediumDebts) in Medium Debts</span><br/>
+                                        @((MarkupString)checkTotal(familyData.MediumDebts))
+                                    }
+                                    @if (familyData.PlannedSavings > runningTotal) {
+                                        <span>@formatMoney(familyData.PlannedSavings-runningTotal) in Taxable</span><br/>
+                                        @((MarkupString)checkTotal(familyData.PlannedSavings-runningTotal))
+                                    } else {
+                                        <span>@formatMoney(0) in Taxable</span><br/>
+                                    }
+                                    @if (familyData.LowDebts > 0) {
+                                        <span>@formatMoney(familyData.LowDebts) in Low Debts</span><br/>
+                                        @((MarkupString)checkTotal(familyData.LowDebts))
+                                    }
+                                    <br/>
+                                </div>
                                 break;
                         }
                     <p>
@@ -884,8 +840,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                         }
                     </p>
 
-                    <a style='font-size:24pt' href="@prevPage"><span class="oi oi-arrow-left m-2 aria-hidden="true"></span></a>
-                    <a style='font-size:24pt;float:right' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
+                    <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
                 }
             }
         }
@@ -1261,5 +1216,26 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     void editAccount(MouseEventArgs e, int index)
     {
         familyData.Accounts[index].Edit = true;
+    }
+    private async Task LoadPortfolioForTopic(string topicStr) {
+        var options = new JsonSerializerOptions() 
+            {
+                Converters =
+                    {
+                        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                    }
+            };
+        var topicJsonUri = "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/portfolios/" + topicStr + ".json";
+        var stream = await Http.GetStreamAsync(topicJsonUri);
+        familyData = await FamilyData.LoadFromJsonStream(familyData.IRSData, stream, options);
+    }
+
+    private async Task CopyTextToClipboard()
+    {
+        var text = await JS.InvokeAsync<string>("getTableInnerText");
+        text = text.Replace("\n✏️\t","");
+        text = text.Replace("✏️\t","");
+        text = text.Replace("Show Portfolio Analysis\n", "");
+        await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
     }
 }

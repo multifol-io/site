@@ -8,6 +8,7 @@ public class Person {
         this.IRA = new IRA();
         this.RothIRA = new RothIRA();
         this.HealthSavingsAccount = new HealthSavingsAccount();
+        this.Retirement = new();
     }
 
     // set back pointers in person
@@ -25,7 +26,10 @@ public class Person {
     [JsonIgnore]
     public IFamilyData? FamilyData { get; set; }
 
+
     public int? Age { get; set; }
+    public Retirement Retirement { get; set; }
+
     public string? Identifier { get; set; }
     public string? Employer { get; set; }
     public EmployerPlan EmployerPlan { get; set; }
