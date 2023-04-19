@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-@inject NavigationManager Navigation
+﻿@inject NavigationManager Navigation
 @using System.Text.Json.Serialization
 @inject IJSRuntime JSRuntime
 @inject IAppData appData
@@ -8,27 +6,12 @@
 @inject IRSData irsData
 @inject IJSRuntime JS
 
-<AuthorizeView>
-    <Authorized>
-        <!--Hello, @context.User.Identity?.Name!
-        <button class="nav-link btn btn-link" @onclick="BeginLogOut">Log out</button>
-        -->
-    </Authorized>
-    <NotAuthorized>
-        <!--<a href="authentication/login">Log in</a>-->
-        <div style=position:absolute;right:0px;padding:10px>
-            <button @onclick=@Save>Save</button>
-            <button @onclick=@Clear>Clear</button>
-        </div>
-    </NotAuthorized>
-</AuthorizeView>
+<div style=position:absolute;right:0px;padding:10px>
+    <button @onclick=@Save>Save</button>
+    <button @onclick=@Clear>Clear</button>
+</div>
 
-@code{
-    public void BeginLogOut()
-    {
-        Navigation.NavigateToLogout("authentication/logout");
-    }
-    
+@code{    
     public string Key { get; set; } = "localSave";
     public string Value { get; set; } = "";
     public string storedJson { get; set; } = "";
@@ -74,6 +57,7 @@
     {
         familyData = new FamilyData(irsData);
         await LocalStorageAccessor.RemoveAsync(Key);
+        Navigation.NavigateTo("/");
     }
 
     public async Task ClearAllAsync()

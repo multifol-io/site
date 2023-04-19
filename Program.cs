@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -39,21 +38,5 @@ if (Funds != null) {
 }
 
 builder.Services.AddScoped<LocalStorageAccessor>();
-
-var baseUrl = builder.Configuration
-    .GetSection("MicrosoftGraph")["BaseUrl"];
-var scopes = builder.Configuration.GetSection("MicrosoftGraph:Scopes")
-    .Get<List<string>>();
-
-builder.Services.AddGraphClient(baseUrl, scopes);
-
-builder.Services.AddMsalAuthentication<RemoteAuthenticationState,
-    RemoteUserAccount>(options =>
-    {
-        builder.Configuration.Bind("AzureAd", 
-            options.ProviderOptions.Authentication);
-    })
-    .AddAccountClaimsPrincipalFactory<RemoteAuthenticationState, RemoteUserAccount,
-        CustomAccountFactory>();
 
 await builder.Build().RunAsync();
