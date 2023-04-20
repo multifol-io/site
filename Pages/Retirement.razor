@@ -58,7 +58,6 @@ Retirement - bogle.tools
             
             <h4 style="max-width:450px">
                 Retirement Plan <br/>
-                <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                 <br/>
             </h4>
 
@@ -258,33 +257,33 @@ Retirement - bogle.tools
                                 }
                                 break;
                             case "pensions-annuities":
-                                    accountIndex = 0;
-                                    @for (int i = 0; i < familyData.PersonCount; i++) {
-                                        int personBuffer = i;
-                                        foreach (var pension in familyData.People[i].Retirement.Pensions) {
-                                            int accBuffer = accountIndex;
-                                            accountIndex++;
-                                            var accountId = "account"+accBuffer;
-                                            <br/>
-                                            <EditForm Model="pension" style=margin-left:.25in>
-                                                <button @onclick='@(e=>deletePension(e,personBuffer,accBuffer))'>❌</button>
-                                                <label>Title:</label><input style="width:140px" type=text @bind-Value=pension.Title @bind-Value:event=oninput placeholder='title' /><br/>
-                                                <label>Annual Income:</label> <span>$</span><input style="width:140px" type=text @bind-Value=pension.Income @bind-Value:event=oninput placeholder='custodian' /><br/>
-                                                <label>Begins at Age:</label> <input style="width:140px" type=text @bind-Value=pension.BeginningAge @bind-Value:event=oninput placeholder='age' /><br/>
-                                                <InputCheckbox @bind-Value=pension.OneTime /><label>&nbsp;OneTime</label><br/>
-                                                <InputCheckbox @bind-Value=pension.HasCola /><label>&nbsp;Has Cost of Living Adjustment (COLA)</label><br/>
-                                            </EditForm>
-                                        }
-
+                                for (int i = 0; i < familyData.PersonCount; i++) {
+                                    int personBuffer = i;
+                                    for (int p = 0; p < familyData.People[i].Retirement.Pensions.Count; p++ ) {
+                                        var pension = familyData.People[i].Retirement.Pensions[p];
+                                        int pensionBuffer = p;
+                                        var oneTimeId = "onetime-" + i + "-" + p;
+                                        var hasColaId = "hasCola-" + i + "-" + p;
                                         <br/>
-                                        <button @onclick='@(e=>addPensionAnnuity(personBuffer))'>
-                                            ➕ 
-                                            @if (familyData.PersonCount > 1) { <span>&nbsp;(@familyData.People[i].Identifier)</span> }
-                                        </button>
-                                        <br/>
+                                        <EditForm Model="pension" style=margin-left:.25in>
+                                            <button @onclick='@(e=>deletePension(e,personBuffer,pensionBuffer))'>❌</button>
+                                            <label>Title:</label><input style="width:140px" type=text @bind-Value=pension.Title @bind-Value:event=oninput placeholder='title' /><br/>
+                                            <label>Annual Income:</label> <span>$</span><input style="width:140px" type=text @bind-Value=pension.Income @bind-Value:event=oninput placeholder='custodian' /><br/>
+                                            <label>Begins at Age:</label> <input style="width:140px" type=text @bind-Value=pension.BeginningAge @bind-Value:event=oninput placeholder='age' /><br/>
+                                            <InputCheckbox id=@oneTimeId @bind-Value=pension.OneTime /><label for=@oneTimeId>&nbsp;OneTime</label><br/>
+                                            <InputCheckbox id=@hasColaId @bind-Value=pension.HasCola /><label for=@hasColaId>&nbsp;Has Cost of Living Adjustment (COLA)</label><br/>
+                                        </EditForm>
                                     }
+
                                     <br/>
-                                    break;                                
+                                    <button @onclick='@(e=>addPensionAnnuity(personBuffer))'>
+                                        ➕ 
+                                        @if (familyData.PersonCount > 1) { <span>&nbsp;(@familyData.People[i].Identifier)</span> }
+                                    </button>
+                                    <br/>
+                                }
+                                <br/>
+                                break;
                             case "income-expenses":
                                     accountIndex = 0;
                                     foreach (var pension in familyData.RetirementData.IncomeExpenses) {
