@@ -37,6 +37,8 @@ public class FamilyData : IFamilyData
     public RetirementData RetirementData { get; set; }
     public EmergencyFund EmergencyFund { get; set; } = new();
 
+    public string EODHistoricalDataApiKey { get; set;}
+
     public bool DebtsComplete {
         get {
             return ((Debts.Count == 0 && DebtFree == TriState.True) || Debts.Count > 0);
@@ -423,30 +425,32 @@ public class FamilyData : IFamilyData
         } 
     }
 
-    public static async Task<FamilyData> LoadFromJson(IRSData irsData, string json, JsonSerializerOptions options) {
+    public static FamilyData LoadFromJson(FamilyData familyData, string json, JsonSerializerOptions options) {
         var loadedData = JsonSerializer.Deserialize<FamilyData>(json, options);
         if (loadedData != null) {
-            loadedData.IRSData = irsData;
+            loadedData.IRSData = familyData.IRSData;
             loadedData.Year = 2023;
             loadedData.SetBackPointers();
+            return loadedData;
         }
         else 
         {
             // error loading
+            throw new Exception("LoadFromJson failed");
         }
-        return loadedData;
     }
-    public static async Task<FamilyData> LoadFromJsonStream(IRSData irsData, Stream jsonStream, JsonSerializerOptions options) {
+    public static async Task<FamilyData> LoadFromJsonStream(FamilyData familyData, Stream jsonStream, JsonSerializerOptions options) {
         var loadedData = await JsonSerializer.DeserializeAsync<FamilyData>(jsonStream, options);
-        if (loadedData != null) {
-            loadedData.IRSData = irsData;
+        if (loadedData != null && familyData.IRSData != null) {
+            loadedData.IRSData = familyData.IRSData;
             loadedData.Year = 2023;
             loadedData.SetBackPointers();
+            return loadedData;
         }
         else 
         {
             // error loading
+            throw new Exception("LoadFromJsonStream failed");
         }
-        return loadedData;
     }
 }

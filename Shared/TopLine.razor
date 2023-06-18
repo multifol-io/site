@@ -7,8 +7,11 @@
 @inject IJSRuntime JS
 
 <div style=position:absolute;right:0px;padding:10px>
-    <button @onclick=@Save>Save</button>
-    <button @onclick=@Clear>Clear</button>
+    <EditForm Model="familyData">
+        <label>key:</label><input type=text @bind-Value=familyData.EODHistoricalDataApiKey @bind-Value:event=oninput placeholder='apikey' />
+        <button @onclick=@Save>Save</button>
+        <button @onclick=@Clear>Clear</button>
+    </EditForm>
 </div>
 
 @code{    
@@ -45,7 +48,7 @@
                     }
             };
 
-            familyData = await FamilyData.LoadFromJson(familyData.IRSData, storedJson, options);
+            familyData = FamilyData.LoadFromJson(familyData, storedJson, options);
         } 
         catch (Exception)
         {
@@ -82,7 +85,7 @@
             foreach (var file in files)
             {
                 using (var stream = file.OpenReadStream()) {
-                    familyData = await FamilyData.LoadFromJsonStream(familyData.IRSData, stream, options);
+                    familyData = await FamilyData.LoadFromJsonStream(familyData, stream, options);
                 }
             }
         }
@@ -124,7 +127,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Load();
+        await Load();
     }
 
 }

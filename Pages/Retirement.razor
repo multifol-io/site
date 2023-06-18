@@ -643,7 +643,7 @@ Retirement - bogle.tools
         ImportResult = null;
     }
 
-    private async void addInvestment(MouseEventArgs e, int accountIndex)
+    private void addInvestment(MouseEventArgs e, int accountIndex)
     {
         var newInvestment = new Investment() { funds = Funds };
         familyData.Accounts[accountIndex].Investments.Add(newInvestment);
@@ -690,7 +690,7 @@ Retirement - bogle.tools
         await LoadPortfolioForTopic(TopicValue);
     }
 
-    private async Task OnClearPortfolio() {
+    private void OnClearPortfolio() {
         familyData = new FamilyData(irsData);
         Navigation.NavigateTo("/portfolio");
     }

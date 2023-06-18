@@ -26,7 +26,7 @@ search/@engine
             @engineDomain
         </label>
         <input type=text style="width:500px" @onkeydown=KeyDown placeholder='terms to find' @bind-Value='@SearchModel.Terms' @bind-Value:event="oninput"  />
-        <input type=button onclick='@doSearch' value="Go" />
+        <input type=button onclick='@doSearch()' value="Go" />
         <br/>
         <label style="font-size:12pt">Search Bogleheads.org: </label> 
         <select style="font-size:12pt" @bind="@SearchModel.Location">
@@ -72,11 +72,11 @@ search/@engine
 @code {
     string prompt = "";
 
-    private void KeyDown(KeyboardEventArgs e)
+    private async Task KeyDown(KeyboardEventArgs e)
     {
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {
-            doSearch();
+            await doSearch();
         }
     }
 

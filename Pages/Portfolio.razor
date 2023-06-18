@@ -672,6 +672,10 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                     <input style="width:70px" type=text @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput placeholder='expense ratio'/>
                                                 %)
                                             </div>
+                                            <div style=margin-left:85px>
+                                                <span>price:</span><input style="width:140px" type=text @bind-Value=investment.Price @bind-Value:event=oninput placeholder='' />
+                                                <button @onclick='@(e=>UpdatePrice(e,investment))'>update</button><br/>
+                                            </div>
                                         }
                                         <button style=margin-left:20px @onclick='@(e=>addInvestment(e,accBuffer))'>➕</button>
                                         <hr style=margin-left:40px/>
@@ -865,7 +869,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             }
         }
 
-        return null;
+        return "";
     }
 
     public int? GetRecommdedIRAAmount(Person person) {
@@ -1129,6 +1133,12 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         }
     }
 
+    private async Task UpdatePrice(MouseEventArgs e, Investment investment) {
+        var quoteDataJson = await Http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={investment.Ticker}&apikey={familyData.EODHistoricalDataApiKey}");
+        var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
+        investment.Price = quoteData.Close;
+    }
+
     private ImportResult? ImportResult = null;
 
     private async Task OnDataFilesImport(InputFileChangeEventArgs e)
@@ -1175,7 +1185,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         ImportResult = null;
     }
 
-    private async void addInvestment(MouseEventArgs e, int accountIndex)
+    private void addInvestment(MouseEventArgs e, int accountIndex)
     {
         var newInvestment = new Investment() { funds = Funds };
         familyData.Accounts[accountIndex].Investments.Add(newInvestment);
@@ -1227,7 +1237,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             };
         var topicJsonUri = "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/portfolios/" + topicStr + ".json";
         var stream = await Http.GetStreamAsync(topicJsonUri);
-        familyData = await FamilyData.LoadFromJsonStream(familyData.IRSData, stream, options);
+        familyData = await FamilyData.LoadFromJsonStream(familyData, stream, options);
     }
 
     private async Task CopyTextToClipboard()
