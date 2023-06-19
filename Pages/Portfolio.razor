@@ -667,14 +667,15 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                 Balance 🟰 $<input style=width:100px type=text @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/>
                                             </div>
                                             <div style=margin-left:85px>
+                                                <span>shares:</span><input style="width:140px" type=text @bind-Value=investment.Shares @bind-Value:event=oninput placeholder='' />
+                                                <span>price:</span><input style="width:140px" type=text @bind-Value=investment.Price @bind-Value:event=oninput placeholder='' />
+                                                <button @onclick='@(e=>UpdatePrice(e,investment))'>update</button><br/>
+                                            </div>
+                                            <div style=margin-left:85px>
                                                 <input type=text @bind-Value=investment.Name @bind-Value:event=oninput placeholder='investment fullname' />
                                                 &nbsp;(
                                                     <input style="width:70px" type=text @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput placeholder='expense ratio'/>
                                                 %)
-                                            </div>
-                                            <div style=margin-left:85px>
-                                                <span>price:</span><input style="width:140px" type=text @bind-Value=investment.Price @bind-Value:event=oninput placeholder='' />
-                                                <button @onclick='@(e=>UpdatePrice(e,investment))'>update</button><br/>
                                             </div>
                                         }
                                         <button style=margin-left:20px @onclick='@(e=>addInvestment(e,accBuffer))'>➕</button>
@@ -1134,9 +1135,14 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     }
 
     private async Task UpdatePrice(MouseEventArgs e, Investment investment) {
-        var quoteDataJson = await Http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={investment.Ticker}&apikey={familyData.EODHistoricalDataApiKey}");
-        var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
-        investment.Price = quoteData.Close;
+        if (!string.IsNullOrEmpty(familyData.EODHistoricalDataApiKey)) {
+            var quoteDataJson = await Http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={investment.Ticker}&apikey={familyData.EODHistoricalDataApiKey}");
+            var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
+            if (quoteData?.Close != null) {
+                investment.Price = quoteData.Close;
+                investment.Value = investment.Price * investment.Shares;
+            }
+        }
     }
 
     private ImportResult? ImportResult = null;
