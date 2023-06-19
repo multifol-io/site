@@ -994,18 +994,15 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         }
     }
 
-    private async Task UpdateInvestmentsPrice(Dictionary<string,List<Investment>> quotes)
+    private async Task UpdateInvestmentsPrice(string ticker, List<Investment> investments)
     {
         if (!string.IsNullOrEmpty(familyData.EODHistoricalDataApiKey)) {
-            foreach (var quote in quotes)
-            {
-                var quoteDataJson = await Http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={quote.Key}&apikey={familyData.EODHistoricalDataApiKey}");
-                var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
-                if (quoteData?.Close != null) {
-                    foreach (var investment in quote.Value) {
-                        investment.Price = quoteData.Close;
-                        investment.Value = investment.Price * investment.Shares;
-                    }
+            var quoteDataJson = await Http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={ticker}&apikey={familyData.EODHistoricalDataApiKey}");
+            var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
+            if (quoteData?.Close != null) {
+                foreach (var investment in investments) {
+                    investment.Price = quoteData.Close;
+                    investment.Value = investment.Price * investment.Shares;
                 }
             }
         }
@@ -1147,6 +1144,9 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             }
         }
 
-        UpdateInvestmentsPrice(quotes);
+        foreach (var quote in quotes)
+        {
+            await UpdateInvestmentsPrice(quote.Key, quote.Value);
+        }
     }
 }
