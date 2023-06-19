@@ -1,8 +1,17 @@
 [
     {
+        "step": "retirement-assets",
+        "title": "Retirement Assets",
+        "number": 1,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
         "step": "age",
         "title": "Age",
-        "number": 1,
+        "number": 2,
         "summary": "",
         "priority": "",
         "returns": "",
@@ -11,17 +20,8 @@
     {
         "step": "asset-allocation",
         "title": "Asset Allocation",
-        "number": 2,
-        "summary": "What is your desired [[Asset allocation|asset allocation]] (ratio of stocks to bonds)?",
-        "priority": "",
-        "returns": "",
-        "description": ""
-    },
-    {
-        "step": "retirement-assets",
-        "title": "Retirement Assets",
         "number": 3,
-        "summary": "",
+        "summary": "What is your desired [[Asset allocation|asset allocation]] (ratio of stocks to bonds)?",
         "priority": "",
         "returns": "",
         "description": ""
