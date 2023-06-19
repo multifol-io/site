@@ -7,11 +7,8 @@
 @inject IJSRuntime JS
 
 <div style=position:absolute;right:0px;padding:10px>
-    <EditForm Model="familyData">
-        <label>key:</label><input type=text @bind-Value=familyData.EODHistoricalDataApiKey @bind-Value:event=oninput placeholder='apikey' />
-        <button @onclick=@Save>Save</button>
-        <button @onclick=@Clear>Clear</button>
-    </EditForm>
+    Your data is <a style=margin-left:0px href=/about>kept private</a>: <button @onclick=@Save>Save</button> or 
+    <button @onclick=@Clear>Erase</button>
 </div>
 
 @code{    

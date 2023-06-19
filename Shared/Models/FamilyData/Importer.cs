@@ -175,6 +175,7 @@ public class Importer {
 
                     string? investmentName;
                     double value;
+                    double? price = null;
                     double? shares = null;
                     double? costBasis = null;
 
@@ -193,6 +194,7 @@ public class Importer {
                     {
                         investmentName = chunks[3];
                         value = ParseDouble(chunks[7], allowCurrency:true);
+                        price = ParseDouble(chunks[5], allowCurrency:true);
                         shares = ParseDouble(chunks[4]);
                         costBasis = ParseDouble(chunks[13], allowCurrency:true);
                     }
@@ -209,7 +211,7 @@ public class Importer {
                             lastAccountNumber = accountNumber;
                         }
 
-                        Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Value = value, Shares = shares, CostBasis = costBasis };
+                        Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares, CostBasis = costBasis };
                         newAccount?.Investments.Add(newInvestment);
                     }
 
@@ -235,6 +237,7 @@ public class Importer {
                             var symbol = chunks[2];
                             var investmentName = chunks[1];
                             double shares = ParseDouble(chunks[3]);
+                            double price = ParseDouble(chunks[4], allowCurrency:true);
                             double value = ParseDouble(chunks[5], allowCurrency:true);
                             // costBasis not available in CSV
                                             
@@ -247,7 +250,7 @@ public class Importer {
                                     importedAccounts.Add(newAccount);
                                 }
 
-                                Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Value = value, Shares = shares };
+                                Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares };
                                 newAccount?.Investments.Add(newInvestment);
                             }
 

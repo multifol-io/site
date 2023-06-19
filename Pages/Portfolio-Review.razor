@@ -1,7 +1,7 @@
-@page "/portfolio"
-@page "/portfolio/reload"
-@page "/portfolio/topic/{TopicValue}"
-@page "/portfolio/{stepPath}"
+@page "/portfolio-review"
+@page "/portfolio-review/reload"
+@page "/portfolio-review/topic/{TopicValue}"
+@page "/portfolio-review/{stepPath}"
 @inject HttpClient Http
 @inject IAppData appData
 @inject IRSData irsData
@@ -11,7 +11,7 @@
 @using System.Text.Json.Serialization
 
 <PageTitle>
-Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
+Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tools
 </PageTitle>
 
 <style>
@@ -44,10 +44,10 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         display: inline-block;
     }
 </style>
-    @if (new Uri(Navigation.Uri).PathAndQuery == "/portfolio/reload")
+    @if (new Uri(Navigation.Uri).PathAndQuery == "/portfolio-review/reload")
     {
         // reload is a workaround where the correct data seemed to be deleted, but i needed to navigate away and then back to retirement-assets
-        Navigation.NavigateTo("/portfolio/retirement-assets");
+        Navigation.NavigateTo("/portfolio-review/retirement-assets");
     }
     @if (steps == null || familyData == null)
     {
@@ -63,15 +63,12 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             familyData.UpdatePercentages();
             
             <h4 style="max-width:450px">
-                Portfolio <br/>
+                Portfolio Review<br/>
                 <br/>
             </h4>
-
-            <p>Organizing information about your portfolio will help you optimize your finances.<br/>
-            Press Save button to save your data. <a href="updated-quotes">Enable updates to stock/fund prices</a>.</p>
-
+            <p> Bogleheads.org forum enables you to <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Ask Portfolio Questions</a> ↗️. This tool makes it easy to collect your information and format it properly.</p>
             <div>
-                <p ><b>Press each ✏️ button to enter info:</b></p>
+                <p ><b>Press edit (✏️) to complete each step:</b></p>
 
                 <table id=_reviewTable>
                     @foreach (var step in steps) {
@@ -85,9 +82,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                             @switch (step.step) {
                                 case "age": 
                                     <td>
-                                        @((MarkupString)bold("Tax Filing Status:"))
-                                        @if (familyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@familyData.TaxFilingStatus</span> }
-                                        <br/>
                                         @((MarkupString)bold("Age:"))
                                         @if(familyData.PersonCount > 0 && familyData.People[0].Age != null) {
                                             <span>&nbsp;@familyData.People[0].Age @getPronoun(familyData.People[0])</span>
@@ -98,6 +92,46 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                         <br/><br/>
                                     </td>
                                    break;
+                                case "emergency-fund":
+                                   <td style=text-align:left>
+                                        @((MarkupString)bold("Emergency funds:"))
+                                        @if (familyData.EmergencyFund.CurrentMonths != null) {
+                                            <span>&nbsp;@familyData.EmergencyFund.CurrentMonthsString months</span>
+                                        } else if (familyData.EmergencyFund.ShowDollars) {
+                                            <span>&nbsp;@formatMoney(familyData.EmergencyFund.CurrentBalance)</span>
+                                        }
+                                        <br/><br/>
+                                   </td>
+                                   break;
+                                case "debts":
+                                    <td style=text-align:left>
+                                        @((MarkupString)bold("Debt:"))
+                                        @if (familyData.Debts.Count == 0 && familyData.DebtsComplete) { <span>&nbsp;no debts</span> } 
+                                        else if (familyData.Debts.Count >= 1) { 
+                                            <br/>
+                                            @foreach (var debt in familyData.Debts)
+                                            {
+                                                <span>&nbsp;&nbsp;@debt.Name: @formatMoney(debt.Total) @@ @(debt.Rate == null ? "unknown" : debt.Rate)%</span><br/> 
+                                            }
+                                        }
+                                        <br/>
+                                    </td>
+                                    break;
+                                case "tax-status":
+                                    <td>
+                                        <span>
+                                            @((MarkupString)bold("Tax Filing Status:"))
+                                            @if (familyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@familyData.TaxFilingStatus</span> }
+                                            <br/><br/>
+                                            @((MarkupString)bold("Tax Rate:"))
+                                            @if (familyData.FederalMarginalTaxBracket != null) { <span>&nbsp;@familyData.FederalMarginalTaxBracket Federal, @familyData.StateMarginalTaxBracket% State</span> }
+                                            <br/><br/>
+                                            @((MarkupString)bold("State of Residence:"))
+                                            @if (familyData.StateMarginalTaxBracket != null) { <span>&nbsp;@familyData.StateOfResidence</span> }
+                                        </span>
+                                        <br/><br/>
+                                    </td>
+                                    break;
                                 case "asset-allocation":
                                     <td>
                                         @((MarkupString)bold("Desired Asset allocation:"))
@@ -148,33 +182,133 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                             <br/>
                                         }
 
-                                        @((MarkupString)boldUnderline("Current Retirement Assets:"))&nbsp;
-                                        <button @onclick=@refreshPrices>Refresh prices</button><br/><br/>
+                                        @((MarkupString)boldUnderline("Current Retirement Assets:"))<br/>
 
-                                        <table>
-                                            <tr>
-                                                <th>Account</th>
-                                                <th>Ticker</th>
-                                                <th>$ / share</th>
-                                                <th>Shares</th>
-                                                <th>Value</th>
-                                            </tr>
-                                            @foreach (var account in familyData.Accounts) {
-                                                @foreach (var investment in account.Investments) {
-                                                    <tr>
-                                                        <td>@((MarkupString)((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "") + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "")))</td>
-                                                        <td title=@investment.Name>@investment.Ticker</td>
-                                                        <td style=text-align:right;padding-left:5px>@investment.Price</td>
-                                                        <td style=text-align:right;padding-left:5px>@investment.Shares</td>
-                                                        <td style=text-align:right;padding-left:5px>@investment.Value</td>
-                                                    </tr>
-                                                }
+                                        @foreach (var account in familyData.Accounts) {
+                                            <br/>
+                                            @((MarkupString)bold((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "") + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + " (" + formatPercent(account.Percentage) + ")" ))
+                                            <br/>
+                                            @foreach (var investment in account.Investments) {
+                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;@formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@(investment.ExpenseRatio!=null?investment.ExpenseRatio:"??")%)</span><br/>
                                             }
-                                        </table>
+                                        }
                                         <br/>
                                     </td>
                                     break;                                
+                                case "available-funds":
+                                    <td>
+                                        @((MarkupString)boldUnderline("Available funds:"))<br/>
+                                             @foreach (var account in familyData.Accounts) {
+                                                @if (account.AvailableFunds.Count > 0) {
+                                                    <br/>
+                                                        @((MarkupString)bold("Funds available in " + account.FullName))<br/>
+                                                    <br/>
+                                                    @foreach (var investment in account.AvailableFunds) {
+                                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;@investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span><br/>
+                                                    }
+                                                }
+                                            }
+                                            <br/>
+                                    </td>
+                                    break;
+                                case "additional-background":
+                                    @((MarkupString)boldUnderline("Additional Background:"))<br/>
+                                    @familyData.AdditionalBackground
+                                    <br/>
+                                    break;
+                                case "questions":
+                                    <td>
+                                        @((MarkupString)boldUnderline("Questions:"))<br/>
+                                        @for (int i = 0; i < familyData.Questions.Count; i++) {
+                                            var question = familyData.Questions[i];
+                                            @(i+1 + ".") @question
+                                            <br/><br/>
+                                        }
+                                    </td>
+                                    break;
+                                case "contributions":
+                                    runningTotal = 0;
+                                    pastTotal = false;
+
+                                    <td>
+                                        <span>
+                                            @((MarkupString)boldUnderline("Contributions:"))
+                                        </span><br/>
+                                        @if (familyData.PlannedSavings > 0) {
+                                            <span>Planned savings: @formatMoney(familyData.PlannedSavings)</span><br/><br/>
+                                        }
+
+                                        <span>Prioritized Investments:</span><br/>
+
+                                        @if (familyData.EmergencyFund.AmountToSave > 0) {
+                                            <span>@formatMoney(familyData.EmergencyFund.AmountToSave) in Emergency Fund</span><br/>
+                                            @((MarkupString)checkTotal(familyData.EmergencyFund.AmountToSave))
+                                        }
+                                        @if (familyData.PersonCount > 0 && familyData.People[0].EmployerPlan.AmountToSaveForMatch > 0) {
+                                            <span>@formatMoney(familyData.People[0].EmployerPlan.AmountToSaveForMatch) in @familyData.People[0].PossessiveID 401k (Match: @formatMoney(familyData.People[0].EmployerPlan.MatchAmount))</span><br/>
+                                            @((MarkupString)checkTotal(familyData.People[0].EmployerPlan.AmountToSaveForMatch))
+                                        }
+                                        @if (familyData.PersonCount > 1 && familyData.People[1].EmployerPlan.AmountToSaveForMatch > 0) {
+                                            <span>@formatMoney(familyData.People[1].EmployerPlan.AmountToSaveForMatch) in @familyData.People[1].PossessiveID 401k (Match: @formatMoney(familyData.People[1].EmployerPlan.MatchAmount))</span><br/>
+                                            @((MarkupString)checkTotal(familyData.People[1].EmployerPlan.AmountToSaveForMatch))
+                                        }
+                                        @if (familyData.HighDebts > 0) {
+                                            <span>@familyData.HighDebts in High Debts</span><br/>
+                                            @((MarkupString)checkTotal(familyData.HighDebts))
+                                        }
+                                        @if (familyData.PersonCount > 0  && (familyData.People[0].EmployerBenefits.Complete || familyData.People[0].EmployerPlan.AnnualSalary == 0 || familyData.People[0].HealthSavingsAccount.EligibleForHSA  || familyData.People[0].HealthSavingsAccount.EligibleForHSACatchUpOnly) && familyData.People[0].HealthSavingsAccount.AmountToSave > 0) {
+                                            <span>@formatMoney(familyData.People[0].HealthSavingsAccount.AmountToSave) in @familyData.People[0].PossessiveID HSA (Employer: @formatMoney(familyData.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
+                                            @((MarkupString)checkTotal(familyData.People[0].HealthSavingsAccount.AmountToSave))
+                                        }
+                                        @if (familyData.PersonCount > 1  && (familyData.People[1].EmployerBenefits.Complete || familyData.People[1].EmployerPlan.AnnualSalary == 0 || familyData.People[1].HealthSavingsAccount.EligibleForHSA  || familyData.People[1].HealthSavingsAccount.EligibleForHSACatchUpOnly) && familyData.People[1].HealthSavingsAccount.AmountToSave > 0) {
+                                            <span>@formatMoney(familyData.People[1].HealthSavingsAccount.AmountToSave) in @familyData.People[1].PossessiveID HSA (Employer: @formatMoney(familyData.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
+                                            @((MarkupString)checkTotal(familyData.People[1].HealthSavingsAccount.AmountToSave))
+                                        }
+                                        @if (familyData.AdjustedGrossIncome != null) {
+                                            if (familyData.PersonCount > 0) {
+                                                <span>@((MarkupString)GetRecommendedIRAMarkup(familyData.People[0]))</span><br/>
+                                                @((MarkupString)checkTotal(GetRecommdedIRAAmount(familyData.People[0])))
+                                            }
+                                            if(familyData.PersonCount > 1) {
+                                                <span>@((MarkupString)GetRecommendedIRAMarkup(familyData.People[1]))</span><br/>
+                                                @((MarkupString)checkTotal(GetRecommdedIRAAmount(familyData.People[1])))
+                                            }
+                                        }
+                                        @if (familyData.PersonCount > 0 && familyData.People[0].EmployerPlan.AmountToSaveForNonMatched > 0) {
+                                            <span>@formatMoney(familyData.People[0].EmployerPlan.AmountToSaveForNonMatched) in @familyData.People[0].PossessiveID 401k</span><br/>
+                                            @((MarkupString)checkTotal(familyData.People[0].EmployerPlan.AmountToSaveForNonMatched))
+                                        }
+                                        @if (familyData.PersonCount > 1 && familyData.People[1].EmployerPlan.AmountToSaveForNonMatched > 0) {
+                                            <span>@formatMoney(familyData.People[1].EmployerPlan.AmountToSaveForNonMatched) in @familyData.People[1].PossessiveID 401k</span><br/>
+                                            @((MarkupString)checkTotal(familyData.People[1].EmployerPlan.AmountToSaveForNonMatched))
+                                        }
+                                        @if (familyData.PersonCount > 0 && familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
+                                            <span>@formatMoney(familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyData.People[0].PossessiveID mega backdoor roth</span><br/>
+                                            @((MarkupString)checkTotal(familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
+                                        }
+                                        @if (familyData.PersonCount > 1 && familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
+                                            <span>@formatMoney(familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyData.People[1].PossessiveID mega backdoor roth</span><br/>
+                                            @((MarkupString)checkTotal(familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
+                                        }
+                                        @if (familyData.MediumDebts > 0) {
+                                            <span>@formatMoney(familyData.MediumDebts) in Medium Debts</span><br/>
+                                            @((MarkupString)checkTotal(familyData.MediumDebts))
+                                        }
+                                        @if (familyData.PlannedSavings > runningTotal) {
+                                            <span>@formatMoney(familyData.PlannedSavings-runningTotal) in Taxable</span><br/>
+                                            @((MarkupString)checkTotal(familyData.PlannedSavings-runningTotal))
+                                        } else {
+                                            <span>@formatMoney(0) in Taxable</span><br/>
+                                        }
+                                        @if (familyData.LowDebts > 0) {
+                                            <span>@formatMoney(familyData.LowDebts) in Low Debts</span><br/>
+                                            @((MarkupString)checkTotal(familyData.LowDebts))
+                                        }
+                                        <br/>
+                                    </td>
+                                    break;
                                 default:
+                                    <td style=text-align:center>NYI</td><td></td>
                                     break;
                             }
                         </tr>
@@ -182,7 +316,10 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                 </table>
                 <br/>
 
-                <p>See the <a href="portfolio-review">Portfolio Review</a> page for help authoring questions to post.  Bogleheads.org forum is a great place to <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Ask Portfolio Questions</a> ↗️.</p>
+                <p>Copy the correct format for your post:</p>
+                <InputCheckbox id=showMarkup style=margin-left:20px @bind-Value=ShowMarkup /> <label for=showMarkup>Use forum post markup: [b]bold[/b]</label><br/>
+                <br/>
+                <button style=margin-left:20px @onclick=CopyTextToClipboard>Copy to clipboard</button><br/>
                 <hr/>
 
             </div>
@@ -201,7 +338,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                     string nextPage = folderName + nextStep?.step;
 
                     <h4 style="max-width:450px">
-                        <NavLink href=/portfolio>Portfolio</NavLink> &gt; @step.title (@step.number)<br/>
+                        <NavLink href=/portfolio-review>Portfolio Review</NavLink> &gt; @step.title (@step.number)<br/>
                         <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                         <br/>
                     </h4>
@@ -351,7 +488,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                 <br/>
                                 break;
                             case "age":
-                                <p><b>Worksheet:</b> </p>
+                                <p ><b>Prerequisities:</b></p>
                                 <label>Tax Filing Status:</label>
                                 <select @bind=familyData.TaxFilingStatus>
                                     <option value="ChoiceNeeded">ChoiceNeeded</option>
@@ -362,6 +499,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                     <option value=HeadOfHousehold>Head of Household</option>
                                 </select><br/><br/>
                                 
+                                <p><b>Worksheet:</b> </p>
                                 @for (int i = 0; i < familyData.PersonCount; i++) {
                                     var person = familyData.People[i];
                                     int personIndex = i + 1;
@@ -461,6 +599,19 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                 break;                                
                             case "retirement-assets":
                                 @if(ImportResult == null) {
+                                    <p><b>Prerequisites:</b> </p>
+
+                                    <label style=margin-left:25px>Tax Filing Status:</label>
+                                    <select @bind=familyData.TaxFilingStatus>
+                                        <option value="ChoiceNeeded">ChoiceNeeded</option>
+                                        <option>Single</option>
+                                        <option value=MarriedFilingJointly>Married filing jointly</option>
+                                        <option value=MarriedFilingSeperately>Married filing seperately</option>
+                                        <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                                        <option value=HeadOfHousehold>Head of Household</option>
+                                    </select><br/>
+                                    <br/>
+
                                     <u><b>Current Retirement Assets:</b></u><br/>
 
                                     accountIndex = 0;
@@ -512,10 +663,13 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                             <div style=margin-top:10px;margin-left:20px;padding-left:3em;text-indent:-3em;>
                                                 <button @onclick='@(e=>deleteInvestment(e,accBuffer,invBuffer))'>❌</button>
                                                 <input @ref=tickerN style="width:70px;text-transform: uppercase;" type=text @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/>
-                                                $<input style="width:140px" type=text @bind-Value=investment.Price @bind-Value:event=oninput placeholder='' />
-                                                ✖️ <input style="width:140px" type=text @bind-Value=investment.Shares @bind-Value:event=oninput placeholder='' /> shares
-                                                🟰 $<input style=width:100px type=text @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/>
-                                                <button @onclick='@(e=>UpdatePrice(e,investment))'>update</button><br/>
+                                                Balance 🟰 $<input style=width:100px type=text @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/>
+                                            </div>
+                                            <div style=margin-left:85px>
+                                                <input type=text @bind-Value=investment.Name @bind-Value:event=oninput placeholder='investment fullname' />
+                                                &nbsp;(
+                                                    <input style="width:70px" type=text @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput placeholder='expense ratio'/>
+                                                %)
                                             </div>
                                         }
                                         <button style=margin-left:20px @onclick='@(e=>addInvestment(e,accBuffer))'>➕</button>
@@ -553,7 +707,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
 
                                     @if(familyData.Value > 0) {
                                     <br/>
-                                    <div>Preferred technique to represent the approximate size of your total portfolio (in <NavLink href="/portfolio">portfolio review</NavLink>):</div>
+                                    <div>Preferred technique to represent the approximate size of your total portfolio (in <NavLink href="/portfolio-review">portfolio review</NavLink>):</div>
                                     <InputRadioGroup @bind-Value=familyData.ValueStyle>
                                         <InputRadio id=rounded Value='0' /> <label for=rounded>@formatMoneyThousands(familyData.Value)</label> <br/>
                                         <InputRadio id=estimate Value='1' /> <label for=estimate>@estimatePortfolio(familyData)</label> <br/>
@@ -939,7 +1093,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     private Step[]? steps;
     public int accountIndex = 0;
     public int investmentIndex = 0;
-    private const string folderName = "/portfolio/";
+    private const string folderName = "/portfolio-review/";
     private bool focusTicker = false;
     private bool focusAccount = false;
     private bool showPortfolioAnalysis = true;
@@ -955,7 +1109,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     
     protected override async Task OnInitializedAsync()
     {
-        steps = await Http.GetFromJsonAsync<Step[]>("data/portfolio-assets-steps.json");
+        steps = await Http.GetFromJsonAsync<Step[]>("data/portfolio-review-steps.json");
 
         if (!string.IsNullOrEmpty(TopicValue)) {
             await LoadPortfolioForTopic(TopicValue);
@@ -974,36 +1128,14 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         }
     }
 
-    private async Task UpdateInvestmentPrice(Investment investment)
-    {
-        var quoteDataJson = await Http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={investment.Ticker}&apikey={familyData.EODHistoricalDataApiKey}");
-        var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
-        if (quoteData?.Close != null) {
-            investment.Price = quoteData.Close;
-            investment.Value = investment.Price * investment.Shares;
-        }
-    }
-
-    private async Task UpdateInvestmentsPrice(Dictionary<string,List<Investment>> quotes)
-    {
-        if (!string.IsNullOrEmpty(familyData.EODHistoricalDataApiKey)) {
-            foreach (var quote in quotes)
-            {
-                var quoteDataJson = await Http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={quote.Key}&apikey={familyData.EODHistoricalDataApiKey}");
-                var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
-                if (quoteData?.Close != null) {
-                    foreach (var investment in quote.Value) {
-                        investment.Price = quoteData.Close;
-                        investment.Value = investment.Price * investment.Shares;
-                    }
-                }
-            }
-        }
-    }
-
     private async Task UpdatePrice(MouseEventArgs e, Investment investment) {
         if (!string.IsNullOrEmpty(familyData.EODHistoricalDataApiKey)) {
-            UpdateInvestmentPrice(investment);
+            var quoteDataJson = await Http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={investment.Ticker}&apikey={familyData.EODHistoricalDataApiKey}");
+            var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
+            if (quoteData?.Close != null) {
+                investment.Price = quoteData.Close;
+                investment.Value = investment.Price * investment.Shares;
+            }
         }
     }
 
@@ -1021,7 +1153,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         Console.WriteLine($"{ImportResult.DataFilesImported} files imported with {ImportResult.ImportedAccounts.Count} accounts");
         showImport = false;
 
-        Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
+        Navigation.NavigateTo("/portfolio-review/reload"); // WORKAROUND
     }
 
     private void finishImport()
@@ -1063,7 +1195,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
     {
         familyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
-        Navigation.NavigateTo("/portfolio/reload");
+        Navigation.NavigateTo("/portfolio-review/reload");
         familyData.UpdatePercentages();
     }
     void addAvailableFund(MouseEventArgs e, Account account)
@@ -1087,7 +1219,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     void deleteAccount(MouseEventArgs e, int accountIndex)
     {
         familyData.Accounts.RemoveAt(accountIndex);
-        Navigation.NavigateTo("/portfolio/reload");
+        Navigation.NavigateTo("/portfolio-review/reload");
         familyData.UpdatePercentages();
     }
 
@@ -1115,28 +1247,5 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         text = text.Replace("✏️\t","");
         text = text.Replace("Show Portfolio Analysis\n", "");
         await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
-    }
-
-    private async Task refreshPrices() {
-        Dictionary<string,List<Investment>> quotes = new();
-        foreach (var account in familyData.Accounts)
-        {
-            foreach (var investment in account.Investments)
-            {
-                if (investment.AssetType != AssetType.Cash && investment.Ticker != "IBOND" && !string.IsNullOrEmpty(investment.Ticker)) {
-                    if (!quotes.ContainsKey(investment.Ticker))
-                    {
-                        quotes.Add(investment.Ticker, new List<Investment> () { investment });
-                    }
-                    else
-                    {
-                        var investments = quotes[investment.Ticker];
-                        investments.Add(investment);
-                    }
-                }
-            }
-        }
-
-        UpdateInvestmentsPrice(quotes);
     }
 }
