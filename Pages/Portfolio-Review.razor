@@ -650,7 +650,6 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                                 <option>Solo 401k</option>
                                                 <option>Taxable</option>
                                                 <option>Traditional IRA</option>
-                                                <option>Treasury Direct</option>
                                             </select>
                                             <span> at <input style="width:140px" type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' /></span><br/>
                                             <span><label for=@accountId>Note: </label><input id=@accountId type=text @bind-value=account.Note @bind-value:event=oninput placeholder='account note'/></span>

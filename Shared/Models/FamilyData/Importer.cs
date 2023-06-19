@@ -204,7 +204,7 @@ public class Importer {
                         {
                             newAccount = new() {
                                 Custodian = "Fidelity",
-                                Note = "*"+ accountNumber.Substring(accountNumber.Length-4,4) + " " + accountName
+                                Note = "*"+ accountNumber.Substring(accountNumber.Length-4,4)
                             };
                             newAccount.GuessAccountType();
                             importedAccounts.Add(newAccount);

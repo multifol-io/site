@@ -155,19 +155,21 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                         <table>
                                             <tr>
                                                 <th>Account</th>
-                                                <th>Ticker</th>
-                                                <th>$ / share</th>
-                                                <th>Shares</th>
-                                                <th>Value</th>
+                                                <th style=padding-left:8px>Type</th>
+                                                <th style=padding-left:8px>Ticker</th>
+                                                <th style=padding-left:8px>$ / share</th>
+                                                <th style=padding-left:8px>Shares</th>
+                                                <th style=padding-left:8px>$ Value</th>
                                             </tr>
                                             @foreach (var account in familyData.Accounts) {
                                                 @foreach (var investment in account.Investments) {
                                                     <tr>
-                                                        <td>@((MarkupString)((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "") + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "")))</td>
-                                                        <td title=@investment.Name>@investment.Ticker</td>
-                                                        <td style=text-align:right;padding-left:5px>@investment.Price</td>
-                                                        <td style=text-align:right;padding-left:5px>@investment.Shares</td>
-                                                        <td style=text-align:right;padding-left:5px>@investment.Value</td>
+                                                        <td>@((account.Custodian != null ? account.Custodian + " ": "")+ account.Note)</td>
+                                                        <td style=padding-left:8px>@((MarkupString)((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "") + account.AccountType))</td>
+                                                        <td style=padding-left:8px title=@investment.Name>@investment.Ticker</td>
+                                                        <td style=text-align:right;padding-left:8px>@formatDoubleTwoDecimal(investment.Price)</td>
+                                                        <td style=text-align:right;padding-left:8px>@formatDoubleFourDecimal(investment.Shares)</td>
+                                                        <td style=text-align:right;padding-left:8px>@formatDoubleTwoDecimal(investment.Value)</td>
                                                     </tr>
                                                 }
                                             }
@@ -500,7 +502,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                 <option>Solo 401k</option>
                                                 <option>Taxable</option>
                                                 <option>Traditional IRA</option>
-                                                <option>Treasury Direct</option>
                                             </select>
                                             <span> at <input style="width:140px" type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' /></span><br/>
                                             <span><label for=@accountId>Note: </label><input id=@accountId type=text @bind-value=account.Note @bind-value:event=oninput placeholder='account note'/></span>
@@ -764,6 +765,14 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     public string formatMoney(double? amount) 
     {
         return String.Format("${0:#,0.##}", amount);
+    }
+    public string formatDoubleTwoDecimal(double? amount) 
+    {
+        return String.Format("{0:#,0.00}", amount);
+    }
+    public string formatDoubleFourDecimal(double? amount) 
+    {
+        return String.Format("{0:#,0.0000}", amount);
     }
     public string formatMoneyThousands(double? amount) 
     {
