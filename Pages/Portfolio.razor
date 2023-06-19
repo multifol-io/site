@@ -150,14 +150,14 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                         }
 
                                         @((MarkupString)boldUnderline("Current Retirement Assets:"))&nbsp;
-                                        <button @onclick=@refreshPrices>Refresh prices</button><br/><br/>
+                                        <br/>
 
                                         <table>
-                                            <tr>
+                                            <tr style=vertical-align:bottom>
                                                 <th>Account</th>
                                                 <th style=padding-left:8px>Type</th>
                                                 <th style=padding-left:8px>Ticker</th>
-                                                <th style=padding-left:8px>$ / share</th>
+                                                <th style=padding-left:8px><button @onclick=@refreshPrices title=Refresh>🔃</button><br/>$ / share</th>
                                                 <th style=padding-left:8px>Shares</th>
                                                 <th style=padding-left:8px>$ Value</th>
                                             </tr>
