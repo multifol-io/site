@@ -515,7 +515,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                 $<input style="width:140px" type=text @bind-Value=investment.Price @bind-Value:event=oninput placeholder='' />
                                                 ✖️ <input style="width:140px" type=text @bind-Value=investment.Shares @bind-Value:event=oninput placeholder='' /> shares
                                                 🟰 $<input style=width:100px type=text @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/>
-                                                <button @onclick='@(e=>UpdatePrice(e,investment))'>update</button><br/>
+                                                <br/>
                                             </div>
                                         }
                                         <button style=margin-left:20px @onclick='@(e=>addInvestment(e,accBuffer))'>➕</button>
