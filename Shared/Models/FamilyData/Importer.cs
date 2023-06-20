@@ -164,55 +164,62 @@ public class Importer {
                 while (line != "" && line != ",,,,,,,,,,,,,,,")
                 {
                     List<string> chunks = await SplitCsvLine(line);
-                    var accountNumber = chunks[0];
-                    var accountName = chunks[1];
-                    var symbol = chunks[2];
+                    try {
+                        var accountNumber = chunks[0];
+                        var accountName = chunks[1];
+                        var symbol = chunks[2];
 
-                    // many tickers have "**" at end, signifying money market fund.
-                    if (symbol.Length >= 2 && symbol.Substring(symbol.Length-2) == "**") { 
-                        symbol = symbol.Substring(0, symbol.Length - 2);
-                    }
-
-                    string? investmentName;
-                    double value;
-                    double? price = null;
-                    double? shares = null;
-                    double? costBasis = null;
-
-                    // many tickers have "**" at end, signifying money market fund.
-                    if (symbol.Length >= 2 && symbol.Substring(symbol.Length-2) == "**") { 
-                        symbol = symbol.Substring(0, symbol.Length - 2);
-                    }
-
-                    if (symbol == "Pending Activity")
-                    {
-                        investmentName = symbol;
-                        value = ParseDouble(chunks[6], allowCurrency:true);
-                        symbol = null;
-                    }
-                    else
-                    {
-                        investmentName = chunks[3];
-                        value = ParseDouble(chunks[7], allowCurrency:true);
-                        price = ParseDouble(chunks[5], allowCurrency:true);
-                        shares = ParseDouble(chunks[4]);
-                        costBasis = ParseDouble(chunks[13], allowCurrency:true);
-                    }
-
-                    if (value < 0.0 || value > 1.0) {
-                        if (lastAccountNumber != accountNumber)
-                        {
-                            newAccount = new() {
-                                Custodian = "Fidelity",
-                                Note = "*"+ accountNumber.Substring(accountNumber.Length-4,4)
-                            };
-                            newAccount.GuessAccountType();
-                            importedAccounts.Add(newAccount);
-                            lastAccountNumber = accountNumber;
+                        // many tickers have "**" at end, signifying money market fund.
+                        if (symbol.Length >= 2 && symbol.Substring(symbol.Length-2) == "**") { 
+                            symbol = symbol.Substring(0, symbol.Length - 2);
                         }
 
-                        Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares, CostBasis = costBasis };
-                        newAccount?.Investments.Add(newInvestment);
+                        string? investmentName;
+                        double value;
+                        double? price = null;
+                        double? shares = null;
+                        double? costBasis = null;
+
+                        // many tickers have "**" at end, signifying money market fund.
+                        if (symbol.Length >= 2 && symbol.Substring(symbol.Length-2) == "**") { 
+                            symbol = symbol.Substring(0, symbol.Length - 2);
+                        }
+
+                        if (symbol == "Pending Activity")
+                        {
+                            investmentName = symbol;
+                            value = ParseDouble(chunks[6], allowCurrency:true);
+                            symbol = null;
+                        }
+                        else
+                        {
+                            investmentName = chunks[3];
+                            value = ParseDouble(chunks[7], allowCurrency:true);
+                            price = ParseDouble(chunks[5], allowCurrency:true);
+                            shares = ParseDouble(chunks[4]);
+                            costBasis = ParseDouble(chunks[13], allowCurrency:true);
+                        }
+
+                        if (value < 0.0 || value > 1.0) {
+                            if (lastAccountNumber != accountNumber)
+                            {
+                                newAccount = new() {
+                                    Custodian = "Fidelity",
+                                    Note = "*"+ accountNumber.Substring(accountNumber.Length-4,4)
+                                };
+                                newAccount.GuessAccountType();
+                                importedAccounts.Add(newAccount);
+                                lastAccountNumber = accountNumber;
+                            }
+
+                            Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares, CostBasis = costBasis };
+                            newAccount?.Investments.Add(newInvestment);
+                        }
+                    } 
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("skipped line due to error: " + line);
+                        Console.WriteLine(e.Message);
                     }
 
                     line = lines[lineIndex++];
