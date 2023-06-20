@@ -8,6 +8,7 @@
 @inject IJSRuntime JS
 @inject NavigationManager Navigation
 @inject IList<Fund> Funds
+@inject IList<Fund> Stocks
 @using System.Text.Json.Serialization
 
 <PageTitle>
@@ -1023,7 +1024,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     private async Task OnDataFilesImport(InputFileChangeEventArgs e)
     {
         var files = e.GetMultipleFiles();
-        ImportResult = await Importer.ImportDataFiles(files, Funds, familyData.Accounts);
+        ImportResult = await Importer.ImportDataFiles(files, Funds, Stocks, familyData.Accounts);
         foreach (var account in ImportResult.ImportedAccounts) 
         {
             account.Import = true;
@@ -1066,7 +1067,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
 
     private void addInvestment(MouseEventArgs e, int accountIndex)
     {
-        var newInvestment = new Investment() { funds = Funds };
+        var newInvestment = new Investment() { funds = Funds, stocks = Stocks };
         familyData.Accounts[accountIndex].Investments.Add(newInvestment);
         focusTicker = true;
     }
@@ -1079,7 +1080,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     }
     void addAvailableFund(MouseEventArgs e, Account account)
     {
-        var newFund = new Investment() { funds = Funds };
+        var newFund = new Investment() { funds = Funds, stocks = Stocks };
         account.AvailableFunds.Add(newFund);
         focusTicker = true;
     }
@@ -1090,7 +1091,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     void addAccount()
     {
         var newAccount = new Account();
-        var newInvestment = new Investment() { funds = Funds };
+        var newInvestment = new Investment() { funds = Funds, stocks = Stocks };
         newAccount.Investments.Add(newInvestment);
         familyData?.Accounts.Add(newAccount);
         focusAccount = true;

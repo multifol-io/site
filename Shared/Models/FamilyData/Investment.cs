@@ -4,6 +4,8 @@ public class Investment
 {
     [JsonIgnore]
     public IList<Fund>? funds { get; set; }
+    [JsonIgnore]
+    public IList<Fund>? stocks { get; set; }
 
     private string? _Name;
     public string? Name { 
@@ -32,6 +34,17 @@ public class Investment
                     {
                         AutoComplete(fund);
                         found = true;
+                        return;
+                    }
+                }
+                foreach (var stock in stocks)
+                {
+                    if (_Ticker == stock.Ticker)
+                    {
+                        stock.AssetType = global::AssetType.Stock;
+                        AutoComplete(stock);
+                        found = true;
+                        return;
                     }
                 }
                 if (!found) {

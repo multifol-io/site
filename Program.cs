@@ -25,6 +25,9 @@ if (irsData != null) {
 var fundsUri = new Uri(builder.HostEnvironment.BaseAddress + "/data/funds.json");
 var fundsJson = await httpClient.GetAsync(fundsUri.AbsoluteUri);
 
+var stocksUri = new Uri(builder.HostEnvironment.BaseAddress + "/data/USStocks.json");
+var stocksJson = await httpClient.GetAsync(stocksUri.AbsoluteUri);
+
 JsonSerializerOptions options = new() {
     Converters =
         {
@@ -35,6 +38,10 @@ JsonSerializerOptions options = new() {
 var Funds = await JsonSerializer.DeserializeAsync<List<Fund>>(fundsJson.Content.ReadAsStream(), options);
 if (Funds != null) {
     builder.Services.AddSingleton<IList<Fund>>(Funds);
+}
+var Stocks = await JsonSerializer.DeserializeAsync<List<Fund>>(stocksJson.Content.ReadAsStream(), options);
+if (Stocks != null) {
+    builder.Services.AddSingleton<IList<Fund>>(Stocks);
 }
 
 builder.Services.AddScoped<LocalStorageAccessor>();
