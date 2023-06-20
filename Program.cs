@@ -36,13 +36,9 @@ JsonSerializerOptions options = new() {
 };
 
 var Funds = await JsonSerializer.DeserializeAsync<List<Fund>>(fundsJson.Content.ReadAsStream(), options);
-if (Funds != null) {
-    builder.Services.AddSingleton<IList<Fund>>(Funds);
-}
 var Stocks = await JsonSerializer.DeserializeAsync<List<Fund>>(stocksJson.Content.ReadAsStream(), options);
-if (Stocks != null) {
-    builder.Services.AddSingleton<IList<Fund>>(Stocks);
-}
+Funds.AddRange(Stocks);
+    builder.Services.AddSingleton<IList<Fund>>(Funds);
 
 builder.Services.AddScoped<LocalStorageAccessor>();
 

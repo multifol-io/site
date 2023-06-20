@@ -7,7 +7,6 @@
 @inject IJSRuntime JS
 @inject NavigationManager Navigation
 @inject IList<Fund> Funds
-@inject IList<Fund> Stocks
 @using System.Text.Json.Serialization
 
 <PageTitle>
@@ -603,7 +602,7 @@ Retirement - bogle.tools
     private async Task OnDataFilesImport(InputFileChangeEventArgs e)
     {
         var files = e.GetMultipleFiles();
-        ImportResult = await Importer.ImportDataFiles(files, Funds, Stocks, familyData.Accounts);
+        ImportResult = await Importer.ImportDataFiles(files, Funds, familyData.Accounts);
         foreach (var account in ImportResult.ImportedAccounts) 
         {
             account.Import = true;
