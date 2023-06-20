@@ -11,14 +11,14 @@ using System.Net.Http;
 
 namespace api
 {
-    public static class GetQuotes
+    public static class SearchTicker
     {
-        [FunctionName("GetQuotes")]
+        [FunctionName("SearchTicker")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("GetQuotes processed a request.");
+            log.LogInformation("SearchTicker processed a request.");
 
             string ticker = req.Query["ticker"];
             string apikey = req.Query["apikey"];
@@ -28,7 +28,7 @@ namespace api
             ticker = ticker ?? data?.ticker;
             apikey = apikey ?? data?.apikey;
 
-            string url = $"https://eodhistoricaldata.com/api/real-time/{ticker}?fmt=json&api_token={apikey}";
+            string url = $"https://eodhistoricaldata.com/api/search/{ticker}?api_token={apikey}";
             var httpClient = new HttpClient();
             try {
                 var quoteDataJson = await httpClient.GetStringAsync(url);
