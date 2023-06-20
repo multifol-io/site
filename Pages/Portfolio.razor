@@ -81,17 +81,17 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                 </span>
                             </td>
                             @switch (step.step) {
-                                case "age": 
+                                case "people": 
                                     <td>
                                         @((MarkupString)bold("Tax Filing Status:"))
                                         @if (familyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@familyData.TaxFilingStatus</span> }
                                         <br/>
-                                        @((MarkupString)bold("Age:"))
-                                        @if(familyData.PersonCount > 0 && familyData.People[0].Age != null) {
-                                            <span>&nbsp;@familyData.People[0].Age @getPronoun(familyData.People[0])</span>
+                                        @if(familyData.PersonCount > 0) {
+                                            <b>People:</b><br/>
+                                            <span>&nbsp;@getPronoun(familyData.People[0])</span>
                                         }
-                                        @if(familyData.PersonCount > 1 && familyData.People[1].Age != null) {
-                                            <span>&nbsp;and @familyData.People[1].Age @getPronoun(familyData.People[1])</span>
+                                        @if(familyData.PersonCount > 1) {
+                                            <span>&nbsp;and @getPronoun(familyData.People[1])</span>
                                         }
                                         <br/><br/>
                                     </td>
@@ -363,7 +363,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                 </EditForm>
                                 <br/>
                                 break;
-                            case "age":
+                            case "people":
                                 <p><b>Worksheet:</b> </p>
                                 <label>Tax Filing Status:</label>
                                 <select @bind=familyData.TaxFilingStatus>
@@ -381,8 +381,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                     <p><b>Person @personIndex:</b> </p>
 
                                     <EditForm Model="person" style=margin-left:25px>
-                                        <label>Age:</label> <input style=width:60px type=number min=0 max=125 @bind-Value=person.Age @bind-Value:event=oninput /><br/>
-
                                         @if(person?.FamilyData?.PersonCount>1){<label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
                                             <option value="ChoiceNeeded">ChoiceNeeded</option>
                                             <option>person @personIndex</option>
