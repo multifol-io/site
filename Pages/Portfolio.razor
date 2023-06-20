@@ -64,12 +64,9 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             
             <h4 style="max-width:450px">
                 Portfolio <br/>
-                <br/>
             </h4>
 
-            <p>Organizing information about your portfolio will help you optimize your finances.<br/>
-            (See the <a href="portfolio-review">Portfolio Review</a> page for help authoring portolio reviews for the Bogleheads.org forum.)<br/>
-            Press Save button to save your data. <a href="updated-quotes">Enable updates to stock/fund prices</a>.</p>
+            <p>Organizing information about your portfolio will help you optimize your finances.</p>
 
             <div>
                 <p ><b>Press each ✏️ button to enter info:</b></p>
@@ -159,7 +156,16 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                     <th style=padding-left:8px></th>
                                                     <th style=padding-left:8px>Type</th>
                                                     <th style=padding-left:8px>Ticker</th>
-                                                    <th style=padding-left:8px><button @onclick=@refreshPrices title=Refresh>🔃</button><br/>$ / share</th>
+                                                    <th style=padding-left:8px;text-align:center>
+                                                        @if (familyData.EODHistoricalDataApiKey != null)
+                                                        {
+                                                            <button @onclick=@refreshPrices title=Refresh>🔃</button>
+                                                        } else {
+                                                            <a href="updated-quotes">Enable<br/>updates.</a>
+                                                        }
+                                                        <br/>
+                                                        <span>$ / share</span>
+                                                    </th>
                                                     <th style=padding-left:8px>Shares</th>
                                                     <th style=padding-left:8px>$ Value</th>
                                                 </tr>
