@@ -113,7 +113,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                     break;
                                 case "retirement-assets":
                                     <td>
-                                        @((MarkupString)bold("Portfolio Size:"))&nbsp;@(familyData.ValueStyle==0?formatMoneyThousands(familyData.Value):(familyData.ValueStyle==1?estimatePortfolio(familyData):formatMoney(familyData.Value)))<br/>
+                                        @((MarkupString)bold("Portfolio Size:"))&nbsp;@(formatMoney(familyData.Value))<br/>
                                         <br/>
                                         @if (familyData.Accounts.Count > 0) {
  
