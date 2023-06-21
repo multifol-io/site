@@ -384,7 +384,7 @@ public class FamilyData : IFamilyData
                 listInvestments.Add(investment);
             }
             
-            return listInvestments;
+            return listInvestments.OrderByDescending(i=>i.Value).ToList();
         }
     }
     public string PortfolioView { get; set; }
