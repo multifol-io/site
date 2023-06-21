@@ -345,25 +345,24 @@ public class FamilyData : IFamilyData
             {
                 foreach (var investment in account.Investments)
                 {
-                    if (investment.Ticker != null) {
-                        Investment matchingInvestment = null;
-                        if (!_GroupedInvestments.ContainsKey(investment.Ticker))
-                        {
-                            matchingInvestment = new Investment() { Ticker = investment.Ticker, Shares = 0.0, Price = investment.Price };
-                            _GroupedInvestments.Add(investment.Ticker, matchingInvestment);
-                        }
-                        else
-                        {
-                            matchingInvestment = _GroupedInvestments[investment.Ticker];
-                        }
+                    var key = string.IsNullOrEmpty(investment.Ticker) ? investment.Name : investment.Ticker;
+                    Investment? matchingInvestment;
+                    if (!_GroupedInvestments.ContainsKey(key))
+                    {
+                        matchingInvestment = new Investment() { Name = investment.Name, Ticker = investment.Ticker, Shares = 0.0, Price = investment.Price, Value = 0.0 };
+                        _GroupedInvestments.Add(key, matchingInvestment);
+                    }
+                    else
+                    {
+                        matchingInvestment = _GroupedInvestments[key];
+                    }
 
-                        if (investment.Shares != null) {
-                            matchingInvestment.Shares += investment.Shares;
-                        } 
-                        else
-                        {
-                            matchingInvestment.Value += investment.Value;
-                        }
+                    if (investment.Shares != null) {
+                        matchingInvestment.Shares += investment.Shares;
+                    } 
+                    else
+                    {
+                        matchingInvestment.Value += investment.Value;
                     }
                 }
             }
@@ -376,6 +375,12 @@ public class FamilyData : IFamilyData
                 {
                     investment.Value = investment.Price * investment.Shares;
                 }
+
+                if (investment.Shares == 0.0)
+                {
+                    investment.Shares = null;
+                }
+
                 listInvestments.Add(investment);
             }
             

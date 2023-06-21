@@ -159,6 +159,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                             <table>
                                                 @if (familyData.Accounts.Count > 0) {
                                                     <tr style=vertical-align:bottom>
+                                                        <th>Name</th>
                                                         <th style=padding-left:8px>Ticker</th>
                                                         <th style=padding-left:8px;text-align:center>
                                                             @if (familyData.EODHistoricalDataApiKey != null)
@@ -168,18 +169,19 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                 <a href="updated-quotes">Enable<br/>updates.</a>
                                                             }
                                                             <br/>
-                                                            <span>$ / share</span>
+                                                            <span>Price</span>
                                                         </th>
-                                                        <th style=padding-left:8px>Shares</th>
-                                                        <th style=padding-left:8px>$ Value</th>
+                                                        <th style=padding-left:8px>Quantity</th>
+                                                        <th style=padding-left:8px>Balance</th>
                                                     </tr>
                                                 }
                                                 @foreach (var investment in familyData.GroupedInvestments) {
                                                     <tr>
+                                                        <td>@investment.Name</td>
                                                         <td style=padding-left:8px title=@investment.Name>@investment.Ticker</td>
-                                                        <td style=text-align:right;padding-left:8px>@formatDoubleTwoDecimal(investment.Price)</td>
+                                                        <td style=text-align:right;padding-left:8px>@formatMoney(investment.Price)</td>
                                                         <td style=text-align:right;padding-left:8px>@formatDoubleFourDecimal(investment.Shares)</td>
-                                                        <td style=text-align:right;padding-left:8px>@formatDoubleTwoDecimal(investment.Value)</td>
+                                                        <td style=text-align:right;padding-left:8px>@formatMoney(investment.Value)</td>
                                                     </tr>
                                                 }
                                             </table>
@@ -201,10 +203,10 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                 <a href="updated-quotes">Enable<br/>updates.</a>
                                                             }
                                                             <br/>
-                                                            <span>$ / share</span>
+                                                            <span>Price</span>
                                                         </th>
-                                                        <th style=padding-left:8px>Shares</th>
-                                                        <th style=padding-left:8px>$ Value</th>
+                                                        <th style=padding-left:8px>Quantity</th>
+                                                        <th style=padding-left:8px>Balance</th>
                                                     </tr>
                                                 }
                                                 @foreach (var account in familyData.Accounts) {
@@ -214,9 +216,9 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             <td style=padding-left:8px>@account.Identifier</td>
                                                             <td style=padding-left:8px>@account.AccountType</td>
                                                             <td style=padding-left:8px title=@investment.Name>@investment.Ticker</td>
-                                                            <td style=text-align:right;padding-left:8px>@formatDoubleTwoDecimal(investment.Price)</td>
+                                                            <td style=text-align:right;padding-left:8px>@formatMoney(investment.Price)</td>
                                                             <td style=text-align:right;padding-left:8px>@formatDoubleFourDecimal(investment.Shares)</td>
-                                                            <td style=text-align:right;padding-left:8px>@formatDoubleTwoDecimal(investment.Value)</td>
+                                                            <td style=text-align:right;padding-left:8px>@formatMoney(investment.Value)</td>
                                                         </tr>
                                                     }
                                                 }
@@ -810,7 +812,14 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     }
     public string formatMoney(double? amount) 
     {
-        return String.Format("${0:#,0.##}", amount);
+        if (amount.HasValue)
+        {
+            return String.Format("${0:#,0.00}", amount);
+        }
+        else
+        {
+            return "";
+        }
     }
     public string formatDoubleTwoDecimal(double? amount) 
     {
