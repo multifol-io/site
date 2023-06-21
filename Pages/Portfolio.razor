@@ -226,7 +226,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             <td style=text-align:right;padding-left:8px>@formatDoubleFourDecimal(investment.Shares)</td>
                                                             <td style=text-align:right;padding-left:8px>@formatMoney(investment.Value)</td>
                                                             <td style=text-align:right;padding-left:8px>@formatPercent3(investment.PercentChange)</td>
-                                                            <td style=text-align:right;padding-left:8px>@investment.LastUpdated</td>
+                                                            <td style=text-align:right;padding-left:8px>@investment.LastUpdated?.ToShortTimeString()</td>
                                                         </tr>
                                                     }
                                                 }
