@@ -173,6 +173,8 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                         </th>
                                                         <th style=padding-left:8px>Quantity</th>
                                                         <th style=padding-left:8px>Balance</th>
+                                                        <th style=padding-left:8px>% change</th>
+                                                        <th style=padding-left:8px>as of</th>
                                                     </tr>
                                                 }
                                                 @foreach (var investment in familyData.GroupedInvestments) {
@@ -182,6 +184,8 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                         <td style=text-align:right;padding-left:8px>@formatMoney(investment.Price)</td>
                                                         <td style=text-align:right;padding-left:8px>@formatDoubleFourDecimal(investment.Shares)</td>
                                                         <td style=text-align:right;padding-left:8px>@formatMoney(investment.Value)</td>
+                                                        <td style=text-align:right;padding-left:8px>@formatPercent3(investment.PercentChange)</td>
+                                                        <td style=text-align:right;padding-left:8px>@investment.LastUpdated</td>
                                                     </tr>
                                                 }
                                             </table>
@@ -207,6 +211,8 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                         </th>
                                                         <th style=padding-left:8px>Quantity</th>
                                                         <th style=padding-left:8px>Balance</th>
+                                                        <th style=padding-left:8px>% change</th>
+                                                        <th style=padding-left:8px>as of</th>
                                                     </tr>
                                                 }
                                                 @foreach (var account in familyData.Accounts) {
@@ -219,6 +225,8 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             <td style=text-align:right;padding-left:8px>@formatMoney(investment.Price)</td>
                                                             <td style=text-align:right;padding-left:8px>@formatDoubleFourDecimal(investment.Shares)</td>
                                                             <td style=text-align:right;padding-left:8px>@formatMoney(investment.Value)</td>
+                                                            <td style=text-align:right;padding-left:8px>@formatPercent3(investment.PercentChange)</td>
+                                                            <td style=text-align:right;padding-left:8px>@investment.LastUpdated</td>
                                                         </tr>
                                                     }
                                                 }
@@ -1048,7 +1056,14 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             investment.Value = investment.Price * investment.Shares;
         }
     }
-
+    public static DateTime? UnixTimeStampToDateTime( int? unixTimeStamp )
+    {
+        if (!unixTimeStamp.HasValue) return null;
+        // Unix timestamp is seconds past epoch
+        DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+        dateTime = dateTime.AddSeconds( unixTimeStamp ?? 0 ).ToLocalTime();
+        return dateTime;
+    }
     private async Task UpdateInvestmentsPrice(string ticker, List<Investment> investments)
     {
         if (!string.IsNullOrEmpty(familyData.EODHistoricalDataApiKey)) {
@@ -1057,6 +1072,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             if (quoteData?.Close != null) {
                 foreach (var investment in investments) {
                     investment.Price = quoteData.Close;
+                    investment.PreviousClose = quoteData.PreviousClose;
+                    investment.PercentChange = quoteData.ChangeP;
+                    if (quoteData.Timestamp != null) {
+                        investment.LastUpdated = UnixTimeStampToDateTime(quoteData.Timestamp);
+                    }
                     investment.Value = investment.Price * investment.Shares;
                 }
             }
