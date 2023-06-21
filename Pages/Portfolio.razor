@@ -113,7 +113,8 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                     break;
                                 case "retirement-assets":
                                     <td>
-                                        @((MarkupString)bold("Portfolio Size:"))&nbsp;@(formatMoney(familyData.Value))<br/>
+                                        @((MarkupString)bold("Portfolio Size:"))&nbsp;@(formatMoney(familyData.Value))<br/> 
+                                        &nbsp;&nbsp;<span title='Change: @formatMoney(portfolioChange())'>.</span><br/>
                                         <br/>
                                         @if (familyData.Accounts.Count > 0) {
  
@@ -1223,5 +1224,19 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         {
             await UpdateInvestmentsPrice(quote.Key, quote.Value);
         }
+    }
+
+    private double? portfolioChange() 
+    {
+        double change = 0.0;
+        foreach (var investment in familyData.GroupedInvestments)
+        {
+            if (investment.PercentChange != null)
+            {
+                change += (investment.Price ?? 0.0 - investment.PreviousClose ?? 0.0) * investment.Shares ?? 0.0;
+            }
+        }
+
+        return change == 0.0 ? null : change;
     }
 }
