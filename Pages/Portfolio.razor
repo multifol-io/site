@@ -1073,8 +1073,15 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             if (quoteData?.Close != null) {
                 foreach (var investment in investments) {
                     investment.Price = quoteData.Close;
-                    investment.PreviousClose = quoteData.PreviousClose;
-                    investment.PercentChange = quoteData.ChangeP;
+                    if (quoteData.Volume == 0) {
+                        investment.PreviousClose = quoteData.Close;
+                        investment.PercentChange = null;
+                    }
+                    else
+                    {
+                        investment.PreviousClose = quoteData.PreviousClose;
+                        investment.PercentChange = quoteData.ChangeP;
+                    }
                     if (quoteData.Timestamp != null) {
                         investment.LastUpdated = UnixTimeStampToDateTime(quoteData.Timestamp);
                     }
