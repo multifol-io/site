@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Office.CoverPageProps;
 using IRS;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
@@ -337,6 +338,51 @@ public class FamilyData : IFamilyData
 
     public List<Account> Accounts { get; set; }
 
+    public List<Investment> GroupedInvestments { 
+        get {
+            Dictionary<string,Investment> _GroupedInvestments = new();
+            foreach (var account in Accounts) 
+            {
+                foreach (var investment in account.Investments)
+                {
+                    if (investment.Ticker != null) {
+                        Investment matchingInvestment = null;
+                        if (!_GroupedInvestments.ContainsKey(investment.Ticker))
+                        {
+                            matchingInvestment = new Investment() { Ticker = investment.Ticker, Shares = 0.0, Price = investment.Price };
+                            _GroupedInvestments.Add(investment.Ticker, matchingInvestment);
+                        }
+                        else
+                        {
+                            matchingInvestment = _GroupedInvestments[investment.Ticker];
+                        }
+
+                        if (investment.Shares != null) {
+                            matchingInvestment.Shares += investment.Shares;
+                        } 
+                        else
+                        {
+                            matchingInvestment.Value += investment.Value;
+                        }
+                    }
+                }
+            }
+
+            var listInvestments = new List<Investment>();
+            foreach (var key in _GroupedInvestments.Keys)
+            {
+                var investment = _GroupedInvestments[key];
+                if (investment.Price != null && investment.Shares != null)
+                {
+                    investment.Value = investment.Price * investment.Shares;
+                }
+                listInvestments.Add(investment);
+            }
+            
+            return listInvestments;
+        }
+    }
+    public string PortfolioView { get; set; }
     public string? AdditionalBackground { get; set; }
     public List<string> Questions { get; set; }
 

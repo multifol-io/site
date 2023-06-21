@@ -149,41 +149,79 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                         @if (familyData.Accounts.Count > 0) {
                                             @((MarkupString)boldUnderline("Current Retirement Assets:"))<br/>
                                         }
-                                        <table>
-                                            @if (familyData.Accounts.Count > 0) {
-                                                <tr style=vertical-align:bottom>
-                                                    <th>Account</th>
-                                                    <th style=padding-left:8px></th>
-                                                    <th style=padding-left:8px>Type</th>
-                                                    <th style=padding-left:8px>Ticker</th>
-                                                    <th style=padding-left:8px;text-align:center>
-                                                        @if (familyData.EODHistoricalDataApiKey != null)
-                                                        {
-                                                            <button @onclick=@refreshPrices title=Refresh>🔃</button>
-                                                        } else {
-                                                            <a href="updated-quotes">Enable<br/>updates.</a>
-                                                        }
-                                                        <br/>
-                                                        <span>$ / share</span>
-                                                    </th>
-                                                    <th style=padding-left:8px>Shares</th>
-                                                    <th style=padding-left:8px>$ Value</th>
-                                                </tr>
-                                            }
-                                            @foreach (var account in familyData.Accounts) {
-                                                @foreach (var investment in account.Investments) {
+
+                                        <Label>View:</Label>&nbsp;<InputSelect @bind-Value=familyData.PortfolioView >
+                                            <option>All Investments by Account</option>
+                                            <option>Group Investments by Ticker</option>
+                                        </InputSelect>
+                                        @if(familyData.PortfolioView == "Group Investments by Ticker")
+                                        {
+                                            <table>
+                                                @if (familyData.Accounts.Count > 0) {
+                                                    <tr style=vertical-align:bottom>
+                                                        <th style=padding-left:8px>Ticker</th>
+                                                        <th style=padding-left:8px;text-align:center>
+                                                            @if (familyData.EODHistoricalDataApiKey != null)
+                                                            {
+                                                                <button @onclick=@refreshPrices title=Refresh>🔃</button>
+                                                            } else {
+                                                                <a href="updated-quotes">Enable<br/>updates.</a>
+                                                            }
+                                                            <br/>
+                                                            <span>$ / share</span>
+                                                        </th>
+                                                        <th style=padding-left:8px>Shares</th>
+                                                        <th style=padding-left:8px>$ Value</th>
+                                                    </tr>
+                                                }
+                                                @foreach (var investment in familyData.GroupedInvestments) {
                                                     <tr>
-                                                        <td>@((account.Custodian != null ? account.Custodian + " ": "")+ account.Note)</td>
-                                                        <td style=padding-left:8px>@account.Identifier</td>
-                                                        <td style=padding-left:8px>@account.AccountType</td>
                                                         <td style=padding-left:8px title=@investment.Name>@investment.Ticker</td>
                                                         <td style=text-align:right;padding-left:8px>@formatDoubleTwoDecimal(investment.Price)</td>
                                                         <td style=text-align:right;padding-left:8px>@formatDoubleFourDecimal(investment.Shares)</td>
                                                         <td style=text-align:right;padding-left:8px>@formatDoubleTwoDecimal(investment.Value)</td>
                                                     </tr>
                                                 }
-                                            }
-                                        </table>
+                                            </table>
+                                        }
+                                        else
+                                        {
+                                            <table>
+                                                @if (familyData.Accounts.Count > 0) {
+                                                    <tr style=vertical-align:bottom>
+                                                        <th>Account</th>
+                                                        <th style=padding-left:8px></th>
+                                                        <th style=padding-left:8px>Type</th>
+                                                        <th style=padding-left:8px>Ticker</th>
+                                                        <th style=padding-left:8px;text-align:center>
+                                                            @if (familyData.EODHistoricalDataApiKey != null)
+                                                            {
+                                                                <button @onclick=@refreshPrices title=Refresh>🔃</button>
+                                                            } else {
+                                                                <a href="updated-quotes">Enable<br/>updates.</a>
+                                                            }
+                                                            <br/>
+                                                            <span>$ / share</span>
+                                                        </th>
+                                                        <th style=padding-left:8px>Shares</th>
+                                                        <th style=padding-left:8px>$ Value</th>
+                                                    </tr>
+                                                }
+                                                @foreach (var account in familyData.Accounts) {
+                                                    @foreach (var investment in account.Investments) {
+                                                        <tr>
+                                                            <td>@((account.Custodian != null ? account.Custodian + " ": "")+ account.Note)</td>
+                                                            <td style=padding-left:8px>@account.Identifier</td>
+                                                            <td style=padding-left:8px>@account.AccountType</td>
+                                                            <td style=padding-left:8px title=@investment.Name>@investment.Ticker</td>
+                                                            <td style=text-align:right;padding-left:8px>@formatDoubleTwoDecimal(investment.Price)</td>
+                                                            <td style=text-align:right;padding-left:8px>@formatDoubleFourDecimal(investment.Shares)</td>
+                                                            <td style=text-align:right;padding-left:8px>@formatDoubleTwoDecimal(investment.Value)</td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            </table>
+                                        }
                                         <br/>
                                     </td>
                                     break;                                
