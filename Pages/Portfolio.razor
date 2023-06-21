@@ -185,7 +185,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                         <td style=text-align:right;padding-left:8px>@formatDoubleFourDecimal(investment.Shares)</td>
                                                         <td style=text-align:right;padding-left:8px>@formatMoney(investment.Value)</td>
                                                         <td style=text-align:right;padding-left:8px>@formatPercent3(investment.PercentChange)</td>
-                                                        <td style=text-align:right;padding-left:8px>@investment.LastUpdated</td>
+                                                        <td style=text-align:right;padding-left:8px>@investment.LastUpdated?.ToShortTimeString()</td>
                                                     </tr>
                                                 }
                                             </table>
@@ -855,7 +855,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     }
     public string formatPercent3(double? amount)
     {
-        return String.Format("{0:#,0.###}%", amount);
+        return amount.HasValue ? String.Format("{0:#,#.###}%", amount) : "";
     }
     public string estimatePortfolio(IFamilyData familyData) 
     {
