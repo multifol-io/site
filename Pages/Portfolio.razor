@@ -162,7 +162,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                         <th>Name</th>
                                                         <th style=padding-left:8px>Ticker</th>
                                                         <th style=padding-left:8px;text-align:center>
-                                                            @if (familyData.EODHistoricalDataApiKey != null)
+                                                            @if (!string.IsNullOrEmpty(familyData.EODHistoricalDataApiKey))
                                                             {
                                                                 <button @onclick=@refreshPrices title=Refresh>🔃</button>
                                                             } else {
