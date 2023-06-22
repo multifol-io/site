@@ -686,10 +686,6 @@ Retirement - bogle.tools
         familyData.Accounts[index].Edit = true;
     }
 
-    private async Task OnLoadPortfolioForTopic() {
-        await LoadPortfolioForTopic(TopicValue);
-    }
-
     private void OnClearPortfolio() {
         familyData = new FamilyData(irsData);
         Navigation.NavigateTo("/portfolio");

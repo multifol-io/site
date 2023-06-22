@@ -1,0 +1,45 @@
+﻿@page "/profiles"
+@inject IAppData appData
+@inject NavigationManager Navigation
+@inject LocalStorageAccessor LocalStorageAccessor
+@inject IRSData irsData
+
+<PageTitle>bogle.tools profiles</PageTitle>
+
+<h1>bogle.tools profiles</h1>
+
+
+Profiles:<br/>
+<ul>
+
+@foreach(var profileName in appData.ProfileNames)
+{
+    <li><a href=/portfolio @onclick="@(e=>gotoProfile(e,profileName))" @onclick:preventDefault>@profileName</a></li>
+}
+
+</ul>
+
+<label>Create new profile:</label><br/>
+<InputText placeholder="name" @bind-Value="@newProfileName" /><button @onclick="createProfile">create</button>
+
+@code {
+    private async Task gotoProfile(EventArgs e, string profileName)
+    {
+        appData.CurrentProfileName = profileName;
+        await ProfileUtilities.Load(appData);
+        Navigation.NavigateTo("/portfolio");
+    }
+    private async Task createProfile()
+    {
+        if (!string.IsNullOrEmpty(newProfileName)) {
+            appData.ProfileNames.Add(newProfileName);
+            await ProfileUtilities.Save(newProfileName, new FamilyData(irsData));
+            newProfileName = "";
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+    private string newProfileName { get; set; }
+}

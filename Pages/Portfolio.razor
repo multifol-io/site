@@ -1,6 +1,5 @@
 @page "/portfolio"
 @page "/portfolio/reload"
-@page "/portfolio/topic/{TopicValue}"
 @page "/portfolio/{stepPath}"
 @inject HttpClient Http
 @inject IAppData appData
@@ -63,7 +62,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             familyData.UpdatePercentages();
             
             <h4 style="max-width:450px">
-                Portfolio <br/>
+                Portfolio (@appData.CurrentProfileName)<br/>
             </h4>
 
             <p>Organizing information about your portfolio will help you optimize your finances.</p>
@@ -263,7 +262,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                     string nextPage = folderName + nextStep?.step;
 
                     <h4 style="max-width:450px">
-                        <NavLink href=/portfolio>Portfolio</NavLink> &gt; @step.title (@step.number)<br/>
+                        <NavLink href=/portfolio>Portfolio (@appData.CurrentProfileName)</NavLink> &gt; @step.title (@step.number)<br/>
                         <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                         <br/>
                     </h4>
@@ -1005,9 +1004,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     [Parameter]
     public string? stepPath { get; set; }
 
-    [Parameter]
-    public string? TopicValue { get; set; }
-
     public bool ShowMarkup { get; set; }
     public string? currentAccountIndex { get; set; }
     private Step[]? steps;
@@ -1030,10 +1026,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     protected override async Task OnInitializedAsync()
     {
         steps = await Http.GetFromJsonAsync<Step[]>("data/portfolio-assets-steps.json");
-
-        if (!string.IsNullOrEmpty(TopicValue)) {
-            await LoadPortfolioForTopic(TopicValue);
-        }
     }
 
     private ElementReference tickerN;

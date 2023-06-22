@@ -7,124 +7,46 @@
 @inject IJSRuntime JS
 
 <div style=position:absolute;right:0px;padding:10px>
-    Your data is <a style=margin-left:0px href=/about>kept private</a>: <button @onclick=@Save>Save</button> or 
+    <a href=/profiles>Profile list.</a> Data is <a style=margin-left:0px href=/about>kept private</a>: <button @onclick=@Save>Save</button> or 
     <button @onclick=@Clear>Erase</button>
 </div>
 
 @code{    
-    public string Key { get; set; } = "localSave";
-    public string Value { get; set; } = "";
-    public string storedJson { get; set; } = "";
 
-    public async Task Save()
-    {
-        var options = new JsonSerializerOptions() 
-        {
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
-            IgnoreReadOnlyProperties = true,
-            WriteIndented = true,
-            Converters =
-                {
-                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                }
-        };
-        var jsonOut = System.Text.Json.JsonSerializer.Serialize(familyData, options);
+    private async Task Save() {
+        await ProfileUtilities.Save(appData.CurrentProfileKey, appData.FamilyData);
+    }    
 
-        await LocalStorageAccessor.SetValueAsync(Key, jsonOut);
-    }
-
-    public async Task Load()
-    {
-        try {
-            storedJson = await LocalStorageAccessor.GetValueAsync<string>(Key);
-            var options = new JsonSerializerOptions() 
-            {
-                Converters =
-                    {
-                        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                    }
-            };
-
-            familyData = FamilyData.LoadFromJson(familyData, storedJson, options);
-        } 
-        catch (Exception)
-        {
-            // Key + " in local storage not found...loading default."
-        }
-    }
-
-    public async Task Clear()
-    {
-        familyData = new FamilyData(irsData);
-        await LocalStorageAccessor.RemoveAsync(Key);
+    private async Task Clear() {
+        ProfileUtilities.Clear(appData, irsData);
         Navigation.NavigateTo("/");
-    }
-
-    public async Task ClearAllAsync()
-    {
-        await LocalStorageAccessor.Clear();
-    }
-    
-    private async Task OnLoadPortfolio(InputFileChangeEventArgs e)
-    {
-        var files = e.GetMultipleFiles();
-
-        if (files != null)
-        {
-            var options = new JsonSerializerOptions() 
-                {
-                    Converters =
-                        {
-                            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                        }
-                };
-
-            foreach (var file in files)
-            {
-                using (var stream = file.OpenReadStream()) {
-                    familyData = await FamilyData.LoadFromJsonStream(familyData, stream, options);
-                }
-            }
-        }
-    }
-
-    private async Task DownloadPortfolio() {
-        var options = new JsonSerializerOptions() 
-        {
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
-            IgnoreReadOnlyProperties = true,
-            WriteIndented = true,
-            Converters =
-                {
-                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                }
-        };
-        await DownloadFileFromStream(familyData, options, "bogle-tools-data.json");
-    }
-
-    private async Task DownloadFileFromStream(object data, JsonSerializerOptions options, string fileName)
-    {
-        var jsonOut = System.Text.Json.JsonSerializer.Serialize(data, options);
-
-        using (MemoryStream ms = new MemoryStream(System.Text.Encoding.ASCII.GetBytes(jsonOut)))
-        {
-            using var streamRef = new DotNetStreamReference(stream: ms);
-            await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
-        }
-    }
-
-    private FamilyData familyData {
-        get {
-            return appData.FamilyData;
-        }
-        set {
-            appData.FamilyData = value;
-        }
     }
 
     protected override async Task OnInitializedAsync()
     {
-        await Load();
-    }
+        ProfileUtilities.LocalStorageAccessor = LocalStorageAccessor;
+        appData.CurrentProfileName = "your";
+        await ProfileUtilities.Load(appData);
 
+        var keys = new List<string>();
+        var keysJsonElement = await LocalStorageAccessor.GetKeys();
+        foreach (var el in keysJsonElement.EnumerateArray())
+        {
+            string? value = el.GetString();
+            if (value != null) {
+                switch (value) {
+                    case "i18nextLng":
+                        break;
+                    case "localSave":
+                        keys.Add("your");
+                        break;
+                    default:
+                        keys.Add(value);
+                        break;
+                }
+            }
+        }
+
+        appData.ProfileNames = keys;
+    }
 }

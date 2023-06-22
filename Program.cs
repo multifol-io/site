@@ -17,6 +17,7 @@ IRSData? irsData = await IRSData.Create(httpClient);
 if (irsData != null) {
     builder.Services.AddSingleton<IRSData>(irsData);
     var appData = new AppData(new FamilyData(irsData));
+    appData.CurrentProfileName = "your";
     builder.Services.AddSingleton<IAppData>(appData);
 } else {
     throw new Exception("irsData is null");
