@@ -12,7 +12,7 @@ public class AppData : IAppData
     {
         get {
             switch (CurrentProfileName) {
-                case "your":
+                case "primary":
                     return "localSave";
                 default:
                     return CurrentProfileName;

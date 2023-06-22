@@ -6,8 +6,11 @@
 @inject IRSData irsData
 @inject IJSRuntime JS
 
+<div style=position:absolute;left:0px;padding:10px>
+    <a href=/profiles>Switch Profile</a>
+</div
 <div style=position:absolute;right:0px;padding:10px>
-    <a href=/profiles>Profile list.</a> Data is <a style=margin-left:0px href=/about>kept private</a>: <button @onclick=@Save>Save</button> or 
+     Data is <a style=margin-left:0px href=/about>kept private</a>: <button @onclick=@Save>Save</button> or 
     <button @onclick=@Clear>Erase</button>
 </div>
 
@@ -25,7 +28,7 @@
     protected override async Task OnInitializedAsync()
     {
         ProfileUtilities.LocalStorageAccessor = LocalStorageAccessor;
-        appData.CurrentProfileName = "your";
+        appData.CurrentProfileName = "primary";
         await ProfileUtilities.Load(appData);
 
         var keys = new List<string>();
@@ -38,7 +41,7 @@
                     case "i18nextLng":
                         break;
                     case "localSave":
-                        keys.Add("your");
+                        keys.Add("primary");
                         break;
                     default:
                         keys.Add(value);
