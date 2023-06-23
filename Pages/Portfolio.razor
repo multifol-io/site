@@ -62,7 +62,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             familyData.UpdatePercentages();
             
             <h4 style="max-width:450px">
-                Portfolio (@appData.CurrentProfileName)<br/>
+                Portfolio (<a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName</a>)<br/>
             </h4>
 
             <p>Organizing information about your portfolio will help you optimize your finances.</p>
@@ -298,7 +298,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                     string nextPage = folderName + nextStep?.step;
 
                     <h4 style="max-width:450px">
-                        <NavLink href=/portfolio>Portfolio (@appData.CurrentProfileName)</NavLink> &gt; @step.title (@step.number)<br/>
+                        <NavLink href=/portfolio>Portfolio</NavLink> (<a href=/profiles title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName</a>) &gt; @step.title (@step.number)<br/>
                         <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                         <br/>
                     </h4>
@@ -1280,5 +1280,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         }
 
         return change == 0.0 ? null : change;
+    }
+    
+    private void navWithBackStack()
+    {
+        appData.LastPageUri = Navigation.Uri;
+        Navigation.NavigateTo("/profiles");
     }
 }

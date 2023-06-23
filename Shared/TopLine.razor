@@ -6,22 +6,12 @@
 @inject IRSData irsData
 @inject IJSRuntime JS
 
-<div style=width:100%;vertical-align:middle>
-    <div style=float:left;padding:3px>
-        <a href=/profiles @onclick:preventDefault @onclick=navWithBackStack>Switch Profile</a>
-    </div
-    <div style=float:right>
-        <a style=margin-left:0px href=/about>Private data</a>: <button @onclick=@Save>Save</button> or 
-        <button @onclick=@Clear>Erase</button>
-    </div>
+<div>
+    <a style=margin-left:0px href=/about>Private data</a>: <button @onclick=@Save>Save</button> or 
+    <button @onclick=@Clear>Erase</button>
 </div>
 @code{
 
-    private void navWithBackStack()
-    {
-        appData.LastPageUri = Navigation.Uri;
-        Navigation.NavigateTo("/profiles");
-    }
     private async Task Save() {
         await ProfileUtilities.Save(appData.CurrentProfileKey, appData.FamilyData);
     }    
