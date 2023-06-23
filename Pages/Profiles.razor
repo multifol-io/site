@@ -10,24 +10,94 @@
 
 Click on profile name to make it the active profile. You'll be navigated back to your prior page.<br/>
 
-<ul>
-
+<table>
+    <tr>
+        <th></th>
+        <th>Name</th>
+        <th>Action</th>
+    </tr>
 @foreach(var profileName in appData.ProfileNames)
 {
-    <li><a href=/portfolio @onclick="@(e=>makeProfileActive(e,profileName))" @onclick:preventDefault>@profileName</a> @if(profileName==appData.CurrentProfileName){<b>&nbsp;[active]</b>}</li>
+    <tr>
+        <td>
+            @if(profileName==appData.CurrentProfileName){<b>&nbsp;[active]&nbsp;</b>} 
+        </td>
+        <td>
+            @if (renameProfileName == profileName)
+            {
+                <EditForm Model="appData">
+                    <InputText @bind-Value=newName />
+                </EditForm>
+            }
+            else
+            {
+                <a href=/portfolio @onclick="@(e=>makeProfileActive(e,profileName))" @onclick:preventDefault>@profileName</a><span>&nbsp;</span>
+            }
+        </td>
+        <td>
+            @if (renameProfileName == null || renameProfileName == profileName)
+            {
+                <button @onclick="@(e=>renameProfile(e,profileName))">Rename</button>
+            }
+            @if (renameProfileName == null)
+            {
+                <button @onclick="@(e=>deleteProfile(e,profileName))">Del</button>
+            }
+        </td>
+    </tr>
 }
 
-</ul>
-
+</table>
+<br/>
 <label>Create new profile:</label><br/>
-<InputText placeholder="name" @bind-Value="@newProfileName" /><button @onclick="createProfile">create</button>
+<InputText placeholder="name" @bind-Value="@newProfileName" /><button @onclick="createProfile">➕ create</button>
 
 @code {
+    private ElementReference renameBox;
+
     private async Task makeProfileActive(EventArgs e, string profileName)
     {
         appData.CurrentProfileName = profileName;
+        await LocalStorageAccessor.SetValueAsync("CurrentProfileName", profileName);
         await ProfileUtilities.Load(appData);
-        Navigation.NavigateTo(appData.LastPageUri);
+        if (appData.LastPageUri != null)
+        {
+            Navigation.NavigateTo(appData.LastPageUri);
+        }
+    }
+    private async Task renameProfile(EventArgs e, string profileName)
+    {
+        if (renameProfileName == null)
+        {
+            renameProfileName = profileName;
+            newName = profileName;
+        }
+        else
+        {
+            if (newName != renameProfileName && !string.IsNullOrEmpty(newName) && !appData.ProfileNames.Contains(newName))
+            {
+                await LocalStorageAccessor.RenameKey(renameProfileName, newName);
+                await ProfileUtilities.SetProfileNames(appData);
+
+                if (appData.CurrentProfileName == renameProfileName)
+                {
+                    appData.CurrentProfileName = newName;
+                }
+
+                renameProfileName = null;
+            }
+        }
+    }
+    private async Task deleteProfile(EventArgs e, string profileName)
+    {
+        await LocalStorageAccessor.RemoveAsync(profileName);
+        if (appData.CurrentProfileName == profileName)
+        {
+            appData.CurrentProfileName = null;
+            appData.FamilyData = null;
+        }
+
+        await ProfileUtilities.SetProfileNames(appData);
     }
 
     private async Task createProfile()
@@ -38,9 +108,13 @@ Click on profile name to make it the active profile. You'll be navigated back to
             newProfileName = "";
         }
     }
+
     protected override async Task OnInitializedAsync()
     {
 
     }
+
     private string newProfileName { get; set; }
+    private string? renameProfileName { get; set; }
+    private string? newName {get; set;}
 }

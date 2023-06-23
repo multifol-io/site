@@ -11,41 +11,30 @@
     <button @onclick=@Clear>Erase</button>
 </div>
 @code{
-
     private async Task Save() {
-        await ProfileUtilities.Save(appData.CurrentProfileKey, appData.FamilyData);
-    }    
+        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
+    }
 
     private async Task Clear() {
-        ProfileUtilities.Clear(appData, irsData);
+        ProfileUtilities.Clear(appData, appData.CurrentProfileName, irsData);
         Navigation.NavigateTo("/");
     }
 
     protected override async Task OnInitializedAsync()
     {
         ProfileUtilities.LocalStorageAccessor = LocalStorageAccessor;
-        appData.CurrentProfileName = "primary";
-        await ProfileUtilities.Load(appData);
+        await ProfileUtilities.SetProfileNames(appData);
 
-        var keys = new List<string>();
-        var keysJsonElement = await LocalStorageAccessor.GetKeys();
-        foreach (var el in keysJsonElement.EnumerateArray())
+        if (appData.CurrentProfileName != null && appData.ProfileNames.Contains(appData.CurrentProfileName))
         {
-            string? value = el.GetString();
-            if (value != null) {
-                switch (value) {
-                    case "i18nextLng":
-                        break;
-                    case "localSave":
-                        keys.Add("primary");
-                        break;
-                    default:
-                        keys.Add(value);
-                        break;
-                }
-            }
+            await ProfileUtilities.Load(appData);
         }
-
-        appData.ProfileNames = keys;
+        else
+        {
+            appData.CurrentProfileName = null;
+            await ProfileUtilities.SetProfileNames(appData);
+            appData.LastPageUri = Navigation.Uri;
+            Navigation.NavigateTo("/profiles");
+        }
     }
 }

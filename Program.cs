@@ -13,11 +13,21 @@ var httpClient = new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddScoped<ISearchModel>(sp => SearchModel.Create());
 
+builder.Services.AddScoped<LocalStorageAccessor>();
+var lsa = builder.Services.BuildServiceProvider().GetService<LocalStorageAccessor>();
+string? CurrentProfileName;
+try {
+    CurrentProfileName = await lsa.GetValueAsync<string>("CurrentProfileName");
+}
+catch (Exception ex) {
+    CurrentProfileName = null;
+}
+
 IRSData? irsData = await IRSData.Create(httpClient);
 if (irsData != null) {
     builder.Services.AddSingleton<IRSData>(irsData);
     var appData = new AppData(new FamilyData(irsData));
-    appData.CurrentProfileName = "primary";
+    appData.CurrentProfileName = CurrentProfileName;
     builder.Services.AddSingleton<IAppData>(appData);
 } else {
     throw new Exception("irsData is null");
@@ -40,7 +50,5 @@ var Funds = await JsonSerializer.DeserializeAsync<List<Fund>>(fundsJson.Content.
 var Stocks = await JsonSerializer.DeserializeAsync<List<Fund>>(stocksJson.Content.ReadAsStream(), options);
 Funds.AddRange(Stocks);
     builder.Services.AddSingleton<IList<Fund>>(Funds);
-
-builder.Services.AddScoped<LocalStorageAccessor>();
 
 await builder.Build().RunAsync();

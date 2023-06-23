@@ -60,4 +60,12 @@ public class LocalStorageAccessor : IAsyncDisposable
         await WaitForReference();
         await _accessorJsRef.Value.InvokeVoidAsync("remove", key);
     }
+
+    public async Task RenameKey(string oldName, string newName)
+    {
+        await WaitForReference();
+        var value = await GetValueAsync<string>(oldName);
+        await SetValueAsync(newName, value);
+        await RemoveAsync(oldName);
+    }
 }

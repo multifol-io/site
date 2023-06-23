@@ -4,7 +4,6 @@ using IRS;
 
 public static class ProfileUtilities
 {
-    public static string Key { get; set; } = "localSave";
     public static string Value { get; set; } = "";
     public static string storedJson { get; set; } = "";
 
@@ -30,7 +29,7 @@ public static class ProfileUtilities
     public static async Task Load(IAppData appData)
     {
         try {
-            storedJson = await LocalStorageAccessor.GetValueAsync<string>(appData.CurrentProfileKey);
+            storedJson = await LocalStorageAccessor.GetValueAsync<string>(appData.CurrentProfileName);
             var options = new JsonSerializerOptions() 
             {
                 Converters =
@@ -48,14 +47,36 @@ public static class ProfileUtilities
         }
     }
 
-    public static async Task Clear(IAppData appData, IRSData irsData)
+    public static async Task Clear(IAppData appData, string key, IRSData irsData)
     {
         appData.FamilyData = new FamilyData(irsData);
-        await LocalStorageAccessor.RemoveAsync(Key);
+        await LocalStorageAccessor.RemoveAsync(key);
     }
 
     public static async Task ClearAllAsync()
     {
         await LocalStorageAccessor.Clear();
+    }
+
+    public static async Task SetProfileNames(IAppData appData)
+    {
+        var keys = new List<string>();
+        var keysJsonElement = await LocalStorageAccessor.GetKeys();
+        foreach (var el in keysJsonElement.EnumerateArray())
+        {
+            string? value = el.GetString();
+            if (value != null) {
+                switch (value) {
+                    case "CurrentProfileName":
+                    case "i18nextLng":
+                        break;
+                    default:
+                        keys.Add(value);
+                        break;
+                }
+            }
+        }
+
+        appData.ProfileNames = keys;
     }
 }
