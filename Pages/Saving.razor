@@ -59,7 +59,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
             int itemTotal = 0;
 
             <h4 style="max-width:450px">
-                Saving Plan <br/>
+                Saving Plan (@appData.CurrentProfileName)<br/>
                 <br/>
             </h4>
 
@@ -411,7 +411,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                     string nextPage = folderName + nextStep?.step;
 
                     <h4 style="max-width:450px">
-                        <NavLink href=/saving>Saving Plan</NavLink> &gt; @step.title (@step.number)<br/>
+                        <NavLink href=/saving>Saving Plan (@appData.CurrentProfileName)</NavLink> &gt; @step.title (@step.number)<br/>
                         <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                         <br/>
                     </h4>

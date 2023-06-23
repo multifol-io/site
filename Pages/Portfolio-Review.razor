@@ -63,7 +63,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
             familyData.UpdatePercentages();
             
             <h4 style="max-width:450px">
-                Portfolio Review<br/>
+                Portfolio Review (@appData.CurrentProfileName)<br/>
                 <br/>
             </h4>
             <p> Bogleheads.org forum enables you to <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Ask Portfolio Questions</a> ↗️. This tool makes it easy to collect your information and format it properly.</p>
@@ -338,7 +338,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                     string nextPage = folderName + nextStep?.step;
 
                     <h4 style="max-width:450px">
-                        <NavLink href=/portfolio-review>Portfolio Review</NavLink> &gt; @step.title (@step.number)<br/>
+                        <NavLink href=/portfolio-review>Portfolio Review (@appData.CurrentProfileName)</NavLink> &gt; @step.title (@step.number)<br/>
                         <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                         <br/>
                     </h4>

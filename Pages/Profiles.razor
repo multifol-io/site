@@ -8,7 +8,7 @@
 
 <h1>bogle.tools profiles</h1>
 
-Click on profile name to make it the active profile, then navigate to which ever tool you'd like to use.<br/>
+Click on profile name to make it the active profile. You'll be navigated back to your prior page.<br/>
 
 <ul>
 
@@ -27,6 +27,7 @@ Click on profile name to make it the active profile, then navigate to which ever
     {
         appData.CurrentProfileName = profileName;
         await ProfileUtilities.Load(appData);
+        Navigation.NavigateTo(appData.LastPageUri);
     }
 
     private async Task createProfile()
