@@ -126,47 +126,38 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                 <option>Group Investments by Ticker</option>
                                                 <option>Group Investments by Tax Type</option>
                                             </InputSelect>
-
+                                            @if (!string.IsNullOrEmpty(familyData.EODHistoricalDataApiKey))
+                                            {
+                                                <button @onclick=@refreshPrices title=Refresh>🔃</button>
+                                            } else {
+                                                <a href="updated-quotes">Enable<br/>updates.</a>
+                                            }
                                             @switch (familyData.PortfolioView) {
                                                 case "Group Investments by Ticker":
                                                     <table>
                                                         @if (familyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
                                                                 <th style=padding-left:8px>Ticker</th>
-                                                                <th style=padding-left:8px;text-align:center>
-                                                                    @if (!string.IsNullOrEmpty(familyData.EODHistoricalDataApiKey))
-                                                                    {
-                                                                        <button @onclick=@refreshPrices title=Refresh>🔃</button>
-                                                                    } else {
-                                                                        <a href="updated-quotes">Enable<br/>updates.</a>
-                                                                    }
-                                                                    <br/>
-                                                                    <span>Price</span>
-                                                                </th>
+                                                                <th style=text-align:right;padding-left:8px>Price</th>
                                                                 <th style=padding-left:8px>Quantity</th>
                                                                 <th style=padding-left:8px>Balance</th>
-                                                                <th style=text-align:right;padding-left:8px>Today's<br/>Change</th>
                                                             </tr>
                                                         }
                                                         @foreach (var investment in familyData.GroupedInvestments) {
                                                             <tr>
-                                                                <td style=padding-left:8px title=@investment.Name>@investment.Ticker</td>
-                                                                <td style=text-align:right;padding-left:8px>@formatMoney(investment.Price)</td>
-                                                                <td style=text-align:right;padding-left:8px>@formatDoubleFourDecimal(investment.Shares)</td>
-                                                                <td style=text-align:right;padding-left:8px>@formatMoney(investment.Value)</td>
-                                                                <td style=text-align:right;padding-left:8px>@formatPercent3(investment.PercentChange)@if(investment.LastUpdated!=null){<br/><span>@investment.LastUpdated?.ToShortTimeString()</span>}</td>
-                                                                <td style=text-align:right;padding-left:8px title=@investment.LastUpdated></td>
+                                                                <td style=padding-left:8px;vertical-align:text-top title=@investment.Name>@investment.Ticker</td>
+                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@formatMoney(investment.Price)<br/>@formatPercent3(investment.PercentChange)</td>
+                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@formatDoubleFourDecimal(investment.Shares)</td>
+                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@formatMoney(investment.Value)@if(investment.LastUpdated!=null){<br/><span>@investment.LastUpdated?.ToShortTimeString()</span>}</td>
                                                             </tr>
                                                         }
                                                         <tr>
                                                             <td colspan=5><hr/></td>
                                                         </tr>
                                                         <tr>
-                                                            <td style=text-align:right;padding-left:8px colspan="4">
+                                                            <td style=text-align:right;padding-left:8px colspan=4>
                                                                 <b>@(formatMoney(familyData.Value))</b>
-                                                            </td>
-                                                            <td>
-                                                                <i>@formatMoney(portfolioChange())</i>
+                                                                <br/>today's change: <i>@formatMoney(portfolioChange())</i>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -177,14 +168,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             <tr style=vertical-align:bottom>
                                                                 <th style=padding-left:8px>Ticker</th>
                                                                 <th style=padding-left:8px;text-align:center>
-                                                                    @if (familyData.EODHistoricalDataApiKey != null)
-                                                                    {
-                                                                        <button @onclick=@refreshPrices title=Refresh>🔃</button>
-                                                                    } else {
-                                                                        <a href="updated-quotes">Enable<br/>updates.</a>
-                                                                    }
-                                                                    <br/>
-                                                                    <span>Price</span>
+                                                                    Price
                                                                 </th>
                                                                 <th style=padding-left:8px>Quantity</th>
                                                                 <th style=padding-left:8px>Balance</th>
@@ -219,13 +203,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             <tr style=vertical-align:bottom>
                                                                 <th>Tax-Type</th>
                                                                 <th style=padding-left:8px;text-align:center>
-                                                                    @if (!string.IsNullOrEmpty(familyData.EODHistoricalDataApiKey))
-                                                                    {
-                                                                        <button @onclick=@refreshPrices title=Refresh>🔃</button>
-                                                                    } else {
-                                                                        <a href="updated-quotes">Enable<br/>updates.</a>
-                                                                    }
-                                                                    <br/>
                                                                     Balance
                                                                 </th>
                                                             </tr>
