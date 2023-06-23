@@ -145,8 +145,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                 </th>
                                                                 <th style=padding-left:8px>Quantity</th>
                                                                 <th style=padding-left:8px>Balance</th>
-                                                                <th style=text-align:right;padding-left:8px>% change<br/>today</th>
-                                                                <th style=padding-left:8px>as of</th>
+                                                                <th style=text-align:right;padding-left:8px>Today's<br/>Change</th>
                                                             </tr>
                                                         }
                                                         @foreach (var investment in familyData.GroupedInvestments) {
@@ -155,17 +154,20 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                 <td style=text-align:right;padding-left:8px>@formatMoney(investment.Price)</td>
                                                                 <td style=text-align:right;padding-left:8px>@formatDoubleFourDecimal(investment.Shares)</td>
                                                                 <td style=text-align:right;padding-left:8px>@formatMoney(investment.Value)</td>
-                                                                <td style=text-align:right;padding-left:8px>@formatPercent3(investment.PercentChange)</td>
-                                                                <td style=text-align:right;padding-left:8px title=@investment.LastUpdated>@investment.LastUpdated?.ToShortTimeString()</td>
+                                                                <td style=text-align:right;padding-left:8px>@formatPercent3(investment.PercentChange)@if(investment.LastUpdated!=null){<br/><span>@investment.LastUpdated?.ToShortTimeString()</span>}</td>
+                                                                <td style=text-align:right;padding-left:8px title=@investment.LastUpdated></td>
                                                             </tr>
                                                         }
                                                         <tr>
+                                                            <td colspan=5><hr/></td>
+                                                        </tr>
+                                                        <tr>
                                                             <td style=text-align:right;padding-left:8px colspan="4">
-                                                                <hr/><b>@(formatMoney(familyData.Value))</b>
-                                                                <br/>today's change: <i>@formatMoney(portfolioChange())</i>
+                                                                <b>@(formatMoney(familyData.Value))</b>
                                                             </td>
-                                                            <td></td>
-                                                            <td></td>
+                                                            <td>
+                                                                <i>@formatMoney(portfolioChange())</i>
+                                                            </td>
                                                         </tr>
                                                     </table>
                                                     break;
@@ -186,14 +188,12 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                 </th>
                                                                 <th style=padding-left:8px>Quantity</th>
                                                                 <th style=padding-left:8px>Balance</th>
-                                                                <th style=text-align:right;padding-left:8px>% change<br/>today</th>
-                                                                <th style=padding-left:8px>as of</th>
                                                             </tr>
                                                         }
                                                         @foreach (var account in familyData.Accounts) {
                                                             <tr>
                                                                 <td colspan=6>
-                                                                    <i>@((account.Custodian != null ? account.Custodian + " ": "")+ account.Note) @account.Identifier @account.AccountType</i>
+                                                                    <u>@((account.Custodian != null ? account.Custodian + " ": "")+ account.Note) @account.Identifier @account.AccountType</u>
                                                                 </td>
                                                             </tr>
                                                             @foreach (var investment in account.Investments) {
@@ -202,8 +202,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                     <td style=text-align:right;padding-left:8px>@formatMoney(investment.Price)</td>
                                                                     <td style=text-align:right;padding-left:8px>@formatDoubleFourDecimal(investment.Shares)</td>
                                                                     <td style=text-align:right;padding-left:8px>@formatMoney(investment.Value)</td>
-                                                                    <td style=text-align:right;padding-left:8px>@formatPercent3(investment.PercentChange)</td>
-                                                                    <td style=text-align:right;padding-left:8px title=@investment.LastUpdated>@investment.LastUpdated?.ToShortTimeString()</td>
                                                                 </tr>
                                                             }
                                                         }
@@ -212,8 +210,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                 <hr/><b>@(formatMoney(familyData.Value))</b>
                                                                 <br/>today's change: <i>@formatMoney(portfolioChange())</i>
                                                             </td>
-                                                            <td></td>
-                                                            <td></td>
                                                         </tr>
                                                     </table>
                                                     break;
