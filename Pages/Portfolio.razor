@@ -65,24 +65,19 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                 Portfolio (<a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName</a>)<br/>
             </h4>
 
-            <p>Organizing information about your portfolio will help you optimize your finances.</p>
+            <p>Track and optimize your finances.</p>
 
             <div>
-                <p ><b>Press each ✏️ button to enter info:</b></p>
+                <p>Press ✏️ links to modify info:</p>
 
                 <table id=_reviewTable>
                     @foreach (var step in steps) {
                         var href = folderName + @step.step;
                         <tr>
-                            <td style=vertical-align:top>
-                                <span>
-                                    <a href="@href" style="background:blue" class="m-1 btn" >✏️</a>
-                                </span>
-                            </td>
                             @switch (step.step) {
                                 case "people": 
                                     <td>
-                                        @((MarkupString)bold("Tax Filing Status:"))
+                                        @((MarkupString)bold("Tax Filing Status:"))<a href="@href" class="m-2" >✏️</a><br/>
                                         @if (familyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@familyData.TaxFilingStatus</span> }
                                         @if(familyData.PersonCount > 0) {
                                             <span>&nbsp;@getPronoun(familyData.People[0], false)</span>
@@ -90,23 +85,22 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                         @if(familyData.PersonCount > 1) {
                                             <span>&nbsp;and @getPronoun(familyData.People[1], false)</span>
                                         }
-                                        <br/><br/>
+                                        <br/><hr/>
                                     </td>
                                    break;
                                 case "asset-allocation":
                                     <td>
-                                        @((MarkupString)bold("Desired Asset allocation:"))
+                                        @((MarkupString)bold("Desired Asset allocation:"))<a href="@href" class="m-2" >✏️</a><br/>
                                         @if (familyData.Stocks != null && familyData.Bonds != null) {
                                             <span>&nbsp;@familyData.Stocks% stocks / @familyData.Bonds% bonds</span><br/>
-                                        } else {
-                                            <br/>
                                         }
                                         @if (familyData.International != null) {
                                             <span>&nbsp;&nbsp;Desired International allocation: </span>
                                             <span>@familyData.International%</span>
                                         }
-                                        <br/><br/>
+                                        <br/>
                                         @if (!double.IsNaN(familyData.ActualStockAllocation) || !double.IsNaN(familyData.ActualBondAllocation) || !double.IsNaN(familyData.ActualInternationalStockAllocation)) {
+                                            <br/>
                                             <fieldset>
                                                 @((MarkupString)bold("Actual Asset allocation: "))
                                                 <span>&nbsp;@formatPercent(familyData.ActualStockAllocation*100.0) stocks / @formatPercent(familyData.ActualBondAllocation*100.0) bonds</span><br/>
@@ -120,93 +114,43 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                 }
                                             </fieldset>
                                         }
+                                        <hr/>
                                     </td>
                                     break;
                                 case "retirement-assets":
                                     <td>
+                                        @((MarkupString)bold("Current Retirement Assets:"))<a href="@href" class="m-2" >✏️</a><br/>
                                         @if (familyData.Accounts.Count > 0) {
-                                            @((MarkupString)boldUnderline("Current Retirement Assets:"))
                                             <Label>&nbsp;&nbsp;View:&nbsp;</Label><InputSelect @bind-Value=familyData.PortfolioView >
                                                 <option>All Investments by Account</option>
                                                 <option>Group Investments by Ticker</option>
                                                 <option>Group Investments by Tax Type</option>
                                             </InputSelect>
-                                        }
 
-                                        @switch (familyData.PortfolioView) {
-                                            case "Group Investments by Ticker":
-                                                <table>
-                                                    @if (familyData.Accounts.Count > 0) {
-                                                        <tr style=vertical-align:bottom>
-                                                            <th>Name</th>
-                                                            <th style=padding-left:8px>Ticker</th>
-                                                            <th style=padding-left:8px;text-align:center>
-                                                                @if (!string.IsNullOrEmpty(familyData.EODHistoricalDataApiKey))
-                                                                {
-                                                                    <button @onclick=@refreshPrices title=Refresh>🔃</button>
-                                                                } else {
-                                                                    <a href="updated-quotes">Enable<br/>updates.</a>
-                                                                }
-                                                                <br/>
-                                                                <span>Price</span>
-                                                            </th>
-                                                            <th style=padding-left:8px>Quantity</th>
-                                                            <th style=padding-left:8px>Balance</th>
-                                                            <th style=text-align:right;padding-left:8px>% change<br/>today</th>
-                                                            <th style=padding-left:8px>as of</th>
-                                                        </tr>
-                                                    }
-                                                    @foreach (var investment in familyData.GroupedInvestments) {
-                                                        <tr>
-                                                            <td>@investment.Name</td>
-                                                            <td style=padding-left:8px title=@investment.Name>@investment.Ticker</td>
-                                                            <td style=text-align:right;padding-left:8px>@formatMoney(investment.Price)</td>
-                                                            <td style=text-align:right;padding-left:8px>@formatDoubleFourDecimal(investment.Shares)</td>
-                                                            <td style=text-align:right;padding-left:8px>@formatMoney(investment.Value)</td>
-                                                            <td style=text-align:right;padding-left:8px>@formatPercent3(investment.PercentChange)</td>
-                                                            <td style=text-align:right;padding-left:8px title=@investment.LastUpdated>@investment.LastUpdated?.ToShortTimeString()</td>
-                                                        </tr>
-                                                    }
-                                                    <tr>
-                                                        <td style=text-align:right;padding-left:8px colspan="5">
-                                                            <hr/><b>@(formatMoney(familyData.Value))</b>
-                                                            <br/>today's change: <i>@formatMoney(portfolioChange())</i>
-                                                        </td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
-                                                </table>
-                                                break;
-                                            case "All Investments by Account":
-                                                <table>
-                                                    @if (familyData.Accounts.Count > 0) {
-                                                        <tr style=vertical-align:bottom>
-                                                            <th>Account</th>
-                                                            <th style=padding-left:8px></th>
-                                                            <th style=padding-left:8px>Type</th>
-                                                            <th style=padding-left:8px>Ticker</th>
-                                                            <th style=padding-left:8px;text-align:center>
-                                                                @if (familyData.EODHistoricalDataApiKey != null)
-                                                                {
-                                                                    <button @onclick=@refreshPrices title=Refresh>🔃</button>
-                                                                } else {
-                                                                    <a href="updated-quotes">Enable<br/>updates.</a>
-                                                                }
-                                                                <br/>
-                                                                <span>Price</span>
-                                                            </th>
-                                                            <th style=padding-left:8px>Quantity</th>
-                                                            <th style=padding-left:8px>Balance</th>
-                                                            <th style=text-align:right;padding-left:8px>% change<br/>today</th>
-                                                            <th style=padding-left:8px>as of</th>
-                                                        </tr>
-                                                    }
-                                                    @foreach (var account in familyData.Accounts) {
-                                                        @foreach (var investment in account.Investments) {
+                                            @switch (familyData.PortfolioView) {
+                                                case "Group Investments by Ticker":
+                                                    <table>
+                                                        @if (familyData.Accounts.Count > 0) {
+                                                            <tr style=vertical-align:bottom>
+                                                                <th style=padding-left:8px>Ticker</th>
+                                                                <th style=padding-left:8px;text-align:center>
+                                                                    @if (!string.IsNullOrEmpty(familyData.EODHistoricalDataApiKey))
+                                                                    {
+                                                                        <button @onclick=@refreshPrices title=Refresh>🔃</button>
+                                                                    } else {
+                                                                        <a href="updated-quotes">Enable<br/>updates.</a>
+                                                                    }
+                                                                    <br/>
+                                                                    <span>Price</span>
+                                                                </th>
+                                                                <th style=padding-left:8px>Quantity</th>
+                                                                <th style=padding-left:8px>Balance</th>
+                                                                <th style=text-align:right;padding-left:8px>% change<br/>today</th>
+                                                                <th style=padding-left:8px>as of</th>
+                                                            </tr>
+                                                        }
+                                                        @foreach (var investment in familyData.GroupedInvestments) {
                                                             <tr>
-                                                                <td>@((account.Custodian != null ? account.Custodian + " ": "")+ account.Note)</td>
-                                                                <td style=padding-left:8px>@account.Identifier</td>
-                                                                <td style=padding-left:8px>@account.AccountType</td>
                                                                 <td style=padding-left:8px title=@investment.Name>@investment.Ticker</td>
                                                                 <td style=text-align:right;padding-left:8px>@formatMoney(investment.Price)</td>
                                                                 <td style=text-align:right;padding-left:8px>@formatDoubleFourDecimal(investment.Shares)</td>
@@ -215,60 +159,108 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                 <td style=text-align:right;padding-left:8px title=@investment.LastUpdated>@investment.LastUpdated?.ToShortTimeString()</td>
                                                             </tr>
                                                         }
-                                                    }
-                                                    <tr>
-                                                        <td style=text-align:right;padding-left:8px colspan=7>
-                                                            <hr/><b>@(formatMoney(familyData.Value))</b>
-                                                            <br/>today's change: <i>@formatMoney(portfolioChange())</i>
-                                                        </td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
-                                                </table>
-                                                break;
-                                            case "Group Investments by Tax Type":
-                                                <table>
-                                                    @if (familyData.Accounts.Count > 0) {
-                                                        <tr style=vertical-align:bottom>
-                                                            <th>Tax-Type</th>
-                                                            <th style=padding-left:8px;text-align:center>
-                                                                @if (!string.IsNullOrEmpty(familyData.EODHistoricalDataApiKey))
-                                                                {
-                                                                    <button @onclick=@refreshPrices title=Refresh>🔃</button>
-                                                                } else {
-                                                                    <a href="updated-quotes">Enable<br/>updates.</a>
-                                                                }
-                                                                <br/>
-                                                                Balance
-                                                            </th>
-                                                        </tr>
-                                                    }
-                                                    @foreach (var investment in familyData.GroupedInvestmentsByTaxType) {
                                                         <tr>
-                                                            <td>@investment.Name</td>
-                                                            <td style=text-align:right;padding-left:8px>@formatMoney(investment.Value)</td>
+                                                            <td style=text-align:right;padding-left:8px colspan="4">
+                                                                <hr/><b>@(formatMoney(familyData.Value))</b>
+                                                                <br/>today's change: <i>@formatMoney(portfolioChange())</i>
+                                                            </td>
+                                                            <td></td>
+                                                            <td></td>
                                                         </tr>
-                                                    }
-                                                    <tr>
-                                                        <td style=text-align:right;padding-left:8px colspan="4">
-                                                            <hr/><b>@(formatMoney(familyData.Value))</b>
-                                                            <br/>today's change: <i>@formatMoney(portfolioChange())</i>
-                                                        </td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
-                                                </table>
-                                                break;
-                                            default:
-                                                break;
+                                                    </table>
+                                                    break;
+                                                case "All Investments by Account":
+                                                    <table>
+                                                        @if (familyData.Accounts.Count > 0) {
+                                                            <tr style=vertical-align:bottom>
+                                                                <th style=padding-left:8px>Ticker</th>
+                                                                <th style=padding-left:8px;text-align:center>
+                                                                    @if (familyData.EODHistoricalDataApiKey != null)
+                                                                    {
+                                                                        <button @onclick=@refreshPrices title=Refresh>🔃</button>
+                                                                    } else {
+                                                                        <a href="updated-quotes">Enable<br/>updates.</a>
+                                                                    }
+                                                                    <br/>
+                                                                    <span>Price</span>
+                                                                </th>
+                                                                <th style=padding-left:8px>Quantity</th>
+                                                                <th style=padding-left:8px>Balance</th>
+                                                                <th style=text-align:right;padding-left:8px>% change<br/>today</th>
+                                                                <th style=padding-left:8px>as of</th>
+                                                            </tr>
+                                                        }
+                                                        @foreach (var account in familyData.Accounts) {
+                                                            <tr>
+                                                                <td colspan=6>
+                                                                    <i>@((account.Custodian != null ? account.Custodian + " ": "")+ account.Note) @account.Identifier @account.AccountType</i>
+                                                                </td>
+                                                            </tr>
+                                                            @foreach (var investment in account.Investments) {
+                                                                <tr>
+                                                                    <td style=padding-left:8px title=@investment.Name>@investment.Ticker</td>
+                                                                    <td style=text-align:right;padding-left:8px>@formatMoney(investment.Price)</td>
+                                                                    <td style=text-align:right;padding-left:8px>@formatDoubleFourDecimal(investment.Shares)</td>
+                                                                    <td style=text-align:right;padding-left:8px>@formatMoney(investment.Value)</td>
+                                                                    <td style=text-align:right;padding-left:8px>@formatPercent3(investment.PercentChange)</td>
+                                                                    <td style=text-align:right;padding-left:8px title=@investment.LastUpdated>@investment.LastUpdated?.ToShortTimeString()</td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                        <tr>
+                                                            <td style=text-align:right;padding-left:8px colspan=4>
+                                                                <hr/><b>@(formatMoney(familyData.Value))</b>
+                                                                <br/>today's change: <i>@formatMoney(portfolioChange())</i>
+                                                            </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </table>
+                                                    break;
+                                                case "Group Investments by Tax Type":
+                                                    <table>
+                                                        @if (familyData.Accounts.Count > 0) {
+                                                            <tr style=vertical-align:bottom>
+                                                                <th>Tax-Type</th>
+                                                                <th style=padding-left:8px;text-align:center>
+                                                                    @if (!string.IsNullOrEmpty(familyData.EODHistoricalDataApiKey))
+                                                                    {
+                                                                        <button @onclick=@refreshPrices title=Refresh>🔃</button>
+                                                                    } else {
+                                                                        <a href="updated-quotes">Enable<br/>updates.</a>
+                                                                    }
+                                                                    <br/>
+                                                                    Balance
+                                                                </th>
+                                                            </tr>
+                                                        }
+                                                        @foreach (var investment in familyData.GroupedInvestmentsByTaxType) {
+                                                            <tr>
+                                                                <td>@investment.Name</td>
+                                                                <td style=text-align:right;padding-left:8px>@formatMoney(investment.Value)</td>
+                                                            </tr>
+                                                        }
+                                                        <tr>
+                                                            <td style=text-align:right;padding-left:8px colspan="4">
+                                                                <hr/><b>@(formatMoney(familyData.Value))</b>
+                                                                <br/>today's change: <i>@formatMoney(portfolioChange())</i>
+                                                            </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </table>
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                            <br/>
+                                            <fieldset>
+                                                @((MarkupString)bold("Weighted Expense Ratio: "))
+                                                <span>&nbsp;@formatPercent3(familyData.OverallER) or @formatMoney(familyData.ExpensesTotal) /year</span>
+                                                @if (familyData.InvestmentsMissingER > 0){<br/><span>&nbsp;(@familyData.InvestmentsMissingER investment(s) missing ER)</span><br/>}
+                                            </fieldset>
                                         }
-                                        <br/>
-                                        <fieldset>
-                                            @((MarkupString)bold("Weighted Expense Ratio: "))
-                                            <span>&nbsp;@formatPercent3(familyData.OverallER) or @formatMoney(familyData.ExpensesTotal) per year</span>
-                                            @if (familyData.InvestmentsMissingER > 0){<span>&nbsp;(@familyData.InvestmentsMissingER investment(s) missing ER)</span><br/>}
-                                        </fieldset>
-                                        <br/>
+                                        <hr/>
                                     </td>
                                     break;                                
                                 default:
@@ -277,11 +269,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                         </tr>
                     }          
                 </table>
-                <br/>
-
                 <p>See the <a href="portfolio-review">Portfolio Review</a> page for help authoring questions to post.  Bogleheads.org forum is a great place to <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Ask Portfolio Questions</a> ↗️.</p>
-                <hr/>
-
             </div>
             
             <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
