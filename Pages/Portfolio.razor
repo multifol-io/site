@@ -48,7 +48,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         // reload is a workaround where the correct data seemed to be deleted, but i needed to navigate away and then back to retirement-assets
         Navigation.NavigateTo("/portfolio/retirement-assets");
     }
-    @if (steps == null || appData == null)
+    @if (steps == null || appData == null || appData.FamilyData == null)
     {
         <p><em>Loading...</em></p>
     }

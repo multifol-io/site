@@ -23,28 +23,30 @@
     protected override async Task OnInitializedAsync()
     {
         ProfileUtilities.LocalStorageAccessor = LocalStorageAccessor;
-        await ProfileUtilities.SetProfileNames(appData);
 
-        if (appData.CurrentProfileName != null && appData.ProfileNames.Contains(appData.CurrentProfileName))
+        var profileNames = await appData.CalculateProfileNames();
+
+        if (appData.CurrentProfileName != null && profileNames.Contains(appData.CurrentProfileName))
         {
             await ProfileUtilities.Load(appData);
         }
         else
         {
-            await ProfileUtilities.SetProfileNames(appData);
-            if (appData.ProfileNames.Count == 0)
+            if (profileNames.Count == 0)
             {
                 appData.CurrentProfileName = "primary";
                 await LocalStorageAccessor.SetValueAsync("CurrentProfileName", appData.CurrentProfileName);
                 appData.FamilyData = new FamilyData(appData);
-                ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
-                await ProfileUtilities.SetProfileNames(appData);
+                await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
             }
             else
             {
                 appData.CurrentProfileName = null;
-                appData.LastPageUri = Navigation.Uri;
-                Navigation.NavigateTo("/profiles");
+                if (!Navigation.Uri.ToString().EndsWith("/activate"))
+                {
+                    appData.LastPageUri = Navigation.Uri;
+                    Navigation.NavigateTo("/profiles");
+                }
             }
         }
     }

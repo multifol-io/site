@@ -1,13 +1,13 @@
-﻿@page "/profiles"
+﻿@page "/activate"
 @inject IAppData appData
 @inject NavigationManager Navigation
 @inject LocalStorageAccessor LocalStorageAccessor
 @inject IRSData irsData
 @inject HttpClient Http
 
-<PageTitle>bogle.tools profiles</PageTitle>
+<PageTitle>bogle.tools activate</PageTitle>
 
-<h1>bogle.tools profiles</h1>
+<h1>bogle.tools activate</h1>
 @if (profileNames != null && profileNames.Count > 0)
 {
     <p>Click on profile name to make it the active profile. You'll be navigated back to your prior page.</p>
@@ -58,9 +58,10 @@
     
     <p>Choose a profile name (defaults to 'primary') to store your data locally.</p>
 }
+
 <br/>
-<label>Create new profile:</label><br/>
-<InputText placeholder="profile name" @bind-Value="@newProfileName" /><button @onclick="createProfile">➕ create</button>
+<label>Fetch shared profile:</label><br/>
+<InputText placeholder="enter code" @bind-Value="@securityKey" /><InputText placeholder="profile name" @bind-Value="@newProfileName" /><button @onclick="fetchProfileData">fetch</button>
 <br/>
 <span>@log</span>
 @code {
@@ -86,7 +87,6 @@
         }
         else
         {
-            var profileNames = await appData.CalculateProfileNames();
             if (newName != renameProfileName && !string.IsNullOrEmpty(newName) && !profileNames.Contains(newName))
             {
                 await LocalStorageAccessor.RenameKey(renameProfileName, newName);
@@ -97,6 +97,7 @@
                 }
 
                 renameProfileName = null;
+                profileNames = await appData.CalculateProfileNames();
             }
         }
     }
@@ -108,7 +109,21 @@
         var jsonEncoding = "{ \"profileData\":'"+profileData+"'}";
         var myHttpContent = new MyHttpContent(jsonEncoding);
         var securityKeyResponse = await Http.PostAsync($"https://api.bogle.tools/api/sharedata", myHttpContent, CancellationToken.None);
-        log += "\nTemporarily shared. Navigate another device to bogle.tools/activate within 2 minutes: " + await securityKeyResponse.Content.ReadAsStringAsync() + "\n";
+        log += "shared. fetch within 2 minutes using securityKey: " + await securityKeyResponse.Content.ReadAsStringAsync() + "\n";
+    }
+    
+    private async Task fetchProfileData()
+    {
+        var jsonEncoding = "{ 'securityKey':'"+securityKey+"'}";
+        var myHttpContent = new MyHttpContent(jsonEncoding);
+        var familyDataResponse = await Http.PostAsync($"https://api.bogle.tools/api/sharedata", myHttpContent, CancellationToken.None);
+        await ProfileUtilities.Save(newProfileName, await familyDataResponse.Content.ReadAsStringAsync());
+        if (appData.CurrentProfileName == newProfileName)
+        {
+            await ProfileUtilities.Load(appData);
+        }
+
+        Navigation.NavigateTo("/portfolio");
     }
 
     private async Task deleteProfile(EventArgs e, string profileName)
@@ -119,8 +134,6 @@
             appData.CurrentProfileName = null;
             appData.FamilyData = null;
         }
-
-        profileNames = await appData.CalculateProfileNames();
     }
 
     private async Task createProfile()
@@ -136,7 +149,7 @@
         profileNames = await appData.CalculateProfileNames();
     }
 
-    private List<string> profileNames;
+    private List<string> profileNames { get; set ; }
     private string newProfileName { get; set; }
     private string? renameProfileName { get; set; }
     private string? newName {get; set;}

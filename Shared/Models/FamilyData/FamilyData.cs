@@ -535,7 +535,24 @@ public class FamilyData : IFamilyData
         } 
     }
 
-    public static FamilyData? LoadFromJson(IAppData appData, string json, JsonSerializerOptions options) {
+    public string SaveToJson()
+    {
+        var options = new JsonSerializerOptions() 
+        {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+            IgnoreReadOnlyProperties = true,
+            WriteIndented = true,
+            Converters =
+            {
+                new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+            }
+        };
+
+        var jsonOut = JsonSerializer.Serialize(this, options);
+
+        return jsonOut;
+    }
+    public static async Task<FamilyData?> LoadFromJson(IAppData appData, string json, JsonSerializerOptions options) {
         var loadedData = JsonSerializer.Deserialize<FamilyData>(json, options);
         if (loadedData != null) {
             loadedData.AppData = appData;

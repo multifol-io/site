@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using DocumentFormat.OpenXml.Wordprocessing;
 using IRS;
 
 public static class ProfileUtilities
@@ -21,9 +22,21 @@ public static class ProfileUtilities
                     new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
                 }
         };
-        var jsonOut = JsonSerializer.Serialize(familyData, options);
+        var familyDataJson = JsonSerializer.Serialize(familyData, options);
 
-        await LocalStorageAccessor.SetValueAsync(key, jsonOut);
+        await Save(key, familyDataJson);
+    }
+
+    public static async Task Save(string key, string familyDataJson)
+    {
+        await LocalStorageAccessor.SetValueAsync(key, familyDataJson);
+    }
+
+
+    public static async Task<string> GetProfileData(string profileName)
+    {
+        var profileData = await LocalStorageAccessor.GetValueAsync<string>(profileName);
+        return profileData;
     }
 
     public static async Task Load(IAppData appData)
@@ -42,8 +55,13 @@ public static class ProfileUtilities
                         new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
                     }
             };
-
-            var loadedFamilyData = FamilyData.LoadFromJson(appData, storedJson, options);
+            FamilyData? loadedFamilyData = null;
+            try {
+                loadedFamilyData = await FamilyData.LoadFromJson(appData, storedJson, options);
+            }
+            catch (Exception ex) {
+                loadedFamilyData = null;
+            }
 
             if (loadedFamilyData == null) {
                 loadedFamilyData = new FamilyData(appData);
@@ -70,7 +88,7 @@ public static class ProfileUtilities
         await LocalStorageAccessor.Clear();
     }
 
-    public static async Task SetProfileNames(IAppData appData)
+    public static async Task<List<String>> GetProfileNames()
     {
         var keys = new List<string>();
         var keysJsonElement = await LocalStorageAccessor.GetKeys();
@@ -90,6 +108,6 @@ public static class ProfileUtilities
             }
         }
 
-        appData.ProfileNames = keys;
+        return keys;
     }
 }
