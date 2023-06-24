@@ -8,49 +8,56 @@
 
 <h1>bogle.tools profiles</h1>
 
-Click on profile name to make it the active profile. You'll be navigated back to your prior page.<br/>
-
-<table>
-    <tr>
-        <th></th>
-        <th>Name</th>
-        <th>Action</th>
-    </tr>
-@foreach(var profileName in appData.ProfileNames)
+@if (appData.ProfileNames != null && appData.ProfileNames.Count > 0)
 {
-    <tr>
-        <td>
-            @if(profileName==appData.CurrentProfileName){<b>&nbsp;[active]&nbsp;</b>} 
-        </td>
-        <td>
-            @if (renameProfileName == profileName)
-            {
-                <EditForm Model="appData">
-                    <InputText @bind-Value=newName />
-                </EditForm>
-            }
-            else
-            {
-                <a href=/portfolio @onclick="@(e=>makeProfileActive(e,profileName))" @onclick:preventDefault>@profileName</a><span>&nbsp;</span>
-            }
-        </td>
-        <td>
-            @if (renameProfileName == null || renameProfileName == profileName)
-            {
-                <button @onclick="@(e=>renameProfile(e,profileName))">Rename</button>
-            }
-            @if (renameProfileName == null)
-            {
-                <button @onclick="@(e=>deleteProfile(e,profileName))">Del</button>
-            }
-        </td>
-    </tr>
-}
 
-</table>
+    <p>Click on profile name to make it the active profile. You'll be navigated back to your prior page.</p>
+
+    <table>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Action</th>
+        </tr>
+    @foreach(var profileName in appData.ProfileNames)
+    {
+        <tr>
+            <td>
+                @if(profileName==appData.CurrentProfileName){<b>&nbsp;[active]&nbsp;</b>} 
+            </td>
+            <td>
+                @if (renameProfileName == profileName)
+                {
+                    <EditForm Model="appData">
+                        <InputText @bind-Value=newName />
+                    </EditForm>
+                }
+                else
+                {
+                    <a href=/portfolio @onclick="@(e=>makeProfileActive(e,profileName))" @onclick:preventDefault>@profileName</a><span>&nbsp;</span>
+                }
+            </td>
+            <td>
+                @if (renameProfileName == null || renameProfileName == profileName)
+                {
+                    <button @onclick="@(e=>renameProfile(e,profileName))">Rename</button>
+                }
+                @if (renameProfileName == null)
+                {
+                    <button @onclick="@(e=>deleteProfile(e,profileName))">Del</button>
+                }
+            </td>
+        </tr>
+    }
+    </table>
+} else {
+    newProfileName = "primary";
+    
+    <p>Choose a profile name (defaults to 'primary') to store your data locally.</p>
+}
 <br/>
 <label>Create new profile:</label><br/>
-<InputText placeholder="name" @bind-Value="@newProfileName" /><button @onclick="createProfile">➕ create</button>
+<InputText placeholder="profile name" @bind-Value="@newProfileName" /><button @onclick="createProfile">➕ create</button>
 
 @code {
     private ElementReference renameBox;
@@ -65,6 +72,7 @@ Click on profile name to make it the active profile. You'll be navigated back to
             Navigation.NavigateTo(appData.LastPageUri);
         }
     }
+
     private async Task renameProfile(EventArgs e, string profileName)
     {
         if (renameProfileName == null)
@@ -88,6 +96,7 @@ Click on profile name to make it the active profile. You'll be navigated back to
             }
         }
     }
+
     private async Task deleteProfile(EventArgs e, string profileName)
     {
         await LocalStorageAccessor.RemoveAsync(profileName);
@@ -104,14 +113,13 @@ Click on profile name to make it the active profile. You'll be navigated back to
     {
         if (!string.IsNullOrEmpty(newProfileName)) {
             appData.ProfileNames.Add(newProfileName);
-            await ProfileUtilities.Save(newProfileName, new FamilyData(irsData));
+            await ProfileUtilities.Save(newProfileName, new FamilyData(appData));
             newProfileName = "";
         }
     }
 
     protected override async Task OnInitializedAsync()
     {
-
     }
 
     private string newProfileName { get; set; }

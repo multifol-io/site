@@ -8,8 +8,8 @@ public class EmployerPlan : INotifyPropertyChanged {
     public Person person { get; set; }
 
     private IRS.Employer401k Employer401k {
-        get { return this.person.FamilyData.IRSData.RetirementData.Employer401k; }
-        set { this.person.FamilyData.IRSData.RetirementData.Employer401k = value; }
+        get { return this.person.FamilyData.AppData.IRSData.RetirementData.Employer401k; }
+        set { this.person.FamilyData.AppData.IRSData.RetirementData.Employer401k = value; }
     }
 
     public TriState Eligible {

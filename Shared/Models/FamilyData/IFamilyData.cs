@@ -32,8 +32,8 @@ public interface IFamilyData
     public int? IncomeTaxPaid { get; set; }
     public int? TaxableToInvest { get; set; }
     public int? PlannedSavings { get; }
-    public IRSData IRSData { get; set; }
 
     public void UpdatePercentages();
     public void SetBackPointers();
+    public IAppData AppData { get; set;}    
 }

@@ -48,7 +48,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         // reload is a workaround where the correct data seemed to be deleted, but i needed to navigate away and then back to retirement-assets
         Navigation.NavigateTo("/portfolio/retirement-assets");
     }
-    @if (steps == null || familyData == null)
+    @if (steps == null || appData == null)
     {
         <p><em>Loading...</em></p>
     }
@@ -65,11 +65,9 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                 Portfolio (<a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName</a>)<br/>
             </h4>
 
-            <p>Track and optimize your finances.</p>
+            <p>Track and optimize your finances. (Press ✏️ to edit)</p>
 
             <div>
-                <p>Press ✏️ links to modify info:</p>
-
                 <table id=_reviewTable>
                     @foreach (var step in steps) {
                         var href = folderName + @step.step;
@@ -151,11 +149,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                @if (!string.IsNullOrEmpty(familyData.EODHistoricalDataApiKey))
+                                                                @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                                 {
                                                                     <button @onclick=@refreshPrices title=Refresh>🔃</button>
                                                                 } else {
-                                                                    <a href="updated-quotes">Enable<br/>updates.</a>
+                                                                    <a href="updated-quotes">Enable<br/>updates</a>
                                                                 }
                                                             </td>                                                            
                                                             <td style=text-align:right;padding-left:8px colspan=3>
@@ -194,11 +192,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                         }
                                                         <tr>
                                                             <td>
-                                                                @if (!string.IsNullOrEmpty(familyData.EODHistoricalDataApiKey))
+                                                                @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                                 {
                                                                     <button @onclick=@refreshPrices title=Refresh>🔃</button>
                                                                 } else {
-                                                                    <a href="updated-quotes">Enable<br/>updates.</a>
+                                                                    <a href="updated-quotes">Enable<br/>updates</a>
                                                                 }
                                                             </td>
                                                             <td style=text-align:right;padding-left:8px colspan=3>
@@ -226,11 +224,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                         }
                                                         <tr>
                                                             <td>
-                                                                @if (!string.IsNullOrEmpty(familyData.EODHistoricalDataApiKey))
+                                                                @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                                 {
                                                                     <button @onclick=@refreshPrices title=Refresh>🔃</button>
                                                                 } else {
-                                                                    <a href="updated-quotes">Enable<br/>updates.</a>
+                                                                    <a href="updated-quotes">Enable<br/>updates</a>
                                                                 }
                                                             </td>
                                                             <td style=text-align:right;padding-left:8px colspan="3">
@@ -379,7 +377,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     
                                     <label>Target Year:</label> <select @bind=familyData.Year><option>2022</option><option>2023</option></select><br/>
 
-                                    @foreach (var taxFiler in familyData.IRSData.TaxRateData.TaxData.TaxFilers)
+                                    @foreach (var taxFiler in familyData.AppData.IRSData.TaxRateData.TaxData.TaxFilers)
                                     {
                                         bool isMatch = false;
                                         switch (familyData.TaxFilingStatus.ToString())
@@ -1065,7 +1063,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
 
     private async Task UpdateInvestmentPrice(Investment investment)
     {
-        var quoteDataJson = await Http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={investment.Ticker}&apikey={familyData.EODHistoricalDataApiKey}");
+        var quoteDataJson = await Http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={investment.Ticker}&apikey={appData.EODHistoricalDataApiKey}");
         var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
         if (quoteData?.Close != null) {
             investment.Price = quoteData.Close;
@@ -1082,13 +1080,14 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     }
     private async Task UpdateInvestmentsPrice(string ticker, List<Investment> investments)
     {
-        if (!string.IsNullOrEmpty(familyData.EODHistoricalDataApiKey)) {
-            var quoteDataJson = await Http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={ticker}&apikey={familyData.EODHistoricalDataApiKey}");
+        if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey)) {
+            var quoteDataJson = await Http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={ticker}&apikey={appData.EODHistoricalDataApiKey}");
             var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
             if (quoteData?.Close != null) {
                 foreach (var investment in investments) {
                     investment.Price = quoteData.Close;
-                    if (quoteData.Volume == 0) {
+                    bool isWeekend = DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday;
+                    if (quoteData.Volume == 0 && !isWeekend) {
                         investment.PreviousClose = quoteData.Close;
                         investment.PercentChange = null;
                     }
@@ -1097,6 +1096,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                         investment.PreviousClose = quoteData.PreviousClose;
                         investment.PercentChange = quoteData.ChangeP;
                     }
+
                     if (quoteData.Timestamp != null) {
                         investment.LastUpdated = UnixTimeStampToDateTime(quoteData.Timestamp);
                     }
@@ -1107,7 +1107,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     }
 
     private async Task UpdatePrice(MouseEventArgs e, Investment investment) {
-        if (!string.IsNullOrEmpty(familyData.EODHistoricalDataApiKey)) {
+        if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey)) {
             UpdateInvestmentPrice(investment);
         }
     }
@@ -1210,7 +1210,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             };
         var topicJsonUri = "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/portfolios/" + topicStr + ".json";
         var stream = await Http.GetStreamAsync(topicJsonUri);
-        familyData = await FamilyData.LoadFromJsonStream(familyData, stream, options);
+        familyData = await FamilyData.LoadFromJsonStream(appData, stream, options);
     }
 
     private async Task CopyTextToClipboard()

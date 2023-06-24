@@ -22,6 +22,8 @@ namespace IRS {
             return irsData;
         }
 
+        public IAppData AppData { get; set; }
+
         public IRSData(RetirementData retirementDataY1, RetirementData retirementDataY2, TaxRateData taxRatesY1, TaxRateData taxRatesY2)
         {
             RetirementDataY1 = retirementDataY1;
@@ -30,12 +32,10 @@ namespace IRS {
             TaxRateDataY2 = taxRatesY2;
         }
 
-        public int Year { get; set; }
-
         public int YearIndex 
         {
             get {
-                return Year - 2022;
+                return AppData.FamilyData.Year - 2022;
             }
         }
 
@@ -47,7 +47,7 @@ namespace IRS {
                 } else if (YearIndex == 0) {
                     return RetirementDataY1;
                 } else {
-                    throw new InvalidDataException("year is not supported");
+                    throw new InvalidDataException("year is not supported - yearindex: " + YearIndex);
                 }
             }
         }

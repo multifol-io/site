@@ -687,7 +687,7 @@ Retirement - bogle.tools
     }
 
     private void OnClearPortfolio() {
-        familyData = new FamilyData(irsData);
+        familyData = new FamilyData(appData);
         Navigation.NavigateTo("/portfolio");
     }
 
@@ -729,10 +729,10 @@ Retirement - bogle.tools
 
     private async Task loadPortfolioFromStream(Stream stream, JsonSerializerOptions options) {
         if (familyData != null) {
-            var irsData = familyData.IRSData;
+            var irsData = familyData.AppData.IRSData;
             familyData = await JsonSerializer.DeserializeAsync<FamilyData>(stream, options);
             if (familyData != null) {
-                familyData.IRSData = irsData;
+                familyData.AppData.IRSData = irsData;
                 familyData.Year = 2023;
                 familyData.SetBackPointers();
             }

@@ -219,7 +219,7 @@ public class Importer {
                     catch (Exception e)
                     {
                         Console.WriteLine("skipped line due to error: " + line);
-                        Console.WriteLine(e.Message);
+                        Console.WriteLine(e.GetType().Name + " " + e.Message + " " + e.StackTrace);
                     }
 
                     line = lines[lineIndex++];

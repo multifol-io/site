@@ -49,7 +49,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
         // reload is a workaround where the correct data seemed to be deleted, but i needed to navigate away and then back to retirement-assets
         Navigation.NavigateTo("/portfolio-review/retirement-assets");
     }
-    @if (steps == null || familyData == null)
+    @if (steps == null || appData == null)
     {
         <p><em>Loading...</em></p>
     }
@@ -439,7 +439,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
     
                                     <label>Target Year:</label> <select @bind=familyData.Year><option>2022</option><option>2023</option></select><br/>
 
-                                    @foreach (var taxFiler in familyData.IRSData.TaxRateData.TaxData.TaxFilers)
+                                    @foreach (var taxFiler in familyData.AppData.IRSData.TaxRateData.TaxData.TaxFilers)
                                     {
                                         bool isMatch = false;
                                         switch (familyData.TaxFilingStatus.ToString())
@@ -1130,8 +1130,8 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
     }
 
     private async Task UpdatePrice(MouseEventArgs e, Investment investment) {
-        if (!string.IsNullOrEmpty(familyData.EODHistoricalDataApiKey)) {
-            var quoteDataJson = await Http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={investment.Ticker}&apikey={familyData.EODHistoricalDataApiKey}");
+        if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey)) {
+            var quoteDataJson = await Http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={investment.Ticker}&apikey={appData.EODHistoricalDataApiKey}");
             var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
             if (quoteData?.Close != null) {
                 investment.Price = quoteData.Close;
@@ -1238,7 +1238,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
             };
         var topicJsonUri = "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/portfolios/" + topicStr + ".json";
         var stream = await Http.GetStreamAsync(topicJsonUri);
-        familyData = await FamilyData.LoadFromJsonStream(familyData, stream, options);
+        familyData = await FamilyData.LoadFromJsonStream(appData, stream, options);
     }
 
     private async Task CopyTextToClipboard()

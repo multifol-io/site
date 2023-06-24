@@ -15,19 +15,23 @@ builder.Services.AddScoped<ISearchModel>(sp => SearchModel.Create());
 
 builder.Services.AddScoped<LocalStorageAccessor>();
 var lsa = builder.Services.BuildServiceProvider().GetService<LocalStorageAccessor>();
-string? CurrentProfileName;
+string? CurrentProfileName = null;
+string? EODHistoricalDataApiKey = null;
 try {
     CurrentProfileName = await lsa.GetValueAsync<string>("CurrentProfileName");
+    EODHistoricalDataApiKey = await lsa.GetValueAsync<string>("EODHistoricalDataApiKey");
 }
 catch (Exception ex) {
-    CurrentProfileName = null;
+    Console.WriteLine(ex.GetType().Name + " " +ex.Message + " " + ex.StackTrace);
 }
 
 IRSData? irsData = await IRSData.Create(httpClient);
 if (irsData != null) {
-    builder.Services.AddSingleton<IRSData>(irsData);
-    var appData = new AppData(new FamilyData(irsData));
+    var appData = new AppData() { IRSData = irsData };
+    irsData.AppData = appData;
     appData.CurrentProfileName = CurrentProfileName;
+    appData.EODHistoricalDataApiKey = EODHistoricalDataApiKey;
+    builder.Services.AddSingleton<IRSData>(irsData);
     builder.Services.AddSingleton<IAppData>(appData);
 } else {
     throw new Exception("irsData is null");

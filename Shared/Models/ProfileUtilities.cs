@@ -28,6 +28,11 @@ public static class ProfileUtilities
 
     public static async Task Load(IAppData appData)
     {
+        if (appData == null)
+        {
+            throw new ArgumentNullException(nameof(appData));
+        }
+        
         try {
             storedJson = await LocalStorageAccessor.GetValueAsync<string>(appData.CurrentProfileName);
             var options = new JsonSerializerOptions() 
@@ -38,19 +43,26 @@ public static class ProfileUtilities
                     }
             };
 
-            appData.FamilyData = FamilyData.LoadFromJson(appData.FamilyData, storedJson, options);
+            var loadedFamilyData = FamilyData.LoadFromJson(appData, storedJson, options);
+
+            if (loadedFamilyData == null) {
+                loadedFamilyData = new FamilyData(appData);
+                await ProfileUtilities.Save(appData.CurrentProfileName, loadedFamilyData);
+            }
+
+            appData.FamilyData = loadedFamilyData;
         } 
         catch (Exception e)
         {
             // Key + " in local storage not found...loading default."
-            Console.WriteLine(e.GetType().Name + " " + e.Message);
+            Console.WriteLine(e.GetType().Name + " " + e.Message + " " + e.StackTrace);
         }
     }
 
     public static async Task Clear(IAppData appData, string key, IRSData irsData)
     {
-        appData.FamilyData = new FamilyData(irsData);
-        await LocalStorageAccessor.RemoveAsync(key);
+        appData.FamilyData = new FamilyData(appData);
+        await ProfileUtilities.Save(key, appData.FamilyData);
     }
 
     public static async Task ClearAllAsync()
@@ -69,6 +81,7 @@ public static class ProfileUtilities
                 switch (value) {
                     case "CurrentProfileName":
                     case "i18nextLng":
+                    case "EODHistoricalDataApiKey":
                         break;
                     default:
                         keys.Add(value);

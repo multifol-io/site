@@ -7,10 +7,10 @@ public class IRA {
 
     private IRS.IRA? iraVariables {
         get {
-            return this.person.FamilyData.IRSData.RetirementData.IRA;
+            return this.person.FamilyData.AppData.IRSData.RetirementData.IRA;
         }
         set {
-            this.person.FamilyData.IRSData.RetirementData.IRA = value;
+            this.person.FamilyData.AppData.IRSData.RetirementData.IRA = value;
         }
     }
 

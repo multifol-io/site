@@ -16,7 +16,7 @@
     }
 
     private async Task Clear() {
-        ProfileUtilities.Clear(appData, appData.CurrentProfileName, irsData);
+        await ProfileUtilities.Clear(appData, appData.CurrentProfileName, irsData);
         Navigation.NavigateTo("/");
     }
 
@@ -31,10 +31,21 @@
         }
         else
         {
-            appData.CurrentProfileName = null;
             await ProfileUtilities.SetProfileNames(appData);
-            appData.LastPageUri = Navigation.Uri;
-            Navigation.NavigateTo("/profiles");
+            if (appData.ProfileNames.Count == 0)
+            {
+                appData.CurrentProfileName = "primary";
+                await LocalStorageAccessor.SetValueAsync("CurrentProfileName", appData.CurrentProfileName);
+                appData.FamilyData = new FamilyData(appData);
+                ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
+                await ProfileUtilities.SetProfileNames(appData);
+            }
+            else
+            {
+                appData.CurrentProfileName = null;
+                appData.LastPageUri = Navigation.Uri;
+                Navigation.NavigateTo("/profiles");
+            }
         }
     }
 }

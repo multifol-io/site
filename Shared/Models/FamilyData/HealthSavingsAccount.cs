@@ -7,8 +7,8 @@ public class HealthSavingsAccount {
     
     public IRS.HSA? HSAVariables {
         get {
-            if (person?.FamilyData?.IRSData != null) {
-                return person.FamilyData.IRSData.RetirementData.HSA;
+            if (person?.FamilyData?.AppData.IRSData != null) {
+                return person.FamilyData.AppData.IRSData.RetirementData.HSA;
             }
 
             return null;

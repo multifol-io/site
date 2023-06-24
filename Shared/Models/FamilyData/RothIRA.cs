@@ -6,7 +6,7 @@ public class RothIRA {
     public Person person { get; set; }
 
     private IRS.RothIRA rothIraVariables {
-        get { return this.person.FamilyData.IRSData.RetirementData.RothIRA; }
+        get { return this.person.FamilyData.AppData.IRSData.RetirementData.RothIRA; }
     }
 
     public int MaximumContributionByAge { 

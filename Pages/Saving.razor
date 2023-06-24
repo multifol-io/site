@@ -43,7 +43,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
     }
 </style>
 
-    @if (steps == null || familyData == null)
+    @if (steps == null || appData == null)
     {
         <p><em>Loading...</em></p>
     }
@@ -1088,15 +1088,17 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        for (var i = 0; i < familyData.PersonCount; i++) {
-            var benefits = familyData.People[i].EmployerBenefits;
-            
-            if (lastEmployer[i] != benefits.Company)
-            {
-                await benefits.GetEmployerDataAsync(familyData.Year);
-                lastEmployer[i] = benefits.Company;
-                if (benefits.Downloaded) {
-                    await InvokeAsync(StateHasChanged); 
+        if (appData != null && familyData != null) {
+            for (var i = 0; i < familyData.PersonCount; i++) {
+                var benefits = familyData.People[i].EmployerBenefits;
+                
+                if (lastEmployer[i] != benefits.Company)
+                {
+                    await benefits.GetEmployerDataAsync(familyData.Year);
+                    lastEmployer[i] = benefits.Company;
+                    if (benefits.Downloaded) {
+                        await InvokeAsync(StateHasChanged); 
+                    }
                 }
             }
         }
