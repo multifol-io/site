@@ -75,6 +75,10 @@
         {
             Navigation.NavigateTo(appData.LastPageUri);
         }
+        else
+        {
+            Navigation.NavigateTo("/portfolio");
+        }
     }
 
     private async Task renameProfile(EventArgs e, string profileName)
@@ -86,7 +90,7 @@
         }
         else
         {
-            var profileNames = await appData.CalculateProfileNames();
+            profileNames = await appData.CalculateProfileNames();
             if (newName != renameProfileName && !string.IsNullOrEmpty(newName) && !profileNames.Contains(newName))
             {
                 await LocalStorageAccessor.RenameKey(renameProfileName, newName);
@@ -98,6 +102,8 @@
 
                 renameProfileName = null;
             }
+
+            profileNames = await appData.CalculateProfileNames();
         }
     }
 
