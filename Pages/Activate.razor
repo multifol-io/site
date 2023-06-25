@@ -122,8 +122,8 @@
         {
             await ProfileUtilities.Load(appData);
         }
-
-        Navigation.NavigateTo("/portfolio");
+        
+        profileNames = await appData.CalculateProfileNames();
     }
 
     private async Task deleteProfile(EventArgs e, string profileName)

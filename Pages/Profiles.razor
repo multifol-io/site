@@ -128,6 +128,7 @@
         if (!string.IsNullOrEmpty(newProfileName)) {
             await ProfileUtilities.Save(newProfileName, new FamilyData(appData));
             newProfileName = "";
+            profileNames = await appData.CalculateProfileNames();
         }
     }
 
