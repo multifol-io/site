@@ -1,4 +1,4 @@
-﻿@page "/activate"
+﻿@page "/import"
 @inject IAppData appData
 @inject NavigationManager Navigation
 @inject LocalStorageAccessor LocalStorageAccessor
@@ -45,10 +45,6 @@
                 {
                     <button @onclick="@(e=>deleteProfile(e,profileName))">Del</button>
                 }
-                @if (renameProfileName == null)
-                {
-                    <button @onclick="@(e=>shareProfileData(e,profileName))">Share</button>
-                }
             </td>
         </tr>
     }
@@ -60,8 +56,8 @@
 }
 
 <br/>
-<label>Fetch shared profile:</label><br/>
-<InputText placeholder="enter code" @bind-Value="@securityKey" /><InputText placeholder="profile name" @bind-Value="@newProfileName" /><button @onclick="fetchProfileData">fetch</button>
+<label>Import shared profile:</label><br/>
+<InputText placeholder="import code" @bind-Value="@importCode" /><InputText placeholder="destination profile" @bind-Value="@newProfileName" /><button @onclick="importProfile">import</button>
 <br/>
 <span>@log</span>
 @code {
@@ -101,20 +97,10 @@
             }
         }
     }
-
-    private async Task shareProfileData(EventArgs e, string profileName)
-    {
-        //TODO: what if not saved? this will get from localstorage.
-        var profileData = await ProfileUtilities.GetProfileData(profileName);
-        var jsonEncoding = "{ \"profileData\":'"+profileData+"'}";
-        var myHttpContent = new MyHttpContent(jsonEncoding);
-        var securityKeyResponse = await Http.PostAsync($"https://api.bogle.tools/api/sharedata", myHttpContent, CancellationToken.None);
-        log += "shared. fetch within 2 minutes using securityKey: " + await securityKeyResponse.Content.ReadAsStringAsync() + "\n";
-    }
     
-    private async Task fetchProfileData()
+    private async Task importProfile()
     {
-        var jsonEncoding = "{ 'securityKey':'"+securityKey+"'}";
+        var jsonEncoding = "{ 'code':'"+importCode+"'}";
         var myHttpContent = new MyHttpContent(jsonEncoding);
         var familyDataResponse = await Http.PostAsync($"https://api.bogle.tools/api/sharedata", myHttpContent, CancellationToken.None);
         await ProfileUtilities.Save(newProfileName, await familyDataResponse.Content.ReadAsStringAsync());
@@ -153,6 +139,6 @@
     private string newProfileName { get; set; }
     private string? renameProfileName { get; set; }
     private string? newName {get; set;}
-    private string? securityKey { get; set;}
+    private string? importCode { get; set;}
     private string? log {get;set;}
 }

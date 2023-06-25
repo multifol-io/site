@@ -45,14 +45,6 @@ namespace api
                     if (!DataStorage.ContainsKey(securityString)) {
                         foundUniqueSecurityString = true;
                         DataStorage.Add(securityString, profileData);
-
-                        var t = Task.Run(async delegate
-                        {
-                            await Task.Delay(TimeSpan.FromSeconds(60), CancellationToken.None);
-                            if (DataStorage.ContainsKey(securityString)) {
-                                DataStorage.Remove(securityString);
-                            }
-                        });
                         return new OkObjectResult(securityString);
                     }
                 }
