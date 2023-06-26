@@ -134,8 +134,8 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             <tr style=vertical-align:bottom>
                                                                 <th style=padding-left:8px>Ticker</th>
                                                                 <th style=text-align:right;padding-left:8px>Price</th>
-                                                                <th style=padding-left:8px>Quantity</th>
-                                                                <th style=padding-left:8px>Balance</th>
+                                                                <th style=padding-left:8px;text-align:center>Quantity</th>
+                                                                <th style=padding-left:8px;text-align:center>Balance</th>
                                                             </tr>
                                                         }
                                                         @foreach (var investment in familyData.GroupedInvestments) {
@@ -173,8 +173,8 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                 <th style=padding-left:8px;text-align:center>
                                                                     Price
                                                                 </th>
-                                                                <th style=padding-left:8px>Quantity</th>
-                                                                <th style=padding-left:8px>Balance</th>
+                                                                <th style=padding-left:8px;text-align:center>Quantity</th>
+                                                                <th style=padding-left:8px;text-align:center>Balance</th>
                                                             </tr>
                                                         }
                                                         @foreach (var account in familyData.Accounts.OrderByDescending(i=>i.Value)) {
@@ -236,12 +236,10 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                     <a href="updated-quotes">Enable<br/>updates</a>
                                                                 }
                                                             </td>
-                                                            <td style=text-align:right;padding-left:8px colspan="3">
-                                                                <hr/><b>@(formatMoney(familyData.Value))</b>
-                                                                <br/>today's change: <i>@formatMoney(portfolioChange())</i>
-                                                            </td>
-                                                            <td></td>
-                                                            <td></td>
+                                                            <td style=text-align:right;padding-left:8px><hr/><b>@(formatMoney(familyData.Value))</b></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan=2 style=text-align:right;padding-left:8px>today's change: <i>@formatMoney(portfolioChange())</i></td>
                                                         </tr>
                                                     </table>
                                                     break;
