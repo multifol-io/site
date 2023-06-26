@@ -1,4 +1,5 @@
 ﻿@page "/profiles"
+@page "/activate"
 @inject IAppData appData
 @inject NavigationManager Navigation
 @inject LocalStorageAccessor LocalStorageAccessor
@@ -37,17 +38,19 @@
                 }
             </td>
             <td>
-                @if (renameProfileName == null || renameProfileName == profileName)
-                {
-                    <button @onclick="@(e=>renameProfile(e,profileName))">Rename</button>
-                }
-                @if (renameProfileName == null)
-                {
-                    <button @onclick="@(e=>deleteProfile(e,profileName))">Del</button>
-                }
-                @if (renameProfileName == null)
-                {
-                    <button @onclick="@(e=>shareProfileData(e,profileName))">Share</button>
+                @if(!importing) {
+                    @if (renameProfileName == null || renameProfileName == profileName)
+                    {
+                        <button @onclick="@(e=>renameProfile(e,profileName))">Rename</button>
+                    }
+                    @if (renameProfileName == null)
+                    {
+                        <button @onclick="@(e=>deleteProfile(e,profileName))">Del</button>
+                    }
+                    @if (renameProfileName == null)
+                    {
+                        <button @onclick="@(e=>shareProfileData(e,profileName))">Share</button>
+                    }
                 }
             </td>
         </tr>
@@ -59,12 +62,45 @@
     <p>Choose a profile name (defaults to 'primary') to store your data locally.</p>
 }
 <br/>
-<label>Create new profile:</label><br/>
-<InputText placeholder="profile name" @bind-Value="@newProfileName" /><button @onclick="createProfile">➕ create</button>
+@if(!importing){<label>Create new profile:</label>} else {<label>Import shared profile:</label>}
+<br/>
+<InputText placeholder="profile name" @bind-Value="@newProfileName" />
+@if(!importing){<button @onclick="createProfile">➕ create</button>} else
+{<InputText placeholder="import code" @bind-Value="@importCode" />}
+<button @onclick="importProfile">➕ import</button>
 <br/>
 <span>@log</span>
 @code {
     private ElementReference renameBox;
+    private bool importing = false;
+
+    private async Task importProfile()
+    {
+        if (!importing)
+        {
+            importCode = null;
+            importing = true;
+        }
+        else
+        {
+            await doImportProfile();
+            importing = false;
+            profileNames = await appData.CalculateProfileNames();
+        }
+    }
+    private async Task doImportProfile()
+    {
+        var jsonEncoding = "{ 'importCode':'"+importCode+"'}";
+        var myHttpContent = new MyHttpContent(jsonEncoding);
+        var familyDataResponse = await Http.PostAsync($"https://api.bogle.tools/api/sharedata", myHttpContent, CancellationToken.None);
+        await ProfileUtilities.Save(newProfileName, await familyDataResponse.Content.ReadAsStringAsync());
+        if (appData.CurrentProfileName == newProfileName)
+        {
+            await ProfileUtilities.Load(appData);
+        }
+        
+        newProfileName = "";
+    }
 
     private async Task makeProfileActive(EventArgs e, string profileName)
     {
@@ -114,7 +150,7 @@
         var jsonEncoding = "{ \"profileData\":'"+profileData+"'}";
         var myHttpContent = new MyHttpContent(jsonEncoding);
         var securityKeyResponse = await Http.PostAsync($"https://api.bogle.tools/api/sharedata", myHttpContent, CancellationToken.None);
-        log += "\nTemporarily shared. Navigate another device to bogle.tools/activate within 2 minutes: " + await securityKeyResponse.Content.ReadAsStringAsync() + "\n";
+        log += $"\n{profileName} profile shared. Navigate another device to bogle.tools/activate within 2 minutes: " + await securityKeyResponse.Content.ReadAsStringAsync() + "\n";
     }
 
     private async Task deleteProfile(EventArgs e, string profileName)
@@ -147,6 +183,6 @@
     private string newProfileName { get; set; }
     private string? renameProfileName { get; set; }
     private string? newName {get; set;}
-    private string? securityKey { get; set;}
+    private string? importCode { get; set;}
     private string? log {get;set;}
 }

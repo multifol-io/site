@@ -23,12 +23,12 @@ namespace api
         {
             log.LogInformation("SearchTicker processed a request.");
 
-            string securityKey = req.Query["securityKey"];
+            string importCode = req.Query["importCode"];
             string profileData = req.Query["profileData"];
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            securityKey = securityKey ?? data?.securityKey;
+            importCode = importCode ?? data?.importCode;
             profileData = profileData ?? data?.profileData;
 
             if (profileData != null)
@@ -51,12 +51,12 @@ namespace api
 
                 return new BadRequestObjectResult("no security string possible");
             }
-            else if (securityKey != null)
+            else if (importCode != null)
             {
-                if (DataStorage.ContainsKey(securityKey))
+                if (DataStorage.ContainsKey(importCode))
                 {
-                    var result = DataStorage[securityKey];
-                    DataStorage.Remove(securityKey);
+                    var result = DataStorage[importCode];
+                    DataStorage.Remove(importCode);
                     return new OkObjectResult(result);
                 }
                 else
