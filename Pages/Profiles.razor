@@ -41,7 +41,7 @@
                 @if(!importing) {
                     @if (renameProfileName == null || renameProfileName == profileName)
                     {
-                        <button @onclick="@(e=>renameProfile(e,profileName))">Rename</button>
+                        <button @onclick="@(e=>renameProfile(e,profileName))">Rename...</button>
                     }
                     @if (renameProfileName == profileName)
                     {
@@ -53,7 +53,7 @@
                     }
                     @if (renameProfileName == null)
                     {
-                        <button @onclick="@(e=>shareProfileData(e,profileName))">Share</button>
+                        <button @onclick="@(e=>copyToProfile(e,profileName))">Copy To...</button>
                     }
                 }
             </td>
@@ -65,18 +65,19 @@
 }
 <br/>
 @if(renameProfileName == null) {
-    @if(!importing){<label>Create new or import shared profile:</label>} else {<label>Import shared profile:</label>}
+    @if(!importing){<label>Create new profile or import copy of profile:</label>} else {<label>Import shared profile:</label>}
     <br/>
-    <InputText placeholder="new profile name" @bind-Value="@newProfileName" />
-    @if(!importing){<button @onclick="createProfile">➕ create</button>} else
-    {<InputText placeholder="import code" @bind-Value="@importCode" />}
-    <button @onclick="importProfile">➕ import</button>
+    <InputText placeholder="@newProfileNamePlaceholder" @bind-Value="@newProfileName" />
+    @if(!importing){<button @onclick="createProfile">➕ new</button>} else
+    {<InputText placeholder="import code" @bind-Value="@copyCode" />}
+    <button @onclick="importProfile">➕ import copy</button>
     @if(importing) { <button @onclick="cancelImport">cancel</button> }
 }
 
 <br/>
 <span>@log</span>
 @code {
+    private string? newProfileNamePlaceholder = "new profile name";
     private ElementReference renameBox;
     private bool importing = false;
 
@@ -92,21 +93,23 @@
     {
         if (!importing)
         {
-            importCode = null;
+            copyCode = null;
             importing = true;
+            newProfileNamePlaceholder = "my name for copy";
         }
         else
         {
             await doImportProfile();
             importing = false;
             profileNames = await appData.CalculateProfileNames();
+            newProfileNamePlaceholder = "new profile name";
         }
     }
     private async Task doImportProfile()
     {
-        var jsonEncoding = "{ 'importCode':'"+importCode?.Trim()+"'}";
+        var jsonEncoding = "{ 'copyCode':'"+copyCode?.Trim()+"'}";
         var myHttpContent = new MyHttpContent(jsonEncoding);
-        var familyDataResponse = await Http.PostAsync($"https://api.bogle.tools/api/sharedata", myHttpContent, CancellationToken.None);
+        var familyDataResponse = await Http.PostAsync($"https://api.bogle.tools/api/copydata", myHttpContent, CancellationToken.None);
         await ProfileUtilities.Save(newProfileName, await familyDataResponse.Content.ReadAsStringAsync());
         if (appData.CurrentProfileName == newProfileName)
         {
@@ -157,15 +160,15 @@
         }
     }
 
-    private async Task shareProfileData(EventArgs e, string profileName)
+    private async Task copyToProfile(EventArgs e, string profileName)
     {
         //TODO: what if not saved? this will get from localstorage.
         var profileData = await ProfileUtilities.GetProfileData(profileName);
         var jsonEncoding = "{ \"profileData\":'"+profileData+"'}";
         var myHttpContent = new MyHttpContent(jsonEncoding);
-        var securityKeyResponse = await Http.PostAsync($"https://api.bogle.tools/api/sharedata", myHttpContent, CancellationToken.None);
-        var sharedProfileImportCode = await securityKeyResponse.Content.ReadAsStringAsync();
-        log += $"\n{profileName} profile shared. Navigate another device to https://bogle.tools/activate?importCode={sharedProfileImportCode} within 5 minutes.\n";
+        var securityKeyResponse = await Http.PostAsync($"https://api.bogle.tools/api/copydata", myHttpContent, CancellationToken.None);
+        var copyToCode = await securityKeyResponse.Content.ReadAsStringAsync();
+        log += $"\n{profileName} profile shared. Navigate another device to https://bogle.tools/activate?copycode={copyToCode} within 5 minutes.\n";
     }
 
     private async Task deleteProfile(EventArgs e, string profileName)
@@ -198,6 +201,6 @@
     private string newProfileName { get; set; }
     private string? renameProfileName { get; set; }
     private string? newName {get; set;}
-    private string? importCode { get; set;}
+    private string? copyCode { get; set;}
     private string? log {get;set;}
 }

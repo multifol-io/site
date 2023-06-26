@@ -12,51 +12,51 @@ using System.Collections.Generic;
 
 namespace api
 {
-    public static class ShareData
+    public static class CopyData
     {
         private static Dictionary<string, string> DataStorage = new();
 
-        [FunctionName("ShareData")]
+        [FunctionName("CopyData")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("SearchTicker processed a request.");
 
-            string importCode = req.Query["importCode"];
+            string copyCode = req.Query["copyCode"];
             string profileData = req.Query["profileData"];
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            importCode = importCode ?? data?.importCode;
+            copyCode = copyCode ?? data?.copyCode;
             profileData = profileData ?? data?.profileData;
 
             if (profileData != null)
             {
-                bool foundUniqueSecurityString = false;
-                string securityString = null;
+                bool foundUniqueCopyCode = false;
+                string newCopyCode = null;
                 int maxCount = 10;
-                while (!foundUniqueSecurityString && maxCount > 0)
+                while (!foundUniqueCopyCode && maxCount > 0)
                 {
                     maxCount--;
                     int security = (int)(Random.Shared.NextDouble() * 999999.0);
-                    securityString = security.ToString();
+                    newCopyCode = security.ToString();
 
-                    if (!DataStorage.ContainsKey(securityString)) {
-                        foundUniqueSecurityString = true;
-                        DataStorage.Add(securityString, profileData);
-                        return new OkObjectResult(securityString);
+                    if (!DataStorage.ContainsKey(newCopyCode)) {
+                        foundUniqueCopyCode = true;
+                        DataStorage.Add(newCopyCode, profileData);
+                        return new OkObjectResult(newCopyCode);
                     }
                 }
 
                 return new BadRequestObjectResult("no security string possible");
             }
-            else if (importCode != null)
+            else if (copyCode != null)
             {
-                if (DataStorage.ContainsKey(importCode))
+                if (DataStorage.ContainsKey(copyCode))
                 {
-                    var result = DataStorage[importCode];
-                    DataStorage.Remove(importCode);
+                    var result = DataStorage[copyCode];
+                    DataStorage.Remove(copyCode);
                     return new OkObjectResult(result);
                 }
                 else
