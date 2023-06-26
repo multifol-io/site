@@ -173,7 +173,7 @@
         var myHttpContent = new MyHttpContent(jsonEncoding);
         var securityKeyResponse = await Http.PostAsync($"https://api.bogle.tools/api/copydata", myHttpContent, CancellationToken.None);
         var copyToCode = await securityKeyResponse.Content.ReadAsStringAsync();
-        log += $"\n{profileName} profile shared. Navigate another device to https://bogle.tools/import/{copyToCode} within 5 minutes.\n";
+        log += $"\n{profileName} profile shared. Navigate any device to https://bogle.tools/import/{copyToCode} within 5 minutes.\n";
     }
 
     private async Task deleteProfile(EventArgs e, string profileName)

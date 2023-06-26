@@ -180,7 +180,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                         @foreach (var account in familyData.Accounts.OrderByDescending(i=>i.Value)) {
                                                             <tr>
                                                                 <td colspan=3>
-                                                                    <u>@((account.Custodian != null ? account.Custodian + " ": "")+ account.Note) @account.Identifier @account.AccountType</u>
+                                                                    <u>
+                                                                        @((account.Custodian != null ? account.Custodian + " ": "")+ account.Note)
+                                                                        @if(!string.IsNullOrEmpty(account.Identifier)) { <span>&nbsp;(</span> } else { <span>&nbsp;(@account.Identifier </span> }
+                                                                        @account.AccountType<span>)</span>
+                                                                    </u>
                                                                 </td>
                                                                 <td style=text-align:right;padding-left:8px>
                                                                     <u>@formatMoney(account.Value)</u>
