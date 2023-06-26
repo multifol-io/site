@@ -122,13 +122,13 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                         @((MarkupString)bold("Current Retirement Assets:"))<a href="@href" class="m-2" >✏️</a><br/>
                                         @if (familyData.Accounts.Count > 0) {
                                             <Label>&nbsp;&nbsp;View:&nbsp;</Label><InputSelect @bind-Value=familyData.PortfolioView >
-                                                <option>All Investments by Account</option>
-                                                <option>Group Investments by Ticker</option>
-                                                <option>Group Investments by Tax Type</option>
+                                                <option>by Account</option>
+                                                <option>by Ticker</option>
+                                                <option>by Tax Type</option>
                                             </InputSelect>
 
                                             @switch (familyData.PortfolioView) {
-                                                case "Group Investments by Ticker":
+                                                case "by Ticker":
                                                     <table>
                                                         @if (familyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
@@ -165,7 +165,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                         </tr>
                                                     </table>
                                                     break;
-                                                case "All Investments by Account":
+                                                case "by Account":
                                                     <table>
                                                         @if (familyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
@@ -177,10 +177,13 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                 <th style=padding-left:8px>Balance</th>
                                                             </tr>
                                                         }
-                                                        @foreach (var account in familyData.Accounts) {
+                                                        @foreach (var account in familyData.Accounts.OrderByDescending(i=>i.Value)) {
                                                             <tr>
-                                                                <td colspan=6>
+                                                                <td colspan=3>
                                                                     <u>@((account.Custodian != null ? account.Custodian + " ": "")+ account.Note) @account.Identifier @account.AccountType</u>
+                                                                </td>
+                                                                <td style=text-align:right;padding-left:8px>
+                                                                    <u>@formatMoney(account.Value)</u>
                                                                 </td>
                                                             </tr>
                                                             @foreach (var investment in account.Investments) {
@@ -188,7 +191,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                     <td style=padding-left:8px title=@investment.Name>@investment.Ticker</td>
                                                                     <td style=text-align:right;padding-left:8px>@formatMoney(investment.Price)</td>
                                                                     <td style=text-align:right;padding-left:8px>@formatDoubleFourDecimal(investment.Shares)</td>
-                                                                    <td style=text-align:right;padding-left:8px>@formatMoney(investment.Value)</td>
+                                                                    <td style=text-align:right;padding-left:8px>@if(account.Investments.Count>1){@formatMoney(investment.Value)}</td>
                                                                 </tr>
                                                             }
                                                         }
@@ -208,7 +211,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                         </tr>
                                                     </table>
                                                     break;
-                                                case "Group Investments by Tax Type":
+                                                case "by Tax Type":
                                                     <table>
                                                         @if (familyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
@@ -218,7 +221,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                 </th>
                                                             </tr>
                                                         }
-                                                        @foreach (var investment in familyData.GroupedInvestmentsByTaxType) {
+                                                        @foreach (var investment in familyData.GroupedInvestmentsByTaxType.OrderByDescending(i => i.Value)) {
                                                             <tr>
                                                                 <td>@investment.Name</td>
                                                                 <td style=text-align:right;padding-left:8px>@formatMoney(investment.Value)</td>

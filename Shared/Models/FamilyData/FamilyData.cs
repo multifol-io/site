@@ -449,6 +449,7 @@ public class FamilyData : IFamilyData
             return listInvestments.OrderByDescending(i=>i.Value).ToList();
         }
     }
+    
     public string PortfolioView { get; set; }
     public string? AdditionalBackground { get; set; }
     public List<string> Questions { get; set; }
