@@ -129,6 +129,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
 
                                             @switch (familyData.PortfolioView) {
                                                 case "by Ticker":
+                                                    bool alternateRow = false;
                                                     <table>
                                                         @if (familyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
@@ -139,12 +140,14 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             </tr>
                                                         }
                                                         @foreach (var investment in familyData.GroupedInvestments) {
-                                                            <tr>
+                                                            string bgColor = alternateRow ? "lightgray" : "white";
+                                                            <tr style=background-color:@bgColor>
                                                                 <td style=padding-left:8px;vertical-align:text-top title=@investment.Name>@investment.Ticker</td>
                                                                 <td style=text-align:right;padding-left:8px;vertical-align:text-top>@formatMoney(investment.Price)<br/>@formatPercent3(investment.PercentChange)</td>
                                                                 <td style=text-align:right;padding-left:8px;vertical-align:text-top>@formatDoubleFourDecimal(investment.Shares)</td>
                                                                 <td style=text-align:right;padding-left:8px;vertical-align:text-top>@formatMoney(investment.Value)@if(investment.LastUpdated!=null){<br/><span>@investment.LastUpdated?.ToShortTimeString()</span>}</td>
                                                             </tr>
+                                                            alternateRow = !alternateRow;
                                                         }
                                                         <tr>
                                                             <td colspan=5><hr/></td>
@@ -177,27 +180,28 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                 <th style=padding-left:8px;text-align:center>Balance</th>
                                                             </tr>
                                                         }
-                                                        @foreach (var account in familyData.Accounts.OrderByDescending(i=>i.Value)) {
-                                                            <tr>
+                                                        @foreach (var account in familyData.Accounts.OrderByDescending(a=>a.Value)) {
+                                                            bool alternateRow2 = false;
+                                                            <tr style=color:white;background:black;>
                                                                 <td colspan=3>
-                                                                    <u>
-                                                                        @((account.Custodian != null ? account.Custodian + " ": "")+ account.Note)
-                                                                        <span>(@account.Identifier</span>
-                                                                        @if(!string.IsNullOrEmpty(account.Identifier)) { <span>&nbsp;@account.AccountType)</span> }
-                                                                        else { <span>@account.AccountType)</span> }
-                                                                    </u>
+                                                                    @((account.Custodian != null ? account.Custodian + " ": "")+ account.Note)
+                                                                    <span>(@account.Identifier</span>
+                                                                    @if(!string.IsNullOrEmpty(account.Identifier)) { <span>&nbsp;@account.AccountType)</span> }
+                                                                    else { <span>@account.AccountType)</span> }
                                                                 </td>
                                                                 <td style=text-align:right;padding-left:8px>
                                                                     <u>@formatMoney(account.Value)</u>
                                                                 </td>
                                                             </tr>
-                                                            @foreach (var investment in account.Investments) {
-                                                                <tr>
+                                                            @foreach (var investment in account.Investments.OrderByDescending(i=>i.Value)) {
+                                                                string bgColor = alternateRow2 ? "lightgray" : "white";
+                                                                <tr style=background-color:@bgColor>
                                                                     <td style=padding-left:8px title=@investment.Name>@investment.Ticker</td>
                                                                     <td style=text-align:right;padding-left:8px>@formatMoney(investment.Price)</td>
                                                                     <td style=text-align:right;padding-left:8px>@formatDoubleFourDecimal(investment.Shares)</td>
                                                                     <td style=text-align:right;padding-left:8px>@if(account.Investments.Count>1){@formatMoney(investment.Value)}</td>
                                                                 </tr>
+                                                                alternateRow2 = !alternateRow2;
                                                             }
                                                         }
                                                         <tr>
@@ -217,6 +221,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                     </table>
                                                     break;
                                                 case "by Tax Type":
+                                                    bool alternateRow3 = false;
                                                     <table>
                                                         @if (familyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
@@ -227,10 +232,12 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             </tr>
                                                         }
                                                         @foreach (var investment in familyData.GroupedInvestmentsByTaxType.OrderByDescending(i => i.Value)) {
-                                                            <tr>
+                                                            string bgColor = alternateRow3 ? "lightgray" : "white";
+                                                            <tr style=background-color:@bgColor>
                                                                 <td>@investment.Name</td>
                                                                 <td style=text-align:right;padding-left:8px>@formatMoney(investment.Value)</td>
                                                             </tr>
+                                                            alternateRow3 = !alternateRow3;
                                                         }
                                                         <tr>
                                                             <td>
