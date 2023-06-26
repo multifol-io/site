@@ -39,7 +39,7 @@ namespace api
                 while (!foundUniqueCopyCode && maxCount > 0)
                 {
                     maxCount--;
-                    int security = (int)(Random.Shared.NextDouble() * 999999.0);
+                    long security = (long)(Random.Shared.NextDouble() * 999999999.0);
                     newCopyCode = security.ToString();
 
                     if (!DataStorage.ContainsKey(newCopyCode)) {
