@@ -344,7 +344,7 @@ public class FamilyData : IFamilyData
             {
                 foreach (var investment in account.Investments)
                 {
-                    var key = string.IsNullOrEmpty(investment.Ticker) ? investment.Name : investment.Ticker;
+                    var key = string.IsNullOrEmpty(investment.Ticker) ? investment.Name ?? Random.Shared.ToString(): investment.Ticker;
                     Investment? matchingInvestment;
                     if (!_GroupedInvestments.ContainsKey(key))
                     {
@@ -417,6 +417,12 @@ public class FamilyData : IFamilyData
                     case "Annuity (Non-Qualified)":
                     case "Taxable":
                         key = "Taxable";
+                        break;
+                    case "Refundable Deposit":
+                        key = "Refundable Deposits";
+                        break;
+                    case "Life Insurance":
+                        key = "For Beneficiaries (POD)";
                         break;
                 }
 
