@@ -19,6 +19,8 @@
         <p>Exising profile names:</p>
     }
 
+    bool alternateRow = false;
+
     <table>
         <tr>
             <th></th>
@@ -27,7 +29,8 @@
         </tr>
     @foreach(var profileName in profileNames)
     {
-        <tr>
+        string bgColor = alternateRow ? "lightgray" : "white";
+        <tr style=background-color:@bgColor>
             <td>
                 @if(profileName==appData.CurrentProfileName){<b>&nbsp;[active]&nbsp;</b>} 
             </td>
@@ -67,6 +70,7 @@
                 }
             </td>
         </tr>
+        alternateRow = !alternateRow;
     }
     </table>
 } else {
