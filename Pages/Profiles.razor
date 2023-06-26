@@ -1,5 +1,5 @@
 ﻿@page "/profiles"
-@page "/activate"
+@page "/import/{copyCode}"
 @inject IAppData appData
 @inject NavigationManager Navigation
 @inject LocalStorageAccessor LocalStorageAccessor
@@ -8,16 +8,22 @@
 
 <PageTitle>bogle.tools profiles</PageTitle>
 
-<h1>bogle.tools profiles</h1>
+<h4>@if(importing) { <span>import a copy of a shared bogle.tools profile</span> } else { <span>bogle.tools profiles</span>}</h4>
 @if (profileNames != null && profileNames.Count > 0)
 {
-    <p>Click on profile name to make it the active profile. You'll be navigated back to your prior page.</p>
+    @if(!importing) {
+        <p>Click on profile name to make it the active profile. You'll be navigated back to your prior page.</p>
+    }
+    else
+    {
+        <p>Exising profile names:</p>
+    }
 
     <table>
         <tr>
             <th></th>
             <th>Name</th>
-            <th>Action</th>
+            <th>@if(importing) {} else {<span>Action</span>}</th>
         </tr>
     @foreach(var profileName in profileNames)
     {
@@ -93,7 +99,6 @@
     {
         if (!importing)
         {
-            copyCode = null;
             importing = true;
             newProfileNamePlaceholder = "my name for copy";
         }
@@ -168,7 +173,7 @@
         var myHttpContent = new MyHttpContent(jsonEncoding);
         var securityKeyResponse = await Http.PostAsync($"https://api.bogle.tools/api/copydata", myHttpContent, CancellationToken.None);
         var copyToCode = await securityKeyResponse.Content.ReadAsStringAsync();
-        log += $"\n{profileName} profile shared. Navigate another device to https://bogle.tools/activate?copycode={copyToCode} within 5 minutes.\n";
+        log += $"\n{profileName} profile shared. Navigate another device to https://bogle.tools/import/{copyToCode} within 5 minutes.\n";
     }
 
     private async Task deleteProfile(EventArgs e, string profileName)
@@ -195,12 +200,20 @@
     protected override async Task OnInitializedAsync()
     {
         profileNames = await appData.CalculateProfileNames();
+
+        Console.WriteLine("copyCode on load: " + copyCode);
+        if (copyCode != null)
+        {
+            importing = true;
+            newProfileNamePlaceholder = "my name for copy";
+        }
     }
 
     private List<string> profileNames;
     private string newProfileName { get; set; }
     private string? renameProfileName { get; set; }
     private string? newName {get; set;}
-    private string? copyCode { get; set;}
+    [Parameter]
+    public string? copyCode { get; set;}
     private string? log {get;set;}
 }

@@ -41,7 +41,7 @@
             else
             {
                 appData.CurrentProfileName = null;
-                if (!Navigation.Uri.ToString().EndsWith("/activate"))
+                if (!Navigation.Uri.ToString().Contains("/import/"))
                 {
                     appData.LastPageUri = Navigation.Uri;
                     Navigation.NavigateTo("/profiles");
