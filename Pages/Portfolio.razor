@@ -1103,20 +1103,18 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             if (quoteData?.Close != null) {
                 foreach (var investment in investments) {
                     investment.Price = quoteData.Close;
-                    bool isWeekend = DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday;
-                    if (quoteData.Volume == 0 && !isWeekend) {
-                        investment.PreviousClose = quoteData.Close;
-                        investment.PercentChange = null;
-                    }
-                    else
-                    {
+                    if (quoteData.Volume > 0 
+                        || (quoteData.Volume == 0 && UnixTimeStampToDateTime(quoteData.Timestamp)?.Date == DateTime.Now.Date)) {
                         investment.PreviousClose = quoteData.PreviousClose;
                         investment.PercentChange = quoteData.ChangeP;
-                    }
-
-                    if (quoteData.Timestamp != null) {
                         investment.LastUpdated = UnixTimeStampToDateTime(quoteData.Timestamp);
                     }
+                    else {
+                        investment.PreviousClose = quoteData.Close;
+                        investment.PercentChange = null;
+                        investment.LastUpdated = null;
+                    }
+
                     investment.Value = investment.Price * investment.Shares;
                 }
             }
@@ -1125,7 +1123,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
 
     private async Task UpdatePrice(MouseEventArgs e, Investment investment) {
         if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey)) {
-            UpdateInvestmentPrice(investment);
+            await UpdateInvestmentPrice(investment);
         }
     }
 
@@ -1261,7 +1259,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
 
         foreach (var quote in quotes)
         {
-            await UpdateInvestmentsPrice(quote.Key, quote.Value);
+            try {
+                await UpdateInvestmentsPrice(quote.Key, quote.Value);
+            } catch (Exception ex) {
+                Console.WriteLine(ex.GetType().Name + ": " + ex.Message + " " + ex.StackTrace);
+            }
         }
     }
 
