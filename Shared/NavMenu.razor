@@ -1,10 +1,14 @@
 ﻿@inject HttpClient httpClient
-@inject NavigationManager NavigationManager
+@inject NavigationManager Navigation
+@inject IAppData appData
+@inject LocalStorageAccessor LocalStorageAccessor
 
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="/"><span class="oi oi-home" aria-hidden="true"></span>bogle.tools</a>
+        <span class="navbar-brand">|</span>
+        <a class="navbar-brand" href="/faq">FAQ</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -34,11 +38,6 @@
             </NavLink>
         </div>
         -->
-        <div class="nav-item px-2">
-            <NavLink class="nav-link" href="/about">
-                <span style="margin:3;font-Size:24pt">❔</span>&nbsp;About bogle.tools
-            </NavLink>
-        </div>
     </nav>
 
 </div>
@@ -51,5 +50,36 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ProfileUtilities.LocalStorageAccessor = LocalStorageAccessor;
+
+        var profileNames = await appData.CalculateProfileNames();
+
+        if (appData.CurrentProfileName != null && profileNames.Contains(appData.CurrentProfileName))
+        {
+            await ProfileUtilities.Load(appData);
+        }
+        else
+        {
+            if (profileNames.Count == 0)
+            {
+                appData.CurrentProfileName = "primary";
+                await LocalStorageAccessor.SetValueAsync("CurrentProfileName", appData.CurrentProfileName);
+                appData.FamilyData = new FamilyData(appData);
+                await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
+            }
+            else
+            {
+                appData.CurrentProfileName = null;
+                if (!Navigation.Uri.ToString().Contains("/import/"))
+                {
+                    appData.LastPageUri = Navigation.Uri;
+                    Navigation.NavigateTo("/profiles");
+                }
+            }
+        }
     }
 }

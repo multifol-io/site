@@ -63,9 +63,8 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             
             <div style=float:left>
                 <h4 style="max-width:450px">
-                    Portfolio
+                    @pageTitle
                 </h4>
-                <p style=float:left>Track and optimize your finances.</p>
             </div>
             <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName</a> profile</div>
 
@@ -292,7 +291,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
 
                     <div style=float:left>
                         <h4 style="max-width:450px">
-                            <NavLink href=/portfolio>Portfolio</NavLink> &gt; @step.title (@step.number)<br/>
+                            <NavLink href=/portfolio>@pageTitle</NavLink> &gt; @step.title (@step.number)<br/>
                         </h4>
                         <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                         <hr/>
@@ -1048,6 +1047,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     public int accountIndex = 0;
     public int investmentIndex = 0;
     private const string folderName = "/portfolio/";
+    private const string pageTitle = "Portfolio Tracker";
     private bool focusTicker = false;
     private bool focusAccount = false;
     private bool showPortfolioAnalysis = true;

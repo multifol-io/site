@@ -61,6 +61,9 @@
                     {
                         <button @onclick="@(e=>copyToProfile(e,profileName))">Copy To...</button>
                     }
+                    @if (profileName==appData.CurrentProfileName) {
+                        <button @onclick=@Save>Save</button>
+                    }
                 }
             </td>
         </tr>
@@ -87,6 +90,10 @@
     private ElementReference renameBox;
     private bool importing = false;
 
+    private async Task Save() {
+        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
+    }
+    
     private async Task cancelRename()
     {
         renameProfileName = null;
