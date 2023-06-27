@@ -144,7 +144,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             string bgColor = alternateRow ? "white" : "lightgray";
                                                             <tr style=background-color:@bgColor>
                                                                 <td style=padding-left:8px;vertical-align:text-top title=@investment.Name>@investment.Ticker</td>
-                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@formatMoney(investment.Price)<br/>@formatPercent3(investment.PercentChange)</td>
+                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@formatMoney(investment.Price)<br/>@((MarkupString)formatPercent3WithColor(investment.PercentChange))</td>
                                                                 <td style=text-align:right;padding-left:8px;vertical-align:text-top>@formatDoubleFourDecimal(investment.Shares)</td>
                                                                 <td style=text-align:right;padding-left:8px;vertical-align:text-top>@formatMoney(investment.Value)@if(investment.LastUpdated!=null){<br/><span>@investment.LastUpdated?.ToShortTimeString()</span>}</td>
                                                             </tr>
@@ -164,7 +164,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             </td>                                                            
                                                             <td style=text-align:right;padding-left:8px colspan=3>
                                                                 <b>@(formatMoney(familyData.Value))</b>
-                                                                <br/>today's change: <i>@formatMoney(portfolioChange())</i>
+                                                                <br/>today's change: <i>@((MarkupString)formatMoney(portfolioChange(),true))</i>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -216,7 +216,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             </td>
                                                             <td style=text-align:right;padding-left:8px colspan=3>
                                                                 <hr/><b>@(formatMoney(familyData.Value))</b>
-                                                                <br/>today's change: <i>@formatMoney(portfolioChange())</i>
+                                                                <br/>today's change: <i>@((MarkupString)formatMoney(portfolioChange(),true))</i>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -263,7 +263,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             <td style=text-align:right;padding-left:8px><hr/><b>@(formatMoney(familyData.Value))</b></td>
                                                         </tr>
                                                         <tr>
-                                                            <td colspan=2 style=text-align:right;padding-left:8px>today's change: <i>@formatMoney(portfolioChange())</i></td>
+                                                            <td colspan=2 style=text-align:right;padding-left:8px>today's change: <i>@((MarkupString)formatMoney(portfolioChange(),true))</i></td>
                                                         </tr>
                                                     </table>
                                                     break;                                                    
@@ -307,7 +307,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             <td style=text-align:right;padding-left:8px><hr/><b>@(formatMoney(familyData.Value))</b></td>
                                                         </tr>
                                                         <tr>
-                                                            <td colspan=2 style=text-align:right;padding-left:8px>today's change: <i>@formatMoney(portfolioChange())</i></td>
+                                                            <td colspan=2 style=text-align:right;padding-left:8px>today's change: <i>@((MarkupString)formatMoney(portfolioChange(),true))</i></td>
                                                         </tr>
                                                     </table>
                                                     break;
@@ -913,11 +913,22 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     {
         return String.Format("${0:#,0.##}", amount);
     }
-    public string formatMoney(double? amount) 
+    public string formatMoney(double? amount) {
+        return formatMoney(amount, false);
+    }
+    public string formatMoney(double? amount,bool withColor) 
     {
         if (amount.HasValue)
         {
-            return String.Format("${0:#,0.00}", amount);
+            string prefix = null;
+            string suffix = null;
+            if (withColor)
+            {
+                prefix = "<span style=color:" + (amount < 0.0 ? "red" : "green") + ">";
+                suffix = "</span>";
+            }
+
+            return prefix + String.Format("${0:#,0.00}", amount) + suffix;
         }
         else
         {
@@ -951,6 +962,10 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     public string formatPercent3(double? amount)
     {
         return amount.HasValue ? String.Format("{0:#,#.###}%", amount) : "";
+    }
+    public string formatPercent3WithColor(double? amount)
+    {
+        return amount.HasValue ? "<span style=color:"+ (amount < 0 ? "red>" : "green>") + String.Format("{0:#,#.###}%", amount)+"</span>" : "";
     }
     public string estimatePortfolio(FamilyData familyData) 
     {
