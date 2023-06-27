@@ -164,7 +164,9 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             </td>                                                            
                                                             <td style=text-align:right;padding-left:8px colspan=3>
                                                                 <b>@(formatMoney(familyData.Value))</b>
-                                                                <br/>today's change: <i>@((MarkupString)formatMoney(portfolioChange(),true))</i>
+                                                                @{var (change,percentChange) = portfolioChange();}
+                                                                <br/>change: <i>@((MarkupString)formatMoney(change,true))</i>
+                                                                <br/>% change: <i>@((MarkupString)formatPercent3WithColor(percentChange))</i>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -215,8 +217,10 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                 }
                                                             </td>
                                                             <td style=text-align:right;padding-left:8px colspan=3>
-                                                                <hr/><b>@(formatMoney(familyData.Value))</b>
-                                                                <br/>today's change: <i>@((MarkupString)formatMoney(portfolioChange(),true))</i>
+                                                                <b>@(formatMoney(familyData.Value))</b>
+                                                                @{var (change2,percentChange2) = portfolioChange();}
+                                                                <br/>change: <i>@((MarkupString)formatMoney(change2,true))</i>
+                                                                <br/>% change: <i>@((MarkupString)formatPercent3WithColor(percentChange2))</i>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -263,7 +267,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             <td style=text-align:right;padding-left:8px><hr/><b>@(formatMoney(familyData.Value))</b></td>
                                                         </tr>
                                                         <tr>
-                                                            <td colspan=2 style=text-align:right;padding-left:8px>today's change: <i>@((MarkupString)formatMoney(portfolioChange(),true))</i></td>
+                                                            <td colspan=2 style=text-align:right;padding-left:8px>
+                                                                @{var (change4,percentChange4) = portfolioChange();}
+                                                                change: <i>@((MarkupString)formatMoney(change4,true))</i>
+                                                                <br/>% change: <i>@((MarkupString)formatPercent3WithColor(percentChange4))</i>
+                                                            </td>
                                                         </tr>
                                                     </table>
                                                     break;                                                    
@@ -307,7 +315,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             <td style=text-align:right;padding-left:8px><hr/><b>@(formatMoney(familyData.Value))</b></td>
                                                         </tr>
                                                         <tr>
-                                                            <td colspan=2 style=text-align:right;padding-left:8px>today's change: <i>@((MarkupString)formatMoney(portfolioChange(),true))</i></td>
+                                                            <td colspan=2 style=text-align:right;padding-left:8px>
+                                                                @{var (change3,percentChange3) = portfolioChange();}
+                                                                change: <i>@((MarkupString)formatMoney(change3,true))</i>
+                                                                <br/>% change: <i>@((MarkupString)formatPercent3WithColor(percentChange3))</i>
+                                                            </td>
                                                         </tr>
                                                     </table>
                                                     break;
@@ -1347,20 +1359,23 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
     }
 
-    private double? portfolioChange() 
+    private (double? change, double? percentChange) portfolioChange() 
     {
         double? change = 0.0;
+        double? total = 0.0;
         foreach (var investment in familyData.GroupedInvestments)
         {
+            total += investment.Value;
             if (investment.PercentChange != null)
             {
                 change += (investment.Price - investment.PreviousClose) * investment.Shares;
             }
         }
 
-        return change == 0.0 ? null : change;
+        var startOfDayTotal = total - change;
+        return change == 0.0 ? (null, null) : (change, change/startOfDayTotal * 100.0);
     }
-    
+
     private void navWithBackStack()
     {
         appData.LastPageUri = Navigation.Uri;
