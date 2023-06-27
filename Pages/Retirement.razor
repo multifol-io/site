@@ -56,12 +56,14 @@ Retirement - bogle.tools
             string nextPage = folderName + nextStep?.step;
             familyData.UpdatePercentages();
             
-            <h4 style="max-width:450px">
-                Retirement Plan <br/>
-                <br/>
-            </h4>
+            <div style=float:left>
+                <h4 style="max-width:450px">
+                    @pageHeading
+                </h4>
+            </div>
+            <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName</a> profile</div>
 
-            <p>If you're still working, maximize <a href="/saving">savings with a plan</a>. After you've collected <a href="/portfolio">your Portfolio</a> information, enter the information that will impact your retirement.</p>
+            <p style=clear:left>If you're still working, maximize <a href="/saving">savings with a plan</a>. After you've collected <a href="/portfolio">your Portfolio</a> information, enter the information that will impact your retirement.</p>
             <div>
                 <p ><b>Press edit (✏️) to complete each step:</b></p>
 
@@ -189,14 +191,16 @@ Retirement - bogle.tools
                     string prevPage = folderName + prevStep?.step;
                     string nextPage = folderName + nextStep?.step;
 
-                    <h4 style="max-width:450px">
-                        <NavLink href=/retirement>Retirement Plan</NavLink> &gt; @step.title (@step.number)<br/>
+                    <div style=float:left>
+                        <h4 style="max-width:450px">
+                            <NavLink href=@pagePath>@pageHeading</NavLink> &gt; @step.title (@step.number)<br/>
+                        </h4>
                         <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
-                        <br/>
-                    </h4>
-                    <hr/>
+                        <hr/>
+                    </div>
+                    <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName</a> profile</div>
 
-                    <h4>@((MarkupString)markupize(step.priority))</h4>
+                    <h4 style=clear:left>@((MarkupString)markupize(step.priority))</h4>
 
                     <p class="article">@((MarkupString)markupize(step.summary))</p>
 
@@ -564,7 +568,9 @@ Retirement - bogle.tools
     private Step[]? steps;
     public int accountIndex = 0;
     public int investmentIndex = 0;
-    private const string folderName = "/retirement/";
+    private const string pagePath = "/retirement";
+    private const string folderName = pagePath + "/";
+    private const string pageHeading = "Retirement Plan";
     private bool focusTicker = false;
     private bool focusAccount = false;
     private bool showPortfolioAnalysis = true;
@@ -585,6 +591,9 @@ Retirement - bogle.tools
         if (!string.IsNullOrEmpty(TopicValue)) {
             await LoadPortfolioForTopic(TopicValue);
         }
+
+        Navigation.LocationChanged += LocationChanged;
+        base.OnInitialized();
     }
 
     private bool showImport = false;
@@ -774,5 +783,16 @@ Retirement - bogle.tools
         text = text.Replace("✏️\t","");
         text = text.Replace("Show Portfolio Analysis\n", "");
         await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
+    }
+    
+    private void navWithBackStack()
+    {
+        appData.LastPageUri = Navigation.Uri;
+        Navigation.NavigateTo("/profiles");
+    }
+    
+    async void LocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
     }
 }

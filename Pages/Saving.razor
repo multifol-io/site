@@ -58,12 +58,14 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
             int? runningTotal = 0;
             int itemTotal = 0;
 
-            <h4 style="max-width:450px">
-                Saving Plan (<a href=/profiles title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName</a>)<br/>
-                <br/>
-            </h4>
+            <div style=float:left>
+                <h4 style="max-width:450px">
+                    @pageHeading
+                </h4>
+            </div>
+            <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName</a> profile</div>
 
-            <p>To save money efficiently, you should prioritize the most efficient techniques. This tool has integrated the advice from <a target=_blank href="https://www.bogleheads.org/wiki/Prioritizing_investments">Bogleheads Prioritizing Investments wiki</a> ↗️. Review and complete the steps below.</p>
+            <p style=clear:left>To save money efficiently, you should prioritize the most efficient techniques. This tool has integrated the advice from <a target=_blank href="https://www.bogleheads.org/wiki/Prioritizing_investments">Bogleheads Prioritizing Investments wiki</a> ↗️. Review and complete the steps below.</p>
 
             <div>
                 <p ><b>Prerequisities:</b></p>
@@ -410,14 +412,17 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                     string prevPage = folderName + prevStep?.step;
                     string nextPage = folderName + nextStep?.step;
 
-                    <h4 style="max-width:450px">
-                        <NavLink href=/saving>Saving Plan</NavLink> (<a href=/profiles title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName</a>) &gt; @step.title (@step.number)<br/>
-                        <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
-                        <br/>
-                    </h4>
-                    <hr/>
 
-                    <h4>@((MarkupString)markupize(step.priority))</h4>
+                    <div style=float:left>
+                        <h4 style="max-width:450px">
+                            <NavLink href=@pagePath>@pageHeading</NavLink> &gt; @step.title (@step.number)<br/>
+                        </h4>
+                        <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
+                        <hr/>
+                    </div>
+                    <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName</a> profile</div>
+
+                    <h4 style=clear:left>@((MarkupString)markupize(step.priority))</h4>
 
                     <p class="article"><b>Summary:</b> @((MarkupString)markupize(step.summary))</p>
                         @switch (step.number) {
@@ -1069,12 +1074,16 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
     private Step[]? steps;
     private bool pastTotal;
     private string?[] lastEmployer = { null, null };
-    private const string folderName = "/saving/";
+    private const string pagePath = "/saving";
+    private const string folderName = pagePath + "/";
+    private const string pageHeading = "Saving Plan";
     private int matchRuleIndex;
     private int contributionIndex;
     protected override async Task OnInitializedAsync()
     {
         steps = await Http.GetFromJsonAsync<Step[]>("data/saving-steps.json");
+        Navigation.LocationChanged += LocationChanged;
+        base.OnInitialized();
     }
 
     private FamilyData familyData {
@@ -1108,5 +1117,10 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
     {
         appData.LastPageUri = Navigation.Uri;
         Navigation.NavigateTo("/profiles");
+    }
+
+    async void LocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
     }
 }

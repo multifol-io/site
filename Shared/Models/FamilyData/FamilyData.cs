@@ -456,7 +456,6 @@ public class FamilyData : IFamilyData
         }
     }
     
-    public string PortfolioView { get; set; }
     public string? AdditionalBackground { get; set; }
     public List<string> Questions { get; set; }
 

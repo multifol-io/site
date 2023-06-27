@@ -62,11 +62,14 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
             string nextPage = folderName + nextStep?.step;
             familyData.UpdatePercentages();
             
-            <h4 style="max-width:450px">
-                Portfolio Review (<a href=/profiles title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName</a>)<br/>
-                <br/>
-            </h4>
-            <p> Bogleheads.org forum enables you to <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Ask Portfolio Questions</a> ↗️. This tool makes it easy to collect your information and format it properly.</p>
+            <div style=float:left>
+                <h4 style="max-width:450px">
+                    @pageHeading
+                </h4>
+            </div>
+            <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName</a> profile</div>
+
+            <p style=clear:left> Bogleheads.org forum enables you to <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Ask Portfolio Questions</a> ↗️. This tool makes it easy to collect your information and format it properly.</p>
             <div>
                 <p ><b>Press edit (✏️) to complete each step:</b></p>
 
@@ -337,14 +340,16 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                     string prevPage = folderName + prevStep?.step;
                     string nextPage = folderName + nextStep?.step;
 
-                    <h4 style="max-width:450px">
-                        <NavLink href=/portfolio-review>Portfolio Review</NavLink> (<a href=/profiles title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName</a>) &gt; @step.title (@step.number)<br/>
+                    <div style=float:left>
+                        <h4 style="max-width:450px">
+                            <NavLink href=@pagePath>@pageHeading</NavLink> &gt; @step.title (@step.number)<br/>
+                        </h4>
                         <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
-                        <br/>
-                    </h4>
-                    <hr/>
+                        <hr/>
+                    </div>
+                    <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName</a> profile</div>
 
-                    <h4>@((MarkupString)markupize(step.priority))</h4>
+                    <h4 style=clear:left>@((MarkupString)markupize(step.priority))</h4>
 
                     <p class="article">@((MarkupString)markupize(step.summary))</p>
 
@@ -1094,7 +1099,9 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
     private Step[]? steps;
     public int accountIndex = 0;
     public int investmentIndex = 0;
-    private const string folderName = "/portfolio-review/";
+    private const string pagePath = "/portfolio-review";
+    private const string folderName = pagePath + "/";
+    private const string pageHeading = "Portfolio Review";
     private bool focusTicker = false;
     private bool focusAccount = false;
     private bool showPortfolioAnalysis = true;
@@ -1115,6 +1122,9 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
         if (!string.IsNullOrEmpty(TopicValue)) {
             await LoadPortfolioForTopic(TopicValue);
         }
+
+        Navigation.LocationChanged += LocationChanged;
+        base.OnInitialized();
     }
 
     private ElementReference tickerN;
@@ -1254,5 +1264,10 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
     {
         appData.LastPageUri = Navigation.Uri;
         Navigation.NavigateTo("/profiles");
+    }
+
+    async void LocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
     }
 }

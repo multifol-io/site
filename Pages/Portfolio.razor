@@ -48,7 +48,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         // reload is a workaround where the correct data seemed to be deleted, but i needed to navigate away and then back to retirement-assets
         Navigation.NavigateTo("/portfolio/retirement-assets");
     }
-    @if (steps == null || appData == null || appData.FamilyData == null)
+    @if (steps == null || appData == null)
     {
         <p><em>Loading...</em></p>
     }
@@ -63,7 +63,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             
             <div style=float:left>
                 <h4 style="max-width:450px">
-                    @pageTitle
+                    @pageHeading
                 </h4>
             </div>
             <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName</a> profile</div>
@@ -120,13 +120,14 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                     <td>
                                         @((MarkupString)bold("Current Retirement Assets:"))<a href="@href" class="m-2" >✏️</a><br/>
                                         @if (familyData.Accounts.Count > 0) {
-                                            <Label>&nbsp;&nbsp;View:&nbsp;</Label><InputSelect @bind-Value=familyData.PortfolioView >
+                                            if (appData.PortfolioView == null) { appData.PortfolioView = "by Ticker"; }
+                                            <Label>&nbsp;&nbsp;View:&nbsp;</Label><InputSelect @bind-Value=appData.PortfolioView >
                                                 <option>by Account</option>
                                                 <option>by Ticker</option>
                                                 <option>by Tax Type</option>
                                             </InputSelect>
 
-                                            @switch (familyData.PortfolioView) {
+                                            @switch (appData.PortfolioView) {
                                                 case "by Ticker":
                                                     bool alternateRow = false;
                                                     <table>
@@ -291,7 +292,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
 
                     <div style=float:left>
                         <h4 style="max-width:450px">
-                            <NavLink href=/portfolio>@pageTitle</NavLink> &gt; @step.title (@step.number)<br/>
+                            <NavLink href=@pagePath>@pageHeading</NavLink> &gt; @step.title (@step.number)<br/>
                         </h4>
                         <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                         <hr/>
@@ -1046,8 +1047,9 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     private Step[]? steps;
     public int accountIndex = 0;
     public int investmentIndex = 0;
-    private const string folderName = "/portfolio/";
-    private const string pageTitle = "Portfolio Tracker";
+    private const string pagePath = "/portfolio";
+    private const string folderName = pagePath + "/";
+    private const string pageHeading = "Portfolio Tracker";
     private bool focusTicker = false;
     private bool focusAccount = false;
     private bool showPortfolioAnalysis = true;
@@ -1064,6 +1066,8 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     protected override async Task OnInitializedAsync()
     {
         steps = await Http.GetFromJsonAsync<Step[]>("data/portfolio-assets-steps.json");
+        Navigation.LocationChanged += LocationChanged;
+        base.OnInitialized();
     }
 
     private ElementReference tickerN;
@@ -1267,6 +1271,8 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                 Console.WriteLine(ex.GetType().Name + ": " + ex.Message + " " + ex.StackTrace);
             }
         }
+
+        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
     }
 
     private double? portfolioChange() 
@@ -1287,5 +1293,10 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     {
         appData.LastPageUri = Navigation.Uri;
         Navigation.NavigateTo("/profiles");
+    }
+
+    async void LocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
     }
 }
