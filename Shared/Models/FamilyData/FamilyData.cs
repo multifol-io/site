@@ -424,6 +424,9 @@ public class FamilyData : IFamilyData
                     case "Life Insurance":
                         key = "For Beneficiaries (POD)";
                         break;
+                    case "529":
+                        key = "Education Savings";
+                        break;
                 }
 
                 key ??= "Other";
