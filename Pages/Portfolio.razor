@@ -124,6 +124,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                             <Label>&nbsp;&nbsp;View:&nbsp;</Label><InputSelect @bind-Value=appData.PortfolioView >
                                                 <option>by Account</option>
                                                 <option>by Ticker</option>
+                                                <option>by Custodian</option>
                                                 <option>by Tax Type</option>
                                             </InputSelect>
 
@@ -140,7 +141,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             </tr>
                                                         }
                                                         @foreach (var investment in familyData.GroupedInvestments) {
-                                                            string bgColor = alternateRow ? "lightgray" : "white";
+                                                            string bgColor = alternateRow ? "white" : "lightgray";
                                                             <tr style=background-color:@bgColor>
                                                                 <td style=padding-left:8px;vertical-align:text-top title=@investment.Name>@investment.Ticker</td>
                                                                 <td style=text-align:right;padding-left:8px;vertical-align:text-top>@formatMoney(investment.Price)<br/>@formatPercent3(investment.PercentChange)</td>
@@ -194,7 +195,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                 </td>
                                                             </tr>
                                                             @foreach (var investment in account.Investments.OrderByDescending(i=>i.Value)) {
-                                                                string bgColor = alternateRow2 ? "lightgray" : "white";
+                                                                string bgColor = alternateRow2 ? "white" : "lightgray";
                                                                 <tr style=background-color:@bgColor>
                                                                     <td style=padding-left:8px title=@investment.Name>@investment.Ticker</td>
                                                                     <td style=text-align:right;padding-left:8px>@formatMoney(investment.Price)</td>
@@ -220,6 +221,52 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                         </tr>
                                                     </table>
                                                     break;
+                                                case "by Custodian":
+                                                    <table>
+                                                        @if (familyData.Accounts.Count > 0) {
+                                                            <tr style=vertical-align:bottom>
+                                                                <th style=padding-left:8px>Custodian</th>
+                                                                <th style=padding-left:8px;text-align:center>Balance</th>
+                                                            </tr>
+                                                        }
+                                                        @{var groupByCustodian = familyData.Accounts
+                                                            .GroupBy(a => a.Custodian)
+                                                            .Select(g => new
+                                                            {
+                                                                Custodian = g.Key,
+                                                                Value = g.Sum(a => a.Value)
+                                                            })
+                                                            .OrderByDescending(g => g.Value);
+                                                            bool alternateRow4 = false;
+                                                        }
+                                                        @foreach (var group in groupByCustodian) {
+                                                            string bgColor = alternateRow4 ? "white" : "lightgray";
+                                                            <tr style=background:@bgColor;>
+                                                                <td>
+                                                                    @group.Custodian
+                                                                </td>
+                                                                <td style=text-align:right;padding-left:8px>
+                                                                    @formatMoney(group.Value)
+                                                                </td>
+                                                            </tr>
+                                                            alternateRow4 = !alternateRow4;
+                                                        }
+                                                        <tr>
+                                                            <td>
+                                                                @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
+                                                                {
+                                                                    <button @onclick=@refreshPrices title=Refresh>🔃</button>
+                                                                } else {
+                                                                    <a href="updated-quotes">Enable<br/>updates</a>
+                                                                }
+                                                            </td>
+                                                            <td style=text-align:right;padding-left:8px><hr/><b>@(formatMoney(familyData.Value))</b></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan=2 style=text-align:right;padding-left:8px>today's change: <i>@formatMoney(portfolioChange())</i></td>
+                                                        </tr>
+                                                    </table>
+                                                    break;                                                    
                                                 case "by Tax Type":
                                                     bool alternateRow3 = false;
                                                     <table>
@@ -232,7 +279,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             </tr>
                                                         }
                                                         @foreach (var investment in familyData.GroupedInvestmentsByTaxType.OrderByDescending(i => i.Value)) {
-                                                            string bgColor = alternateRow3 ? "lightgray" : "white";
+                                                            string bgColor = alternateRow3 ? "white" : "lightgray";
                                                             <tr style=background-color:@bgColor>
                                                                 <td>@investment.Name</td>
                                                                 <td style=text-align:right;padding-left:8px>@formatMoney(investment.Value)</td>

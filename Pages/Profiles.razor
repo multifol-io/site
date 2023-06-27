@@ -29,7 +29,7 @@
         </tr>
     @foreach(var profileName in profileNames.OrderBy(i=>i))
     {
-        string bgColor = alternateRow ? "lightgray" : "white";
+        string bgColor = alternateRow ? "white" : "lightgray";
         <tr style=background-color:@bgColor>
             <td>
                 @if(profileName==appData.CurrentProfileName){<b>&nbsp;[active]&nbsp;</b>} 
