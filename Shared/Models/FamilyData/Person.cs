@@ -12,7 +12,7 @@ public class Person {
     }
 
     // set back pointers in person
-    public void SetBackPointers(IFamilyData familyData)
+    public void SetBackPointers(FamilyData familyData)
     {
         this.FamilyData = familyData;
         this.EmployerBenefits.person = this;
@@ -24,7 +24,7 @@ public class Person {
 
     // back pointer
     [JsonIgnore]
-    public IFamilyData? FamilyData { get; set; }
+    public FamilyData? FamilyData { get; set; }
 
 
     public int? Age { get; set; }

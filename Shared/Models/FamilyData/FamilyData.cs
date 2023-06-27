@@ -5,7 +5,7 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-public class FamilyData : IFamilyData
+public class FamilyData
 {
     public FamilyData(IAppData appData) {
         AppData = appData;
@@ -387,78 +387,6 @@ public class FamilyData : IFamilyData
         }
     }
 
-    [JsonIgnore]
-    public List<Investment> GroupedInvestmentsByTaxType { 
-        get {
-            Dictionary<string,Investment> _GroupedInvestments = new();
-            foreach (var account in Accounts) 
-            {
-                string? key = null;
-                switch (account.AccountType)
-                {
-                    case "401k":
-                    case "403b":
-                    case "457b":
-                    case "Annuity (Qualified)":
-                    case "Inherited IRA":
-                    case "SIMPLE IRA":
-                    case "Traditional IRA":
-                    case "Rollover IRA":
-                    case "Solo 401k":
-                    case "SEP IRA":
-                        key = "Pre-Tax";
-                        break;
-                    case "Inherited Roth IRA":
-                    case "Roth 401k":
-                    case "Roth IRA":
-                    case "HSA":
-                        key = "Post-Tax";
-                        break;                        
-                    case "Annuity (Non-Qualified)":
-                    case "Taxable":
-                        key = "Taxable";
-                        break;
-                    case "Refundable Deposit":
-                        key = "Refundable Deposits";
-                        break;
-                    case "Life Insurance":
-                        key = "For Beneficiaries (POD)";
-                        break;
-                    case "529":
-                        key = "Education Savings";
-                        break;
-                }
-
-                key ??= "Other";
-
-                foreach (var investment in account.Investments)
-                {
-                    Investment? matchingInvestment;
-                    if (!_GroupedInvestments.ContainsKey(key))
-                    {
-                        matchingInvestment = new Investment() { Name = key, Value = 0.0 };
-                        _GroupedInvestments.Add(key, matchingInvestment);
-                    }
-                    else
-                    {
-                        matchingInvestment = _GroupedInvestments[key];
-                    }
-
-                    matchingInvestment.Value += investment.Value;
-                }
-            }
-
-            var listInvestments = new List<Investment>();
-            foreach (var key in _GroupedInvestments.Keys)
-            {
-                var investment = _GroupedInvestments[key];
-                listInvestments.Add(investment);
-            }
-            
-            return listInvestments.OrderByDescending(i=>i.Value).ToList();
-        }
-    }
-    
     public string? AdditionalBackground { get; set; }
     public List<string> Questions { get; set; }
 

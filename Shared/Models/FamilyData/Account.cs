@@ -93,4 +93,38 @@ public class Account
             AccountType = "HSA";
         }
     }
+
+    public string TaxType {
+        get { 
+            switch (AccountType) {
+                case "401k":
+                case "403b":
+                case "457b":
+                case "Annuity (Qualified)":
+                case "Inherited IRA":
+                case "SIMPLE IRA":
+                case "Traditional IRA":
+                case "Rollover IRA":
+                case "Solo 401k":
+                case "SEP IRA":
+                    return "Pre-Tax";
+                case "Inherited Roth IRA":
+                case "Roth 401k":
+                case "Roth IRA":
+                case "HSA":
+                    return "Post-Tax";
+                case "Annuity (Non-Qualified)":
+                case "Taxable":
+                    return "Taxable";
+                case "Refundable Deposit":
+                    return "Refundable Deposits";
+                case "Life Insurance":
+                    return "For Beneficiaries (POD)";
+                case "529":
+                    return "Education Savings";
+                default:
+                    return "Other";
+            }
+        }
+    }
 }

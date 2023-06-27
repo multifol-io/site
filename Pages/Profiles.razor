@@ -27,49 +27,49 @@
             <th>Name</th>
             <th>@if(importing) {} else {<span>Action</span>}</th>
         </tr>
-    @foreach(var profileName in profileNames.OrderBy(i=>i))
-    {
-        string bgColor = alternateRow ? "white" : "lightgray";
-        <tr style=background-color:@bgColor>
-            <td>
-                @if(profileName==appData.CurrentProfileName){<b>&nbsp;[active]&nbsp;</b>} 
-            </td>
-            <td>
-                @if (renameProfileName == profileName)
-                {
-                    <EditForm Model="appData">
-                        <InputText @bind-Value=newName />
-                    </EditForm>
-                }
-                else
-                {
-                    <a href=/portfolio @onclick="@(e=>makeProfileActive(e,profileName))" @onclick:preventDefault>@profileName</a><span>&nbsp;</span>
-                }
-            </td>
-            <td>
-                @if(!importing) {
-                    @if (renameProfileName == null || renameProfileName == profileName)
-                    {
-                        renameButtonText = renameProfileName == profileName ? "Rename" : "Rename...";
-                        <button @onclick="@(e=>renameProfile(e,profileName))">@renameButtonText</button>
-                    }
+        @foreach(var profileName in profileNames.OrderBy(i=>i))
+        {
+            string bgColor = alternateRow ? "white" : "lightgray";
+            <tr style=background-color:@bgColor>
+                <td>
+                    @if(profileName==appData.CurrentProfileName){<b>&nbsp;[active]&nbsp;</b>} 
+                </td>
+                <td>
                     @if (renameProfileName == profileName)
                     {
-                        <button @onclick="cancelRename">cancel</button>
+                        <EditForm Model="appData">
+                            <InputText @bind-Value=newName />
+                        </EditForm>
                     }
-                    @if (renameProfileName == null)
+                    else
                     {
-                        <button @onclick="@(e=>deleteProfile(e,profileName))">Del</button>
+                        <a href=/portfolio @onclick="@(e=>makeProfileActive(e,profileName))" @onclick:preventDefault>@profileName</a><span>&nbsp;</span>
                     }
-                    @if (renameProfileName == null)
-                    {
-                        <button @onclick="@(e=>copyToProfile(e,profileName))">Copy To...</button>
+                </td>
+                <td>
+                    @if(!importing) {
+                        @if (renameProfileName == null || renameProfileName == profileName)
+                        {
+                            renameButtonText = renameProfileName == profileName ? "Rename" : "Rename...";
+                            <button @onclick="@(e=>renameProfile(e,profileName))">@renameButtonText</button>
+                        }
+                        @if (renameProfileName == profileName)
+                        {
+                            <button @onclick="cancelRename">cancel</button>
+                        }
+                        @if (renameProfileName == null)
+                        {
+                            <button @onclick="@(e=>deleteProfile(e,profileName))">Del</button>
+                        }
+                        @if (renameProfileName == null)
+                        {
+                            <button @onclick="@(e=>copyToProfile(e,profileName))">Copy To...</button>
+                        }
                     }
-                }
-            </td>
-        </tr>
-        alternateRow = !alternateRow;
-    }
+                </td>
+            </tr>
+            alternateRow = !alternateRow;
+        }
     </table>
 } else {
     <p>Choose a profile name to store your data locally.</p>

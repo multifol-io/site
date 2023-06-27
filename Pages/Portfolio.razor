@@ -268,7 +268,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                     </table>
                                                     break;                                                    
                                                 case "by Tax Type":
-                                                    bool alternateRow3 = false;
                                                     <table>
                                                         @if (familyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
@@ -278,11 +277,21 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                 </th>
                                                             </tr>
                                                         }
-                                                        @foreach (var investment in familyData.GroupedInvestmentsByTaxType.OrderByDescending(i => i.Value)) {
+                                                        @{var groupByTaxType = familyData.Accounts
+                                                            .GroupBy(a => a.TaxType)
+                                                            .Select(g => new
+                                                            {
+                                                                TaxType = g.Key,
+                                                                Value = g.Sum(a => a.Value)
+                                                            })
+                                                            .OrderByDescending(g => g.Value);
+                                                            bool alternateRow3 = false;
+                                                        }
+                                                        @foreach (var group in groupByTaxType) {
                                                             string bgColor = alternateRow3 ? "white" : "lightgray";
                                                             <tr style=background-color:@bgColor>
-                                                                <td>@investment.Name</td>
-                                                                <td style=text-align:right;padding-left:8px>@formatMoney(investment.Value)</td>
+                                                                <td>@group.TaxType</td>
+                                                                <td style=text-align:right;padding-left:8px>@formatMoney(group.Value)</td>
                                                             </tr>
                                                             alternateRow3 = !alternateRow3;
                                                         }
@@ -943,7 +952,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     {
         return amount.HasValue ? String.Format("{0:#,#.###}%", amount) : "";
     }
-    public string estimatePortfolio(IFamilyData familyData) 
+    public string estimatePortfolio(FamilyData familyData) 
     {
         if (familyData.Value >= 10000000) {
             return "8-figures";

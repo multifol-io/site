@@ -947,7 +947,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
     {
         return String.Format("{0:#,0.###}%", amount);
     }
-    public string estimatePortfolio(IFamilyData familyData) 
+    public string estimatePortfolio(FamilyData familyData) 
     {
         if (familyData.Value >= 10000000) {
             return "8-figures";
