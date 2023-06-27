@@ -1103,13 +1103,15 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             if (quoteData?.Close != null) {
                 foreach (var investment in investments) {
                     investment.Price = quoteData.Close;
-                    if (quoteData.Volume > 0 
-                        || (quoteData.Volume == 0 && UnixTimeStampToDateTime(quoteData.Timestamp)?.Date == DateTime.Now.Date)) {
-                        investment.PreviousClose = quoteData.PreviousClose;
+                    if (quoteData.Volume > 0) {
+                        investment.PreviousClose = quoteData.PreviousClose; 
                         investment.PercentChange = quoteData.ChangeP;
                         investment.LastUpdated = UnixTimeStampToDateTime(quoteData.Timestamp);
-                    }
-                    else {
+                    } else if (quoteData.Volume == 0 && UnixTimeStampToDateTime(quoteData.Timestamp)?.Date == DateTime.Now.Date) {
+                        investment.PreviousClose = quoteData.PreviousClose;
+                        investment.PercentChange = quoteData.ChangeP;
+                        investment.LastUpdated = DateTime.Now;
+                    } else {
                         investment.PreviousClose = quoteData.Close;
                         investment.PercentChange = null;
                         investment.LastUpdated = null;

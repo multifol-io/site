@@ -27,7 +27,7 @@
             <th>Name</th>
             <th>@if(importing) {} else {<span>Action</span>}</th>
         </tr>
-    @foreach(var profileName in profileNames)
+    @foreach(var profileName in profileNames.OrderBy(i=>i))
     {
         string bgColor = alternateRow ? "lightgray" : "white";
         <tr style=background-color:@bgColor>
@@ -50,7 +50,8 @@
                 @if(!importing) {
                     @if (renameProfileName == null || renameProfileName == profileName)
                     {
-                        <button @onclick="@(e=>renameProfile(e,profileName))">Rename...</button>
+                        renameButtonText = renameProfileName == profileName ? "Rename" : "Rename...";
+                        <button @onclick="@(e=>renameProfile(e,profileName))">@renameButtonText</button>
                     }
                     @if (renameProfileName == profileName)
                     {
@@ -64,7 +65,7 @@
                     {
                         <button @onclick="@(e=>copyToProfile(e,profileName))">Copy To...</button>
                     }
-                    @if (profileName==appData.CurrentProfileName) {
+                    @if (profileName == appData.CurrentProfileName && renameProfileName == null) {
                         <button @onclick=@Save>Save</button>
                     }
                 }
@@ -222,6 +223,7 @@
     private List<string> profileNames;
     private string newProfileName { get; set; }
     private string? renameProfileName { get; set; }
+    private string? renameButtonText { get; set; }
     private string? newName {get; set;}
     [Parameter]
     public string? copyCode { get; set;}
