@@ -310,7 +310,7 @@
                                                             }
                                                         }
                                                         <tr>
-                                                            <td>
+                                                            <td colspan=2>
                                                                 @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                                 {
                                                                     <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button>
@@ -325,7 +325,7 @@
                                                                     ⬆️
                                                                 </button>
                                                             </td>
-                                                            <td style=text-align:right;padding-left:8px colspan=3>
+                                                            <td style=text-align:right;padding-left:8px colspan=2>
                                                                 <b>@(FormatUtilities.formatMoney(familyData.Value))</b>
                                                                 @{var (change2,percentChange2) = portfolioChange();}
                                                                 <br/>change: <i>@((MarkupString)FormatUtilities.formatMoney(change2,true))</i>
@@ -1405,10 +1405,12 @@
         account.AvailableFunds.Add(newFund);
         focusTicker = true;
     }
+
     void deleteAvailableFund(MouseEventArgs e, Account account, int investmentIndex)
     {
         account.AvailableFunds.RemoveAt(investmentIndex);
     }
+
     void addAccountInline()
     {
         var newAccount = new Account();
@@ -1417,13 +1419,16 @@
         newAccount.Edit = true;
         familyData?.Accounts.Add(newAccount);
     }
-    void deleteAccount2(MouseEventArgs e, int accountIndex)
+
+    private async void deleteAccount2(MouseEventArgs e, int accountIndex)
     {
         var accountToDelete = familyData.Accounts.OrderByDescending(a=>a.Value).ToList()[accountIndex];
         familyData.Accounts.Remove(accountToDelete);
         accountIndexEditing = null;
         familyData.UpdatePercentages();
+        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
     }
+
     void addAccount()
     {
         var newAccount = new Account();
