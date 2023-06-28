@@ -48,13 +48,17 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         // reload is a workaround where the correct data seemed to be deleted, but i needed to navigate away and then back to retirement-assets
         Navigation.NavigateTo("/portfolio/retirement-assets");
     }
-    @if (steps == null || appData == null)
+    @if (steps == null || appData == null || familyData == null)
     {
-        <p><em>Loading...</em></p>
-    }
-    else
-    {
-        @if (stepPath == null) {
+        <p>
+            @if(appData.CurrentProfileName==null){<em>No active <a href=/profiles>profile</a>.</em>} 
+            else {<em>Loading...</em>}
+        </p>
+        <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
+            @if(appData.CurrentProfileName==null){<span>choose a</span>}else {<span>@appData.CurrentProfileName</span>}</a> profile
+        </div>    
+    } else {
+        if (stepPath == null) {
             var prevStep = steps[steps.Length - 1];
             var nextStep = steps[0];
             string prevPage = folderName + prevStep?.step;
@@ -161,16 +165,21 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                     break;
                                 case "retirement-assets":
                                     <td>
+                                        <a @onclick=editAccounts class="m-2" >✏️</a>
                                         @((MarkupString)bold("Current Retirement Assets:"))<br/>
                                         @if (familyData.Accounts.Count > 0) {
-                                            if (appData.PortfolioView == null) { appData.PortfolioView = "by Account"; }
-
+                                            if (appData.PortfolioView == null) { appData.PortfolioView = "by Ticker"; }
                                             <label>&nbsp;&nbsp;View:&nbsp;</label><InputSelect @bind-Value=appData.PortfolioView >
                                                 <option>by Account</option>
                                                 <option>by Ticker</option>
                                                 <option>by Custodian</option>
                                                 <option>by Tax Type</option>
                                             </InputSelect>
+                                            @if(showEditAccountHelpers) {
+                                                <br/><i>Editing Retirement Assets:</i>
+                                                <br/><span>Click on account/investment, in "by Account" view to edit.
+                                                <br/>Add/import accounts buttons are below the account list.</span>
+                                            }
 
                                             @switch (appData.PortfolioView) {
                                                 case "by Account":
@@ -1007,6 +1016,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         accounts[accountIndexEditing.Value].Edit = true;
     }
 
+    void editAccounts() {
+        appData.PortfolioView = "by Account";
+        showEditAccountHelpers = !showEditAccountHelpers;
+    }
+
     void toggleTaxFilingStatusEditing() {
         taxFilingStatusEditing = !taxFilingStatusEditing;
     }
@@ -1015,6 +1029,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         assetAllocationEditing = !assetAllocationEditing;
     }
 
+    bool showEditAccountHelpers = false;
     string refreshButtonText = "🔃";
     bool assetAllocationEditing = false;
     bool taxFilingStatusEditing = false;

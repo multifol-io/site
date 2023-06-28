@@ -43,9 +43,15 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
     }
 </style>
 
-    @if (steps == null || appData == null)
+    @if (steps == null || appData == null || familyData == null)
     {
-        <p><em>Loading...</em></p>
+        <p>
+            @if(appData.CurrentProfileName==null){<em>No active <a href=/profiles>profile</a>.</em>} 
+            else {<em>Loading...</em>}
+        </p>
+        <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
+            @if(appData.CurrentProfileName==null){<span>choose a</span>}else {<span>@appData.CurrentProfileName</span>}</a> profile
+        </div>
     }
     else
     {
