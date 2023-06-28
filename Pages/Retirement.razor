@@ -101,18 +101,18 @@ Retirement - bogle.tools
                                         break;
                                     case "portfolio":
                                         <br/>
-                                        <span>@formatMoneyThousands(familyData.Value + (familyData.EmergencyFund.CurrentBalance ?? 0.0)) (includes EF)</span>
+                                        <span>@FormatUtilities.formatMoneyThousands(familyData.Value + (familyData.EmergencyFund.CurrentBalance ?? 0.0)) (includes EF)</span>
                                         <br/><br/>
                                         break;
                                     case "social-security": 
                                         <br/>
                                         @if(familyData.PersonCount > 0 && familyData.People[0].Age != null) {
-                                            <span>&nbsp;@getPronoun(familyData.People[0]) @formatMoneyThousands(familyData.People[0].Retirement.SSAnnual) 
+                                            <span>&nbsp;@getPronoun(familyData.People[0]) @FormatUtilities.formatMoneyThousands(familyData.People[0].Retirement.SSAnnual) 
                                                 @if(familyData.People[0].Age < familyData.People[0].Retirement.RetirementAge) { <span>&nbsp;at @familyData.People[0].Retirement.SSAge </span> }
                                             (with COLA)</span><br/>
                                         }
                                         @if(familyData.PersonCount > 1 && familyData.People[1].Age != null) {
-                                            <span>&nbsp;@getPronoun(familyData.People[1]) @formatMoneyThousands(familyData.People[1].Retirement.SSAnnual) 
+                                            <span>&nbsp;@getPronoun(familyData.People[1]) @FormatUtilities.formatMoneyThousands(familyData.People[1].Retirement.SSAnnual) 
                                                 @if(familyData.People[1].Age < familyData.People[1].Retirement.RetirementAge) { <span>&nbsp;at @familyData.People[1].Retirement.SSAge </span> }
                                             (with COLA)</span><br/>
                                         }
@@ -122,7 +122,7 @@ Retirement - bogle.tools
                                         <br/> 
                                         @for (int i = 0; i < familyData.PersonCount; i++) {
                                             foreach (var pension in familyData.People[i].Retirement.Pensions) {
-                                                <span>&nbsp;@formatMoneyThousands(pension.Income)
+                                                <span>&nbsp;@FormatUtilities.formatMoneyThousands(pension.Income)
                                                     @if(!pension.OneTime) {
                                                         <span>&nbsp;start at @pension.BeginningAge</span>
                                                     } else {<span>&nbsp;lump sum at @pension.BeginningAge</span>}
@@ -137,14 +137,14 @@ Retirement - bogle.tools
                                     case "spending": 
                                         <br/>
                                         @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
-                                            <span style=font-family:monospace>&nbsp;@formatMoneyThousands(familyData.RetirementData.AnnualExpenses)</span><br/>
+                                            <span style=font-family:monospace>&nbsp;@FormatUtilities.formatMoneyThousands(familyData.RetirementData.AnnualExpenses)</span><br/>
                                         }
                                         <br/>
                                         break;                                        
                                     case "income-expenses":
                                         <br/> 
                                         foreach (var pension in familyData.RetirementData.IncomeExpenses) {
-                                            <span>&nbsp;@formatMoneyThousands(pension.Income)
+                                            <span>&nbsp;@FormatUtilities.formatMoneyThousands(pension.Income)
                                                 @if(!pension.OneTime) {
                                                     <span>&nbsp;start at @pension.BeginningYear</span>
                                                 } else {<span>&nbsp;lump sum at @pension.BeginningYear</span>}
@@ -230,7 +230,7 @@ Retirement - bogle.tools
                                 }
                                 break;
                             case "portfolio":
-                                <span>Retirement Assets: @formatMoneyThousands(familyData.Value) (edit at <a href="/portfolio/retirement-assets">/portfolio/retirement-assets</a>)
+                                <span>Retirement Assets: @FormatUtilities.formatMoneyThousands(familyData.Value) (edit at <a href="/portfolio/retirement-assets">/portfolio/retirement-assets</a>)
                                 </span><br/>
                                 <label>Current Emergency Fund:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/>
                                 <br/><br/>
@@ -353,7 +353,7 @@ Retirement - bogle.tools
             pastTotal = familyData.PlannedSavings <= runningTotal;
 
             if (pastTotal) {
-                return "<div>-------<br/><div>Planned savings " + (familyData.PlannedSavings==runningTotal?"met":"exceeded") + " after " + formatMoney(itemTotal+(familyData.PlannedSavings-runningTotal)) + " towards previous step</div>-------<br/></div>";
+                return "<div>-------<br/><div>Planned savings " + (familyData.PlannedSavings==runningTotal?"met":"exceeded") + " after " + FormatUtilities.formatMoney(itemTotal+(familyData.PlannedSavings-runningTotal)) + " towards previous step</div>-------<br/></div>";
             }
         }
 
@@ -378,15 +378,15 @@ Retirement - bogle.tools
     public string GetRecommendedIRAMarkup(Person person) {
         switch(person.IRATypeRecommendation) {
             case IRAType.DeductibleIRAThenBackdoorRoth:
-                return "<span>" + formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + formatMoney(person.IRA.DeductionAllowed) + " Deductible), then backdoor roth</span>";
+                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.formatMoney(person.IRA.DeductionAllowed) + " Deductible), then backdoor roth</span>";
             case IRAType.DeductibleIRA:
-                return "<span>" + formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + formatMoney(person.IRA.DeductionAllowed) + " Deductible)</span>";
+                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.formatMoney(person.IRA.DeductionAllowed) + " Deductible)</span>";
             case IRAType.Roth:
-                return "<span>" + formatMoney(person.RothIRA.AmountToSave) + " in " + person.PossessiveID + " Roth IRA</span>";
+                return "<span>" + FormatUtilities.formatMoney(person.RothIRA.AmountToSave) + " in " + person.PossessiveID + " Roth IRA</span>";
             case IRAType.NondeductibleIRAThenBackdoorRoth:
-                return "<span>" + formatMoney(person.IRA.AmountToSave) + " (nondeductible), then backdoor roth</span>";
+                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " (nondeductible), then backdoor roth</span>";
             case IRAType.NondeductibleIRA:
-                return "<span>$" + formatMoney(person.IRA.AmountToSave) + " (nondeductible)</span>";
+                return "<span>$" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " (nondeductible)</span>";
             default:
                 return "<p>do nothing</p>";
         }
@@ -401,35 +401,6 @@ Retirement - bogle.tools
         {
             return "";
         }
-    }
-
-    public string formatMoney(int? amount) 
-    {
-        return String.Format("${0:#,0.##}", amount);
-    }
-    public string formatMoney(double? amount) 
-    {
-        return String.Format("${0:#,0.##}", amount);
-    }
-    public string formatMoneyThousands(double? amount) 
-    {
-        if (amount == null) return "";
-
-        if (amount >= 1000000) {
-            return String.Format("${0:#,0.##M}", Math.Round((double)amount / 10000.0)/100.0);
-        } else if (amount >= 1000) {
-            return String.Format("${0:#,0.##K}", Math.Round((double)amount / 1000.0));
-        } else {
-            return String.Format("${0:#,0.##}", amount);
-        }
-    }
-    public string formatPercent(double? amount)
-    {
-        return String.Format("{0:#,0.#}%", amount);
-    }
-    public string formatPercent3(double? amount)
-    {
-        return String.Format("{0:#,0.###}%", amount);
     }
     
     void addPensionAnnuity(int personIndex)

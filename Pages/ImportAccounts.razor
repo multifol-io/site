@@ -1,0 +1,122 @@
+@page "/import-accounts"
+@inject IAppData appData
+@inject NavigationManager Navigation
+@inject IList<Fund> Funds
+
+<PageTitle>
+@pageHeading
+</PageTitle>
+
+<div style=float:left>
+    <h4 style="max-width:450px">
+        @pageHeading
+    </h4>
+</div>
+<div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName</a> profile</div>
+
+<div style=clear:left>
+@if (appData.ImportResult == null) {
+    @if(showError){<br/><br/><span style=color:red>ERROR: must be a CSV file from Ameriprise, eTrade, Fidelity, Merrill Edge, Schwab, or Vanguard or a XLSX file from Morgan Stanley.</span><br/>}
+    <br/>
+    <fieldset style=margin-left:20px>
+        <span>Download portfolio details from custodian website, and then "choose file", to import: </span><br/>
+        <InputFile multiple accept=".csv,.xlsx" OnChange="@((e) => OnDataFilesImport(e))" /><br/>
+        <ul>
+            <li>Currently supports importing Ameriprise, eTrade, Fidelity, Merrill Edge, Morgan Stanley, Schwab, or Vanguard data files</li>
+            <li>If your custodian's format isn't supported yet, we're happy to try to add support. If you can share your custodian's downloaded CSV file format (feel free to anonymize/change the data), please email it to suggestions@bogle.tools with details on what custodian it is from.</li>
+            <li>CAUTION: only share personal info (like these files) to apps worthy of your trust!</li>
+        </ul>
+    </fieldset>
+}
+else
+{
+    <EditForm Model=@appData.ImportResult>
+        <div>Data Files Contains These Accounts/Investments - Choose Which to Import:</div>
+        <br/>
+        <button @onclick=finishImport>Import selected accounts</button>
+        <button @onclick=cancelImport>Cancel Import</button>
+        <br/>
+        <br/>
+
+        @foreach (var error in appData?.ImportResult.Errors)
+        {
+            <div style=font-weight:bold>Error: @error.Exception.Message</div>
+            @if(error.Exception.InnerException!=null){ <div>Failure location: <br/>@error.Exception.InnerException.StackTrace<br/><br/></div>};
+        }
+
+        <div><InputCheckbox @bind-Value=appData.ImportResult.ImportUpdatedAccounts /> UPDATE these EXISTING accounts in your data file:</div>
+        @foreach (var account in appData.ImportResult.UpdatedAccounts)
+        {
+            <div style=margin-left:40px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)</div>
+            @foreach (var investment in account.Investments)
+            {
+                <div style=margin-left:80px>@investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)</div>
+            }
+        }
+
+        <br/>
+        <div><InputCheckbox @bind-Value=appData.ImportResult.ImportNewAccounts /> ADD these NEW accounts in your data file:</div>
+        @foreach (var account in appData.ImportResult.NewAccounts)
+        {
+            <div style=margin-left:40px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)</div>
+            @foreach (var investment in account.Investments)
+            {
+                <div style=margin-left:80px>@investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)</div>
+            }
+        }
+    </EditForm>
+}
+</div>
+
+@code {
+    private async Task OnDataFilesImport(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles();
+        appData.ImportResult = await Importer.ImportDataFiles(files, Funds, appData.FamilyData.Accounts);
+        foreach (var account in appData.ImportResult.ImportedAccounts) 
+        {
+            account.Import = true;
+        }
+
+        Navigation.NavigateTo("/import-accounts");
+    }
+    private void finishImport()
+    {
+        if (appData.ImportResult == null) { return; }
+
+        foreach (var updatedAccount in appData.ImportResult.UpdatedAccounts)
+        {
+            if (updatedAccount.Import && updatedAccount.ReplaceAccount != null)
+            {
+                updatedAccount.ReplaceAccount.Investments.Clear();
+                updatedAccount.ReplaceAccount.Investments.AddRange(updatedAccount.Investments);
+            }
+        }
+
+        foreach (var newAccount in appData.ImportResult.NewAccounts)
+        {
+            if (newAccount.Import)
+            {
+                appData.FamilyData.Accounts.Add(newAccount);
+            }
+        }
+
+        appData.ImportResult = null;
+        Navigation.NavigateTo("/portfolio");
+    }
+
+    private void cancelImport()
+    {
+        appData.ImportResult = null;
+        Navigation.NavigateTo("/portfolio");
+    }
+
+    private void navWithBackStack()
+    {
+        appData.LastPageUri = Navigation.Uri;
+        Navigation.NavigateTo("/profiles");
+    }
+    
+    private bool showError { get; set; }
+    private string pageHeading = "Import Accounts";
+}

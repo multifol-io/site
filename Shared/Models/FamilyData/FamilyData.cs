@@ -154,7 +154,7 @@ public class FamilyData
                         outStr += "<b>========= "+significantYear+"</b><br/>";
                     }
 
-                    outStr += (yearIndex+DateTime.Now.Year) + " " + formatMoneyThousands(+incomeNeeded+inflationAffectedIncome) + " " + formatPercent((incomeNeeded+inflationAffectedIncome)/portfolioRunningBalance*100.0) +"<b>" + (yearNote!=null?" &lt;== ":"") + yearNote + "</b><br/>";
+                    outStr += (yearIndex+DateTime.Now.Year) + " " + FormatUtilities.formatMoneyThousands(+incomeNeeded+inflationAffectedIncome) + " " + FormatUtilities.formatPercent((incomeNeeded+inflationAffectedIncome)/portfolioRunningBalance*100.0) +"<b>" + (yearNote!=null?" &lt;== ":"") + yearNote + "</b><br/>";
                 }
                 
                 inflationAffectedIncome *= .97;
@@ -164,24 +164,6 @@ public class FamilyData
             }
 
             return outStr;
-        }
-    }
-
-    public string formatPercent(double? amount)
-    {
-        return String.Format("{0:#,0.#}%", amount);
-    }
-
-    public string formatMoneyThousands(double? amount) 
-    {
-        if (amount == null) return "";
-
-        if (amount >= 1000000 || amount <= -1000000) {
-            return String.Format("${0:#,0.##M}", Math.Round((double)amount / 10000.0)/100.0);
-        } else if (amount >= 1000 || amount <= -1000) {
-            return String.Format("${0:#,0.##K}", Math.Round((double)amount / 1000.0));
-        } else {
-            return String.Format("${0:#,0.##}", amount);
         }
     }
 

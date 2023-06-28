@@ -22,7 +22,10 @@ public class Account
             return newValue;
         }
     }
+
+    [JsonIgnore]
     public bool Edit { get; set; }
+
     [JsonIgnore]
     public double Percentage { get; set; }
 

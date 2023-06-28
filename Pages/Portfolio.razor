@@ -102,14 +102,14 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                             <br/>
                                             <fieldset>
                                                 @((MarkupString)bold("Actual Asset allocation: "))
-                                                <span>&nbsp;@formatPercent(familyData.ActualStockAllocation*100.0) stocks / @formatPercent(familyData.ActualBondAllocation*100.0) bonds</span><br/>
+                                                <span>&nbsp;@FormatUtilities.formatPercent(familyData.ActualStockAllocation*100.0) stocks / @FormatUtilities.formatPercent(familyData.ActualBondAllocation*100.0) bonds</span><br/>
                                                 <span>&nbsp;&nbsp;Actual International allocation: </span>
-                                                <span>@formatPercent(familyData.ActualInternationalStockAllocation*100.0)</span><br/>
+                                                <span>@FormatUtilities.formatPercent(familyData.ActualInternationalStockAllocation*100.0)</span><br/>
                                                 <span>&nbsp;&nbsp;Actual Cash allocation: </span>
-                                                <span>@formatPercent(familyData.ActualCashAllocation*100.0)</span><br/>
+                                                <span>@FormatUtilities.formatPercent(familyData.ActualCashAllocation*100.0)</span><br/>
                                                 @if(familyData.ActualOtherAllocation > 0.0) {
                                                     <span>&nbsp;&nbsp;Actual Unclassified allocation: </span>
-                                                    <span>@formatPercent(familyData.ActualOtherAllocation*100.0)</span><br/>
+                                                    <span>@FormatUtilities.formatPercent(familyData.ActualOtherAllocation*100.0)</span><br/>
                                                 }
                                             </fieldset>
                                         }
@@ -118,10 +118,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                     break;
                                 case "retirement-assets":
                                     <td>
-                                        @((MarkupString)bold("Current Retirement Assets:"))<a href="@href" class="m-2" >✏️</a><br/>
+                                        @((MarkupString)bold("Current Retirement Assets:"))<br/>
                                         @if (familyData.Accounts.Count > 0) {
-                                            if (appData.PortfolioView == null) { appData.PortfolioView = "by Ticker"; }
-                                            <Label>&nbsp;&nbsp;View:&nbsp;</Label><InputSelect @bind-Value=appData.PortfolioView >
+                                            if (appData.PortfolioView == null) { appData.PortfolioView = "by Account"; }
+
+                                            <label>&nbsp;&nbsp;View:&nbsp;</label><InputSelect @bind-Value=appData.PortfolioView >
                                                 <option>by Account</option>
                                                 <option>by Ticker</option>
                                                 <option>by Custodian</option>
@@ -144,9 +145,9 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             string bgColor = alternateRow ? "white" : "lightgray";
                                                             <tr style=background-color:@bgColor>
                                                                 <td style=padding-left:8px;vertical-align:text-top title=@investment.Name>@investment.Ticker</td>
-                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@formatMoney(investment.Price)<br/>@((MarkupString)formatPercent3WithColor(investment.PercentChange))</td>
-                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@formatDoubleFourDecimal(investment.Shares)</td>
-                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@formatMoney(investment.Value)@if(investment.LastUpdated!=null){<br/><span>@investment.LastUpdated?.ToShortTimeString()</span>}</td>
+                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.Price)<br/>@((MarkupString)FormatUtilities.formatPercent3WithColor(investment.PercentChange))</td>
+                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatDoubleFourDecimal(investment.Shares)</td>
+                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.Value)@if(investment.LastUpdated!=null){<br/><span>@investment.LastUpdated?.ToShortTimeString()</span>}</td>
                                                             </tr>
                                                             alternateRow = !alternateRow;
                                                         }
@@ -155,6 +156,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                         </tr>
                                                         <tr>
                                                             <td>
+                                                                <label>Quotes:</label>
                                                                 @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                                 {
                                                                     <button @onclick=@refreshPrices title=Refresh>🔃</button>
@@ -163,10 +165,10 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                 }
                                                             </td>                                                            
                                                             <td style=text-align:right;padding-left:8px colspan=3>
-                                                                <b>@(formatMoney(familyData.Value))</b>
+                                                                <b>@(FormatUtilities.formatMoney(familyData.Value))</b>
                                                                 @{var (change,percentChange) = portfolioChange();}
-                                                                <br/>change: <i>@((MarkupString)formatMoney(change,true))</i>
-                                                                <br/>% change: <i>@((MarkupString)formatPercent3WithColor(percentChange))</i>
+                                                                <br/>change: <i>@((MarkupString)FormatUtilities.formatMoney(change,true))</i>
+                                                                <br/>% change: <i>@((MarkupString)FormatUtilities.formatPercent3WithColor(percentChange))</i>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -183,9 +185,12 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                 <th style=padding-left:8px;text-align:center>Balance</th>
                                                             </tr>
                                                         }
+                                                        @{var accountIndex = 0;}
                                                         @foreach (var account in familyData.Accounts.OrderByDescending(a=>a.Value)) {
                                                             bool alternateRow2 = false;
-                                                            <tr style=color:white;background:black;>
+                                                            int accBuffer = accountIndex;
+                                                            accountIndex++;
+                                                            <tr style=color:white;background:black; @onclick='@(e=>editAccount(e,accBuffer))'>
                                                                 <td colspan=3>
                                                                     @((account.Custodian != null ? account.Custodian + " ": "")+ account.Note)
                                                                     <span>(@account.Identifier</span>
@@ -193,34 +198,119 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                     else { <span>@account.AccountType)</span> }
                                                                 </td>
                                                                 <td style=text-align:right;padding-left:8px>
-                                                                    <u>@formatMoney(account.Value)</u>
+                                                                    @FormatUtilities.formatMoney(account.Value)
                                                                 </td>
                                                             </tr>
+                                                            @if(account.Edit) {
+                                                                <tr style=color:white;background:black;padding-left:8px><td colspan=3>
+                                                                    <label style=padding-left:8px>Custodian: </label><input style="width:140px" type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' />
+                                                                    
+                                                                </td>
+                                                                <td >
+                                                                    <div style=float:right><button @onclick=doneEditing>done</button></div>
+                                                                </td>
+                                                                </tr>
+                                                                
+                                                                <tr style=color:white;background:black;padding-left:8px><td colspan=3>
+                                                                    @if (familyData.PersonCount == 2) {
+                                                                        <select style=margin-left:8px @ref=accountN @bind=account.Identifier>
+                                                                            <option>our</option>
+                                                                            @for(int p=0;p<familyData.PersonCount;p++) {
+                                                                                <option>@familyData.People[p].PossessiveID</option>
+                                                                            }
+                                                                        </select>
+                                                                    }
+                                                                    <select style=margin-left:8px @ref=accountN @bind=account.AccountType>
+                                                                        <option>Account Type...</option>
+                                                                        <option>401k</option>
+                                                                        <option>403b</option>
+                                                                        <option>457b</option>
+                                                                        <option>529</option>
+                                                                        <option>Annuity (Non-Qualified)</option>
+                                                                        <option>Annuity (Qualified)</option>
+                                                                        <option>HSA</option>
+                                                                        <option>Inherited IRA</option>
+                                                                        <option>Inherited Roth IRA</option>
+                                                                        <option value="Traditional IRA">IRA</option>
+                                                                        <option>Life Insurance</option>
+                                                                        <option>Refundable Deposit</option>
+                                                                        <option>Rollover IRA</option>
+                                                                        <option>Roth 401k</option>
+                                                                        <option>Roth IRA</option>
+                                                                        <option>SEP IRA</option>
+                                                                        <option>SIMPLE IRA</option>
+                                                                        <option>Solo 401k</option>
+                                                                        <option>Taxable</option>
+                                                                        <option>Traditional IRA</option>
+                                                                    </select>
+                                                                    </td>
+                                                                    <td >
+                                                                        <div style=float:right><button @onclick='@(e=>deleteAccountInline(e,accBuffer))'>delete account</button></div>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr style=color:white;background:black;><td colspan=3>
+                                                                    <label style=padding-left:8px>Note: </label><input type=text @bind-value=account.Note @bind-value:event=oninput placeholder='account note'/>
+                                                                    </td>
+                                                                    <td>
+                                                                        @* <button style=float:right>add investment</button> *@
+                                                                    </td>
+                                                                </tr>
+                                                            }
                                                             @foreach (var investment in account.Investments.OrderByDescending(i=>i.Value)) {
                                                                 string bgColor = alternateRow2 ? "white" : "lightgray";
-                                                                <tr style=background-color:@bgColor>
-                                                                    <td style=padding-left:8px title=@investment.Name>@investment.Ticker</td>
-                                                                    <td style=text-align:right;padding-left:8px>@formatMoney(investment.Price)</td>
-                                                                    <td style=text-align:right;padding-left:8px>@formatDoubleFourDecimal(investment.Shares)</td>
-                                                                    <td style=text-align:right;padding-left:8px>@if(account.Investments.Count>1){@formatMoney(investment.Value)}</td>
-                                                                </tr>
+                                                                if (!account.Edit) {
+                                                                    <tr style=background-color:@bgColor @onclick='@(e=>editAccount(e,accBuffer))'>
+                                                                        <td style=padding-left:8px title=@investment.Name>@investment.Ticker</td>
+                                                                        <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(investment.Price)</td>
+                                                                        <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleFourDecimal(investment.Shares)</td>
+                                                                        <td style=text-align:right;padding-left:8px>@if(account.Investments.Count>1){@FormatUtilities.formatMoney(investment.Value)}</td>
+                                                                    </tr>
+                                                                } else {
+                                                                    <tr style=background-color:@bgColor>
+                                                                        <td style=padding-left:16px>
+                                                                            <input type=text style=width:70px @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/></td>
+                                                                        <td style=text-align:right;padding-left:8px>$<input width= type=text style=width:80px;text-align:right @bind-Value=investment.Price @bind-Value:event=oninput placeholder='price'/></td>
+                                                                        <td style=text-align:right;padding-left:8px><input type=text style=width:100px;text-align:right @bind-Value=investment.Shares @bind-Value:event=oninput placeholder='shares'/></td>
+                                                                        <td style=text-align:right;padding-left:8px>
+                                                                            $<input type=text style=width:100px;text-align:right @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr style=background-color:@bgColor>
+                                                                        <td colspan=4><label style=padding-left:16px>Name:</label><input width= type=text style=width:320px;text-align:right @bind-Value=investment.Name @bind-Value:event=oninput placeholder='name'/></td>
+                                                                    </tr>
+                                                                    <tr style=background-color:@bgColor>
+                                                                        <td colspan=4>
+                                                                            <label style=padding-left:16px>Expense Ratio:</label><input width= type=text style=width:100px;text-align:right @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput placeholder='exp. ratio'/>%
+                                                                            @* <div style=float:right><button>delete</button></div> *@
+                                                                        </td>
+                                                                    </tr>
+                                                                }
+
                                                                 alternateRow2 = !alternateRow2;
                                                             }
                                                         }
                                                         <tr>
                                                             <td>
+                                                                <label>Quotes:</label>
                                                                 @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                                 {
                                                                     <button @onclick=@refreshPrices title=Refresh>🔃</button>
                                                                 } else {
                                                                     <a href="updated-quotes">Enable<br/>updates</a>
                                                                 }
+                                                                <br/>
+                                                                <label>Accounts: </label>
+                                                                <button @onclick=addAccountInline title='add account'>➕</button>
+                                                                <button @onclick=ShowImport title='to import Account info from a CSV/XLSX file'>
+                                                                    @if(showImport){<span>Import</span>}
+                                                                    ⬆️
+                                                                </button>
                                                             </td>
                                                             <td style=text-align:right;padding-left:8px colspan=3>
-                                                                <b>@(formatMoney(familyData.Value))</b>
+                                                                <b>@(FormatUtilities.formatMoney(familyData.Value))</b>
                                                                 @{var (change2,percentChange2) = portfolioChange();}
-                                                                <br/>change: <i>@((MarkupString)formatMoney(change2,true))</i>
-                                                                <br/>% change: <i>@((MarkupString)formatPercent3WithColor(percentChange2))</i>
+                                                                <br/>change: <i>@((MarkupString)FormatUtilities.formatMoney(change2,true))</i>
+                                                                <br/>% change: <i>@((MarkupString)FormatUtilities.formatPercent3WithColor(percentChange2))</i>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -250,13 +340,14 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                     @group.Custodian
                                                                 </td>
                                                                 <td style=text-align:right;padding-left:8px>
-                                                                    @formatMoney(group.Value)
+                                                                    @FormatUtilities.formatMoney(group.Value)
                                                                 </td>
                                                             </tr>
                                                             alternateRow4 = !alternateRow4;
                                                         }
                                                         <tr>
                                                             <td>
+                                                                <label>Quotes:</label>
                                                                 @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                                 {
                                                                     <button @onclick=@refreshPrices title=Refresh>🔃</button>
@@ -264,13 +355,13 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                     <a href="updated-quotes">Enable<br/>updates</a>
                                                                 }
                                                             </td>
-                                                            <td style=text-align:right;padding-left:8px><hr/><b>@(formatMoney(familyData.Value))</b></td>
+                                                            <td style=text-align:right;padding-left:8px><hr/><b>@(FormatUtilities.formatMoney(familyData.Value))</b></td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan=2 style=text-align:right;padding-left:8px>
                                                                 @{var (change4,percentChange4) = portfolioChange();}
-                                                                change: <i>@((MarkupString)formatMoney(change4,true))</i>
-                                                                <br/>% change: <i>@((MarkupString)formatPercent3WithColor(percentChange4))</i>
+                                                                change: <i>@((MarkupString)FormatUtilities.formatMoney(change4,true))</i>
+                                                                <br/>% change: <i>@((MarkupString)FormatUtilities.formatPercent3WithColor(percentChange4))</i>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -299,12 +390,13 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             string bgColor = alternateRow3 ? "white" : "lightgray";
                                                             <tr style=background-color:@bgColor>
                                                                 <td>@group.TaxType</td>
-                                                                <td style=text-align:right;padding-left:8px>@formatMoney(group.Value)</td>
+                                                                <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(group.Value)</td>
                                                             </tr>
                                                             alternateRow3 = !alternateRow3;
                                                         }
                                                         <tr>
                                                             <td>
+                                                                <label>Quotes:</label>
                                                                 @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                                 {
                                                                     <button @onclick=@refreshPrices title=Refresh>🔃</button>
@@ -312,13 +404,13 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                     <a href="updated-quotes">Enable<br/>updates</a>
                                                                 }
                                                             </td>
-                                                            <td style=text-align:right;padding-left:8px><hr/><b>@(formatMoney(familyData.Value))</b></td>
+                                                            <td style=text-align:right;padding-left:8px><hr/><b>@(FormatUtilities.formatMoney(familyData.Value))</b></td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan=2 style=text-align:right;padding-left:8px>
                                                                 @{var (change3,percentChange3) = portfolioChange();}
-                                                                change: <i>@((MarkupString)formatMoney(change3,true))</i>
-                                                                <br/>% change: <i>@((MarkupString)formatPercent3WithColor(percentChange3))</i>
+                                                                change: <i>@((MarkupString)FormatUtilities.formatMoney(change3,true))</i>
+                                                                <br/>% change: <i>@((MarkupString)FormatUtilities.formatPercent3WithColor(percentChange3))</i>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -329,10 +421,19 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                             <br/>
                                             <fieldset>
                                                 @((MarkupString)bold("Weighted Expense Ratio: "))
-                                                <span>&nbsp;@formatPercent3(familyData.OverallER) or @formatMoney(familyData.ExpensesTotal) /year</span>
+                                                <span>&nbsp;@FormatUtilities.formatPercent3(familyData.OverallER) or @FormatUtilities.formatMoney(familyData.ExpensesTotal) /year</span>
                                                 @if (familyData.InvestmentsMissingER > 0){<br/><span>&nbsp;(@familyData.InvestmentsMissingER investment(s) missing ER)</span><br/>}
                                             </fieldset>
                                         }
+                                        @if (appData.FamilyData.Accounts.Count == 0) {
+                                            <label>accounts: </label>
+                                            <button @onclick=addAccountInline title='add account'>➕</button>
+                                            <button @onclick=ShowImport title='to import Account info from a CSV/XLSX file'>
+                                                @if(showImport){<span>Hide</span>}
+                                                ⬆️
+                                            </button>
+                                        }
+
                                         <hr/>
                                     </td>
                                     break;                                
@@ -426,10 +527,10 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
 
                                         <br/><br/>
                                         <label>Amounts to Pay-Off (@step.title):</label><br/><br/>
-                                        High Interest: @formatMoney(familyData.HighDebts)<br/>
-                                        Medium Interest: @formatMoney(familyData.MediumDebts)<br/>
-                                        Low Interest: @formatMoney(familyData.LowDebts)<br/>
-                                        Unknown Interest: @formatMoney(familyData.UnknownDebts)<br/>
+                                        High Interest: @FormatUtilities.formatMoney(familyData.HighDebts)<br/>
+                                        Medium Interest: @FormatUtilities.formatMoney(familyData.MediumDebts)<br/>
+                                        Low Interest: @FormatUtilities.formatMoney(familyData.LowDebts)<br/>
+                                        Unknown Interest: @FormatUtilities.formatMoney(familyData.UnknownDebts)<br/>
                                         <br/>
                                     </EditForm>
                                 </div>
@@ -486,12 +587,12 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                 {
                                                     if (lastBracket != null) {
                                                         var elName = "bracket"+lastBracket.Substring(0,lastBracket.Length-2);
-                                                        <tr><td><InputRadio id=@elName Value='@lastBracket'/>&nbsp;<label for=@elName>@lastBracket</label></td><td style=padding-left:30px>@(lastStartAmount==1?"Up":formatMoney(lastStartAmount)) to @formatMoney(taxBracket.StartAmount)</td></tr>
+                                                        <tr><td><InputRadio id=@elName Value='@lastBracket'/>&nbsp;<label for=@elName>@lastBracket</label></td><td style=padding-left:30px>@(lastStartAmount==1?"Up":FormatUtilities.formatMoney(lastStartAmount)) to @FormatUtilities.formatMoney(taxBracket.StartAmount)</td></tr>
                                                     }
                                                     lastBracket = taxBracket.Rate;
                                                     lastStartAmount = taxBracket.StartAmount + 1;
                                                 }
-                                                    <tr><td><InputRadio Value='@lastBracket'/>&nbsp;@lastBracket</td><td style=padding-left:30px>Over @formatMoney(lastStartAmount-1)</td></tr>
+                                                    <tr><td><InputRadio Value='@lastBracket'/>&nbsp;@lastBracket</td><td style=padding-left:30px>Over @FormatUtilities.formatMoney(lastStartAmount-1)</td></tr>
                                                 </table>
                                             </InputRadioGroup>
                                         }
@@ -617,10 +718,10 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                 </td>
                                 break;                                
                             case "retirement-assets":
-                                @if(ImportResult == null) {
+                                @if(appData.ImportResult == null) {
                                     <u><b>Current Retirement Assets:</b></u><br/>
 
-                                    accountIndex = 0;
+                                    var accountIndex = 0;
                                     @foreach (var account in familyData.Accounts) {
                                         int accBuffer = accountIndex;
                                         accountIndex++;
@@ -679,11 +780,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                         }
                                         <button style=margin-left:20px @onclick='@(e=>addInvestment(e,accBuffer))'>➕</button>
                                         <hr style=margin-left:40px/>
-                                        <div style=margin-left:40px>Account Total: @formatMoney(account.Value)</div>
+                                        <div style=margin-left:40px>Account Total: @FormatUtilities.formatMoney(account.Value)</div>
                                     }
                                     <br/>
                                     <hr/>
-                                    <div>Portfolio Size: @formatMoney(familyData.Value)</div>
+                                    <div>Portfolio Size: @FormatUtilities.formatMoney(familyData.Value)</div>
                                     <br/>
                                     <div>
                                         <button @onclick=addAccount>➕ Account</button> to manually enter another Account's info.
@@ -714,13 +815,13 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                     <br/>
                                     <div>Preferred technique to represent the approximate size of your total portfolio (in <NavLink href="/portfolio">portfolio review</NavLink>):</div>
                                     <InputRadioGroup @bind-Value=familyData.ValueStyle>
-                                        <InputRadio id=rounded Value='0' /> <label for=rounded>@formatMoneyThousands(familyData.Value)</label> <br/>
+                                        <InputRadio id=rounded Value='0' /> <label for=rounded>@FormatUtilities.formatMoneyThousands(familyData.Value)</label> <br/>
                                         <InputRadio id=estimate Value='1' /> <label for=estimate>@estimatePortfolio(familyData)</label> <br/>
-                                        <InputRadio id=dollar Value='2' /> <label for=dollar>@formatMoney(familyData.Value)</label> <br/>
+                                        <InputRadio id=dollar Value='2' /> <label for=dollar>@FormatUtilities.formatMoney(familyData.Value)</label> <br/>
                                     </InputRadioGroup>
                                     }
                                 } else {
-                                    <EditForm Model=@ImportResult>
+                                    <EditForm Model=@appData.ImportResult>
                                         <div>Data Files Contains These Accounts/Investments - Choose Which to Import:</div>
                                         <br/>
                                         <button @onclick=finishImport>Import selected accounts</button>
@@ -728,30 +829,30 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                         <br/>
                                         <br/>
 
-                                        @foreach (var error in ImportResult.Errors)
+                                        @foreach (var error in appData.ImportResult.Errors)
                                         {
                                             <div style=font-weight:bold>Error: @error.Exception.Message</div>
                                             @if(error.Exception.InnerException!=null){ <div>Failure location: <br/>@error.Exception.InnerException.StackTrace<br/><br/></div>};
                                         }
 
-                                        <div><InputCheckbox @bind-Value=ImportResult.ImportUpdatedAccounts /> UPDATE these EXISTING accounts in your data file:</div>
-                                        @foreach (var account in ImportResult.UpdatedAccounts)
+                                        <div><InputCheckbox @bind-Value=appData.ImportResult.ImportUpdatedAccounts /> UPDATE these EXISTING accounts in your data file:</div>
+                                        @foreach (var account in appData.ImportResult.UpdatedAccounts)
                                         {
-                                            <div style=margin-left:40px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @formatMoney(account.Value)</div>
+                                            <div style=margin-left:40px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)</div>
                                             @foreach (var investment in account.Investments)
                                             {
-                                                <div style=margin-left:80px>@investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @formatMoney(investment.Value)</div>
+                                                <div style=margin-left:80px>@investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)</div>
                                             }
                                         }
 
                                         <br/>
-                                        <div><InputCheckbox @bind-Value=ImportResult.ImportNewAccounts /> ADD these NEW accounts in your data file:</div>
-                                        @foreach (var account in ImportResult.NewAccounts)
+                                        <div><InputCheckbox @bind-Value=appData.ImportResult.ImportNewAccounts /> ADD these NEW accounts in your data file:</div>
+                                        @foreach (var account in appData.ImportResult.NewAccounts)
                                         {
-                                            <div style=margin-left:40px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @formatMoney(account.Value)</div>
+                                            <div style=margin-left:40px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)</div>
                                             @foreach (var investment in account.Investments)
                                             {
-                                                <div style=margin-left:80px>@investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @formatMoney(investment.Value)</div>
+                                                <div style=margin-left:80px>@investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)</div>
                                             }
                                         }
                                     </EditForm>
@@ -765,21 +866,21 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                         @((MarkupString)boldUnderline("Contributions:"))
                                     </span><br/>
                                     @if (familyData.PlannedSavings > 0) {
-                                        <span>Planned savings: @formatMoney(familyData.PlannedSavings)</span><br/><br/>
+                                        <span>Planned savings: @FormatUtilities.formatMoney(familyData.PlannedSavings)</span><br/><br/>
                                     }
 
                                     <span>Prioritized Investments:</span><br/>
 
                                     @if (familyData.EmergencyFund.AmountToSave > 0) {
-                                        <span>@formatMoney(familyData.EmergencyFund.AmountToSave) in Emergency Fund</span><br/>
+                                        <span>@FormatUtilities.formatMoney(familyData.EmergencyFund.AmountToSave) in Emergency Fund</span><br/>
                                         @((MarkupString)checkTotal(familyData.EmergencyFund.AmountToSave))
                                     }
                                     @if (familyData.PersonCount > 0 && familyData.People[0].EmployerPlan.AmountToSaveForMatch > 0) {
-                                        <span>@formatMoney(familyData.People[0].EmployerPlan.AmountToSaveForMatch) in @familyData.People[0].PossessiveID 401k (Match: @formatMoney(familyData.People[0].EmployerPlan.MatchAmount))</span><br/>
+                                        <span>@FormatUtilities.formatMoney(familyData.People[0].EmployerPlan.AmountToSaveForMatch) in @familyData.People[0].PossessiveID 401k (Match: @FormatUtilities.formatMoney(familyData.People[0].EmployerPlan.MatchAmount))</span><br/>
                                         @((MarkupString)checkTotal(familyData.People[0].EmployerPlan.AmountToSaveForMatch))
                                     }
                                     @if (familyData.PersonCount > 1 && familyData.People[1].EmployerPlan.AmountToSaveForMatch > 0) {
-                                        <span>@formatMoney(familyData.People[1].EmployerPlan.AmountToSaveForMatch) in @familyData.People[1].PossessiveID 401k (Match: @formatMoney(familyData.People[1].EmployerPlan.MatchAmount))</span><br/>
+                                        <span>@FormatUtilities.formatMoney(familyData.People[1].EmployerPlan.AmountToSaveForMatch) in @familyData.People[1].PossessiveID 401k (Match: @FormatUtilities.formatMoney(familyData.People[1].EmployerPlan.MatchAmount))</span><br/>
                                         @((MarkupString)checkTotal(familyData.People[1].EmployerPlan.AmountToSaveForMatch))
                                     }
                                     @if (familyData.HighDebts > 0) {
@@ -787,11 +888,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                         @((MarkupString)checkTotal(familyData.HighDebts))
                                     }
                                     @if (familyData.PersonCount > 0  && (familyData.People[0].EmployerBenefits.Complete || familyData.People[0].EmployerPlan.AnnualSalary == 0 || familyData.People[0].HealthSavingsAccount.EligibleForHSA  || familyData.People[0].HealthSavingsAccount.EligibleForHSACatchUpOnly) && familyData.People[0].HealthSavingsAccount.AmountToSave > 0) {
-                                        <span>@formatMoney(familyData.People[0].HealthSavingsAccount.AmountToSave) in @familyData.People[0].PossessiveID HSA (Employer: @formatMoney(familyData.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
+                                        <span>@FormatUtilities.formatMoney(familyData.People[0].HealthSavingsAccount.AmountToSave) in @familyData.People[0].PossessiveID HSA (Employer: @FormatUtilities.formatMoney(familyData.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
                                         @((MarkupString)checkTotal(familyData.People[0].HealthSavingsAccount.AmountToSave))
                                     }
                                     @if (familyData.PersonCount > 1  && (familyData.People[1].EmployerBenefits.Complete || familyData.People[1].EmployerPlan.AnnualSalary == 0 || familyData.People[1].HealthSavingsAccount.EligibleForHSA  || familyData.People[1].HealthSavingsAccount.EligibleForHSACatchUpOnly) && familyData.People[1].HealthSavingsAccount.AmountToSave > 0) {
-                                        <span>@formatMoney(familyData.People[1].HealthSavingsAccount.AmountToSave) in @familyData.People[1].PossessiveID HSA (Employer: @formatMoney(familyData.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
+                                        <span>@FormatUtilities.formatMoney(familyData.People[1].HealthSavingsAccount.AmountToSave) in @familyData.People[1].PossessiveID HSA (Employer: @FormatUtilities.formatMoney(familyData.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
                                         @((MarkupString)checkTotal(familyData.People[1].HealthSavingsAccount.AmountToSave))
                                     }
                                     @if (familyData.AdjustedGrossIncome != null) {
@@ -805,33 +906,33 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                         }
                                     }
                                     @if (familyData.PersonCount > 0 && familyData.People[0].EmployerPlan.AmountToSaveForNonMatched > 0) {
-                                        <span>@formatMoney(familyData.People[0].EmployerPlan.AmountToSaveForNonMatched) in @familyData.People[0].PossessiveID 401k</span><br/>
+                                        <span>@FormatUtilities.formatMoney(familyData.People[0].EmployerPlan.AmountToSaveForNonMatched) in @familyData.People[0].PossessiveID 401k</span><br/>
                                         @((MarkupString)checkTotal(familyData.People[0].EmployerPlan.AmountToSaveForNonMatched))
                                     }
                                     @if (familyData.PersonCount > 1 && familyData.People[1].EmployerPlan.AmountToSaveForNonMatched > 0) {
-                                        <span>@formatMoney(familyData.People[1].EmployerPlan.AmountToSaveForNonMatched) in @familyData.People[1].PossessiveID 401k</span><br/>
+                                        <span>@FormatUtilities.formatMoney(familyData.People[1].EmployerPlan.AmountToSaveForNonMatched) in @familyData.People[1].PossessiveID 401k</span><br/>
                                         @((MarkupString)checkTotal(familyData.People[1].EmployerPlan.AmountToSaveForNonMatched))
                                     }
                                     @if (familyData.PersonCount > 0 && familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
-                                        <span>@formatMoney(familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyData.People[0].PossessiveID mega backdoor roth</span><br/>
+                                        <span>@FormatUtilities.formatMoney(familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyData.People[0].PossessiveID mega backdoor roth</span><br/>
                                         @((MarkupString)checkTotal(familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
                                     }
                                     @if (familyData.PersonCount > 1 && familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
-                                        <span>@formatMoney(familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyData.People[1].PossessiveID mega backdoor roth</span><br/>
+                                        <span>@FormatUtilities.formatMoney(familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyData.People[1].PossessiveID mega backdoor roth</span><br/>
                                         @((MarkupString)checkTotal(familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
                                     }
                                     @if (familyData.MediumDebts > 0) {
-                                        <span>@formatMoney(familyData.MediumDebts) in Medium Debts</span><br/>
+                                        <span>@FormatUtilities.formatMoney(familyData.MediumDebts) in Medium Debts</span><br/>
                                         @((MarkupString)checkTotal(familyData.MediumDebts))
                                     }
                                     @if (familyData.PlannedSavings > runningTotal) {
-                                        <span>@formatMoney(familyData.PlannedSavings-runningTotal) in Taxable</span><br/>
+                                        <span>@FormatUtilities.formatMoney(familyData.PlannedSavings-runningTotal) in Taxable</span><br/>
                                         @((MarkupString)checkTotal(familyData.PlannedSavings-runningTotal))
                                     } else {
-                                        <span>@formatMoney(0) in Taxable</span><br/>
+                                        <span>@FormatUtilities.formatMoney(0) in Taxable</span><br/>
                                     }
                                     @if (familyData.LowDebts > 0) {
-                                        <span>@formatMoney(familyData.LowDebts) in Low Debts</span><br/>
+                                        <span>@FormatUtilities.formatMoney(familyData.LowDebts) in Low Debts</span><br/>
                                         @((MarkupString)checkTotal(familyData.LowDebts))
                                     }
                                     <br/>
@@ -851,6 +952,31 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     }
 
 @code {
+
+    async void doneEditing()
+    {
+        var accounts = familyData.Accounts;
+        foreach (var account in accounts) {
+            account.Edit = false;
+        }
+        
+        accountIndexEditing = null;
+
+        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
+    }
+
+    void editAccount(MouseEventArgs e, int index)
+    {
+        var accounts = familyData.Accounts.OrderByDescending(a=>a.Value).ToList();
+        if (accountIndexEditing != null) {
+            accounts[accountIndexEditing.Value].Edit = false;            
+        }
+
+        accountIndexEditing = index;
+        accounts[accountIndexEditing.Value].Edit = true;
+    }
+
+    int? accountIndexEditing = null;
     public enum Mode {
         normal = 0,
         href,
@@ -865,7 +991,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             pastTotal = familyData.PlannedSavings <= runningTotal;
 
             if (pastTotal) {
-                return "<div>-------<br/><div>Planned savings " + (familyData.PlannedSavings==runningTotal?"met":"exceeded") + " after " + formatMoney(itemTotal+(familyData.PlannedSavings-runningTotal)) + " towards previous step</div>-------<br/></div>";
+                return "<div>-------<br/><div>Planned savings " + (familyData.PlannedSavings==runningTotal?"met":"exceeded") + " after " + FormatUtilities.formatMoney(itemTotal+(familyData.PlannedSavings-runningTotal)) + " towards previous step</div>-------<br/></div>";
             }
         }
 
@@ -890,15 +1016,15 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     public string GetRecommendedIRAMarkup(Person person) {
         switch(person.IRATypeRecommendation) {
             case IRAType.DeductibleIRAThenBackdoorRoth:
-                return "<span>" + formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + formatMoney(person.IRA.DeductionAllowed) + " Deductible), then backdoor roth</span>";
+                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.formatMoney(person.IRA.DeductionAllowed) + " Deductible), then backdoor roth</span>";
             case IRAType.DeductibleIRA:
-                return "<span>" + formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + formatMoney(person.IRA.DeductionAllowed) + " Deductible)</span>";
+                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.formatMoney(person.IRA.DeductionAllowed) + " Deductible)</span>";
             case IRAType.Roth:
-                return "<span>" + formatMoney(person.RothIRA.AmountToSave) + " in " + person.PossessiveID + " Roth IRA</span>";
+                return "<span>" + FormatUtilities.formatMoney(person.RothIRA.AmountToSave) + " in " + person.PossessiveID + " Roth IRA</span>";
             case IRAType.NondeductibleIRAThenBackdoorRoth:
-                return "<span>" + formatMoney(person.IRA.AmountToSave) + " (nondeductible), then backdoor roth</span>";
+                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " (nondeductible), then backdoor roth</span>";
             case IRAType.NondeductibleIRA:
-                return "<span>$" + formatMoney(person.IRA.AmountToSave) + " (nondeductible)</span>";
+                return "<span>$" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " (nondeductible)</span>";
             default:
                 return "<p>do nothing</p>";
         }
@@ -921,64 +1047,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         }
     }
 
-    public string formatMoney(int? amount) 
-    {
-        return String.Format("${0:#,0.##}", amount);
-    }
-    public string formatMoney(double? amount) {
-        return formatMoney(amount, false);
-    }
-    public string formatMoney(double? amount,bool withColor) 
-    {
-        if (amount.HasValue)
-        {
-            string prefix = null;
-            string suffix = null;
-            if (withColor)
-            {
-                prefix = "<span style=color:" + (amount < 0.0 ? "red" : "green") + ">";
-                suffix = "</span>";
-            }
-
-            return prefix + String.Format("${0:#,0.00}", amount) + suffix;
-        }
-        else
-        {
-            return "";
-        }
-    }
-    public string formatDoubleTwoDecimal(double? amount) 
-    {
-        return String.Format("{0:#,0.00}", amount);
-    }
-    public string formatDoubleFourDecimal(double? amount) 
-    {
-        return String.Format("{0:#,0.0000}", amount);
-    }
-    public string formatMoneyThousands(double? amount) 
-    {
-        if (amount == null) return "";
-
-        if (amount >= 1000000) {
-            return String.Format("${0:#,0.##M}", Math.Round((double)amount / 10000.0)/100.0);
-        } else if (amount >= 1000) {
-            return String.Format("${0:#,0.##K}", Math.Round((double)amount / 1000.0));
-        } else {
-            return String.Format("${0:#,0.##}", amount);
-        }
-    }
-    public string formatPercent(double? amount)
-    {
-        return String.Format("{0:#,0.#}%", amount);
-    }
-    public string formatPercent3(double? amount)
-    {
-        return amount.HasValue ? String.Format("{0:#,#.###}%", amount) : "";
-    }
-    public string formatPercent3WithColor(double? amount)
-    {
-        return amount.HasValue ? "<span style=color:"+ (amount < 0 ? "red>" : "green>") + String.Format("{0:#,#.###}%", amount)+"</span>" : "";
-    }
     public string estimatePortfolio(FamilyData familyData) 
     {
         if (familyData.Value >= 10000000) {
@@ -1160,10 +1228,11 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     private bool showError  = false;
 
     private void ShowImport() {
-        showImport = !showImport;
+        @* showImport = !showImport;
         if (!showImport) {
             showError = false;
-        }
+        } *@
+        Navigation.NavigateTo("/import-accounts");
     }
 
     private async Task UpdateInvestmentPrice(Investment investment)
@@ -1216,19 +1285,17 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             await UpdateInvestmentPrice(investment);
         }
     }
-
-    private ImportResult? ImportResult = null;
-
+    
     private async Task OnDataFilesImport(InputFileChangeEventArgs e)
     {
         var files = e.GetMultipleFiles();
-        ImportResult = await Importer.ImportDataFiles(files, Funds, familyData.Accounts);
-        foreach (var account in ImportResult.ImportedAccounts) 
+        appData.ImportResult = await Importer.ImportDataFiles(files, Funds, familyData.Accounts);
+        foreach (var account in appData.ImportResult.ImportedAccounts) 
         {
             account.Import = true;
         }
 
-        Console.WriteLine($"{ImportResult.DataFilesImported} files imported with {ImportResult.ImportedAccounts.Count} accounts");
+        Console.WriteLine($"{appData.ImportResult.DataFilesImported} files imported with {appData.ImportResult.ImportedAccounts.Count} accounts");
         showImport = false;
 
         Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
@@ -1236,9 +1303,9 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
 
     private void finishImport()
     {
-        if (ImportResult == null) { return; }
+        if (appData.ImportResult == null) { return; }
 
-        foreach (var updatedAccount in ImportResult.UpdatedAccounts)
+        foreach (var updatedAccount in appData.ImportResult.UpdatedAccounts)
         {
             if (updatedAccount.Import && updatedAccount.ReplaceAccount != null)
             {
@@ -1247,7 +1314,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             }
         }
 
-        foreach (var newAccount in ImportResult.NewAccounts)
+        foreach (var newAccount in appData.ImportResult.NewAccounts)
         {
             if (newAccount.Import)
             {
@@ -1255,12 +1322,12 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
             }
         }
 
-        ImportResult = null;
+        appData.ImportResult = null;
     }
 
     private void cancelImport()
     {
-        ImportResult = null;
+        appData.ImportResult = null;
     }
 
     private void addInvestment(MouseEventArgs e, int accountIndex)
@@ -1286,6 +1353,21 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     {
         account.AvailableFunds.RemoveAt(investmentIndex);
     }
+    void addAccountInline()
+    {
+        var newAccount = new Account();
+        var newInvestment = new Investment() { funds = Funds };
+        newAccount.Investments.Add(newInvestment);
+        newAccount.Edit = true;
+        familyData?.Accounts.Add(newAccount);
+    }
+    void deleteAccountInline(MouseEventArgs e, int accountIndex)
+    {
+        var accountToDelete = familyData.Accounts.OrderByDescending(a=>a.Value).ToList()[accountIndex];
+        familyData.Accounts.Remove(accountToDelete);
+        accountIndexEditing = null;
+        familyData.UpdatePercentages();
+    }
     void addAccount()
     {
         var newAccount = new Account();
@@ -1301,10 +1383,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         familyData.UpdatePercentages();
     }
 
-    void editAccount(MouseEventArgs e, int index)
-    {
-        familyData.Accounts[index].Edit = true;
-    }
     private async Task LoadPortfolioForTopic(string topicStr) {
         var options = new JsonSerializerOptions() 
             {
