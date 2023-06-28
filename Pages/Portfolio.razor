@@ -196,16 +196,16 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             <td colspan=5><hr/></td>
                                                         </tr>
                                                         <tr>
-                                                            <td>
+                                                            <td colspan=2>
                                                                 <label>Quotes:</label>
                                                                 @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                                 {
-                                                                    <button @onclick=@refreshPrices title=Refresh>🔃</button>
+                                                                    <button @onclick=@refreshPrices title=Refresh>@refreshButtonText</button>
                                                                 } else {
                                                                     <a href="updated-quotes">Enable<br/>updates</a>
                                                                 }
                                                             </td>                                                            
-                                                            <td style=text-align:right;padding-left:8px colspan=3>
+                                                            <td style=text-align:right;padding-left:8px colspan=2>
                                                                 <b>@(FormatUtilities.formatMoney(familyData.Value))</b>
                                                                 @{var (change,percentChange) = portfolioChange();}
                                                                 <br/>change: <i>@((MarkupString)FormatUtilities.formatMoney(change,true))</i>
@@ -335,7 +335,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                 <label>Quotes:</label>
                                                                 @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                                 {
-                                                                    <button @onclick=@refreshPrices title=Refresh>🔃</button>
+                                                                    <button @onclick=@refreshPrices title=Refresh>@refreshButtonText</button>
                                                                 } else {
                                                                     <a href="updated-quotes">Enable<br/>updates</a>
                                                                 }
@@ -391,7 +391,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                 <label>Quotes:</label>
                                                                 @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                                 {
-                                                                    <button @onclick=@refreshPrices title=Refresh>🔃</button>
+                                                                    <button @onclick=@refreshPrices title=Refresh>@refreshButtonText</button>
                                                                 } else {
                                                                     <a href="updated-quotes">Enable<br/>updates</a>
                                                                 }
@@ -440,7 +440,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                 <label>Quotes:</label>
                                                                 @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                                 {
-                                                                    <button @onclick=@refreshPrices title=Refresh>🔃</button>
+                                                                    <button @onclick=@refreshPrices title=Refresh>@refreshButtonText</button>
                                                                 } else {
                                                                     <a href="updated-quotes">Enable<br/>updates</a>
                                                                 }
@@ -997,6 +997,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         assetAllocationEditing = !assetAllocationEditing;
     }
 
+    string refreshButtonText = "🔃";
     bool assetAllocationEditing = false;
     bool taxFilingStatusEditing = false;
     int? accountIndexEditing = null;
@@ -1429,6 +1430,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
     }
 
     private async Task refreshPrices() {
+        refreshButtonText = "updating...";
         Dictionary<string,List<Investment>> quotes = new();
         foreach (var account in familyData.Accounts)
         {
@@ -1458,6 +1460,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         }
 
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
+        refreshButtonText = "🔃";
     }
 
     private (double? change, double? percentChange) portfolioChange() 
