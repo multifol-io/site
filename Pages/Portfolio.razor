@@ -245,7 +245,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                             @if(account.Edit) {
                                                                 <tr style=color:white;background:black;padding-left:8px><td colspan=3>
                                                                     <label style=padding-left:8px>Custodian: </label><input style="width:140px" type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' />
-                                                                    
                                                                 </td>
                                                                 <td >
                                                                     <div style=float:right><button @onclick=doneEditing>done</button></div>
@@ -286,18 +285,19 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                     </select>
                                                                     </td>
                                                                     <td >
-                                                                        <div style=float:right><button @onclick='@(e=>deleteAccountInline(e,accBuffer))'>delete account</button></div>
+                                                                        <div style=float:right><button @onclick='@(e=>deleteAccount2(e,accBuffer))' title='delete account'>❌ account</button></div>
                                                                     </td>
                                                                 </tr>
-                                                                <tr style=color:white;background:black;><td colspan=3>
+                                                                <tr style=color:white;background:black;><td colspan=4>
                                                                     <label style=padding-left:8px>Note: </label><input type=text @bind-value=account.Note @bind-value:event=oninput placeholder='account note'/>
-                                                                    </td>
-                                                                    <td>
-                                                                        @* <button style=float:right>add investment</button> *@
                                                                     </td>
                                                                 </tr>
                                                             }
-                                                            @foreach (var investment in account.Investments.OrderByDescending(i=>i.Value)) {
+                                                            
+                                                            var investmentIndex = 0;
+                                                            foreach (var investment in account.Investments.OrderByDescending(i=>i.Value)) {
+                                                                int invBuffer = investmentIndex;
+                                                                investmentIndex++;
                                                                 string bgColor = alternateRow2 ? "white" : "lightgray";
                                                                 if (!account.Edit) {
                                                                     <tr style=background-color:@bgColor @onclick='@(e=>editAccount(e,accBuffer))'>
@@ -322,7 +322,17 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                     <tr style=background-color:@bgColor>
                                                                         <td colspan=4>
                                                                             <label style=padding-left:16px>Expense Ratio:</label><input width= type=text style=width:100px;text-align:right @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput placeholder='exp. ratio'/>%
-                                                                            @* <div style=float:right><button>delete</button></div> *@
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr style=background-color:@bgColor>
+                                                                        <td colspan=4>
+                                                                            <label style=padding-left:16px>Asset Type:</label>
+                                                                            <select @bind=investment.AssetType>
+                                                                                @foreach (AssetType assetType in (AssetType[]) Enum.GetValues(typeof(AssetType))) {
+                                                                                    <option>@assetType</option>
+                                                                                }
+                                                                            </select>
+                                                                            <div style=float:right><button @onclick='@(e=>deleteInvestment2(e,accBuffer, invBuffer))' title='delete investment'>❌</button></div>
                                                                         </td>
                                                                     </tr>
                                                                 }
@@ -1361,6 +1371,14 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         focusTicker = true;
     }
 
+    void deleteInvestment2(MouseEventArgs e, int accountIndex, int investmentIndex)
+    {
+        var account = familyData.Accounts.OrderByDescending(a=>a.Value).ToList()[accountIndex];
+        var investmentToDelete = account.Investments.OrderByDescending(i=>i.Value).ToList()[investmentIndex];
+        account.Investments.Remove(investmentToDelete);
+        familyData.UpdatePercentages();
+    }
+
     void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
     {
         familyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
@@ -1385,7 +1403,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         newAccount.Edit = true;
         familyData?.Accounts.Add(newAccount);
     }
-    void deleteAccountInline(MouseEventArgs e, int accountIndex)
+    void deleteAccount2(MouseEventArgs e, int accountIndex)
     {
         var accountToDelete = familyData.Accounts.OrderByDescending(a=>a.Value).ToList()[accountIndex];
         familyData.Accounts.Remove(accountToDelete);
