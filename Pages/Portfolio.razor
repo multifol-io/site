@@ -76,33 +76,74 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                             @switch (step.step) {
                                 case "people": 
                                     <td>
-                                        @((MarkupString)bold("Tax Filing Status:"))<a href="@href" class="m-2" >✏️</a><br/>
-                                        @if (familyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@familyData.TaxFilingStatus</span> }
-                                        @if(familyData.PersonCount > 0) {
-                                            <span>&nbsp;@getPronoun(familyData.People[0], false)</span>
+                                        @((MarkupString)bold("Tax Filing Status:"))<a @onclick=toggleTaxFilingStatusEditing class="m-2" >✏️</a>
+                                        @if (!taxFilingStatusEditing) {
+                                            @if (familyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@familyData.TaxFilingStatus</span> }
+                                            @if(familyData.PersonCount > 0) {
+                                                <span>&nbsp;@getPronoun(familyData.People[0], false)</span>
+                                            }
+                                            @if(familyData.PersonCount > 1) {
+                                                <span>&nbsp;and @getPronoun(familyData.People[1], false)</span>
+                                            }
+                                            <br/><hr/>
+                                        } else {
+                                            <select @bind=familyData.TaxFilingStatus>
+                                                <option value="ChoiceNeeded">ChoiceNeeded</option>
+                                                <option>Single</option>
+                                                <option value=MarriedFilingJointly>Married filing jointly</option>
+                                                <option value=MarriedFilingSeperately>Married filing seperately</option>
+                                                <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                                                <option value=HeadOfHousehold>Head of Household</option>
+                                            </select><br/><br/>
+                                            
+                                            @for (int i = 0; i < familyData.PersonCount; i++) {
+                                                var person = familyData.People[i];
+                                                int personIndex = i + 1;
+
+                                                <EditForm Model="person" style=margin-left:25px>
+                                                    @if(person?.FamilyData?.PersonCount>1){
+                                                        <b>Person @personIndex:</b><br/>
+                                                        <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
+                                                        <option value="ChoiceNeeded">ChoiceNeeded</option>
+                                                        <option>person @personIndex</option>
+                                                        <option>him</option>
+                                                        <option>her</option>
+                                                        <option>me</option>
+                                                        <option>them</option>
+                                                    </select><br/>}
+                                                </EditForm><br/>
+                                            }
                                         }
-                                        @if(familyData.PersonCount > 1) {
-                                            <span>&nbsp;and @getPronoun(familyData.People[1], false)</span>
-                                        }
-                                        <br/><hr/>
                                     </td>
                                    break;
                                 case "asset-allocation":
                                     <td>
-                                        @((MarkupString)bold("Desired Asset allocation:"))<a href="@href" class="m-2" >✏️</a><br/>
-                                        @if (familyData.Stocks != null && familyData.Bonds != null) {
-                                            <span>&nbsp;@familyData.Stocks% stocks / @familyData.Bonds% bonds</span><br/>
-                                        }
-                                        @if (familyData.International != null) {
+                                        @((MarkupString)bold("Desired Asset allocation:"))<a @onclick=toggleAssetAllocationEditing  class="m-2" >✏️</a><br/>
+                                        @if(!assetAllocationEditing) { 
+                                            if (familyData.Stocks != null && familyData.Bonds != null) {
+                                                <span>&nbsp;@familyData.Stocks% stocks / @familyData.Bonds% bonds</span><br/>
+                                            }
+                                            @if (familyData.International != null) {
+                                                <span>&nbsp;&nbsp;Desired International allocation: </span>
+                                                <span>@familyData.International%</span>
+                                            }
+                                        } else {
+                                            <span>
+                                                &nbsp;<input style=width:50px;text-align:right type=text @bind-Value=familyData.Stocks @bind-Value:event=oninput />% stocks
+                                                /
+                                                <input style=width:50px;text-align:right type=text @bind-Value=familyData.Bonds @bind-Value:event=oninput />% bonds
+                                            </span><br/>
                                             <span>&nbsp;&nbsp;Desired International allocation: </span>
-                                            <span>@familyData.International%</span>
+                                            <span><input style=width:50px;text-align:right type=text @bind-Value=familyData.International @bind-Value:event=oninput />%</span>
                                         }
+
+
                                         <br/>
                                         @if (!double.IsNaN(familyData.ActualStockAllocation) || !double.IsNaN(familyData.ActualBondAllocation) || !double.IsNaN(familyData.ActualInternationalStockAllocation)) {
                                             <br/>
                                             <fieldset>
                                                 @((MarkupString)bold("Actual Asset allocation: "))
-                                                <span>&nbsp;@FormatUtilities.formatPercent(familyData.ActualStockAllocation*100.0) stocks / @FormatUtilities.formatPercent(familyData.ActualBondAllocation*100.0) bonds</span><br/>
+                                                <span>&nbsp;@if(assetAllocationEditing) {} else {@FormatUtilities.formatPercent(familyData.ActualStockAllocation*100.0)} stocks / @FormatUtilities.formatPercent(familyData.ActualBondAllocation*100.0) bonds</span><br/>
                                                 <span>&nbsp;&nbsp;Actual International allocation: </span>
                                                 <span>@FormatUtilities.formatPercent(familyData.ActualInternationalStockAllocation*100.0)</span><br/>
                                                 <span>&nbsp;&nbsp;Actual Cash allocation: </span>
@@ -611,35 +652,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                 break;
                             case "people":
                                 <p><b>Worksheet:</b> </p>
-                                <label>Tax Filing Status:</label>
-                                <select @bind=familyData.TaxFilingStatus>
-                                    <option value="ChoiceNeeded">ChoiceNeeded</option>
-                                    <option>Single</option>
-                                    <option value=MarriedFilingJointly>Married filing jointly</option>
-                                    <option value=MarriedFilingSeperately>Married filing seperately</option>
-                                    <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
-                                    <option value=HeadOfHousehold>Head of Household</option>
-                                </select><br/><br/>
-                                
-                                @for (int i = 0; i < familyData.PersonCount; i++) {
-                                    var person = familyData.People[i];
-                                    int personIndex = i + 1;
 
-                                    <EditForm Model="person" style=margin-left:25px>
-                                        @if(person?.FamilyData?.PersonCount>1){
-                                            <p><b>Person @personIndex:</b> </p>
-                                            <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
-                                            <option value="ChoiceNeeded">ChoiceNeeded</option>
-                                            <option>person @personIndex</option>
-                                            <option>him</option>
-                                            <option>her</option>
-                                            <option>me</option>
-                                            <option>them</option>
-                                        </select><br/>}
-                                        
-                                        <br/>
-                                    </EditForm><br/>
-                                }
                                 break;
                             case "asset-allocation":
                                 <p><b>Worksheet:</b> </p>
@@ -976,6 +989,16 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         accounts[accountIndexEditing.Value].Edit = true;
     }
 
+    void toggleTaxFilingStatusEditing() {
+        taxFilingStatusEditing = !taxFilingStatusEditing;
+    }
+
+    void toggleAssetAllocationEditing() {
+        assetAllocationEditing = !assetAllocationEditing;
+    }
+
+    bool assetAllocationEditing = false;
+    bool taxFilingStatusEditing = false;
     int? accountIndexEditing = null;
     public enum Mode {
         normal = 0,
