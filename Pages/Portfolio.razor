@@ -10,7 +10,7 @@
 @using System.Text.Json.Serialization
 
 <PageTitle>
-Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
+@pageHeading - bogle.tools
 </PageTitle>
 
 <style>
@@ -43,11 +43,6 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
         display: inline-block;
     }
 </style>
-    @if (new Uri(Navigation.Uri).PathAndQuery == "/portfolio/reload")
-    {
-        // reload is a workaround where the correct data seemed to be deleted, but i needed to navigate away and then back to retirement-assets
-        Navigation.NavigateTo("/portfolio/retirement-assets");
-    }
     @if (steps == null || appData == null || familyData == null)
     {
         <p>
