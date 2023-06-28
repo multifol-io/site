@@ -311,10 +311,9 @@
                                                         }
                                                         <tr>
                                                             <td>
-                                                                <label>Quotes:</label>
                                                                 @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                                 {
-                                                                    <button @onclick=@refreshPrices title=Refresh>@refreshButtonText</button>
+                                                                    <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button>
                                                                 } else {
                                                                     <a href="updated-quotes">Enable<br/>updates</a>
                                                                 }
@@ -361,10 +360,9 @@
                                                         </tr>
                                                         <tr>
                                                             <td colspan=2>
-                                                                <label>Quotes:</label>
                                                                 @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                                 {
-                                                                    <button @onclick=@refreshPrices title=Refresh>@refreshButtonText</button>
+                                                                    <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button>
                                                                 } else {
                                                                     <a href="updated-quotes">Enable<br/>updates</a>
                                                                 }
@@ -410,10 +408,9 @@
                                                         }
                                                         <tr>
                                                             <td>
-                                                                <label>Quotes:</label>
                                                                 @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                                 {
-                                                                    <button @onclick=@refreshPrices title=Refresh>@refreshButtonText</button>
+                                                                    <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button>
                                                                 } else {
                                                                     <a href="updated-quotes">Enable<br/>updates</a>
                                                                 }
@@ -459,10 +456,9 @@
                                                         }
                                                         <tr>
                                                             <td>
-                                                                <label>Quotes:</label>
                                                                 @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                                 {
-                                                                    <button @onclick=@refreshPrices title=Refresh>@refreshButtonText</button>
+                                                                    <button @onclick=@refreshPrices title='Refresh Quotes' style=min-width:80px;>@refreshButtonText</button>
                                                                 } else {
                                                                     <a href="updated-quotes">Enable<br/>updates</a>
                                                                 }
@@ -1025,7 +1021,7 @@
     }
 
     bool showEditAccountHelpers = false;
-    string refreshButtonText = "🔃";
+    string refreshButtonText = "🔃 Quotes";
     bool assetAllocationEditing = false;
     bool taxFilingStatusEditing = false;
     int? accountIndexEditing = null;
@@ -1466,7 +1462,7 @@
     }
 
     private async Task refreshPrices() {
-        refreshButtonText = "updating...";
+        refreshButtonText = "Updating...";
         Dictionary<string,List<Investment>> quotes = new();
         foreach (var account in familyData.Accounts)
         {
@@ -1496,7 +1492,7 @@
         }
 
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
-        refreshButtonText = "🔃";
+        refreshButtonText = "🔃 Quotes";
     }
 
     private (double? change, double? percentChange) portfolioChange() 
