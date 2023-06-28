@@ -76,7 +76,8 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                             @switch (step.step) {
                                 case "people": 
                                     <td>
-                                        @((MarkupString)bold("Tax Filing Status:"))<a @onclick=toggleTaxFilingStatusEditing class="m-2" >✏️</a>
+                                        <a @onclick=toggleTaxFilingStatusEditing class="m-2" >✏️</a>
+                                        @((MarkupString)bold("Tax Filing Status:"))
                                         @if (!taxFilingStatusEditing) {
                                             @if (familyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@familyData.TaxFilingStatus</span> }
                                             @if(familyData.PersonCount > 0) {
@@ -118,7 +119,8 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                    break;
                                 case "asset-allocation":
                                     <td>
-                                        @((MarkupString)bold("Desired Asset allocation:"))<a @onclick=toggleAssetAllocationEditing  class="m-2" >✏️</a><br/>
+                                        <a @onclick=toggleAssetAllocationEditing  class="m-2" >✏️</a>
+                                        @((MarkupString)bold("Desired Asset allocation:"))
                                         @if(!assetAllocationEditing) { 
                                             if (familyData.Stocks != null && familyData.Bonds != null) {
                                                 <span>&nbsp;@familyData.Stocks% stocks / @familyData.Bonds% bonds</span><br/>
@@ -293,7 +295,7 @@ Portfolio@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.too
                                                                     </td>
                                                                 </tr>
                                                             }
-                                                            
+
                                                             var investmentIndex = 0;
                                                             foreach (var investment in account.Investments.OrderByDescending(i=>i.Value)) {
                                                                 int invBuffer = investmentIndex;
