@@ -1392,7 +1392,7 @@
 
     private void addInvestment2(MouseEventArgs e, int accountIndex) {
         var account = familyData.Accounts.OrderByDescending(a=>a.Value).ToList()[accountIndex];
-        account.Investments.Add(new Investment());
+        account.Investments.Add(new Investment() { funds = Funds });
     }
 
     void deleteInvestment2(MouseEventArgs e, int accountIndex, int investmentIndex)
