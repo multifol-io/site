@@ -23,7 +23,7 @@ public class Investment
         }
         set {
             if (value == null) { _Ticker = value; return; }
-            _Ticker = value?.ToUpperInvariant();
+            _Ticker = value?.ToUpperInvariant().Trim();
             if (funds != null) {
                 bool found = false;
                 foreach (var fund in funds)
@@ -66,7 +66,6 @@ public class Investment
             AutoCompleted = true;
         }
     }
-
     public string? VanguardFundId { get; set;  }
     public AssetType? AssetType { get; set; }
     private double? _ExpenseRatio;
@@ -78,9 +77,28 @@ public class Investment
             _ExpenseRatio = value;
         }
      }
-    public double? Shares { get; set; }
+
+    private double? _Shares;
+    public double? Shares {
+        get {
+            return _Shares;
+        }
+        set {
+            _Shares = value;
+            Value = _Shares * Price;
+        }
+    }
     public double? CostBasis { get; set; }
-    public double? Price { get; set; }
+    private double? _Price;
+    public double? Price {
+        get {
+            return _Price;
+        }
+        set {
+            _Price = value;
+            Value = _Price * Shares;
+        }
+    }
     public double? PreviousClose { get; set; }
     public double? PercentChange { get; set; }
     public DateTime? LastUpdated { get; set; }
