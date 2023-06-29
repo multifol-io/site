@@ -286,7 +286,7 @@
                                                                         </td>
                                                                     </tr>                                                                    
                                                                     <tr style=background-color:@bgColor>
-                                                                        <td colspan=4><label style=padding-left:16px>Name:</label><input width= type=text style=width:320px;text-align:right @bind-Value=investment.Name @bind-Value:event=oninput placeholder='name'/></td>
+                                                                        <td colspan=4><label style=padding-left:16px>Name:</label><input width= type=text style=width:320px @bind-Value=investment.Name @bind-Value:event=oninput placeholder='name'/></td>
                                                                     </tr>
                                                                     <tr style=background-color:@bgColor>
                                                                         <td colspan=4>
@@ -307,6 +307,11 @@
                                                                 }
 
                                                                 alternateRow2 = !alternateRow2;
+                                                            }
+                                                            @if(account.Edit) {
+                                                                <tr style=background:black;color:white>
+                                                                    <td colspan=4><button @onclick='@(e=>addInvestment2(e,accBuffer))' style=margin-left:20px>➕ Investment</button></td>
+                                                                </tr>
                                                             }
                                                         }
                                                         <tr>
@@ -1383,6 +1388,11 @@
         var newInvestment = new Investment() { funds = Funds };
         familyData.Accounts[accountIndex].Investments.Add(newInvestment);
         focusTicker = true;
+    }
+
+    private void addInvestment2(MouseEventArgs e, int accountIndex) {
+        var account = familyData.Accounts.OrderByDescending(a=>a.Value).ToList()[accountIndex];
+        account.Investments.Add(new Investment());
     }
 
     void deleteInvestment2(MouseEventArgs e, int accountIndex, int investmentIndex)
