@@ -1516,7 +1516,7 @@
         double? total = 0.0;
         foreach (var investment in familyData.GroupedInvestments)
         {
-            total += investment.Value;
+            total += investment.Value ?? 0.0;
             if (investment.PercentChange != null)
             {
                 change += (investment.Price - investment.PreviousClose) * investment.Shares;

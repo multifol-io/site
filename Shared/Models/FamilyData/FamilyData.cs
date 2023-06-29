@@ -330,7 +330,7 @@ public class FamilyData
                     Investment? matchingInvestment;
                     if (!_GroupedInvestments.ContainsKey(key))
                     {
-                        matchingInvestment = new Investment() { Name = investment.Name, Ticker = investment.Ticker, PercentChange = investment.PercentChange, LastUpdated = investment.LastUpdated, Shares = 0.0, Price = investment.Price, PreviousClose = investment.PreviousClose, Value = 0.0 };
+                        matchingInvestment = new Investment() { Name = investment.Name, Ticker = investment.Ticker, PercentChange = investment.PercentChange, LastUpdated = investment.LastUpdated, Shares = null, Price = investment.Price, PreviousClose = investment.PreviousClose, Value = 0.0 };
                         _GroupedInvestments.Add(key, matchingInvestment);
                     }
                     else
@@ -339,7 +339,14 @@ public class FamilyData
                     }
 
                     if (investment.Shares != null) {
-                        matchingInvestment.Shares += investment.Shares;
+                        if (matchingInvestment.Shares == null)
+                        {
+                            matchingInvestment.Shares = investment.Shares;
+                        }
+                        else
+                        {
+                            matchingInvestment.Shares += investment.Shares;
+                        }
                     } 
                     else
                     {
