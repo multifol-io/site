@@ -32,7 +32,7 @@ public class Investment
                     {
                         if (fund.AssetType == null)
                         {
-                            fund.AssetType = global::AssetType.Stock;
+                            fund.AssetType = global::AssetType.USStock;
                         }
                     
                         AutoComplete(fund);
@@ -67,7 +67,21 @@ public class Investment
         }
     }
     public string? VanguardFundId { get; set;  }
-    public AssetType? AssetType { get; set; }
+    public AssetType? _AssetType;
+    public AssetType? AssetType {
+        get { return _AssetType; }
+        set { 
+            switch (value) {
+                case global::AssetType.Stock:
+                    _AssetType = global::AssetType.USStock;
+                    break;
+                default:
+                    _AssetType = value;
+                    break;
+            }
+        }
+    }
+
     private double? _ExpenseRatio;
     public double? ExpenseRatio {
         get {

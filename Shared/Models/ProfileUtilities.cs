@@ -46,35 +46,17 @@ public static class ProfileUtilities
             throw new ArgumentNullException(nameof(appData));
         }
         
-        try {
-            storedJson = await LocalStorageAccessor.GetValueAsync<string>(appData.CurrentProfileName);
-            var options = new JsonSerializerOptions() 
-            {
-                Converters =
-                    {
-                        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                    }
-            };
-            FamilyData? loadedFamilyData = null;
-            try {
-                loadedFamilyData = await FamilyData.LoadFromJson(appData, storedJson, options);
-            }
-            catch (Exception ex) {
-                loadedFamilyData = null;
-            }
-
-            if (loadedFamilyData == null) {
-                loadedFamilyData = new FamilyData(appData);
-                await ProfileUtilities.Save(appData.CurrentProfileName, loadedFamilyData);
-            }
-
-            appData.FamilyData = loadedFamilyData;
-        } 
-        catch (Exception e)
+        storedJson = await LocalStorageAccessor.GetValueAsync<string>(appData.CurrentProfileName);
+        var options = new JsonSerializerOptions() 
         {
-            // Key + " in local storage not found...loading default."
-            Console.WriteLine(e.GetType().Name + " " + e.Message + " " + e.StackTrace);
-        }
+            Converters =
+                {
+                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                }
+        };
+        
+        var loadedFamilyData = await FamilyData.LoadFromJson(appData, storedJson, options);
+        appData.FamilyData = loadedFamilyData;
     }
 
     public static async Task Clear(IAppData appData, string key, IRSData irsData)

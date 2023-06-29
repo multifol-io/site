@@ -58,17 +58,34 @@ public class Account
             else
             {
                 switch (investment.AssetType) {
-                    case AssetType.Stock:
+                    case AssetType.Stock: 
+                    case AssetType.USStock:
+                    case AssetType.ETF_USStock:
+                    case AssetType.Fund_USStock:
                         familyData.StockBalance += investment.Value;
                         break;
                     case AssetType.InternationalStock:
+                    case AssetType.ETF_InternationalStock:
+                    case AssetType.Fund_InternationalStock:
                         familyData.InternationalStockBalance += investment.Value;
                         break;
                     case AssetType.Bond:
+                    case AssetType.ETF_Bond:
+                    case AssetType.Fund_Bond:
                         familyData.BondBalance += investment.Value;
                         break;
+                    case AssetType.BankAccount:
                     case AssetType.Cash:
+                    case AssetType.MoneyMarket:
                         familyData.CashBalance += investment.Value;
+                        break;
+                    //TODO: provide way for people to give usstock/intlstock/bond/cash mix
+                    case AssetType.ETF_Mixed:
+                    case AssetType.Fund_Mixed:
+                        familyData.OtherBalance += investment.Value;
+                        break;
+                    case AssetType.Unknown:
+                        familyData.OtherBalance += investment.Value;
                         break;
                     default:
                         throw new InvalidDataException("unexpected case");
