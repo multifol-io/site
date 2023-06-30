@@ -465,10 +465,10 @@
                                                                             <span>total sale as Earned Income</span>
                                                                             break;
                                                                         case "Taxable":
-                                                                            <span>realized profilts as Capital Gains</span>
+                                                                            <span>profits as Capital Gains</span>
                                                                             break;
                                                                         case "Post-Tax":
-                                                                            <span>no taxes (per current law)</span>
+                                                                            <span>no taxes<sub>1</sub></span>
                                                                             break;
                                                                         case "For Beneficiaries (POD)":
                                                                         case "Refundable Deposits":
@@ -488,7 +488,7 @@
                                                             alternateRow3 = !alternateRow3;
                                                         }
                                                         <tr>
-                                                            <td colspan=3>
+                                                            <td colspan=2>
                                                                 @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                                 {
                                                                     <button @onclick=@refreshPrices title='Refresh Quotes' style=min-width:80px;>@refreshButtonText</button>
@@ -496,7 +496,7 @@
                                                                     <a href="updated-quotes">Enable<br/>updates</a>
                                                                 }
                                                             </td>
-                                                            <td style=text-align:right;padding-left:8px><hr/><b>@(FormatUtilities.formatMoney(familyData.Value))</b></td>
+                                                            <td colspan=2 style=text-align:right;padding-left:8px><hr/><b>@(FormatUtilities.formatMoney(familyData.Value))</b></td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan=4 style=text-align:right;padding-left:8px>
@@ -505,7 +505,8 @@
                                                                 <br/>% change: <i>@((MarkupString)FormatUtilities.formatPercent3WithColor(percentChange3))</i>
                                                             </td>
                                                         </tr>
-                                                    </table>
+                                                    </table><br/>
+                                                    <p><sub>1</sub> - per current tax law.</p>
                                                     break;
                                                 default:
                                                     break;

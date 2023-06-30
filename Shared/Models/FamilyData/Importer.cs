@@ -179,6 +179,7 @@ public class Importer {
                         double? price = null;
                         double? shares = null;
                         double? costBasis = null;
+                        double? expenseRatio = null;
 
                         // many tickers have "**" at end, signifying money market fund.
                         if (symbol.Length >= 2 && symbol.Substring(symbol.Length-2) == "**") { 
@@ -191,6 +192,7 @@ public class Importer {
                             value = ParseDouble(chunks[6], allowCurrency:true);
                             Console.WriteLine("pending activity: " + value);
                             symbol = "PENDING";
+                            expenseRatio = 0.0;
                         } else {
                             investmentName = chunks[3];
                             value = ParseDouble(chunks[7], allowCurrency:true);
@@ -212,6 +214,11 @@ public class Importer {
                             }
 
                             Investment newInvestment = new () { funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares, CostBasis = costBasis };
+                            if (expenseRatio != null)
+                            {
+                                newInvestment.ExpenseRatio = expenseRatio;
+                            }
+
                             newAccount?.Investments.Add(newInvestment);
                         }
                     } 
