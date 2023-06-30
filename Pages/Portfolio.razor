@@ -166,7 +166,7 @@
                                             if (appData.PortfolioView == null) { appData.PortfolioView = "by Ticker"; }
                                             <label>&nbsp;&nbsp;View:&nbsp;</label><InputSelect @bind-Value=appData.PortfolioView >
                                                 <option>by Account</option>
-                                                <option>by Account (cost basis)</option>
+                                                @* <option>by Account (cost basis)</option> *@
                                                 <option>by Ticker</option>
                                                 <option>by Custodian</option>
                                                 <option>by Tax Type</option>
@@ -181,14 +181,13 @@
                                             @switch (appData.PortfolioView) {
                                                 case "by Account":
                                                 case "by Account (cost basis)":
+                                                    var showCostBasis = appData.PortfolioView.EndsWith("(cost basis)");
                                                     <table>
                                                         @if (familyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
                                                                 <th style=padding-left:8px>Ticker</th>
-                                                                <th style=padding-left:8px;text-align:center>
-                                                                    Price
-                                                                </th>
                                                                 <th style=padding-left:8px;text-align:center>Quantity</th>
+                                                                <th style=padding-left:8px;text-align:center>Price</th>
                                                                 <th style=padding-left:8px;text-align:center>Balance</th>
                                                             </tr>
                                                         }
@@ -268,16 +267,16 @@
                                                                 if (!account.Edit) {
                                                                     <tr style=background-color:@bgColor @onclick='@(e=>editAccount(e,accBuffer))'>
                                                                         <td style=padding-left:8px title=@investment.Name>@investment.Ticker</td>
-                                                                        <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(investment.Price)</td>
                                                                         <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleFourDecimal(investment.Shares)</td>
+                                                                        <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(investment.Price)</td>
                                                                         <td style=text-align:right;padding-left:8px>@if(account.Investments.Count>1){@FormatUtilities.formatMoney(investment.Value)}</td>
                                                                     </tr>
                                                                 } else {
                                                                     <tr style=background-color:@bgColor>
                                                                         <td style=padding-left:16px>
                                                                             <input type=text style=width:70px @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/></td>
-                                                                        <td style=text-align:right;padding-left:8px>$<input width= type=text style=width:80px;text-align:right @bind-Value=investment.Price @bind-Value:event=oninput placeholder='price'/></td>
                                                                         <td style=text-align:right;padding-left:8px><input type=text style=width:100px;text-align:right @bind-Value=investment.Shares @bind-Value:event=oninput placeholder='shares'/></td>
+                                                                        <td style=text-align:right;padding-left:8px>$<input width= type=text style=width:80px;text-align:right @bind-Value=investment.Price @bind-Value:event=oninput placeholder='price'/></td>
                                                                         <td style=text-align:right;padding-left:8px>
                                                                             $<input type=text style=width:100px;text-align:right @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/>
                                                                         </td>
@@ -348,8 +347,8 @@
                                                         @if (familyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
                                                                 <th style=padding-left:8px>Ticker</th>
-                                                                <th style=text-align:right;padding-left:8px>Price</th>
                                                                 <th style=padding-left:8px;text-align:center>Quantity</th>
+                                                                <th style=text-align:right;padding-left:8px>Price</th>
                                                                 <th style=padding-left:8px;text-align:center>Balance</th>
                                                             </tr>
                                                         }
@@ -357,8 +356,8 @@
                                                             string bgColor = alternateRow ? "white" : "lightgray";
                                                             <tr style=background-color:@bgColor>
                                                                 <td style=padding-left:8px;vertical-align:text-top title=@investment.Name>@investment.Ticker</td>
-                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.Price)<br/>@((MarkupString)FormatUtilities.formatPercent3WithColor(investment.PercentChange))</td>
                                                                 <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatDoubleFourDecimal(investment.Shares)</td>
+                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.Price)<br/>@((MarkupString)FormatUtilities.formatPercent3WithColor(investment.PercentChange))</td>
                                                                 <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.Value)@if(investment.LastUpdated!=null){<br/><span>@investment.LastUpdated?.ToShortTimeString()</span>}</td>
                                                             </tr>
                                                             alternateRow = !alternateRow;
@@ -439,12 +438,9 @@
                                                         @if (familyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
                                                                 <th>Tax-Type</th>
-                                                                <th style=padding-left:8px;text-align:center>
-                                                                    Balance
-                                                                </th>
-                                                                <th style=padding-left:8px;text-align:center>
-                                                                    Unrealized Gain
-                                                                </th>
+                                                                <th style=padding-left:8px;text-align:center>Tax Treatment<br/>(when sold)</th>
+                                                                <th style=padding-left:8px;text-align:center>Unrealized<br/>Capital Gains</th>
+                                                                <th style=padding-left:8px;text-align:center>Balance</th>
                                                             </tr>
                                                         }
                                                         @{var groupByTaxType = familyData.Accounts
@@ -462,17 +458,37 @@
                                                             string bgColor = alternateRow3 ? "white" : "lightgray";
                                                             <tr style=background-color:@bgColor>
                                                                 <td>@group.TaxType</td>
-                                                                <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(group.Value)</td>
+                                                                <td style=padding-left:8px;max-width:150px>
+                                                                    @switch (group.TaxType)
+                                                                    {
+                                                                        case "Pre-Tax":
+                                                                            <span>total sale as Earned Income</span>
+                                                                            break;
+                                                                        case "Taxable":
+                                                                            <span>realized profilts as Capital Gains</span>
+                                                                            break;
+                                                                        case "Post-Tax":
+                                                                            <span>no taxes (per current law)</span>
+                                                                            break;
+                                                                        case "For Beneficiaries (POD)":
+                                                                        case "Refundable Deposits":
+                                                                        case "Education Savings":
+                                                                        default:
+                                                                            <span>--To Be Implemented--</span>
+                                                                            break;
+                                                                    }
+                                                                </td>
                                                                 <td style=text-align:right;padding-left:8px>
                                                                     @if (!group.TaxType.EndsWith("-Tax")) {
                                                                         @FormatUtilities.formatMoney(group.Value - group.CostBasis)
                                                                     }
                                                                 </td>
+                                                                <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(group.Value)</td>
                                                             </tr>
                                                             alternateRow3 = !alternateRow3;
                                                         }
                                                         <tr>
-                                                            <td>
+                                                            <td colspan=3>
                                                                 @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                                 {
                                                                     <button @onclick=@refreshPrices title='Refresh Quotes' style=min-width:80px;>@refreshButtonText</button>
@@ -483,7 +499,7 @@
                                                             <td style=text-align:right;padding-left:8px><hr/><b>@(FormatUtilities.formatMoney(familyData.Value))</b></td>
                                                         </tr>
                                                         <tr>
-                                                            <td colspan=2 style=text-align:right;padding-left:8px>
+                                                            <td colspan=4 style=text-align:right;padding-left:8px>
                                                                 @{var (change3,percentChange3) = portfolioChange();}
                                                                 change: <i>@((MarkupString)FormatUtilities.formatMoney(change3,true))</i>
                                                                 <br/>% change: <i>@((MarkupString)FormatUtilities.formatPercent3WithColor(percentChange3))</i>
