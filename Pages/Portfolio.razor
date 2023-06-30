@@ -443,7 +443,7 @@
                                                                     Balance
                                                                 </th>
                                                                 <th style=padding-left:8px;text-align:center>
-                                                                    Cost Basis
+                                                                    Unrealized Gain
                                                                 </th>
                                                             </tr>
                                                         }
@@ -463,7 +463,11 @@
                                                             <tr style=background-color:@bgColor>
                                                                 <td>@group.TaxType</td>
                                                                 <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(group.Value)</td>
-                                                                <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(group.CostBasis)</td>
+                                                                <td style=text-align:right;padding-left:8px>
+                                                                    @if (!group.TaxType.EndsWith("-Tax")) {
+                                                                        @FormatUtilities.formatMoney(group.Value - group.CostBasis)
+                                                                    }
+                                                                </td>
                                                             </tr>
                                                             alternateRow3 = !alternateRow3;
                                                         }
