@@ -1,0 +1,114 @@
+﻿@page "/updating-portfolio"
+@inject IAppData appData
+@inject NavigationManager Navigation
+@inject LocalStorageAccessor LocalStorageAccessor
+
+<PageTitle>Updating Portfolio</PageTitle>
+
+<h4>Updating Portfolio</h4>
+
+@if(appData == null)
+{
+    <p>Loading...</p>
+} else {
+    <span>
+    The <a href=/portfolio>portfolio tracker</a> provides 3 ways to enter and update portfolio information. 
+    </span><br/><br/>
+
+    <table>
+        <tr>
+            <th style=width:100px;vertical-align:bottom>
+                Update
+            </th>
+            <th style=width:100px;vertical-align:bottom;text-align:center>
+                Import Accounts (CSV)
+            </th>
+            <th style=width:100px;vertical-align:bottom;text-align:center>
+                Enter/Update on Site
+            </th>
+            <th style=width:100px;vertical-align:bottom;text-align:center>
+                Site can update
+            </th>
+        </tr>
+        <tr>
+            <td style=width:120px>
+                ticker names
+            </td>
+            <td style=text-align:center>
+                ✅
+            </td>
+            <td style=text-align:center>
+                ✅
+            </td>
+            <td style=text-align:center>
+                
+            </td>
+        </tr>        <tr>
+            <td style=width:120px>
+                share price
+            </td>
+            <td style=text-align:center>
+                ✅
+            </td>
+            <td style=text-align:center>
+                ✅
+            </td>
+            <td style=text-align:center>
+                ✅
+            </td>
+        </tr>
+        <tr>
+            <td style=width:120px>
+                share quantity
+            </td>
+            <td style=text-align:center>
+                ✅
+            </td>
+            <td style=text-align:center>
+                ✅
+            </td>            
+            <td>
+                
+            </td>
+        </tr>
+    </table>
+
+    <br/>
+
+    <p><b>Import Accounts (CSV)</b><br/>You can initially load account info or update account info by importing CSV files from your Custodian's web site.</p>
+    <p><b>Enter/Update on Site</b><br/>You can initially enter or update account info by using "by Account" view in <a href=/portfolio>Portfolio Tracker</a> and click on the pencil icon for entry/editing instructions.</p>
+    <p><b>Site Can Update</b><br/>If you provide an <a target=_new href="https://eodhistoricaldata.com?utm_source=bogle_tool&utm_medium=app&utm_campaign=friendly_bogle"↗️>EODHistoricalData.com</a> apikey, bogle.tools can use it to get 15min delayed quotes whenever you ask.
+    <ol>
+        <li>
+            <a href="https://eodhistoricaldata.com/register?utm_source=bogle_tool&utm_medium=app&utm_campaign=friendly_bogle" target=_new>Register</a>
+             for free account for updated quotes at <a target=_new href="https://eodhistoricaldata.com?utm_source=bogle_tool&utm_medium=app&utm_campaign=friendly_bogle">EODHistoricalData.com</a>↗️. You will receive a short code (called an API key) via email.
+             That API key will enable 20 free quotes a day. (When you need more, $5 buys 100,000 quotes.)
+        </li>
+        <li>To enable app to use, enter here:</li>
+            <label>API key:</label> <input type=text @bind-Value=appData.EODHistoricalDataApiKey @bind-Value:event=oninput placeholder='apikey' />
+    </ol>
+    </p>
+    <p></p>
+}
+
+@code{    
+
+    protected override async Task OnInitializedAsync()
+    {
+        Navigation.LocationChanged += LocationChanged;
+        base.OnInitialized();
+    }
+
+    async void LocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        if (string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
+        {
+            await LocalStorageAccessor.RemoveAsync("EODHistoricalDataApiKey");
+            appData.EODHistoricalDataApiKey = null;
+        }
+        else
+        {
+            await LocalStorageAccessor.SetValueAsync("EODHistoricalDataApiKey", appData.EODHistoricalDataApiKey);
+        }
+    }
+}

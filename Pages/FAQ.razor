@@ -1,21 +1,73 @@
 ﻿@page "/faq"
+@inject IAppData appData
+@inject NavigationManager Navigation
 
-<PageTitle>bogle.tools FAQ</PageTitle>
+<PageTitle>FAQ - bogle.tools</PageTitle>
 
-<h1>bogle.tools FAQ</h1>
+<h4 style=float:left>bogle.tools FAQ</h4>
 
-This site aims to provide useful tools to people interested in optimizing their finances:<br/>
+        @if(appData.CurrentProfileName==null){
+            <em style=float:right>No active <a href=/profiles>profile</a>.</em>
+        }
+        else {
+            <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
+                @if(appData.CurrentProfileName==null){<span>choose a</span>}else {<span>@appData.CurrentProfileName</span>} profile</a>
+            </div>
+        }
+
+<p style=clear:left>
+This site aims to provide useful tools to people interested in optimizing their finances:
+</p>
 <ul>
 <li>Organize/track your Portfolio</li>
 <li>Portfolio Review via bogleheads.org</li>
 <li>Plan Annual Saving</li>
 <!--<li>Plan Retirement</li>-->
 </ul>
-<b>Profiles</b> - you can have more than one profile ... with seperate portfolio and other data per profile. Click on "(primary)" at the top of one of the pages to start.<br/>
-<b>Privacy</b> - None of your data leaves this device (PC/Phone/Tablet). If you save it, it will be saved to this browser's local storage only.<br/>
-(if you set up stock <a href=updated-quotes>price updating</a>, requests to servers for quotes contain ticker symbols only.)<br/>
-<br/>
-<p><b>Feedback Welcome:</b> via email to <a href="mailto:suggestions@bogle.tools">suggestions@bogle.tools</a> or via Private Message to Rob Relyea on bogleheads.org</p>
-<p><b>News:</b> Read/subscribe to updates at <a target=_blank href=https://bogletools.substack.com>bogletools.substack.com</a></p>
 
-<b>Programmers</b> - This site is open source. See <a target=_blank href='https://github.com/bogle-tools/site'>github.com/bogle-tools/site</a> ↗️ for code and an issues list.<br/>
+<p><b>Profiles</b><br/>
+    One can have one or more profiles.
+    Each profile has portfolio and savings plan data.
+    Only one profile is active at a time.
+    <br/>
+    At <a href=/profiles>/profiles</a>, you can:
+    <ul>
+        <li>switch to another profile</li>
+        <li>create a new profile</li>
+        <li>rename a profile</li>
+        <li>delete your local copy of a profile</li>
+        <li>create a new copy of a profile and its data via "CopyTo"</li>
+    </ul>
+    Navigate to <a href=/profiles>/profiles</a> by clicking "xyz profile" in the top right of most pages.
+</p>
+
+<p><b>Updating Portfolio Data</b><br/>
+See <a href="/updating-portfolio">3 ways to update portfolios</a>.</p>
+
+
+<p><b>Privacy</b><br/>
+<ul>
+    <li>Your portfolio/savings plan data for each profile is only stored on your local device (laptop, phone, tablet) in your web browser's local storage.</li>
+    <li>You can delete each profile's data at any point via the "del" command in <a href="/profiles">/profiles</a></li>
+    <li>You can send a copy of a profile and its data to another device via the "CopyTo..." command in <a href="/profiles">/profiles</a></li>
+    <li>
+        If you choose to have the site <a href=/updating-portfolio>update stock/etf/fund prices via EODHistoricalData.com</a>, your API key and stock ticker list will be sent to api.bogle.tools.
+        api.bogle.tools will make the request to EODHistoricalData.com on your behalf.
+        bogle.tools and api.bogle.tools servers won't store your API key or stock tickers in any way.
+        See <a target=_new href=https://eodhistoricaldata.com/financial-apis/privacy-policy>EODHistoricalData.com's privacy policy</a>↗️.
+    </li>
+</ul>
+</p>
+
+<p><b>Feedback Welcome:</b><br/>via email to <a href="mailto:suggestions@bogle.tools">suggestions@bogle.tools</a> or via Private Message to Rob Relyea on bogleheads.org</p>
+<p><b>News:</b><br/>Read/subscribe to updates at <a target=_blank href=https://bogletools.substack.com>bogletools.substack.com</a></p>
+
+<p><b>Programmers</b><br/>This site is open source. See <a target=_blank href='https://github.com/bogle-tools/site'>github.com/bogle-tools/site</a> ↗️ for code and and issues list.</p>
+
+@code {
+    private void navWithBackStack()
+    {
+        appData.LastPageUri = Navigation.Uri;
+        Navigation.NavigateTo("/profiles");
+    }
+}

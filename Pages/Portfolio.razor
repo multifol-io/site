@@ -65,7 +65,7 @@
                     @pageHeading
                 </h4>
             </div>
-            <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName</a> profile</div>
+            <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
 
             <div style=clear:left>
                 <table id=_reviewTable>
@@ -173,7 +173,8 @@
                                             @if(showEditAccountHelpers) {
                                                 <br/><i>Editing Retirement Assets:</i>
                                                 <br/><span>Click on account/investment, in "by Account" view to edit.
-                                                <br/>Add/import accounts buttons are below the account list.</span>
+                                                <br/>Add/import accounts buttons are below the account list.
+                                                <br/>Details on <a href="/updating-portfolio">3 ways to update portfolios</a>.</span>
                                             }
 
                                             @switch (appData.PortfolioView) {
@@ -530,7 +531,7 @@
                         <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                         <hr/>
                     </div>
-                    <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName</a> profile</div>
+                    <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
 
                     <p class="article" style=clear:left>@((MarkupString)markupize(step.summary))</p>
 
