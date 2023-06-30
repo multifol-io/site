@@ -455,11 +455,11 @@
                                                     </table>
                                                     break;                                                    
                                                 case "by Tax Type":
+                                                    var showFootnotes = new bool[4];
                                                     <table>
                                                         @if (familyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
                                                                 <th>Tax-Type</th>
-                                                                <th style=padding-left:8px;text-align:center>Tax Treatment<br/>(when sold)</th>
                                                                 <th style=padding-left:8px;text-align:center>Unrealized<br/>Capital Gains</th>
                                                                 <th style=padding-left:8px;text-align:center>Balance</th>
                                                             </tr>
@@ -478,24 +478,27 @@
                                                         @foreach (var group in groupByTaxType) {
                                                             string bgColor = alternateRow3 ? "white" : "lightgray";
                                                             <tr style=background-color:@bgColor>
-                                                                <td>@group.TaxType</td>
-                                                                <td style=padding-left:8px;max-width:150px>
+                                                                <td>@group.TaxType
                                                                     @switch (group.TaxType)
                                                                     {
                                                                         case "Pre-Tax":
-                                                                            <span>total sale as Earned Income</span>
+                                                                            <sub>1</sub>
+                                                                            showFootnotes[0] = true;
                                                                             break;
                                                                         case "Taxable":
-                                                                            <span>profits as Capital Gains</span>
+                                                                            <sub>2</sub>
+                                                                            showFootnotes[1] = true;
                                                                             break;
                                                                         case "Post-Tax":
-                                                                            <span>no taxes<sub>1</sub></span>
+                                                                            <sub>3</sub>
+                                                                            showFootnotes[2] = true;
                                                                             break;
                                                                         case "For Beneficiaries (POD)":
                                                                         case "Refundable Deposits":
                                                                         case "Education Savings":
                                                                         default:
-                                                                            <span>--To Be Implemented--</span>
+                                                                            <sub>4</sub>
+                                                                            showFootnotes[3] = true;
                                                                             break;
                                                                     }
                                                                 </td>
@@ -509,7 +512,9 @@
                                                             alternateRow3 = !alternateRow3;
                                                         }
                                                         <tr>
-                                                            <td colspan=4><p>&nbsp;&nbsp;<sub>1</sub> - per current tax law.</p></td>
+                                                            <td colspan=4 style=padding-left:8px;max-width:150px>
+
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan=2>
@@ -530,6 +535,10 @@
                                                             </td>
                                                         </tr>
                                                     </table><br/>
+                                                        @if(showFootnotes[0]) {<span><sub>1</sub>- total sale as Earned Income</span><br/>}
+                                                        @if(showFootnotes[1]) {<span><sub>2</sub>- profits as Capital Gains</span><br/>}
+                                                        @if(showFootnotes[2]) {<span><sub>3</sub>- no taxes, per current tax law</span><br/>}
+                                                        @if(showFootnotes[3]) {<span><sub>4</sub>- description needs to be written</span><br/>}
                                                     break;
                                                 default:
                                                     break;
