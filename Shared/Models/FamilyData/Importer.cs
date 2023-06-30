@@ -189,10 +189,9 @@ public class Importer {
                         {
                             investmentName = symbol;
                             value = ParseDouble(chunks[6], allowCurrency:true);
-                            symbol = null;
-                        }
-                        else
-                        {
+                            Console.WriteLine("pending activity: " + value);
+                            symbol = "PENDING";
+                        } else {
                             investmentName = chunks[3];
                             value = ParseDouble(chunks[7], allowCurrency:true);
                             price = ParseDouble(chunks[5], allowCurrency:true);

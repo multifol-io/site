@@ -166,6 +166,7 @@
                                             if (appData.PortfolioView == null) { appData.PortfolioView = "by Ticker"; }
                                             <label>&nbsp;&nbsp;View:&nbsp;</label><InputSelect @bind-Value=appData.PortfolioView >
                                                 <option>by Account</option>
+                                                <option>by Account (cost basis)</option>
                                                 <option>by Ticker</option>
                                                 <option>by Custodian</option>
                                                 <option>by Tax Type</option>
@@ -179,6 +180,7 @@
 
                                             @switch (appData.PortfolioView) {
                                                 case "by Account":
+                                                case "by Account (cost basis)":
                                                     <table>
                                                         @if (familyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
@@ -440,6 +442,9 @@
                                                                 <th style=padding-left:8px;text-align:center>
                                                                     Balance
                                                                 </th>
+                                                                <th style=padding-left:8px;text-align:center>
+                                                                    Cost Basis
+                                                                </th>
                                                             </tr>
                                                         }
                                                         @{var groupByTaxType = familyData.Accounts
@@ -447,7 +452,8 @@
                                                             .Select(g => new
                                                             {
                                                                 TaxType = g.Key,
-                                                                Value = g.Sum(a => a.Value)
+                                                                Value = g.Sum(a => a.Value),
+                                                                CostBasis = g.Sum(a => a.CalculateCostBasis())
                                                             })
                                                             .OrderByDescending(g => g.Value);
                                                             bool alternateRow3 = false;
@@ -457,6 +463,7 @@
                                                             <tr style=background-color:@bgColor>
                                                                 <td>@group.TaxType</td>
                                                                 <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(group.Value)</td>
+                                                                <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(group.CostBasis)</td>
                                                             </tr>
                                                             alternateRow3 = !alternateRow3;
                                                         }

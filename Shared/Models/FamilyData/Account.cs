@@ -46,6 +46,22 @@ public class Account
     [JsonIgnore]
     public bool Import { get; set; }
 
+    public double? CalculateCostBasis() {
+        double costBasis = 0.0;
+        foreach (var investment in Investments)
+        {
+            if (investment.CostBasis != null)
+            {
+                costBasis += investment.CostBasis.Value;
+            }
+        }
+        if (costBasis == 0.0) {
+            return null;
+        } else {
+            return costBasis;
+        }
+    }
+
     public void UpdatePercentages(double totalValue, FamilyData familyData)
     {
         foreach (var investment in Investments)

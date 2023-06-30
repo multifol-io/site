@@ -99,7 +99,9 @@ public class Investment
         }
         set {
             _Shares = value;
-            Value = _Shares * Price;
+            if (value != null) {
+                Value = _Shares * Price;
+            }
         }
     }
     public double? CostBasis { get; set; }
@@ -110,7 +112,9 @@ public class Investment
         }
         set {
             _Price = value;
-            Value = _Price * Shares;
+            if (value != null) {
+                Value = _Price * Shares;
+            }
         }
     }
     public double? PreviousClose { get; set; }
