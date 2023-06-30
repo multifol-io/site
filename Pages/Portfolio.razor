@@ -399,11 +399,9 @@
                                                                 Value = g.Sum(a => a.Value)
                                                             })
                                                             .OrderByDescending(g => g.Value);
-                                                            bool alternateRow4 = false;
                                                         }
                                                         @foreach (var group in groupByCustodian) {
-                                                            string bgColor = alternateRow4 ? "white" : "lightgray";
-                                                            <tr style=background:@bgColor;>
+                                                                <tr style=color:white;background:black>
                                                                 <td>
                                                                     @group.Custodian
                                                                 </td>
@@ -411,7 +409,30 @@
                                                                     @FormatUtilities.formatMoney(group.Value)
                                                                 </td>
                                                             </tr>
-                                                            alternateRow4 = !alternateRow4;
+                                                            bool alternateRow4 = false;
+                                                            List<Investment> groupInvestments = new();
+                                                            @foreach (var account in familyData.Accounts.OrderByDescending(a=>a.Value))
+                                                            {
+                                                                if (account.Custodian == group.Custodian) {
+                                                                    string bgColor = alternateRow4 ? "white" : "lightgray";
+                                                                    <tr style=background:@bgColor;>
+                                                                        <td colspan=1>&nbsp;&nbsp;
+                                                                            @((account.Custodian != null ? account.Custodian + " ": "")+ account.Note)
+                                                                            <span>(@account.Identifier</span>
+                                                                            @if(!string.IsNullOrEmpty(account.Identifier)) { <span>&nbsp;@account.AccountType)</span> }
+                                                                            else { <span>@account.AccountType)</span> }
+                                                                        </td>
+                                                                        <td style=text-align:right;padding-left:8px>
+                                                                            @FormatUtilities.formatMoney(account.Value)
+                                                                        </td>
+                                                                    </tr>
+                                                                    alternateRow4 = !alternateRow4;
+                                                                    foreach (var investment in account.Investments)
+                                                                    {
+                                                                        groupInvestments.Add(investment);
+                                                                    }
+                                                                }
+                                                            }
                                                         }
                                                         <tr>
                                                             <td>
