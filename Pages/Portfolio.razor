@@ -535,9 +535,10 @@
                                                             </td>
                                                         </tr>
                                                     </table><br/>
-                                                        @if(showFootnotes[0]) {<span><sub>1</sub>- total sale as Earned Income</span><br/>}
-                                                        @if(showFootnotes[1]) {<span><sub>2</sub>- profits as Capital Gains</span><br/>}
-                                                        @if(showFootnotes[2]) {<span><sub>3</sub>- no taxes, per current tax law</span><br/>}
+                                                        <span>Current Tax law:</span><br/>
+                                                        @if(showFootnotes[0]) {<span><sub>1</sub>- total sale treated as Earned Income</span><br/>}
+                                                        @if(showFootnotes[1]) {<span><sub>2</sub>- profits of sale treated as Capital Gains</span><br/>}
+                                                        @if(showFootnotes[2]) {<span><sub>3</sub>- no taxes on sale</span><br/>}
                                                         @if(showFootnotes[3]) {<span><sub>4</sub>- description needs to be written</span><br/>}
                                                     break;
                                                 default:
