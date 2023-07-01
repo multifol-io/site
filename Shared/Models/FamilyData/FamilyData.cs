@@ -361,7 +361,7 @@ public class FamilyData
                 var investment = _GroupedInvestments[key];
                 if (investment.Price != null && investment.Shares != null)
                 {
-                    investment.Value = investment.Price * investment.Shares;
+                    investment.UpdateValue();
                 }
 
                 if (investment.Shares == 0.0)

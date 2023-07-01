@@ -99,9 +99,7 @@ public class Investment
         }
         set {
             _Shares = value;
-            if (value != null) {
-                Value = _Shares * Price;
-            }
+            UpdateValue();
         }
     }
     public double? CostBasis { get; set; }
@@ -112,11 +110,16 @@ public class Investment
         }
         set {
             _Price = value;
-            if (value != null) {
-                Value = _Price * Shares;
-            }
+            UpdateValue();
         }
     }
+
+    public void UpdateValue() {
+        if (Price != null && Shares != null) {
+            Value = Price * Shares;
+        }
+    }
+
     public double? PreviousClose { get; set; }
     public double? PercentChange { get; set; }
     public DateTime? LastUpdated { get; set; }

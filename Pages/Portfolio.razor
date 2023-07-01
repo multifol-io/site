@@ -165,20 +165,20 @@
                                         @if (familyData.Accounts.Count > 0) {
                                             if (appData.PortfolioView == null) { appData.PortfolioView = "by Ticker"; }
                                             <label>&nbsp;&nbsp;View:&nbsp;</label><InputSelect @bind-Value=appData.PortfolioView >
-                                                <option>Investments by Accounts</option>
+                                                <option>@EditAccountsViewName</option>
                                                 <option>by Ticker</option>
                                                 <option>Accounts by Custodian</option>
                                                 <option>Accounts by Tax Type</option>
                                             </InputSelect>
                                             @if(showEditAccountHelpers) {
                                                 <br/><i>Editing Retirement Assets:</i>
-                                                <br/><span>Click on account/investment, in "by Account" view to edit.
+                                                <br/><span>Click on account/investment, in "@EditAccountsViewName" view to edit.
                                                 <br/>Add/import accounts buttons are below the account list.
                                                 <br/>Details on <a href="/updating-portfolio">3 ways to update portfolios</a>.</span>
                                             }
 
                                             @switch (appData.PortfolioView) {
-                                                case "Investments by Accounts":
+                                                case EditAccountsViewName:
                                                     <table>
                                                         @if (familyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
@@ -1128,7 +1128,7 @@
     }
 
     void editAccounts() {
-        appData.PortfolioView = "by Account";
+        appData.PortfolioView = EditAccountsViewName;
         showEditAccountHelpers = !showEditAccountHelpers;
     }
 
@@ -1140,6 +1140,7 @@
         assetAllocationEditing = !assetAllocationEditing;
     }
 
+    private const string EditAccountsViewName = "Investments by Accounts";
     bool showEditAccountHelpers = false;
     string refreshButtonText = "🔃 Quotes";
     bool assetAllocationEditing = false;
@@ -1409,7 +1410,7 @@
         var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
         if (quoteData?.Close != null) {
             investment.Price = quoteData.Close;
-            investment.Value = investment.Price * investment.Shares;
+            investment.UpdateValue();
         }
     }
     public static DateTime? UnixTimeStampToDateTime( int? unixTimeStamp )
@@ -1442,7 +1443,7 @@
                         investment.LastUpdated = null;
                     }
 
-                    investment.Value = investment.Price * investment.Shares;
+                    investment.UpdateValue();
                 }
             }
         }

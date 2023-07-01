@@ -1124,7 +1124,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
             var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
             if (quoteData?.Close != null) {
                 investment.Price = quoteData.Close;
-                investment.Value = investment.Price * investment.Shares;
+                investment.UpdateValue();
             }
         }
     }
