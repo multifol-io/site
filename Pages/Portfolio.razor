@@ -523,13 +523,15 @@
                                                                 if (account.TaxType == group.TaxType) {
                                                                     string bgColor2 = alternateRow3 ? "white" : "lightgray";
                                                                     <tr style=background:@bgColor2;>
-                                                                        <td colspan=1>&nbsp;&nbsp;
+                                                                        <td colspan=4>&nbsp;&nbsp;
                                                                             @((account.Custodian != null ? account.Custodian + " ": "")+ account.Note)
                                                                             <span>(@account.Identifier</span>
                                                                             @if(!string.IsNullOrEmpty(account.Identifier)) { <span>&nbsp;@account.AccountType)</span> }
                                                                             else { <span>@account.AccountType)</span> }
                                                                         </td>
-                                                                        <td style=text-align:right;padding-left:8px>
+                                                                    </tr>
+                                                                    <tr style=background:@bgColor2;>
+                                                                        <td style=text-align:right;padding-left:8px colspan=2>
                                                                             @switch (group.TaxType) {
                                                                                 case "Pre-Tax":
                                                                                     <span>@FormatUtilities.formatMoney(account.Value)</span>
