@@ -11,7 +11,7 @@ public static class FormatUtilities {
         return formatMoney(amount, false);
     }
 
-    public static string formatMoney(double? amount,bool withColor) 
+    public static string formatMoney(double? amount, bool withColor) 
     {
         if (amount.HasValue)
         {

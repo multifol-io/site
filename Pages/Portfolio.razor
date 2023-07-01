@@ -165,11 +165,10 @@
                                         @if (familyData.Accounts.Count > 0) {
                                             if (appData.PortfolioView == null) { appData.PortfolioView = "by Ticker"; }
                                             <label>&nbsp;&nbsp;View:&nbsp;</label><InputSelect @bind-Value=appData.PortfolioView >
-                                                <option>by Account</option>
-                                                @* <option>by Account (cost basis)</option> *@
+                                                <option>Investments by Accounts</option>
                                                 <option>by Ticker</option>
-                                                <option>by Custodian</option>
-                                                <option>by Tax Type</option>
+                                                <option>Accounts by Custodian</option>
+                                                <option>Accounts by Tax Type</option>
                                             </InputSelect>
                                             @if(showEditAccountHelpers) {
                                                 <br/><i>Editing Retirement Assets:</i>
@@ -179,9 +178,7 @@
                                             }
 
                                             @switch (appData.PortfolioView) {
-                                                case "by Account":
-                                                case "by Account (cost basis)":
-                                                    var showCostBasis = appData.PortfolioView.EndsWith("(cost basis)");
+                                                case "Investments by Accounts":
                                                     <table>
                                                         @if (familyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
@@ -383,7 +380,7 @@
                                                         </tr>
                                                     </table>
                                                     break;
-                                                case "by Custodian":
+                                                case "Accounts by Custodian":
                                                     <table>
                                                         @if (familyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
@@ -410,7 +407,6 @@
                                                                 </td>
                                                             </tr>
                                                             bool alternateRow4 = false;
-                                                            List<Investment> groupInvestments = new();
                                                             @foreach (var account in familyData.Accounts.OrderByDescending(a=>a.Value))
                                                             {
                                                                 if (account.Custodian == group.Custodian) {
@@ -427,10 +423,6 @@
                                                                         </td>
                                                                     </tr>
                                                                     alternateRow4 = !alternateRow4;
-                                                                    foreach (var investment in account.Investments)
-                                                                    {
-                                                                        groupInvestments.Add(investment);
-                                                                    }
                                                                 }
                                                             }
                                                         }
@@ -454,12 +446,13 @@
                                                         </tr>
                                                     </table>
                                                     break;                                                    
-                                                case "by Tax Type":
+                                                case "Accounts by Tax Type":
                                                     var showFootnotes = new bool[4];
                                                     <table>
                                                         @if (familyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
                                                                 <th>Tax-Type</th>
+                                                                <th style=padding-left:8px;text-align:center>Unrealized<br/>Earned Income</th>
                                                                 <th style=padding-left:8px;text-align:center>Unrealized<br/>Capital Gains</th>
                                                                 <th style=padding-left:8px;text-align:center>Balance</th>
                                                             </tr>
@@ -473,11 +466,10 @@
                                                                 CostBasis = g.Sum(a => a.CalculateCostBasis())
                                                             })
                                                             .OrderByDescending(g => g.Value);
-                                                            bool alternateRow3 = false;
                                                         }
                                                         @foreach (var group in groupByTaxType) {
-                                                            string bgColor = alternateRow3 ? "white" : "lightgray";
-                                                            <tr style=background-color:@bgColor>
+                                                            bool alternateRow3 = false;
+                                                            <tr style=color:white;background:black>
                                                                 <td>@group.TaxType
                                                                     @switch (group.TaxType)
                                                                     {
@@ -503,19 +495,77 @@
                                                                     }
                                                                 </td>
                                                                 <td style=text-align:right;padding-left:8px>
+                                                                    @switch (group.TaxType) {
+                                                                        case "Pre-Tax":
+                                                                            <span>@FormatUtilities.formatMoney(group.Value)</span>
+                                                                            break;
+                                                                        case "Taxable":
+                                                                        case "Post-Tax":
+                                                                            <span>@FormatUtilities.formatMoney(0.0)</span>
+                                                                            break;
+                                                                        default:
+                                                                            <span>NYI<sub>1</sub></span>
+                                                                            break;
+                                                                    }
+                                                                </td>
+                                                                <td style=text-align:right;padding-left:8px>
                                                                     @if (!group.TaxType.EndsWith("-Tax")) {
                                                                         @FormatUtilities.formatMoney(group.Value - group.CostBasis)
+                                                                    } else {
+                                                                        @FormatUtilities.formatMoney(0.0)
                                                                     }
                                                                 </td>
                                                                 <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(group.Value)</td>
                                                             </tr>
-                                                            alternateRow3 = !alternateRow3;
-                                                        }
-                                                        <tr>
-                                                            <td colspan=4 style=padding-left:8px;max-width:150px>
+                                                            List<Investment> groupInvestments = new();
+                                                            @foreach (var account in familyData.Accounts.OrderByDescending(a=>a.Value))
+                                                            {
+                                                                if (account.TaxType == group.TaxType) {
+                                                                    string bgColor2 = alternateRow3 ? "white" : "lightgray";
+                                                                    <tr style=background:@bgColor2;>
+                                                                        <td colspan=1>&nbsp;&nbsp;
+                                                                            @((account.Custodian != null ? account.Custodian + " ": "")+ account.Note)
+                                                                            <span>(@account.Identifier</span>
+                                                                            @if(!string.IsNullOrEmpty(account.Identifier)) { <span>&nbsp;@account.AccountType)</span> }
+                                                                            else { <span>@account.AccountType)</span> }
+                                                                        </td>
+                                                                        <td style=text-align:right;padding-left:8px>
+                                                                            @switch (group.TaxType) {
+                                                                                case "Pre-Tax":
+                                                                                    <span>@FormatUtilities.formatMoney(account.Value)</span>
+                                                                                    break;
+                                                                                case "Taxable":
+                                                                                case "Post-Tax":
+                                                                                    <span>@FormatUtilities.formatMoney(0.0)</span>
+                                                                                    break;
+                                                                                default:
+                                                                                    showFootnotes[3] = true;
+                                                                                    <span>NYI<sub>4</sub></span>
+                                                                                    break;
+                                                                            }
+                                                                        </td>                                                                        
+                                                                        <td style=text-align:right;padding-left:8px>
+                                                                            @if (!account.TaxType.EndsWith("-Tax")) {
+                                                                                var costBasis = account.CalculateCostBasis();
+                                                                                if (costBasis != null)
+                                                                                {
+                                                                                    <span>@FormatUtilities.formatMoney(account.Value - costBasis)</span>
+                                                                                } else {
+                                                                                    <span>Missing!</span>
+                                                                                }
 
-                                                            </td>
-                                                        </tr>
+                                                                            } else {
+                                                                                <span>@FormatUtilities.formatMoney(0.0)</span>
+                                                                            }
+                                                                        </td>
+                                                                        <td style=text-align:right;padding-left:8px>
+                                                                            @FormatUtilities.formatMoney(account.Value)
+                                                                        </td>                                                                        
+                                                                    </tr>
+                                                                    alternateRow3 = !alternateRow3;
+                                                                }
+                                                            }
+                                                        }
                                                         <tr>
                                                             <td colspan=2>
                                                                 @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
