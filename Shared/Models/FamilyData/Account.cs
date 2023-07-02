@@ -76,28 +76,28 @@ public class Account
                 switch (investment.AssetType) {
                     case AssetType.Stock: 
                     case AssetType.USStock:
-                    case AssetType.ETF_USStock:
-                    case AssetType.Fund_USStock:
+                    case AssetType.USStock_ETF:
+                    case AssetType.USStock_Fund:
                         familyData.StockBalance += investment.Value;
                         break;
                     case AssetType.InternationalStock:
-                    case AssetType.ETF_InternationalStock:
-                    case AssetType.Fund_InternationalStock:
+                    case AssetType.InternationalStock_ETF:
+                    case AssetType.InternationalStock_Fund:
                         familyData.InternationalStockBalance += investment.Value;
                         break;
                     case AssetType.Bond:
-                    case AssetType.ETF_Bond:
-                    case AssetType.Fund_Bond:
+                    case AssetType.Bond_ETF:
+                    case AssetType.Bond_Fund:
                         familyData.BondBalance += investment.Value;
                         break;
-                    case AssetType.BankAccount:
                     case AssetType.Cash:
-                    case AssetType.MoneyMarket:
+                    case AssetType.Cash_BankAccount:
+                    case AssetType.Cash_MoneyMarket:
                         familyData.CashBalance += investment.Value;
                         break;
                     //TODO: provide way for people to give usstock/intlstock/bond/cash mix
-                    case AssetType.ETF_Mixed:
-                    case AssetType.Fund_Mixed:
+                    case AssetType.StocksAndBonds_ETF:
+                    case AssetType.StocksAndBonds_Fund:
                         familyData.OtherBalance += investment.Value;
                         break;
                     case AssetType.Unknown:

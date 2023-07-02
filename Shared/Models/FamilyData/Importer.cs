@@ -219,6 +219,10 @@ public class Importer {
                                 newInvestment.ExpenseRatio = expenseRatio;
                             }
 
+                            if (newInvestment.Ticker == "PENDING") {
+                                newInvestment.AssetType = global::AssetType.Cash;
+                            }
+
                             newAccount?.Investments.Add(newInvestment);
                         }
                     } 

@@ -1609,7 +1609,23 @@
         {
             foreach (var investment in account.Investments)
             {
-                if (investment.AssetType != AssetType.Cash && investment.Ticker != "IBOND" && !string.IsNullOrEmpty(investment.Ticker)) {
+                var fetchQuote = true;
+                switch (investment.AssetType) {
+                    case AssetType.Cash:
+                    case AssetType.Cash_BankAccount:
+                    case AssetType.Cash_MoneyMarket:
+                        fetchQuote = false;
+                        break;
+                    case AssetType.Bond:
+                        if (investment.Ticker == "IBOND") {
+                            fetchQuote = false;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                if (fetchQuote) {
                     if (!quotes.ContainsKey(investment.Ticker))
                     {
                         quotes.Add(investment.Ticker, new List<Investment> () { investment });

@@ -1,19 +1,19 @@
 public enum AssetType
 {
     Unknown = 0,
-    Stock, // move to *USStock
-    USStock,
-    InternationalStock,
     Bond,
+    Bond_ETF,
+    Bond_Fund,
     Cash,
-    MoneyMarket,
-    BankAccount,
-    Fund_USStock,
-    Fund_Bond,
-    Fund_InternationalStock,
-    Fund_Mixed,
-    ETF_USStock,
-    ETF_InternationalStock,
-    ETF_Bond,
-    ETF_Mixed,
+    Cash_BankAccount,
+    Cash_MoneyMarket,
+    InternationalStock,
+    InternationalStock_ETF,
+    InternationalStock_Fund,
+    StocksAndBonds_ETF,
+    StocksAndBonds_Fund,
+    USStock,
+    USStock_ETF,
+    USStock_Fund,
+    Stock, // move to *USStock
 }

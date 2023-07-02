@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Text.Json.Serialization;
 
 public class Investment 
@@ -64,23 +65,42 @@ public class Investment
             AssetType = fund.AssetType;
             VanguardFundId = fund.VanguardFundId;
             AutoCompleted = true;
+            Console.WriteLine($"{fund.Ticker}: {AssetType}");
         }
     }
     public string? VanguardFundId { get; set;  }
-    public AssetType? _AssetType;
-    public AssetType? AssetType {
-        get { return _AssetType; }
+
+    [JsonIgnore]
+    [JsonPropertyName("AssetType")]
+    private AssetType _TransitionAssetType; 
+    public string TransitionAssetType {
+        get { return _TransitionAssetType.ToString(); }
         set { 
             switch (value) {
-                case global::AssetType.Stock:
-                    _AssetType = global::AssetType.USStock;
-                    break;
-                default:
-                    _AssetType = value;
-                    break;
+                case "Unknown": _TransitionAssetType = global::AssetType.Unknown; break;
+                case "Stock": // move to *USStock
+                case "USStock": _TransitionAssetType = global::AssetType.USStock; break;
+                case "InternationalStock": _TransitionAssetType = global::AssetType.InternationalStock; break;
+                case "Bond": _TransitionAssetType = global::AssetType.Bond; break;
+                case "Cash": _TransitionAssetType = global::AssetType.Cash; break;
+                case "MoneyMarket": _TransitionAssetType = global::AssetType.Cash_MoneyMarket; break;
+                case "BankAccount": _TransitionAssetType = global::AssetType.Cash_BankAccount; break;
+                case "Fund_USStock": _TransitionAssetType = global::AssetType.USStock_Fund; break;
+                case "Fund_Bond": _TransitionAssetType = global::AssetType.Bond_Fund; break;
+                case "Fund_InternationalStock": _TransitionAssetType = global::AssetType.InternationalStock_Fund; break;
+                case "Fund_Mixed": _TransitionAssetType = global::AssetType.StocksAndBonds_Fund; break;
+                case "ETF_USStock": _TransitionAssetType = global::AssetType.USStock_ETF; break;
+                case "ETF_InternationalStock": _TransitionAssetType = global::AssetType.InternationalStock_ETF; break;
+                case "ETF_Bond": _TransitionAssetType = global::AssetType.Bond_ETF; break;
+                case "ETF_Mixed": _TransitionAssetType = global::AssetType.StocksAndBonds_ETF; break;
             }
+
+            AssetType = _TransitionAssetType;
         }
     }
+
+    [JsonPropertyName("AssetType2")]
+    public AssetType? AssetType { get; set; }
 
     private double? _ExpenseRatio;
     public double? ExpenseRatio {
