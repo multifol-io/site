@@ -44,6 +44,21 @@ public static class FormatUtilities {
         }
     }
 
+    public static string formatMoneyNarrow(double? amount) 
+    {
+        if (amount == null) return "";
+
+        if (amount >= 100000000) {
+            return String.Format("${0:#,0.##M}", Math.Round((double)amount / 10000.0)/100.0);
+        } else if (amount >= 1000000 || amount <= -1000000) {
+            return String.Format("${0:#,0.##K}", Math.Round((double)amount / 1000.0));
+        } else if (amount >= 1000 || amount <= -1000) {
+            return String.Format("${0:#,0}", amount);
+        } else {
+            return String.Format("${0:#,0.##}", amount);
+        }
+    }
+
     public static string formatPercent(double? amount)
     {
         return String.Format("{0:#,0.#}%", amount);

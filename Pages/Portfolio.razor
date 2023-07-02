@@ -497,11 +497,11 @@
                                                                 <td style=text-align:right;padding-left:8px>
                                                                     @switch (group.TaxType) {
                                                                         case "Pre-Tax":
-                                                                            <span>@FormatUtilities.formatMoney(group.Value)</span>
+                                                                            <span>@FormatUtilities.formatMoneyNarrow(group.Value)</span>
                                                                             break;
                                                                         case "Taxable":
                                                                         case "Post-Tax":
-                                                                            <span>@FormatUtilities.formatMoney(0.0)</span>
+                                                                            <span>@FormatUtilities.formatMoneyNarrow(0.0)</span>
                                                                             break;
                                                                         default:
                                                                             <span>NYI<sub>4</sub></span>
@@ -511,12 +511,12 @@
                                                                 </td>
                                                                 <td style=text-align:right;padding-left:8px>
                                                                     @if (!group.TaxType.EndsWith("-Tax")) {
-                                                                        @FormatUtilities.formatMoney(group.Value - group.CostBasis)
+                                                                        @FormatUtilities.formatMoneyNarrow(group.Value - group.CostBasis)
                                                                     } else {
-                                                                        @FormatUtilities.formatMoney(0.0)
+                                                                        @FormatUtilities.formatMoneyNarrow(0.0)
                                                                     }
                                                                 </td>
-                                                                <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(group.Value)</td>
+                                                                <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoneyNarrow(group.Value)</td>
                                                             </tr>
                                                             List<Investment> groupInvestments = new();
                                                             @foreach (var account in familyData.Accounts.OrderByDescending(a=>a.Value))
@@ -535,11 +535,11 @@
                                                                         <td style=text-align:right;padding-left:8px colspan=2>
                                                                             @switch (group.TaxType) {
                                                                                 case "Pre-Tax":
-                                                                                    <span>@FormatUtilities.formatMoney(account.Value)</span>
+                                                                                    <span>@FormatUtilities.formatMoneyNarrow(account.Value)</span>
                                                                                     break;
                                                                                 case "Taxable":
                                                                                 case "Post-Tax":
-                                                                                    <span>@FormatUtilities.formatMoney(0.0)</span>
+                                                                                    <span>@FormatUtilities.formatMoneyNarrow(0.0)</span>
                                                                                     break;
                                                                                 default:
                                                                                     showFootnotes[3] = true;
@@ -552,17 +552,17 @@
                                                                                 var costBasis = account.CalculateCostBasis();
                                                                                 if (costBasis != null)
                                                                                 {
-                                                                                    <span>@FormatUtilities.formatMoney(account.Value - costBasis)</span>
+                                                                                    <span>@FormatUtilities.formatMoneyNarrow(account.Value - costBasis)</span>
                                                                                 } else {
                                                                                     <span>missing<br/>cost basis</span>
                                                                                 }
 
                                                                             } else {
-                                                                                <span>@FormatUtilities.formatMoney(0.0)</span>
+                                                                                <span>@FormatUtilities.formatMoneyNarrow(0.0)</span>
                                                                             }
                                                                         </td>
                                                                         <td style=text-align:right;padding-left:8px>
-                                                                            @FormatUtilities.formatMoney(account.Value)
+                                                                            @FormatUtilities.formatMoneyNarrow(account.Value)
                                                                         </td>                                                                        
                                                                     </tr>
                                                                     alternateRow3 = !alternateRow3;
