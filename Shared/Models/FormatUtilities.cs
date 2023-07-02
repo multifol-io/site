@@ -7,12 +7,12 @@ public static class FormatUtilities {
         return String.Format("${0:#,0.##}", amount);
     }
 
-    public static string formatMoney(double? amount) {
-        return formatMoney(amount, false);
-    }
-
-    public static string formatMoney(double? amount, bool withColor) 
+    public static string formatMoney(double? amount, bool withColor = false, int decimalPlaces = 2) 
     {
+        if (decimalPlaces != 2 && decimalPlaces != 0) {
+            throw new ArgumentException("only 0 or 2 decimal places is allowed","decimalPlaces");
+        }
+
         if (amount.HasValue)
         {
             string? prefix = null;
@@ -22,8 +22,12 @@ public static class FormatUtilities {
                 prefix = "<span style=color:" + (amount < 0.0 ? "red" : "green") + ">";
                 suffix = "</span>";
             }
-
-            return prefix + String.Format("${0:#,0.00}", amount) + suffix;
+            
+            if (decimalPlaces == 2) {
+                return prefix + String.Format("${0:#,0.00}", amount) + suffix;
+            } else if (decimalPlaces == 0) {
+                return prefix + String.Format("${0:#,0}", amount) + suffix;
+            } else { return "decimalPlaces value not allowed"; }
         }
         else
         {

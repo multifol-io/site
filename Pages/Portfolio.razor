@@ -264,9 +264,9 @@
                                                                 if (!account.Edit) {
                                                                     <tr style=background-color:@bgColor @onclick='@(e=>editAccount(e,accBuffer))'>
                                                                         <td style=padding-left:8px title=@investment.Name>@investment.Ticker</td>
-                                                                        <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleFourDecimal(investment.Shares)</td>
+                                                                        <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleTwoDecimal(investment.Shares)</td>
                                                                         <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(investment.Price)</td>
-                                                                        <td style=text-align:right;padding-left:8px>@if(account.Investments.Count>1){@FormatUtilities.formatMoney(investment.Value)}</td>
+                                                                        <td style=text-align:right;padding-left:8px>@if(account.Investments.Count>1){@FormatUtilities.formatMoney(investment.Value, decimalPlaces:0)}</td>
                                                                     </tr>
                                                                 } else {
                                                                     <tr style=background-color:@bgColor>
@@ -353,7 +353,7 @@
                                                             string bgColor = alternateRow ? "white" : "lightgray";
                                                             <tr style=background-color:@bgColor>
                                                                 <td style=padding-left:8px;vertical-align:text-top title=@investment.Name>@investment.Ticker</td>
-                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatDoubleFourDecimal(investment.Shares)</td>
+                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatDoubleTwoDecimal(investment.Shares)</td>
                                                                 <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.Price)<br/>@((MarkupString)FormatUtilities.formatPercent3WithColor(investment.PercentChange))</td>
                                                                 <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.Value)@if(investment.LastUpdated!=null){<br/><span>@investment.LastUpdated?.ToShortTimeString()</span>}</td>
                                                             </tr>
