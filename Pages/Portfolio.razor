@@ -201,7 +201,7 @@
                                                                     else { <span>@account.AccountType)</span> }
                                                                 </td>
                                                                 <td style=text-align:right;padding-left:8px>
-                                                                    @FormatUtilities.formatMoney(account.Value)
+                                                                    @FormatUtilities.formatMoney(account.Value, decimalPlaces:0)
                                                                 </td>
                                                             </tr>
                                                             @if(account.Edit) {
@@ -272,18 +272,27 @@
                                                                     <tr style=background-color:@bgColor>
                                                                         <td style=padding-left:16px>
                                                                             <input type=text style=width:70px @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/></td>
+                                                                        <label>Quantity: </label>
                                                                         <td style=text-align:right;padding-left:8px><input type=text style=width:100px;text-align:right @bind-Value=investment.Shares @bind-Value:event=oninput placeholder='shares'/></td>
-                                                                        <td style=text-align:right;padding-left:8px>$<input width= type=text style=width:80px;text-align:right @bind-Value=investment.Price @bind-Value:event=oninput placeholder='price'/></td>
-                                                                        <td style=text-align:right;padding-left:8px>
-                                                                            $<input type=text style=width:100px;text-align:right @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/>
-                                                                        </td>
+                                                                        <td></td>
                                                                     </tr>
                                                                     <tr style=background-color:@bgColor>
-                                                                        <td style=text-align:right;padding-left:8px colspan=4>
+                                                                        <td style=text-align:right;padding-left:8px colspan=3>
                                                                             <label>Cost Basis: </label>
                                                                             $<input type=text style=width:100px;text-align:right @bind-Value=investment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
                                                                         </td>
-                                                                    </tr>                                                                    
+                                                                        <td></td>
+                                                                    </tr> 
+                                                                    <tr style=background-color:@bgColor>
+                                                                        <td style=text-align:right;padding-left:8px colspan=2>
+                                                                            <label>Price: </label>
+                                                                            $<input width= type=text style=width:80px;text-align:right @bind-Value=investment.Price @bind-Value:event=oninput placeholder='price'/></td>
+                                                                        <td style=text-align:right;padding-left:8px colspan=2>
+                                                                            <label>Balance: </label>
+                                                                            $<input type=text style=width:100px;text-align:right @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/>
+                                                                        </td>
+                                                                    </tr>
+                                                                   
                                                                     <tr style=background-color:@bgColor>
                                                                         <td colspan=4><label style=padding-left:16px>Name:</label><input width= type=text style=width:320px @bind-Value=investment.Name @bind-Value:event=oninput placeholder='name'/></td>
                                                                     </tr>
