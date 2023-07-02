@@ -88,18 +88,29 @@
     <sub>1</sub> - Cost basis contained in .CSV files from ETrade, Fidelity, Merrill Edge, Schwab and .XSLX files from Morgan Stanley
     </p>
     
-    <p><b>Import Accounts (CSV)</b><br/>You can initially load account info or update account info by importing CSV files from your Custodian's web site.</p>
-    <p><b>Enter/Update on bogle.tools</b><br/>You can initially enter or update account info by using "by Account" view in <a href=/portfolio>Portfolio Tracker</a> and click on the pencil icon for entry/editing instructions.</p>
-    <p><b>bogle.tools Can Update</b><br/>If you provide an <a target=_new href="https://eodhistoricaldata.com?utm_source=bogle_tool&utm_medium=app&utm_campaign=friendly_bogle"↗️>EODHistoricalData.com</a> apikey, bogle.tools can use it to get 15min delayed quotes whenever you ask.
+    <p><b>Import Accounts (CSV)</b><br/>
+        You can initially load account info or update account info by importing CSV files from your Custodian's web site.<br/>
+        Link: <a href=/importing-accounts>/importing-accounts</a>
+    </p>
+
+    <p><b>Enter/Update on bogle.tools</b><br/>
+        You can initially enter or update account info by using "@Portfolio.EditAccountsViewName" view in <a href=/portfolio>Portfolio Tracker</a> and click on the pencil icon for entry/editing instructions.<br/>
+        Link: <a href=/portfolio>Portfolio Tracker</a>
+    </p>
+
+    <p><b>bogle.tools Can Update</b><br/>
+        If you provide an <a target=_new href="https://eodhistoricaldata.com?utm_source=bogle_tool&utm_medium=app&utm_campaign=friendly_bogle"↗>EODHistoricalData.com</a>
+        ↗️ API key, bogle.tools can use it to get 15min delayed quotes whenever you ask.
     <ol>
         <li>
-            <a href="https://eodhistoricaldata.com/register?utm_source=bogle_tool&utm_medium=app&utm_campaign=friendly_bogle" target=_new>Register</a>
+            <a href="https://eodhistoricaldata.com/register?utm_source=bogle_tool&utm_medium=app&utm_campaign=friendly_bogle" target=_new>Register</a>↗️
              for free account for updated quotes at <a target=_new href="https://eodhistoricaldata.com?utm_source=bogle_tool&utm_medium=app&utm_campaign=friendly_bogle">EODHistoricalData.com</a>↗️. You will receive a short code (called an API key) via email.
              That API key will enable 20 free quotes a day. (When you need more, $5 buys 100,000 quotes.)
         </li>
         <li>To enable app to use, enter here:</li>
             <label>API key:</label> <input type=text @bind-Value=appData.EODHistoricalDataApiKey @bind-Value:event=oninput placeholder='apikey' />
     </ol>
+    <p>Note: these links to EODHistoricalData.com, let EODHistoricalData.com that bogle.tools sent you to them. They track how many users are from bogle.tools. Feel free to navigate to their site without using these links if this concerns you in any way.</p>
     </p>
     <p></p>
 }
