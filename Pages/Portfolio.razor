@@ -320,6 +320,8 @@
                                                                 <tr style=background:black;color:white>
                                                                     <td colspan=4><button @onclick='@(e=>addInvestment2(e,accBuffer))' style=margin-left:20px>➕ Investment</button></td>
                                                                 </tr>
+                                                            } else {
+                                                                <tr style=height:4;background:white;font-size:4pt;><td>&nbsp;</td></tr>
                                                             }
                                                         }
                                                         <tr>
@@ -334,7 +336,7 @@
                                                                 <label>Accounts: </label>
                                                                 <button @onclick=addAccountInline title='add account'>➕</button>
                                                                 <button @onclick=ShowImport title='to import Account info from a CSV/XLSX file'>
-                                                                    @if(showImport){<span>Import</span>}
+                                                                    <span>Import</span>
                                                                     ⬆️
                                                                 </button>
                                                             </td>
@@ -614,11 +616,9 @@
                                             </fieldset>
                                         }
                                         @if (appData.FamilyData.Accounts.Count == 0) {
-                                            <label>accounts: </label>
-                                            <button @onclick=addAccountInline title='add account'>➕</button>
-                                            <button @onclick=ShowImport title='to import Account info from a CSV/XLSX file'>
-                                                @if(showImport){<span>Hide</span>}
-                                                ⬆️
+                                            <button style=margin-left:40px @onclick=addAccountInline title='add account'>➕</button>
+                                            <button @onclick=ShowImport title='import Accounts from a CSV/XLSX file'>
+                                                Import ⬆️
                                             </button>
                                         }
 
