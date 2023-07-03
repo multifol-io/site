@@ -150,6 +150,7 @@ public class Account
                 case "HSA":
                     return "Post-Tax";
                 case "Annuity (Non-Qualified)":
+                case "Brokerage":
                 case "Taxable":
                     return "Taxable";
                 case "Refundable Deposit":
