@@ -35,22 +35,24 @@
 
         <p><b>Detailed steps for Vanguard accounts</b>:
         <ol>
-            <li>Log into <a target=_new href=vanguard.com>vanguard.com</a>↗️</li>
-            <li>Click on the <a href=https://holdings.web.vanguard.com>Holdings</a>↗️ link</li>
-            <li>Click on the <a href=https://personal1.vanguard.com/ofu-open-fin-exchange-webapp/ofx-welcome>Download Center</a>↗️ link to the right</li>
+            <li>Log into <a target=_new href=https://vanguard.com>vanguard.com</a>↗️</li>
+            <li>Click on the <a target=_new href=https://holdings.web.vanguard.com>Holdings</a>↗️ link</li>
+            <li>Click on the <a target=_new href=https://personal1.vanguard.com/ofu-open-fin-exchange-webapp/ofx-welcome>Download Center</a>↗️ link to the right</li>
             <li>Step 1 - Choose "A spreadsheet-compatible CSV File"</li>
             <li>Step 2 - Choose any date range (I choose 18 months, but bogle.tools doesn't use this transaction information yet, so 1 month is fine too)</li>
             <li>Step 3 - Choose all accounts you'd like to export holdings info about</li>
             <li>Press Download button on bottom right of page - a file named OfxDownload.csv will be downloaded via your browser</li>
             <li>Click "Choose File" button on this page, find and choose the OfxDownload.csv file in Downloads folder</li>
+            <li>Choose Account Type for each new or updated account</li>
+            <li>For Taxable accounts, enter "Total cost" for each investment on <a target=_new href=https://cost-basis.web.vanguard.com/unrealized>Vanguard's Cost Basis view</a></li>
         </ol>
         </p>
 
         <p><b>Detailed steps for Fidelity accounts</b>:
         <ol>
-            <li>Log into <a target=_new href=fidelity.com>fidelity.com</a>↗️</li>
-            <li>Click on the <a href=https://digital.fidelity.com/ftgw/digital/portfolio/positions>Positions</a>↗️ link</li>
-            <li>Click on the <a href=https://personal1.vanguard.com/ofu-open-fin-exchange-webapp/ofx-welcome>Download image</a>↗️ (<img src=/images/fidelity-download-csv.png />) link</li>
+            <li>Log into <a target=_new href=https://fidelity.com>fidelity.com</a>↗️</li>
+            <li>Click on the <a target=_new href=https://digital.fidelity.com/ftgw/digital/portfolio/positions>Positions</a>↗️ link</li>
+            <li>Click on the <a target=_new href=https://personal1.vanguard.com/ofu-open-fin-exchange-webapp/ofx-welcome>Download image</a>↗️ (<img src=/images/fidelity-download-csv.png />) link</li>
             <li>a file named Portfolio_Positions_[DATE].csv will be downloaded via your browser</li>
             <li>Click "Choose File" button on this page, find and choose the Portfolio_Positions_[DATE].csv file in Downloads folder</li>
         </ol>
@@ -76,6 +78,7 @@
 }
 else
 {
+    bool alternateRow;
     <EditForm Model=@appData.ImportResult>
         <div>Data Files Contains These Accounts/Investments - Choose Which to Import:</div>
         <br/>
@@ -90,24 +93,84 @@ else
             @if(error.Exception.InnerException!=null){ <div>Failure location: <br/>@error.Exception.InnerException.StackTrace<br/><br/></div>};
         }
 
-        <div><InputCheckbox @bind-Value=appData.ImportResult.ImportUpdatedAccounts /> UPDATE these EXISTING accounts in your data file:</div>
-        @foreach (var account in appData.ImportResult.UpdatedAccounts)
-        {
-            <div style=margin-left:40px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)</div>
-            @foreach (var investment in account.Investments)
-            {
-                <div style=margin-left:80px>@investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)</div>
-            }
+        @if(appData.ImportResult.UpdatedAccounts.Count > 0) {
+            <div>
+                <InputCheckbox @bind-Value=appData.ImportResult.ImportUpdatedAccounts /> UPDATE these EXISTING accounts  into <a href="/profiles">@appData.CurrentProfileName profile's</a> portfolio:</div>
+                @foreach (var account in appData.ImportResult.UpdatedAccounts)
+                {
+                    alternateRow = false;
+                    <div style=margin-left:8px;background-color:black;color:white;margin-left:8px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)</div>
+                    @foreach (var investment in account.Investments)
+                    {
+                        string bgColor = alternateRow ? "white" : "lightgray";
+                        alternateRow = !alternateRow;
+                        <div style=margin-left:16px;background-color:@bgColor>@investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)<br/>
+                        @if(account.ReplaceAccount.AccountType == "Taxable" && investment.AssetType != AssetType.Cash_MoneyMarket) {
+                            <span>@account.AccountType</span>
+                            <label>Cost Basis: </label>
+                            <span>$</span><input type=text style=width:100px;text-align:right @bind-Value=investment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
+                        }
+                        </div>
+                    }
+                }
+        } else {
+            <span>These imported accounts all appear to be new accounts in this profile:</span><br/>
         }
 
         <br/>
-        <div><InputCheckbox @bind-Value=appData.ImportResult.ImportNewAccounts /> ADD these NEW accounts in your data file:</div>
-        @foreach (var account in appData.ImportResult.NewAccounts)
-        {
-            <div style=margin-left:40px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)</div>
-            @foreach (var investment in account.Investments)
+        @if (appData.ImportResult.NewAccounts.Count > 0) {
+            <div><InputCheckbox @bind-Value=appData.ImportResult.ImportNewAccounts /> ADD these NEW accounts into <a href="/profiles">@appData.CurrentProfileName profile's</a> portfolio:</div>
+            @foreach (var account in appData.ImportResult.NewAccounts)
             {
-                <div style=margin-left:80px>@investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)</div>
+                alternateRow = false;
+                <div style=margin-left:8px;background-color:black;color:white>
+                    <InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)
+                    <br/>
+                    @if (appData.FamilyData.PersonCount == 2) {
+                        <label>Account Owner(s):</label>
+                        <select style=margin-left:8px@bind=account.Identifier>
+                            <option>our</option>
+                            @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
+                                <option>@appData.FamilyData.People[p].PossessiveID</option>
+                            }
+                        </select>
+                    }
+                    <label style=margin-left:16px;>Account Type:</label> <select @bind=account.AccountType>
+                        <option>Unknown</option>
+                        <option>401k</option>
+                        <option>403b</option>
+                        <option>457b</option>
+                        <option>529</option>
+                        <option>Annuity (Non-Qualified)</option>
+                        <option>Annuity (Qualified)</option>
+                        <option>HSA</option>
+                        <option>Inherited IRA</option>
+                        <option>Inherited Roth IRA</option>
+                        <option value="Traditional IRA">IRA</option>
+                        <option>Life Insurance</option>
+                        <option>Refundable Deposit</option>
+                        <option>Rollover IRA</option>
+                        <option>Roth 401k</option>
+                        <option>Roth IRA</option>
+                        <option>SEP IRA</option>
+                        <option>SIMPLE IRA</option>
+                        <option>Solo 401k</option>
+                        <option>Taxable</option>
+                        <option>Traditional IRA</option>
+                    </select>
+                </div>
+
+                @foreach (var investment in account.Investments)
+                {
+                    string bgColor = alternateRow ? "white" : "lightgray";
+                    alternateRow = !alternateRow;
+                    <div style=margin-left:16px;background-color:@bgColor>@investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)<br/>
+                    @if(account.AccountType == "Taxable" && investment.AssetType != AssetType.Cash_MoneyMarket) {
+                        <label>Cost Basis: </label>
+                        <span>$</span><input type=text style=width:100px;text-align:right @bind-Value=investment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
+                    }
+                    </div>
+                }
             }
         }
     </EditForm>
@@ -124,7 +187,27 @@ else
             account.Import = true;
         }
 
-        Navigation.NavigateTo("/import-accounts");
+        if (appData.ImportResult.UpdatedAccounts.Count == 0) {
+            appData.ImportResult.ImportNewAccounts = true;
+        }
+
+        if (appData.ImportResult.NewAccounts.Count == 0) {
+            appData.ImportResult.ImportUpdatedAccounts = true;
+        }
+
+        foreach (var updatedAccount in appData.ImportResult.UpdatedAccounts)
+        {
+            if (updatedAccount.Import && updatedAccount.ReplaceAccount != null)
+            {
+                foreach (var updatedInvestment in updatedAccount.Investments) {
+                    foreach (var existingInvestment in updatedAccount.ReplaceAccount.Investments) {
+                        if (existingInvestment.Ticker == updatedInvestment.Ticker) {
+                            updatedInvestment.CostBasis = existingInvestment.CostBasis;
+                        }
+                    }
+                }
+            }
+        }
     }
     private void finishImport()
     {

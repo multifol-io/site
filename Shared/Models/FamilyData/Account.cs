@@ -8,7 +8,7 @@ public class Account
     }
 
     public string? Identifier { get; set; }
-    public string AccountType { get; set; } = "Taxable";
+    public string AccountType { get; set; }
     public string? Custodian { get; set; }
     public string? Note { get; set; }
     public double Value { 
