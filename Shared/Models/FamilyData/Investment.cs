@@ -71,6 +71,63 @@ public class Investment
     public string? VanguardFundId { get; set;  }
 
     [JsonIgnore]
+    public bool IsETF {
+        get {
+            var assetType = AssetType ?? global::AssetType.Unknown;
+            switch (assetType) {
+                case  global::AssetType.USStock_ETF:
+                case  global::AssetType.InternationalStock_ETF:
+                case  global::AssetType.Bond_ETF:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+    }
+
+    [JsonIgnore]
+    public bool IsStockOrBond {
+        get {
+            switch (AssetType) {
+                case global::AssetType.USStock:
+                case global::AssetType.InternationalStock:
+                case global::AssetType.Bond:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+    }
+
+    [JsonIgnore]
+    public bool IsFund {
+        get {
+            switch (AssetType) {
+                case global::AssetType.USStock_Fund:
+                case global::AssetType.InternationalStock_Fund:
+                case global::AssetType.Bond_Fund:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+    }
+
+    [JsonIgnore]
+    public bool IsCash {
+        get {
+            switch (AssetType) {
+                case global::AssetType.Cash:
+                case global::AssetType.Cash_BankAccount:
+                case global::AssetType.Cash_MoneyMarket:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+    }
+
+    [JsonIgnore]
     [JsonPropertyName("AssetType")]
     private AssetType _TransitionAssetType; 
     public string TransitionAssetType {

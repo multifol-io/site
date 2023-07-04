@@ -367,7 +367,7 @@
                                                                 <td style=padding-left:8px;vertical-align:text-top title=@investment.Name>@investment.Ticker</td>
                                                                 <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatDoubleTwoDecimal(investment.Shares)</td>
                                                                 <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.Price)<br/>@((MarkupString)FormatUtilities.formatPercent3WithColor(investment.PercentChange))</td>
-                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.Value)@if(investment.LastUpdated!=null){<br/><span>@investment.LastUpdated?.ToShortTimeString()</span>}</td>
+                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.Value)@if(investment.LastUpdated!=null){<br/><span title=@investment.LastUpdated>@investment.LastUpdated?.ToShortTimeString()</span>}</td>
                                                             </tr>
                                                             alternateRow = !alternateRow;
                                                         }
@@ -1445,10 +1445,10 @@
                         investment.PreviousClose = quoteData.PreviousClose; 
                         investment.PercentChange = quoteData.ChangeP;
                         investment.LastUpdated = UnixTimeStampToDateTime(quoteData.Timestamp);
-                    } else if (quoteData.Volume == 0 && UnixTimeStampToDateTime(quoteData.Timestamp)?.Date == DateTime.Now.Date) {
+                    } else if (quoteData.Volume == 0) {
                         investment.PreviousClose = quoteData.PreviousClose;
                         investment.PercentChange = quoteData.ChangeP;
-                        investment.LastUpdated = DateTime.Now;
+                        investment.LastUpdated = UnixTimeStampToDateTime(quoteData.Timestamp);
                     } else {
                         investment.PreviousClose = quoteData.Close;
                         investment.PercentChange = null;
@@ -1607,33 +1607,32 @@
     private async Task refreshPrices() {
         refreshButtonText = "Updating...";
         Dictionary<string,List<Investment>> quotes = new();
+
+        var now = DateTime.Now.Date;
+        var previousMarketClose = PreviousMarketClose(now).ToLocalTime();
+        var nextMarketClose = NextMarketClose(now).ToLocalTime();
+        var nextMarketOpen = new DateTime(nextMarketClose.Year,nextMarketClose.Month,nextMarketClose.Day,13,30,00).ToLocalTime();
+        var marketIsBeforeOpen = DateTime.Now < nextMarketOpen;
+        bool marketIsOpen = DateTime.Now >= nextMarketOpen && DateTime.Now <= nextMarketClose;
+        var marketIsAfterClose = DateTime.Now > nextMarketClose;
+        
         foreach (var account in familyData.Accounts)
         {
             foreach (var investment in account.Investments)
             {
-                var fetchQuote = true;
-                switch (investment.AssetType) {
-                    case AssetType.Cash:
-                    case AssetType.Cash_BankAccount:
-                    case AssetType.Cash_MoneyMarket:
-                        fetchQuote = false;
-                        break;
-                    case AssetType.Bond:
-                        if (investment.Ticker == "IBOND") {
-                            fetchQuote = false;
-                        }
-                        break;
-                    default:
-                        break;
+                investment.LastUpdated = null;
+                investment.PercentChange = null;
+                bool fetchQuote = false;
+                if (investment.IsStockOrBond || investment.IsETF) {
+                    fetchQuote = investment.LastUpdated == null || (marketIsBeforeOpen && investment.LastUpdated < previousMarketClose) || marketIsOpen || (marketIsAfterClose && investment.LastUpdated < nextMarketClose);
+                } else if (investment.IsFund) {
+                    fetchQuote = investment.LastUpdated == null || investment.LastUpdated?.Date != previousMarketClose.Date;
                 }
 
                 if (fetchQuote) {
-                    if (!quotes.ContainsKey(investment.Ticker))
-                    {
+                    if (!quotes.ContainsKey(investment.Ticker)) {
                         quotes.Add(investment.Ticker, new List<Investment> () { investment });
-                    }
-                    else
-                    {
+                    } else {
                         var investments = quotes[investment.Ticker];
                         investments.Add(investment);
                     }
@@ -1652,6 +1651,72 @@
 
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         refreshButtonText = "🔃 Quotes";
+    }
+
+    enum MarketDay {
+        MarketDay,
+        Holiday,
+        HalfDay,
+        WeekEnd
+    }
+    
+    static DateTime[] holidays = {
+        new DateTime(2023, 1, 2),
+        new DateTime(2023, 1 , 16 ),
+        new DateTime(2023, 2, 20),
+        new DateTime(2023, 4, 7),
+        new DateTime(2023, 5, 29),
+        new DateTime(2023, 6, 19),
+        new DateTime(2023, 7, 4),
+        new DateTime(2023, 9, 4),
+        new DateTime(2023, 11, 23),
+        new DateTime(2023, 12, 25),
+    };
+
+    static DateTime[] halfDays = {
+        new DateTime(2023, 7, 3),
+        new DateTime(2023, 11, 24),
+        new DateTime(2023, 12, 24),
+    };
+
+    private MarketDay GetMarketDay(DateTime dateTime) {
+        switch (dateTime.DayOfWeek) {
+            case DayOfWeek.Saturday: 
+            case DayOfWeek.Sunday:
+                return MarketDay.WeekEnd;
+            default:
+                var date = dateTime.Date;
+                if (holidays.Contains(date)) {
+                    return MarketDay.Holiday;
+                }
+                
+                if (halfDays.Contains(date)) {
+                    return MarketDay.HalfDay;
+                }
+
+                return MarketDay.MarketDay;
+        }
+    }
+
+    private DateTime PreviousMarketClose(DateTime dateTime) {
+        return MarketClose(dateTime, -1);
+    }
+    private DateTime NextMarketClose(DateTime dateTime) {
+        return MarketClose(dateTime, 1);
+    }
+    private DateTime MarketClose(DateTime dateTime, int direction) {
+        DateTime marketCloseDay = dateTime.AddDays(direction);
+
+        switch (GetMarketDay(marketCloseDay)) {
+            case MarketDay.Holiday:
+            case MarketDay.WeekEnd:
+                return MarketClose(marketCloseDay, direction);
+            case MarketDay.HalfDay:
+                return new DateTime(marketCloseDay.Year, marketCloseDay.Month, marketCloseDay.Day, 17, 0, 0);
+            default:
+                return new DateTime(marketCloseDay.Year, marketCloseDay.Month, marketCloseDay.Day, 20, 0, 0);
+            
+        }
     }
 
     private (double? change, double? percentChange) portfolioChange() 
