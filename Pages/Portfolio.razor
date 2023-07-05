@@ -363,6 +363,7 @@
                                                     break;
                                                 case "by Ticker":
                                                     bool alternateRow = false;
+                                                    
                                                     <table>
                                                         @if (familyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
@@ -375,10 +376,28 @@
                                                         @foreach (var investment in familyData.GroupedInvestments) {
                                                             string bgColor = alternateRow ? "white" : "lightgray";
                                                             <tr style=background-color:@bgColor>
-                                                                <td style=padding-left:8px;vertical-align:text-top title=@investment.Name>@investment.Ticker</td>
+                                                                <td style=padding-left:8px;vertical-align:text-top title=@investment.Name>@investment.Ticker 
+                                                                    @if (investment.IsStock && (investment.ValuePIN > familyData.Value * .05)) {
+                                                                        <sub title='@FormatUtilities.formatMoney(familyData.Value*.05) is 5% of portfolio' style=background-color:yellow>&nbsp;&gt;5%</sub>
+                                                                    }
+                                                                </td>
                                                                 <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatDoubleTwoDecimal(investment.SharesPIN)</td>
                                                                 <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.Price)<br/>@((MarkupString)FormatUtilities.formatPercent3WithColor(investment.PercentChange))</td>
-                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.ValuePIN)@if(investment.LastUpdated!=null){<br/><span title=@investment.LastUpdated>@investment.LastUpdated?.ToShortTimeString()</span>}</td>
+                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.ValuePIN)
+                                                                    @if(investment.LastUpdated!=null) {
+                                                                        if (investment.IsFund) {
+                                                                            <br/>
+                                                                            <span title=@investment.LastUpdated>
+                                                                                @investment.LastUpdated?.ToString("ddd MM/dd")
+                                                                            </span>
+                                                                        } else {
+                                                                            <br/>
+                                                                            <span title=@investment.LastUpdated>
+                                                                                @investment.LastUpdated?.ToShortTimeString()
+                                                                            </span>
+                                                                        }
+                                                                    }
+                                                                </td>
                                                             </tr>
                                                             alternateRow = !alternateRow;
                                                         }

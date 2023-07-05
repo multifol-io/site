@@ -344,7 +344,7 @@ public class FamilyData
                     Investment? matchingInvestment;
                     if (!_GroupedInvestments.ContainsKey(key))
                     {
-                        matchingInvestment = new Investment(PIN) { Name = investment.Name, Ticker = investment.Ticker, PercentChange = investment.PercentChange, LastUpdated = investment.LastUpdated, SharesPIN = null, Price = investment.Price, PreviousClose = investment.PreviousClose, ValuePIN = 0.0 };
+                        matchingInvestment = new Investment(PIN) { Name = investment.Name, AssetType = investment.AssetType, Ticker = investment.Ticker, PercentChange = investment.PercentChange, LastUpdated = investment.LastUpdated, SharesPIN = null, Price = investment.Price, PreviousClose = investment.PreviousClose, ValuePIN = 0.0 };
                         _GroupedInvestments.Add(key, matchingInvestment);
                     }
                     else
