@@ -1631,8 +1631,6 @@
         {
             foreach (var investment in account.Investments)
             {
-                investment.LastUpdated = null;
-                investment.PercentChange = null;
                 bool fetchQuote = false;
                 if (investment.IsStockOrBond || investment.IsETF) {
                     fetchQuote = investment.LastUpdated == null || (marketIsBeforeOpen && investment.LastUpdated < previousMarketClose) || marketIsOpen || (marketIsAfterClose && investment.LastUpdated < nextMarketClose);
