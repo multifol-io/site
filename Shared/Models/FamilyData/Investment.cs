@@ -94,12 +94,11 @@ public class Investment
     }
 
     [JsonIgnore]
-    public bool IsStockOrBond {
+    public bool IsStock {
         get {
             switch (AssetType) {
                 case global::AssetType.USStock:
                 case global::AssetType.InternationalStock:
-                case global::AssetType.Bond:
                     return true;
                 default:
                     return false;

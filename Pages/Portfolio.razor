@@ -1626,13 +1626,12 @@
         var marketIsBeforeOpen = DateTime.Now < nextMarketOpen;
         bool marketIsOpen = DateTime.Now >= nextMarketOpen && DateTime.Now <= nextMarketClose;
         var marketIsAfterClose = DateTime.Now > nextMarketClose;
-        
         foreach (var account in familyData.Accounts)
         {
             foreach (var investment in account.Investments)
             {
                 bool fetchQuote = false;
-                if (investment.IsStockOrBond || investment.IsETF) {
+                if (investment.IsStock || investment.IsETF) {
                     fetchQuote = investment.LastUpdated == null || (marketIsBeforeOpen && investment.LastUpdated < previousMarketClose) || marketIsOpen || (marketIsAfterClose && investment.LastUpdated < nextMarketClose);
                 } else if (investment.IsFund) {
                     fetchQuote = investment.LastUpdated == null || investment.LastUpdated?.Date != previousMarketClose.Date;
@@ -1721,7 +1720,12 @@
         return MarketClose(dateTime, 1);
     }
     private DateTime MarketClose(DateTime dateTime, int direction) {
-        DateTime marketCloseDay = dateTime.AddDays(direction);
+        DateTime marketCloseDay;
+        if (direction == -1) {
+            marketCloseDay = dateTime.AddDays(direction);
+        } else {
+            marketCloseDay = dateTime;
+        }
 
         switch (GetMarketDay(marketCloseDay)) {
             case MarketDay.Holiday:
