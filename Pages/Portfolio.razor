@@ -51,7 +51,18 @@
         </p>
         <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
             @if(appData.CurrentProfileName==null){<span>choose a</span>}else {<span>@appData.CurrentProfileName</span>}</a> profile
-        </div>    
+        </div>
+    } else if (familyData != null && familyData.PINProtected && familyData.PIN == null) {
+        <div style=float:left>
+            <h4 style="max-width:450px">
+                @pageHeading
+            </h4>
+        </div>
+        <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
+
+        <p style=clear:left>Need PIN</p>
+        <input style=width:50px;text-align:right type=text @bind-Value=PINEntry @bind-Value:event=oninput />
+        <button @onclick=setPIN>Go</button>
     } else {
         if (stepPath == null) {
             var prevStep = steps[steps.Length - 1];
@@ -265,16 +276,16 @@
                                                                 if (!account.Edit) {
                                                                     <tr style=background-color:@bgColor @onclick='@(e=>editAccount(e,accBuffer))'>
                                                                         <td style=padding-left:8px title=@investment.Name>@investment.Ticker</td>
-                                                                        <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleTwoDecimal(investment.Shares)</td>
+                                                                        <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleTwoDecimal(investment.SharesPIN)</td>
                                                                         <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(investment.Price)</td>
-                                                                        <td style=text-align:right;padding-left:8px>@if(account.Investments.Count>1){@FormatUtilities.formatMoney(investment.Value, decimalPlaces:0)}</td>
+                                                                        <td style=text-align:right;padding-left:8px>@if(account.Investments.Count>1){@FormatUtilities.formatMoney(investment.ValuePIN, decimalPlaces:0)}</td>
                                                                     </tr>
                                                                 } else {
                                                                     <tr style=background-color:@bgColor>
                                                                         <td style=padding-left:16px>
                                                                             <input type=text style=width:70px @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/></td>
                                                                         <label>Quantity: </label>
-                                                                        <td style=text-align:right;padding-left:8px><input type=text style=width:100px;text-align:right @bind-Value=investment.Shares @bind-Value:event=oninput placeholder='shares'/></td>
+                                                                        <td style=text-align:right;padding-left:8px><input type=text style=width:100px;text-align:right @bind-Value=investment.SharesPIN @bind-Value:event=oninput placeholder='shares'/></td>
                                                                         <td></td>
                                                                     </tr>
                                                                     <tr style=background-color:@bgColor>
@@ -290,7 +301,7 @@
                                                                             $<input width= type=text style=width:80px;text-align:right @bind-Value=investment.Price @bind-Value:event=oninput placeholder='price'/></td>
                                                                         <td style=text-align:right;padding-left:8px colspan=2>
                                                                             <label>Balance: </label>
-                                                                            $<input type=text style=width:100px;text-align:right @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/>
+                                                                            $<input type=text style=width:100px;text-align:right @bind-Value=investment.ValuePIN @bind-Value:event=oninput placeholder='value'/>
                                                                         </td>
                                                                     </tr>
                                                                    
@@ -334,7 +345,7 @@
                                                                     <a href="/updating-portfolio">Update quotes</a>
                                                                 }
                                                                 <br/>
-                                                                <label>Accounts: </label>
+                                                                <label>Accounts: </label><br/>
                                                                 <button @onclick=addAccountInline title='add account'>➕</button>
                                                                 <button @onclick=ShowImport title='to import Account info from a CSV/XLSX file'>
                                                                     <span>Import</span>
@@ -365,9 +376,9 @@
                                                             string bgColor = alternateRow ? "white" : "lightgray";
                                                             <tr style=background-color:@bgColor>
                                                                 <td style=padding-left:8px;vertical-align:text-top title=@investment.Name>@investment.Ticker</td>
-                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatDoubleTwoDecimal(investment.Shares)</td>
+                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatDoubleTwoDecimal(investment.SharesPIN)</td>
                                                                 <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.Price)<br/>@((MarkupString)FormatUtilities.formatPercent3WithColor(investment.PercentChange))</td>
-                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.Value)@if(investment.LastUpdated!=null){<br/><span title=@investment.LastUpdated>@investment.LastUpdated?.ToShortTimeString()</span>}</td>
+                                                                <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.ValuePIN)@if(investment.LastUpdated!=null){<br/><span title=@investment.LastUpdated>@investment.LastUpdated?.ToShortTimeString()</span>}</td>
                                                             </tr>
                                                             alternateRow = !alternateRow;
                                                         }
@@ -935,7 +946,7 @@
                                                 <button @onclick='@(e=>deleteInvestment(e,accBuffer,invBuffer))'>❌</button>
                                                 <input @ref=tickerN style="width:70px;text-transform: uppercase;" type=text @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/>
                                                 $<input style="width:140px" type=text @bind-Value=investment.Price @bind-Value:event=oninput placeholder='' />
-                                                ✖️ <input style="width:140px" type=text @bind-Value=investment.Shares @bind-Value:event=oninput placeholder='' /> shares
+                                                ✖️ <input style="width:140px" type=text @bind-Value=investment.SharesPIN @bind-Value:event=oninput placeholder='' /> shares
                                                 🟰 $<input style=width:100px type=text @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/>
                                                 <br/>
                                             </div>
@@ -1003,7 +1014,7 @@
                                             <div style=margin-left:40px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)</div>
                                             @foreach (var investment in account.Investments)
                                             {
-                                                <div style=margin-left:80px>@investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)</div>
+                                                <div style=margin-left:80px>@investment.Name (@investment.Ticker) @(investment.SharesPIN) shares =&gt; @FormatUtilities.formatMoney(investment.ValuePIN)</div>
                                             }
                                         }
 
@@ -1014,7 +1025,7 @@
                                             <div style=margin-left:40px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)</div>
                                             @foreach (var investment in account.Investments)
                                             {
-                                                <div style=margin-left:80px>@investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)</div>
+                                                <div style=margin-left:80px>@investment.Name (@investment.Ticker) @(investment.SharesPIN) shares =&gt; @FormatUtilities.formatMoney(investment.ValuePIN)</div>
                                             }
                                         }
                                     </EditForm>
@@ -1470,7 +1481,7 @@
     private async Task OnDataFilesImport(InputFileChangeEventArgs e)
     {
         var files = e.GetMultipleFiles();
-        appData.ImportResult = await Importer.ImportDataFiles(files, Funds, familyData.Accounts);
+        appData.ImportResult = await Importer.ImportDataFiles(files, Funds, familyData.Accounts, familyData.PIN);
         foreach (var account in appData.ImportResult.ImportedAccounts) 
         {
             account.Import = true;
@@ -1513,14 +1524,14 @@
 
     private void addInvestment(MouseEventArgs e, int accountIndex)
     {
-        var newInvestment = new Investment() { funds = Funds };
+        var newInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds };
         familyData.Accounts[accountIndex].Investments.Add(newInvestment);
         focusTicker = true;
     }
 
     private void addInvestment2(MouseEventArgs e, int accountIndex) {
         var account = familyData.Accounts.OrderByDescending(a=>a.Value).ToList()[accountIndex];
-        account.Investments.Add(new Investment() { funds = Funds });
+        account.Investments.Add(new Investment(appData.FamilyData.PIN) { funds = Funds });
     }
 
     void deleteInvestment2(MouseEventArgs e, int accountIndex, int investmentIndex)
@@ -1539,7 +1550,7 @@
     }
     void addAvailableFund(MouseEventArgs e, Account account)
     {
-        var newFund = new Investment() { funds = Funds };
+        var newFund = new Investment(appData.FamilyData.PIN) { funds = Funds };
         account.AvailableFunds.Add(newFund);
         focusTicker = true;
     }
@@ -1551,8 +1562,8 @@
 
     void addAccountInline()
     {
-        var newAccount = new Account();
-        var newInvestment = new Investment() { funds = Funds };
+        var newAccount = new Account(appData.FamilyData.PIN);
+        var newInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds };
         newAccount.Investments.Add(newInvestment);
         newAccount.Edit = true;
         familyData?.Accounts.Add(newAccount);
@@ -1569,8 +1580,8 @@
 
     void addAccount()
     {
-        var newAccount = new Account();
-        var newInvestment = new Investment() { funds = Funds };
+        var newAccount = new Account(appData.FamilyData.PIN);
+        var newInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds };
         newAccount.Investments.Add(newInvestment);
         familyData?.Accounts.Add(newAccount);
         focusAccount = true;
@@ -1698,6 +1709,13 @@
         }
     }
 
+    private int? PINEntry { get; set; }
+    private void setPIN() {
+        if (PINEntry != null) {
+            familyData.PIN = PINEntry;
+        }
+    }
+
     private DateTime PreviousMarketClose(DateTime dateTime) {
         return MarketClose(dateTime, -1);
     }
@@ -1728,7 +1746,7 @@
             total += investment.Value ?? 0.0;
             if (investment.PercentChange != null)
             {
-                change += (investment.Price - investment.PreviousClose) * investment.Shares;
+                change += (investment.Price - investment.PreviousClose) * investment.SharesPIN;
             }
         }
 

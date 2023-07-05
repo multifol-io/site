@@ -318,6 +318,20 @@ public class FamilyData
 
     public List<Account> Accounts { get; set; }
 
+    private int? _PIN;
+    [JsonIgnore]
+    public int? PIN { 
+        get { return _PIN; }
+        set {
+            _PIN = value; 
+            foreach (var account in Accounts) {
+                account.PIN = _PIN;
+            }
+        }    
+    }
+
+    public bool PINProtected { get; set; }
+
     [JsonIgnore]
     public List<Investment> GroupedInvestments { 
         get {
@@ -330,7 +344,7 @@ public class FamilyData
                     Investment? matchingInvestment;
                     if (!_GroupedInvestments.ContainsKey(key))
                     {
-                        matchingInvestment = new Investment() { Name = investment.Name, Ticker = investment.Ticker, PercentChange = investment.PercentChange, LastUpdated = investment.LastUpdated, Shares = null, Price = investment.Price, PreviousClose = investment.PreviousClose, Value = 0.0 };
+                        matchingInvestment = new Investment(PIN) { Name = investment.Name, Ticker = investment.Ticker, PercentChange = investment.PercentChange, LastUpdated = investment.LastUpdated, SharesPIN = null, Price = investment.Price, PreviousClose = investment.PreviousClose, ValuePIN = 0.0 };
                         _GroupedInvestments.Add(key, matchingInvestment);
                     }
                     else
@@ -338,19 +352,19 @@ public class FamilyData
                         matchingInvestment = _GroupedInvestments[key];
                     }
 
-                    if (investment.Shares != null) {
-                        if (matchingInvestment.Shares == null)
+                    if (investment.SharesPIN != null) {
+                        if (matchingInvestment.SharesPIN == null)
                         {
-                            matchingInvestment.Shares = investment.Shares;
+                            matchingInvestment.SharesPIN = investment.SharesPIN;
                         }
                         else
                         {
-                            matchingInvestment.Shares += investment.Shares;
+                            matchingInvestment.SharesPIN += investment.SharesPIN;
                         }
                     } 
                     else
                     {
-                        matchingInvestment.Value += investment.Value;
+                        matchingInvestment.ValuePIN += investment.ValuePIN;
                     }
                 }
             }
@@ -359,14 +373,14 @@ public class FamilyData
             foreach (var key in _GroupedInvestments.Keys)
             {
                 var investment = _GroupedInvestments[key];
-                if (investment.Price != null && investment.Shares != null)
+                if (investment.Price != null && investment.SharesPIN != null)
                 {
                     investment.UpdateValue();
                 }
 
-                if (investment.Shares == 0.0)
+                if (investment.SharesPIN == 0.0)
                 {
-                    investment.Shares = null;
+                    investment.SharesPIN = null;
                 }
 
                 listInvestments.Add(investment);

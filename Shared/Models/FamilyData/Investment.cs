@@ -3,6 +3,15 @@ using System.Text.Json.Serialization;
 
 public class Investment 
 {
+    public Investment() {
+
+    }
+
+    public Investment(int? pin) : this()
+    {
+        PIN = pin;
+    }
+
     [JsonIgnore]
     public IList<Fund>? funds { get; set; }
 
@@ -65,7 +74,6 @@ public class Investment
             AssetType = fund.AssetType;
             VanguardFundId = fund.VanguardFundId;
             AutoCompleted = true;
-            Console.WriteLine($"{fund.Ticker}: {AssetType}");
         }
     }
     public string? VanguardFundId { get; set;  }
@@ -169,6 +177,25 @@ public class Investment
         }
      }
 
+    private int? _PIN;
+    [JsonIgnore]
+    public int? PIN {
+        get { return _PIN; }
+        set { 
+            _PIN = value;
+        }
+    }
+
+    [JsonIgnore]
+    public double? SharesPIN {
+        get {
+            return Shares * (PIN ?? 1);
+        }
+        set {
+            Shares = value / (PIN ?? 1);
+        }
+    }
+
     private double? _Shares;
     public double? Shares {
         get {
@@ -179,6 +206,28 @@ public class Investment
             UpdateValue();
         }
     }
+
+    [JsonIgnore]
+    public double? ValuePIN {
+        get {
+            return Value * (PIN ?? 1);
+        }
+        set {
+            Value = value / (PIN ?? 1);
+        }
+    }
+
+    private double? _Value;
+    public double? Value {
+        get {
+            return _Value;
+        }
+        set {
+            _Value = value;
+        }
+    }
+    
+
     public double? CostBasis { get; set; }
     private double? _Price;
     public double? Price {
@@ -192,15 +241,14 @@ public class Investment
     }
 
     public void UpdateValue() {
-        if (Price != null && Shares != null) {
-            Value = Price * Shares;
+        if (Price != null && SharesPIN != null) {
+            ValuePIN = Price * SharesPIN;
         }
     }
 
     public double? PreviousClose { get; set; }
     public double? PercentChange { get; set; }
     public DateTime? LastUpdated { get; set; }
-    public double? Value { get; set; }
     [JsonIgnore]
     public double Percentage { get; set; }
 }

@@ -582,7 +582,7 @@ Retirement - bogle.tools
     private async Task OnDataFilesImport(InputFileChangeEventArgs e)
     {
         var files = e.GetMultipleFiles();
-        ImportResult = await Importer.ImportDataFiles(files, Funds, familyData.Accounts);
+        ImportResult = await Importer.ImportDataFiles(files, Funds, familyData.Accounts, familyData.PIN);
         foreach (var account in ImportResult.ImportedAccounts) 
         {
             account.Import = true;

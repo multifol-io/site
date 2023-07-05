@@ -7,6 +7,23 @@ public class Account
         AvailableFunds = new();
     }
 
+    public Account(int? pin) : this()
+    {
+        PIN = pin;
+    }
+
+    private int? _PIN;
+    [JsonIgnore]
+    public int? PIN {
+        get { return _PIN; }
+        set { 
+            _PIN = value; 
+            foreach (var investment in Investments) {
+                investment.PIN = _PIN;
+            }
+        }
+    }
+
     public string? Identifier { get; set; }
     public string AccountType { get; set; }
     public string? Custodian { get; set; }
@@ -16,7 +33,7 @@ public class Account
             double newValue = 0;
             foreach (var investment in Investments) 
             {
-                newValue += investment.Value ?? 0;
+                newValue += investment.ValuePIN ?? 0;
             }
 
             return newValue;

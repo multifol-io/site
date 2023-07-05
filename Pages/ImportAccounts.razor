@@ -168,7 +168,7 @@ else
                 {
                     string bgColor = alternateRow ? "white" : "lightgray";
                     alternateRow = !alternateRow;
-                    <div style=margin-left:16px;background-color:@bgColor>@investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)<br/>
+                    <div style=margin-left:16px;background-color:@bgColor>@investment.Name (@investment.Ticker) @(investment.SharesPIN) shares =&gt; @FormatUtilities.formatMoney(investment.ValuePIN)<br/>
                     @if(account.AccountType == "Taxable" && investment.AssetType != AssetType.Cash_MoneyMarket) {
                         <label>Cost Basis: </label>
                         <span>$</span><input type=text style=width:100px;text-align:right @bind-Value=investment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
@@ -186,7 +186,7 @@ else
     private async Task OnDataFilesImport(InputFileChangeEventArgs e)
     {
         var files = e.GetMultipleFiles();
-        appData.ImportResult = await Importer.ImportDataFiles(files, Funds, appData.FamilyData.Accounts);
+        appData.ImportResult = await Importer.ImportDataFiles(files, Funds, appData.FamilyData.Accounts, appData.FamilyData.PIN);
         foreach (var account in appData.ImportResult.ImportedAccounts) 
         {
             account.Import = true;
