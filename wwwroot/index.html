@@ -40,6 +40,12 @@
           anchorElement.remove();
           URL.revokeObjectURL(url);
         }
+
+        function updateSite(event) {
+            window.location.reload();
+        }
+        
+        window.applicationCache.addEventListener('updateready', updateSite, false);
       </script>
 </head>
 
