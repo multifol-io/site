@@ -166,6 +166,20 @@ public class Investment
     [JsonPropertyName("AssetType2")]
     public AssetType? AssetType { get; set; }
 
+    public int InvestmentOrder {
+        get {
+            return (AssetType ?? global::AssetType.Unknown) switch
+            {
+                global::AssetType.USStock or global::AssetType.USStock_ETF or global::AssetType.USStock_Fund or global::AssetType.Stock=> 1,
+                global::AssetType.InternationalStock or global::AssetType.InternationalStock_ETF or global::AssetType.InternationalStock_Fund => 2,
+                global::AssetType.Bond or global::AssetType.Bond_ETF or global::AssetType.Bond_Fund => 3,
+                global::AssetType.StocksAndBonds_ETF or global::AssetType.StocksAndBonds_Fund => 4,
+                global::AssetType.Cash or global::AssetType.Cash_BankAccount or global::AssetType.Cash_MoneyMarket => 5,
+                _ => 6,
+            };
+        }
+    }
+
     private double? _ExpenseRatio;
     public double? ExpenseRatio {
         get {

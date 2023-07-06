@@ -24,6 +24,8 @@ public class Account
         }
     }
 
+    [JsonIgnore]
+    public int Owner { get; set; }
     public string? Identifier { get; set; }
     public string AccountType { get; set; }
     public string? Custodian { get; set; }
@@ -179,6 +181,21 @@ public class Account
                 default:
                     return "Other";
             }
+        }
+    }
+
+    public int PortfolioReviewOrder {
+        get {
+            var ownerCategory = (Owner + 1) * 6; // 6=Joint, 12=First Person, 18= Second Person
+            return AccountType switch
+            {
+                "Annuity (Non-Qualified)" or "Brokerage" or "Taxable" => 1 + Owner,
+                "401k" or "403b" or "457b" or "Roth 401k" or "SIMPLE IRA" or "Solo 401k" or "SEP IRA" => 2 + ownerCategory,
+                "Annuity (Qualified)" or "Inherited IRA" or "Traditional IRA" or "Rollover IRA" => 3 + ownerCategory,
+                "Inherited Roth IRA" or "Roth IRA" => 4 + ownerCategory,
+                "HSA" => 5 + ownerCategory,
+                _ => 6 + ownerCategory,
+            };
         }
     }
 }

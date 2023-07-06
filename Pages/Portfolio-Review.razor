@@ -190,18 +190,17 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                         }
 
                                         @((MarkupString)boldUnderline("Current Retirement Assets:"))<br/>
-
-                                        @foreach (var account in familyData.Accounts.OrderByDescending(a=>a.Value)) {
+                                        @foreach (var account in familyData.Accounts.OrderBy(a=>a.PortfolioReviewOrder).ThenByDescending(a=>a.Value)) {
                                             <br/>
                                             @((MarkupString)bold((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "") + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + " (" + FormatUtilities.formatPercent(account.Percentage) + ")" ))
                                             <br/>
-                                            @foreach (var investment in account.Investments.OrderByDescending(a=>a.Value)) {
+                                            @foreach (var investment in account.Investments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.ValuePIN)) {
                                                 <span>&nbsp;&nbsp;&nbsp;&nbsp;@FormatUtilities.formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@(investment.ExpenseRatio!=null?investment.ExpenseRatio:"??")%)</span><br/>
                                             }
                                         }
                                         <br/>
                                     </td>
-                                    break;                                
+                                    break;
                                 case "available-funds":
                                     <td>
                                         @((MarkupString)boldUnderline("Available funds:"))<br/>
