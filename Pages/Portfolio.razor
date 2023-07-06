@@ -363,7 +363,6 @@
                                                     break;
                                                 case "by Ticker":
                                                     bool alternateRow = false;
-                                                    
                                                     <table>
                                                         @if (familyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
@@ -373,7 +372,7 @@
                                                                 <th style=padding-left:8px;text-align:center>Balance</th>
                                                             </tr>
                                                         }
-                                                        @foreach (var investment in familyData.GroupedInvestments) {
+                                                        @foreach (var investment in familyData.GroupedInvestments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.ValuePIN)) {
                                                             string bgColor = alternateRow ? "white" : "lightgray";
                                                             <tr style=background-color:@bgColor>
                                                                 <td style=padding-left:8px;vertical-align:text-top title=@investment.Name>@investment.Ticker 

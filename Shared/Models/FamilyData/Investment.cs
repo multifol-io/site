@@ -180,6 +180,20 @@ public class Investment
         }
     }
 
+    public string InvestmentOrderCategory {
+        get {
+            return InvestmentOrder switch
+            {
+                1 => "US Stocks",
+                2 => "International Stocks",
+                3 => "Bonds",
+                4 => "Balanced Funds",
+                5 => "Cash",
+                _ => "Other",
+            };
+        }
+    }
+
     private double? _ExpenseRatio;
     public double? ExpenseRatio {
         get {
