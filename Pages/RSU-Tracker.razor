@@ -130,9 +130,10 @@
                                         <a @onclick=editAccounts class="m-2" >✏️</a>
                                         @((MarkupString)bold("RSU Summary:"))<br/>
                                         @if (familyData.Accounts.Count > 0) {
-                                            if (appData.RSUView == null) { appData.RSUView = "RSU Summary"; }
+                                            if (appData.RSUView == null) { appData.RSUView = "Vest Events by Month"; }
                                             <label>&nbsp;&nbsp;View:&nbsp;</label><InputSelect @bind-Value=appData.RSUView >
-                                                <option>RSU Summary</option>
+                                                <option>Vest Events by Month</option>
+                                                <option>Vest Events by Grant</option>
                                             </InputSelect>
                                             
                                             <br/>
@@ -148,7 +149,7 @@
                                             }
 
                                             @switch (appData.RSUView) {
-                                                case "RSU Summary":
+                                                case "Vest Events by Grant":
                                                     @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
                                                         var person = appData.FamilyData.People[p];
                                                         <br/>
@@ -179,6 +180,37 @@
                                                         </table>
                                                     }
                                                     break;
+                                                case "Vest Events by Month":
+                                                    @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
+                                                        var person = appData.FamilyData.People[p];
+
+                                                        var vestMonths = (from rsuGrant in person.RSUGrants  // First foreach loop
+                                                            from vestEvent in rsuGrant.VestEvents  // Second foreach loop
+                                                            where vestEvent.Date > DateTime.Now.Date
+                                                            group vestEvent by new { vestEvent.Date.Year, vestEvent.Date.Month }
+                                                            into grp
+                                                            select new { month = grp.Key.Month, year = grp.Key.Year, count = grp.Count(), shares = grp.Sum(ve=>ve.Shares), value = grp.Sum(ve=>ve.Value) });
+                                                            
+                                                        <br/>
+                                                        <p>@person.PossessiveID RSU Grants:</p>
+                                                        <table>
+                                                            <tr style=vertical-align:bottom>
+                                                                <th style=padding-left:8px>Vest Month</th>
+                                                                <th style=padding-left:8px;text-align:center>Grants</th>
+                                                                <th style=padding-left:8px;text-align:center>Shares</th>
+                                                                <th style=padding-left:8px;text-align:center>Value</th>
+                                                            </tr>
+                                                            @foreach (var vestMonth in vestMonths) {
+                                                                    <tr style=vertical-align:bottom>
+                                                                        <td style=padding-left:8px>@vestMonth.month-@vestMonth.year</td>
+                                                                        <td style=padding-left:8px;text-align:center>@vestMonth.count</td>
+                                                                        <td style=padding-left:8px;text-align:center>@vestMonth.shares</td>
+                                                                        <td style=padding-left:8px;text-align:center>~@FormatUtilities.formatMoney(vestMonth.value)</td>
+                                                                    </tr>
+                                                            }
+                                                        </table>
+                                                    }
+                                                    break;                                    
                                             }
                                         }
                                         @if (appData.FamilyData.Accounts.Count == 0) {
