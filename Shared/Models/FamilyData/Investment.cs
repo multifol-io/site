@@ -163,8 +163,14 @@ public class Investment
         }
     }
 
+    private AssetType? _AssetType;
     [JsonPropertyName("AssetType2")]
-    public AssetType? AssetType { get; set; }
+    public AssetType? AssetType {
+        get { return _AssetType; }
+        set {
+            _AssetType = value;
+        }
+    }
 
     public int InvestmentOrder {
         get {
@@ -269,7 +275,14 @@ public class Investment
 
     public void UpdateValue() {
         if (Price != null && SharesPIN != null) {
-            ValuePIN = Price * SharesPIN;
+            switch (AssetType ?? global::AssetType.Unknown) {
+                case global::AssetType.Unknown:
+                case global::AssetType.Bond:
+                    break;
+                default:
+                    ValuePIN = Price * SharesPIN;
+                    break;
+            }
         }
     }
 

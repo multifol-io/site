@@ -362,8 +362,8 @@ public class FamilyData
                             matchingInvestment.SharesPIN += investment.SharesPIN;
                         }
                     } 
-                    else
-                    {
+                    
+                    if (investment.ValuePIN != null) {
                         matchingInvestment.ValuePIN += investment.ValuePIN;
                     }
                 }

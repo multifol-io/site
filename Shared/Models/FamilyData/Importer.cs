@@ -197,13 +197,6 @@ public class Importer {
                             value = ParseDouble(chunks[7], allowCurrency:true);
                             price = ParseDouble(chunks[5], allowCurrency:true);
                             shares = ParseDouble(chunks[4]);
-                            
-                            // workaround for issue#123: individual bond importing from fidelity CSV file ends up with Balance 100 times too big
-                            if (price * shares > value * 90)
-                            {
-                                price = value / shares;
-                            }
-
                             costBasis = ParseDouble(chunks[13], allowCurrency:true);
                         }
 
