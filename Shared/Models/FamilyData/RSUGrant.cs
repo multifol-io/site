@@ -5,6 +5,7 @@ public class RSUGrant {
     public int VestPeriodMonths { get; set;}
     public double Amount { get; set; }
     public double? Price { get; set; }
+    public int? Shares { get; set; }
 
     private double? _LastPrice;
     public double? LastPrice { 
@@ -16,13 +17,11 @@ public class RSUGrant {
             }
         }
     }
-    
-    public int? Shares {
-        get {
-            if (Price != null) {
-                return (int)(Amount/Price);
-            } else return null;
+
+    public List<RSUVestEvent> VestEvents { get; set; } = new();
+    public void CalculateShares() {
+        if (Price != null) {
+            Shares = (int)(Amount/Price);
         }
     }
-    public List<RSUVestEvent> VestEvents { get; set; } = new();
 }

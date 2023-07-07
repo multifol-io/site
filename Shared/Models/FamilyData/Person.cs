@@ -149,6 +149,5 @@ public class Person {
         }
     }
 
-    [JsonIgnore]
     public List<RSUGrant> RSUGrants { get; set; }
 }

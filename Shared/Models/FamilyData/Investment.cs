@@ -272,6 +272,9 @@ public class Investment
         }
         set {
             _Price = value;
+            if (_Price != null && GrantToUpdateQuote != null) {
+                GrantToUpdateQuote.LastPrice = Price;
+            }
             UpdateValue();
         }
     }
@@ -286,9 +289,6 @@ public class Investment
                     ValuePIN = Price * SharesPIN;
                     break;
             }
-        }
-        if (Price != null && GrantToUpdateQuote != null) {
-            GrantToUpdateQuote.LastPrice = Price;
         }
     }
 

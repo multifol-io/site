@@ -154,6 +154,8 @@
                                                         var person = appData.FamilyData.People[p];
                                                         <br/>
                                                         <p>@person.PossessiveID RSU Grants:</p>
+
+                                                        @if(person.RSUGrants.Count > 0) {
                                                         <table>
                                                             <tr style=vertical-align:bottom>
                                                                 <th style=padding-left:8px>Grant Date</th>
@@ -178,37 +180,42 @@
                                                                 }
                                                             }
                                                         </table>
+                                                        } else {
+                                                            <p>add UI to add Grants</p>
+                                                        }
                                                     }
                                                     break;
                                                 case "Vest Events by Month":
                                                     @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
                                                         var person = appData.FamilyData.People[p];
 
-                                                        var vestMonths = (from rsuGrant in person.RSUGrants  // First foreach loop
-                                                            from vestEvent in rsuGrant.VestEvents  // Second foreach loop
-                                                            where vestEvent.Date > DateTime.Now.Date
-                                                            group vestEvent by new { vestEvent.Date.Year, vestEvent.Date.Month }
-                                                            into grp
-                                                            select new { month = grp.Key.Month, year = grp.Key.Year, count = grp.Count(), shares = grp.Sum(ve=>ve.Shares), value = grp.Sum(ve=>ve.Value) });
-                                                            
-                                                        <br/>
-                                                        <p>@person.PossessiveID RSU Grants:</p>
-                                                        <table>
-                                                            <tr style=vertical-align:bottom>
-                                                                <th style=padding-left:8px>Vest Month</th>
-                                                                <th style=padding-left:8px;text-align:center>Grants</th>
-                                                                <th style=padding-left:8px;text-align:center>Shares</th>
-                                                                <th style=padding-left:8px;text-align:center>Value</th>
-                                                            </tr>
-                                                            @foreach (var vestMonth in vestMonths) {
-                                                                    <tr style=vertical-align:bottom>
-                                                                        <td style=padding-left:8px>@vestMonth.month-@vestMonth.year</td>
-                                                                        <td style=padding-left:8px;text-align:center>@vestMonth.count</td>
-                                                                        <td style=padding-left:8px;text-align:center>@vestMonth.shares</td>
-                                                                        <td style=padding-left:8px;text-align:center>~@FormatUtilities.formatMoney(vestMonth.value)</td>
-                                                                    </tr>
-                                                            }
-                                                        </table>
+                                                        @if(person.RSUGrants.Count > 0) {
+                                                            var vestMonths = (from rsuGrant in person.RSUGrants  // First foreach loop
+                                                                from vestEvent in rsuGrant.VestEvents  // Second foreach loop
+                                                                where vestEvent.Date > DateTime.Now.Date
+                                                                group vestEvent by new { vestEvent.Date.Year, vestEvent.Date.Month }
+                                                                into grp
+                                                                select new { month = grp.Key.Month, year = grp.Key.Year, count = grp.Count(), shares = grp.Sum(ve=>ve.Shares), value = grp.Sum(ve=>ve.Value) });
+                                                                
+                                                            <br/>
+                                                            <p>@person.PossessiveID RSU Grants:</p>
+                                                            <table>
+                                                                <tr style=vertical-align:bottom>
+                                                                    <th style=padding-left:8px>Vest Month</th>
+                                                                    <th style=padding-left:8px;text-align:center>Grants</th>
+                                                                    <th style=padding-left:8px;text-align:center>Shares</th>
+                                                                    <th style=padding-left:8px;text-align:center>Value</th>
+                                                                </tr>
+                                                                @foreach (var vestMonth in vestMonths) {
+                                                                        <tr style=vertical-align:bottom>
+                                                                            <td style=padding-left:8px>@vestMonth.month-@vestMonth.year</td>
+                                                                            <td style=padding-left:8px;text-align:center>@vestMonth.count</td>
+                                                                            <td style=padding-left:8px;text-align:center>@vestMonth.shares</td>
+                                                                            <td style=padding-left:8px;text-align:center>~@FormatUtilities.formatMoney(vestMonth.value)</td>
+                                                                        </tr>
+                                                                }
+                                                            </table>
+                                                        }
                                                     }
                                                     break;                                    
                                             }
@@ -525,31 +532,23 @@
         Navigation.LocationChanged += LocationChanged;
         for(int p=0;p<appData.FamilyData.PersonCount;p++) {
             var person = appData.FamilyData.People[p];
-            
-            //Fake Data for now
-            if (person.RSUGrants.Count == 0) {
-                int yearsAgo = -5;
-                Random random = new();
-                while (yearsAgo < 0) {
-                    var rsuGrant = new RSUGrant() { 
-                        Date = new DateTime(2023,8,31).AddYears(yearsAgo++),
-                        Ticker = "MSFT",
-                        VestEventsCount = 20,
-                        VestPeriodMonths = 3,
-                        Amount = ((random.NextDouble() * (50000 - 20000)) + 20000),
-                        Price = ((random.NextDouble() * (300 - 100)) + 100),
+
+            foreach (var grant in person.RSUGrants) {
+                grant.VestEvents.Clear();
+                if (grant.Shares != null) {
+                    var vestShares = (grant.Shares ?? 0) / grant.VestEventsCount;
+                    for (int i=0; i < grant.VestEventsCount; i++) {
+                        var vestEvent = new RSUVestEvent() { 
+                            Date = grant.Date.AddMonths((i+1) * grant.VestPeriodMonths),
+                            Shares = vestShares,
+                            Price = grant.LastPrice
                         };
-                    if (rsuGrant.Price != null) {
-                        var vestShares = (rsuGrant.Shares ?? 0) / rsuGrant.VestEventsCount;
-                        for (int i=0; i < rsuGrant.VestEventsCount; i++) {
-                            var vestEvent = new RSUVestEvent() { Date = rsuGrant.Date.AddMonths((i+1) * rsuGrant.VestPeriodMonths), Shares = vestShares };
-                            rsuGrant.VestEvents.Add(vestEvent);
-                        }
+                        grant.VestEvents.Add(vestEvent);
                     }
-                    person.RSUGrants.Add(rsuGrant);
                 }
             }
         }
+
         base.OnInitialized();
     }
 
