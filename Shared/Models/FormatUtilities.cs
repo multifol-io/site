@@ -77,6 +77,10 @@ public static class FormatUtilities {
         return amount.HasValue ? "<span style=color:"+ (amount < 0 ? "red>" : "green>") + String.Format("{0:#,#.###}%", amount)+"</span>" : "";
     }
 
+    public static string formatDouble(double? amount) 
+    {
+        return String.Format("{0:#,0}", amount);
+    }
     public static string formatDoubleTwoDecimal(double? amount) 
     {
         return String.Format("{0:#,0.00}", amount);

@@ -9,6 +9,7 @@ public class Person {
         this.RothIRA = new RothIRA();
         this.HealthSavingsAccount = new HealthSavingsAccount();
         this.Retirement = new();
+        this.RSUGrants = new();
     }
 
     // set back pointers in person
@@ -147,4 +148,7 @@ public class Person {
             }
         }
     }
+
+    [JsonIgnore]
+    public List<RSUGrant> RSUGrants { get; set; }
 }

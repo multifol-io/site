@@ -14,5 +14,6 @@ public class AppData : IAppData
     public string EODHistoricalDataApiKey { get; set;}
     public int Year {get; set;} 
     public string PortfolioView { get; set; }
+    public string RSUView { get; set; }
     public ImportResult? ImportResult { get; set; }
 }

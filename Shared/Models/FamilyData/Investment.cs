@@ -241,6 +241,9 @@ public class Investment
     }
 
     [JsonIgnore]
+    public RSUGrant GrantToUpdateQuote { get; set; }
+
+    [JsonIgnore]
     public double? ValuePIN {
         get {
             return Value * (PIN ?? 1);
@@ -283,6 +286,9 @@ public class Investment
                     ValuePIN = Price * SharesPIN;
                     break;
             }
+        }
+        if (Price != null && GrantToUpdateQuote != null) {
+            GrantToUpdateQuote.LastPrice = Price;
         }
     }
 

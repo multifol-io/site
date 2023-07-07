@@ -1,0 +1,20 @@
+[
+    {
+        "step": "people",
+        "title": "People",
+        "number": 1,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    },
+    {
+        "step": "rsu-summary",
+        "title": "RSU Summary",
+        "number": 2,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
+    }
+]

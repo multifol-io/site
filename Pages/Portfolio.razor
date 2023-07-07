@@ -1,5 +1,4 @@
 @page "/portfolio"
-@page "/portfolio/reload"
 @page "/portfolio/{stepPath}"
 @inject HttpClient Http
 @inject IAppData appData
@@ -46,13 +45,13 @@
     @if (steps == null || appData == null || familyData == null)
     {
         <p>
-            @if(appData.CurrentProfileName==null){<em>No active <a href=/profiles>profile</a>.</em>} 
+            @if(appData == null || appData.CurrentProfileName==null){<em>No active <a href=/profiles>profile</a>.</em>} 
             else {<em>Loading...</em>}
         </p>
         <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
             @if(appData.CurrentProfileName==null){<span>choose a</span>}else {<span>@appData.CurrentProfileName</span>}</a> profile
         </div>
-    } else if (familyData != null && familyData.PINProtected && familyData.PIN == null) {
+    } else if (familyData != null && appData.FamilyData.PINProtected && appData.FamilyData.PIN == null) {
         <div style=float:left>
             <h4 style="max-width:450px">
                 @pageHeading
@@ -69,7 +68,7 @@
             var nextStep = steps[0];
             string prevPage = folderName + prevStep?.step;
             string nextPage = folderName + nextStep?.step;
-            familyData.UpdatePercentages();
+            appData.FamilyData.UpdatePercentages();
             
             <div style=float:left>
                 <h4 style="max-width:450px">
@@ -89,16 +88,16 @@
                                         <a @onclick=toggleTaxFilingStatusEditing class="m-2" >✏️</a>
                                         @((MarkupString)bold("Tax Filing Status:"))
                                         @if (!taxFilingStatusEditing) {
-                                            @if (familyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@familyData.TaxFilingStatus</span> }
-                                            @if(familyData.PersonCount > 0) {
-                                                <span>&nbsp;@getPronoun(familyData.People[0], false)</span>
+                                            @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@appData.FamilyData.TaxFilingStatus</span> }
+                                            @if(appData.FamilyData.PersonCount > 0) {
+                                                <span>&nbsp;@getPronoun(appData.FamilyData.People[0], false)</span>
                                             }
-                                            @if(familyData.PersonCount > 1) {
-                                                <span>&nbsp;and @getPronoun(familyData.People[1], false)</span>
+                                            @if(appData.FamilyData.PersonCount > 1) {
+                                                <span>&nbsp;and @getPronoun(appData.FamilyData.People[1], false)</span>
                                             }
                                             <br/><hr/>
                                         } else {
-                                            <select @bind=familyData.TaxFilingStatus>
+                                            <select @bind=appData.FamilyData.TaxFilingStatus>
                                                 <option value="ChoiceNeeded">ChoiceNeeded</option>
                                                 <option>Single</option>
                                                 <option value=MarriedFilingJointly>Married filing jointly</option>
@@ -107,8 +106,8 @@
                                                 <option value=HeadOfHousehold>Head of Household</option>
                                             </select><br/><br/>
                                             
-                                            @for (int i = 0; i < familyData.PersonCount; i++) {
-                                                var person = familyData.People[i];
+                                            @for (int i = 0; i < appData.FamilyData.PersonCount; i++) {
+                                                var person = appData.FamilyData.People[i];
                                                 int personIndex = i + 1;
 
                                                 <EditForm Model="person" style=margin-left:25px>
@@ -132,37 +131,37 @@
                                         <a @onclick=toggleAssetAllocationEditing  class="m-2" >✏️</a>
                                         @((MarkupString)bold("Desired Asset allocation:"))
                                         @if(!assetAllocationEditing) { 
-                                            if (familyData.Stocks != null && familyData.Bonds != null) {
-                                                <span>&nbsp;@familyData.Stocks% stocks / @familyData.Bonds% bonds</span><br/>
+                                            if (appData.FamilyData.Stocks != null && appData.FamilyData.Bonds != null) {
+                                                <span>&nbsp;@appData.FamilyData.Stocks% stocks / @appData.FamilyData.Bonds% bonds</span><br/>
                                             }
-                                            @if (familyData.International != null) {
+                                            @if (appData.FamilyData.International != null) {
                                                 <span>&nbsp;&nbsp;Desired International allocation: </span>
-                                                <span>@familyData.International%</span>
+                                                <span>@appData.FamilyData.International%</span>
                                             }
                                         } else {
                                             <span>
-                                                &nbsp;<input style=width:50px;text-align:right type=text @bind-Value=familyData.Stocks @bind-Value:event=oninput />% stocks
+                                                &nbsp;<input style=width:50px;text-align:right type=text @bind-Value=appData.FamilyData.Stocks @bind-Value:event=oninput />% stocks
                                                 /
-                                                <input style=width:50px;text-align:right type=text @bind-Value=familyData.Bonds @bind-Value:event=oninput />% bonds
+                                                <input style=width:50px;text-align:right type=text @bind-Value=appData.FamilyData.Bonds @bind-Value:event=oninput />% bonds
                                             </span><br/>
                                             <span>&nbsp;&nbsp;Desired International allocation: </span>
-                                            <span><input style=width:50px;text-align:right type=text @bind-Value=familyData.International @bind-Value:event=oninput />%</span>
+                                            <span><input style=width:50px;text-align:right type=text @bind-Value=appData.FamilyData.International @bind-Value:event=oninput />%</span>
                                         }
 
 
                                         <br/>
-                                        @if (!double.IsNaN(familyData.ActualStockAllocation) || !double.IsNaN(familyData.ActualBondAllocation) || !double.IsNaN(familyData.ActualInternationalStockAllocation)) {
+                                        @if (!double.IsNaN(appData.FamilyData.ActualStockAllocation) || !double.IsNaN(appData.FamilyData.ActualBondAllocation) || !double.IsNaN(appData.FamilyData.ActualInternationalStockAllocation)) {
                                             <br/>
                                             <fieldset>
                                                 @((MarkupString)bold("Actual Asset allocation: "))
-                                                <span>&nbsp;@if(assetAllocationEditing) {} else {@FormatUtilities.formatPercent(familyData.ActualStockAllocation*100.0)} stocks / @FormatUtilities.formatPercent(familyData.ActualBondAllocation*100.0) bonds</span><br/>
+                                                <span>&nbsp;@if(assetAllocationEditing) {} else {@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation*100.0)} stocks / @FormatUtilities.formatPercent(appData.FamilyData.ActualBondAllocation*100.0) bonds</span><br/>
                                                 <span>&nbsp;&nbsp;Actual International allocation: </span>
-                                                <span>@FormatUtilities.formatPercent(familyData.ActualInternationalStockAllocation*100.0)</span><br/>
+                                                <span>@FormatUtilities.formatPercent(appData.FamilyData.ActualInternationalStockAllocation*100.0)</span><br/>
                                                 <span>&nbsp;&nbsp;Actual Cash allocation: </span>
-                                                <span>@FormatUtilities.formatPercent(familyData.ActualCashAllocation*100.0)</span><br/>
-                                                @if(familyData.ActualOtherAllocation > 0.0) {
+                                                <span>@FormatUtilities.formatPercent(appData.FamilyData.ActualCashAllocation*100.0)</span><br/>
+                                                @if(appData.FamilyData.ActualOtherAllocation > 0.0) {
                                                     <span>&nbsp;&nbsp;Actual Unclassified allocation: </span>
-                                                    <span>@FormatUtilities.formatPercent(familyData.ActualOtherAllocation*100.0)</span><br/>
+                                                    <span>@FormatUtilities.formatPercent(appData.FamilyData.ActualOtherAllocation*100.0)</span><br/>
                                                 }
                                             </fieldset>
                                         }
@@ -173,7 +172,7 @@
                                     <td>
                                         <a @onclick=editAccounts class="m-2" >✏️</a>
                                         @((MarkupString)bold("Current Retirement Assets:"))<br/>
-                                        @if (familyData.Accounts.Count > 0) {
+                                        @if (appData.FamilyData.Accounts.Count > 0) {
                                             if (appData.PortfolioView == null) { appData.PortfolioView = "by Ticker"; }
                                             <label>&nbsp;&nbsp;View:&nbsp;</label><InputSelect @bind-Value=appData.PortfolioView >
                                                 <option>@EditAccountsViewName</option>
@@ -191,7 +190,7 @@
                                             @switch (appData.PortfolioView) {
                                                 case EditAccountsViewName:
                                                     <table>
-                                                        @if (familyData.Accounts.Count > 0) {
+                                                        @if (appData.FamilyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
                                                                 <th style=padding-left:8px>Ticker</th>
                                                                 <th style=padding-left:8px;text-align:center>Quantity</th>
@@ -200,7 +199,7 @@
                                                             </tr>
                                                         }
                                                         @{var accountIndex = 0;}
-                                                        @foreach (var account in familyData.Accounts.OrderByDescending(a=>a.Value)) {
+                                                        @foreach (var account in appData.FamilyData.Accounts.OrderByDescending(a=>a.Value)) {
                                                             bool alternateRow2 = false;
                                                             int accBuffer = accountIndex;
                                                             accountIndex++;
@@ -225,11 +224,11 @@
                                                                 </tr>
                                                                 
                                                                 <tr style=color:white;background:black;padding-left:8px><td colspan=3>
-                                                                    @if (familyData.PersonCount == 2) {
+                                                                    @if (appData.FamilyData.PersonCount == 2) {
                                                                         <select style=margin-left:8px @ref=accountN @bind=account.Identifier>
                                                                             <option>our</option>
-                                                                            @for(int p=0;p<familyData.PersonCount;p++) {
-                                                                                <option>@familyData.People[p].PossessiveID</option>
+                                                                            @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
+                                                                                <option>@appData.FamilyData.People[p].PossessiveID</option>
                                                                             }
                                                                         </select>
                                                                     }
@@ -353,7 +352,7 @@
                                                                 </button>
                                                             </td>
                                                             <td style=text-align:right;padding-left:8px colspan=2>
-                                                                <b>@(FormatUtilities.formatMoney(familyData.Value))</b>
+                                                                <b>@(FormatUtilities.formatMoney(appData.FamilyData.Value))</b>
                                                                 @{var (change2,percentChange2) = portfolioChange();}
                                                                 <br/>change: <i>@((MarkupString)FormatUtilities.formatMoney(change2,true))</i>
                                                                 <br/>% change: <i>@((MarkupString)FormatUtilities.formatPercent3WithColor(percentChange2))</i>
@@ -364,7 +363,7 @@
                                                 case "by Ticker":
                                                     bool alternateRow = false;
                                                     <table>
-                                                        @if (familyData.Accounts.Count > 0) {
+                                                        @if (appData.FamilyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
                                                                 <th style=padding-left:8px>Ticker</th>
                                                                 <th style=padding-left:8px;text-align:center>Quantity</th>
@@ -372,12 +371,12 @@
                                                                 <th style=padding-left:8px;text-align:center>Balance</th>
                                                             </tr>
                                                         }
-                                                        @foreach (var investment in familyData.GroupedInvestments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.ValuePIN)) {
+                                                        @foreach (var investment in appData.FamilyData.GroupedInvestments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.ValuePIN)) {
                                                             string bgColor = alternateRow ? "white" : "lightgray";
                                                             <tr style=background-color:@bgColor>
                                                                 <td style=padding-left:8px;vertical-align:text-top title=@investment.Name>@investment.Ticker 
-                                                                    @if (investment.IsStock && (investment.ValuePIN > familyData.Value * .05)) {
-                                                                        <sub title='@FormatUtilities.formatMoney(familyData.Value*.05) is 5% of portfolio' style=background-color:yellow>&nbsp;&gt;5%</sub>
+                                                                    @if (investment.IsStock && (investment.ValuePIN > appData.FamilyData.Value * .05)) {
+                                                                        <sub title='@FormatUtilities.formatMoney(appData.FamilyData.Value*.05) is 5% of portfolio' style=background-color:yellow>&nbsp;&gt;5%</sub>
                                                                     }
                                                                 </td>
                                                                 <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatDoubleTwoDecimal(investment.SharesPIN)</td>
@@ -413,7 +412,7 @@
                                                                 }
                                                             </td>                                                            
                                                             <td style=text-align:right;padding-left:8px colspan=2>
-                                                                <b>@(FormatUtilities.formatMoney(familyData.Value))</b>
+                                                                <b>@(FormatUtilities.formatMoney(appData.FamilyData.Value))</b>
                                                                 @{var (change,percentChange) = portfolioChange();}
                                                                 <br/>change: <i>@((MarkupString)FormatUtilities.formatMoney(change,true))</i>
                                                                 <br/>% change: <i>@((MarkupString)FormatUtilities.formatPercent3WithColor(percentChange))</i>
@@ -423,13 +422,13 @@
                                                     break;
                                                 case "Accounts by Custodian":
                                                     <table>
-                                                        @if (familyData.Accounts.Count > 0) {
+                                                        @if (appData.FamilyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
                                                                 <th style=padding-left:8px>Custodian</th>
                                                                 <th style=padding-left:8px;text-align:center>Balance</th>
                                                             </tr>
                                                         }
-                                                        @{var groupByCustodian = familyData.Accounts
+                                                        @{var groupByCustodian = appData.FamilyData.Accounts
                                                             .GroupBy(a => a.Custodian)
                                                             .Select(g => new
                                                             {
@@ -448,7 +447,7 @@
                                                                 </td>
                                                             </tr>
                                                             bool alternateRow4 = false;
-                                                            @foreach (var account in familyData.Accounts.OrderByDescending(a=>a.Value))
+                                                            @foreach (var account in appData.FamilyData.Accounts.OrderByDescending(a=>a.Value))
                                                             {
                                                                 if (account.Custodian == group.Custodian) {
                                                                     string bgColor = alternateRow4 ? "white" : "lightgray";
@@ -476,7 +475,7 @@
                                                                     <a href="/updating-portfolio">Update quotes</a>
                                                                 }
                                                             </td>
-                                                            <td style=text-align:right;padding-left:8px><hr/><b>@(FormatUtilities.formatMoney(familyData.Value))</b></td>
+                                                            <td style=text-align:right;padding-left:8px><hr/><b>@(FormatUtilities.formatMoney(appData.FamilyData.Value))</b></td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan=2 style=text-align:right;padding-left:8px>
@@ -490,7 +489,7 @@
                                                 case "Accounts by Tax Type":
                                                     var showFootnotes = new bool[4];
                                                     <table>
-                                                        @if (familyData.Accounts.Count > 0) {
+                                                        @if (appData.FamilyData.Accounts.Count > 0) {
                                                             <tr style=vertical-align:bottom>
                                                                 <th>Tax-Type</th>
                                                                 <th style=padding-left:8px;text-align:center>Unrealized<br/>Earned Income</th>
@@ -498,7 +497,7 @@
                                                                 <th style=padding-left:8px;text-align:center>Balance</th>
                                                             </tr>
                                                         }
-                                                        @{var groupByTaxType = familyData.Accounts
+                                                        @{var groupByTaxType = appData.FamilyData.Accounts
                                                             .GroupBy(a => a.TaxType)
                                                             .Select(g => new
                                                             {
@@ -560,7 +559,7 @@
                                                                 <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoneyNarrow(group.Value)</td>
                                                             </tr>
                                                             List<Investment> groupInvestments = new();
-                                                            @foreach (var account in familyData.Accounts.OrderByDescending(a=>a.Value))
+                                                            @foreach (var account in appData.FamilyData.Accounts.OrderByDescending(a=>a.Value))
                                                             {
                                                                 if (account.TaxType == group.TaxType) {
                                                                     string bgColor2 = alternateRow3 ? "white" : "lightgray";
@@ -619,7 +618,7 @@
                                                                     <a href="/updating-portfolio">Update quotes</a>
                                                                 }
                                                             </td>
-                                                            <td colspan=2 style=text-align:right;padding-left:8px><hr/><b>@(FormatUtilities.formatMoney(familyData.Value))</b></td>
+                                                            <td colspan=2 style=text-align:right;padding-left:8px><hr/><b>@(FormatUtilities.formatMoney(appData.FamilyData.Value))</b></td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan=4 style=text-align:right;padding-left:8px>
@@ -641,8 +640,8 @@
                                             <br/>
                                             <fieldset>
                                                 @((MarkupString)bold("Weighted Expense Ratio: "))
-                                                <span>&nbsp;@FormatUtilities.formatPercent3(familyData.OverallER) or @FormatUtilities.formatMoney(familyData.ExpensesTotal) /year</span>
-                                                @if (familyData.InvestmentsMissingER > 0){<br/><span>&nbsp;(@familyData.InvestmentsMissingER investment(s) missing ER)</span><br/>}
+                                                <span>&nbsp;@FormatUtilities.formatPercent3(appData.FamilyData.OverallER) or @FormatUtilities.formatMoney(appData.FamilyData.ExpensesTotal) /year</span>
+                                                @if (appData.FamilyData.InvestmentsMissingER > 0){<br/><span>&nbsp;(@appData.FamilyData.InvestmentsMissingER investment(s) missing ER)</span><br/>}
                                             </fieldset>
                                         }
                                         @if (appData.FamilyData.Accounts.Count == 0) {
@@ -666,487 +665,13 @@
             
             <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
         }
-        else
-        {
-            @foreach (var step in steps) {
-                @if (step.step == stepPath) {
-                    var firstStepIndex = 0;
-                    var lastStepIndex = steps.Length-1;
-                    var prevStep = step.number - 2 >= firstStepIndex ? steps[step.number - 2] : null;
-                    var nextStep = step.number <= lastStepIndex ? steps[step.number] : null;
-                    string prevPage = folderName + prevStep?.step;
-                    string nextPage = folderName + nextStep?.step;
-
-                    <div style=float:left>
-                        <h4 style="max-width:450px">
-                            <NavLink href=@pagePath>@pageHeading</NavLink> &gt; @step.title (@step.number)<br/>
-                        </h4>
-                        <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
-                        <hr/>
-                    </div>
-                    <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
-
-                    <p class="article" style=clear:left>@((MarkupString)markupize(step.summary))</p>
-
-                        @switch (step.step) {
-                            case "emergency-fund":
-                                <p><b>Worksheet:</b> </p>
-
-                                <EditForm Model="familyData" style=margin-left:25px>
-                                    <label>Current Emergency Fund:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/><br/><br/>
-                                    <label>➗ Monthly Expenses:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /><br/><br/>
-                                    <hr style=width:300px />
-                                    <div style=text-align:right;width:275px>@familyData.EmergencyFund.CurrentMonthsString months</div>
-                                    @if(familyData.EmergencyFund.CurrentMonths == null && familyData.EmergencyFund.CurrentBalance != null) {
-                                        <br/><br/>
-                                        <InputCheckbox id=ShowDollars @bind-Value=familyData.EmergencyFund.ShowDollars /> <label for=ShowDollars>Only publish amount, since I haven't yet estimated monthly expenses</label><br/>
-                                        <span>(Months is MORE useful than a dollar amount.)</span>
-                                    }
-                                </EditForm><br/>
-                                break;
-                            case "debts":
-                                <p><b>Worksheet:</b> </p>
-                                <div>
-                                    <i>list of debts (all interest rates):</i><br/><br/>
-
-                                    @if (familyData.DebtFree == TriState.ChoiceNeeded || familyData.DebtFree == TriState.True) {
-                                        <label style="display:inline" for=debtFree>Debt free:</label> <InputSelect @bind-Value=familyData.DebtFree id=debtFree>
-                                        @foreach (var option in Enum.GetValues<TriState>()) {
-                                            <option value="@option">@option</option>
-                                        }
-                                        </InputSelect><br/>
-                                        <br/>
-                                    }
-
-                                    <EditForm Model="familyData">
-
-                                        <table>
-                                            <thead>
-                                            <th style="width:150px"><label>name</label></th>
-                                            <th style="width:150px"><label>total $</label></th>
-                                            <th style="width:100px"><label>interest %</label></th>
-                                            <th>rate</th>
-                                            <th><label></label></th>
-                                            </thead>
-                                            @for (var i=0;i<familyData.Debts.Count;i++) {
-                                                var debt = familyData.Debts[i];
-                                                int debtBuffer = i;
-                                                <tr>
-                                                <td><input style=width:100% type=text class=dollar @bind-Value=debt.Name @bind-Value:event=oninput placeholder='description'/></td>
-                                                <td><input style=width:100% type=text class=dollar @bind-Value=debt.Total @bind-Value:event=oninput placeholder='amount owed'/></td>
-                                                <td><input style=width:100% type=text class=dollar @bind-Value=debt.Rate @bind-Value:event=oninput placeholder='rate'/></td>
-                                                <td><span>@debt.Category</span></td>
-                                                <td><button @onclick=@(e=>RemoveDebt(e, debtBuffer))>❌ Debt</button></td>
-                                                </tr>
-                                            }
-                                        </table>
-                                        <br/>
-                                        <button @onclick=addDebt>➕ Debt</button>
-
-                                        <br/><br/>
-                                        <label>Amounts to Pay-Off (@step.title):</label><br/><br/>
-                                        High Interest: @FormatUtilities.formatMoney(familyData.HighDebts)<br/>
-                                        Medium Interest: @FormatUtilities.formatMoney(familyData.MediumDebts)<br/>
-                                        Low Interest: @FormatUtilities.formatMoney(familyData.LowDebts)<br/>
-                                        Unknown Interest: @FormatUtilities.formatMoney(familyData.UnknownDebts)<br/>
-                                        <br/>
-                                    </EditForm>
-                                </div>
-
-                                @code{
-                                    void RemoveDebt(MouseEventArgs e, int debtIndex) {
-                                        familyData.Debts.RemoveAt(debtIndex);
-                                    }
-                                    void addDebt()
-                                    {
-                                        familyData?.Debts.Add(new Debt());
-                                    }
-                                }
-                                break;
-                            case "tax-status":
-                                <p ><b>Worksheet:</b></p>
-                                <EditForm Model="familyData" style=margin-left:25px>
-                                    <label>Tax Filing Status:</label>
-                                    <select @bind=familyData.TaxFilingStatus>
-                                        <option value="ChoiceNeeded">ChoiceNeeded</option>
-                                        <option>Single</option>
-                                        <option value=MarriedFilingJointly>Married filing jointly</option>
-                                        <option value=MarriedFilingSeperately>Married filing seperately</option>
-                                        <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
-                                        <option value=HeadOfHousehold>Head of Household</option>
-                                    </select><br/>
-                                    <br/>
-    
-                                    <label>Target Year:</label> <select @bind=familyData.Year><option>2022</option><option>2023</option></select><br/>
-
-                                    @foreach (var taxFiler in familyData.AppData.IRSData.TaxRateData.TaxData.TaxFilers)
-                                    {
-                                        bool isMatch = false;
-                                        switch (familyData.TaxFilingStatus.ToString())
-                                        {
-                                            case "MarriedFilingSeperatelyAndLivingApart":
-                                                isMatch = taxFiler.TaxFilingStatus == "MarriedFilingSeperately";
-                                                break;
-                                            default:
-                                                isMatch = taxFiler.TaxFilingStatus == familyData.TaxFilingStatus.ToString();
-                                                break;
-                                        }
-                                        if (isMatch)
-                                        {
-                                            string? lastBracket = null;
-                                            int? lastStartAmount = null;
-
-                                            <br/>
-                                            <InputRadioGroup @bind-Value=familyData.FederalMarginalTaxBracket>
-                                                <label>Tax Bracket (@familyData.TaxFilingStatus):</label><br/>
-                                                <table style="margin-left:20px">
-                                                    <tr><th></th><th></th></tr>
-                                                @foreach (var taxBracket in taxFiler.TaxBrackets)
-                                                {
-                                                    if (lastBracket != null) {
-                                                        var elName = "bracket"+lastBracket.Substring(0,lastBracket.Length-2);
-                                                        <tr><td><InputRadio id=@elName Value='@lastBracket'/>&nbsp;<label for=@elName>@lastBracket</label></td><td style=padding-left:30px>@(lastStartAmount==1?"Up":FormatUtilities.formatMoney(lastStartAmount)) to @FormatUtilities.formatMoney(taxBracket.StartAmount)</td></tr>
-                                                    }
-                                                    lastBracket = taxBracket.Rate;
-                                                    lastStartAmount = taxBracket.StartAmount + 1;
-                                                }
-                                                    <tr><td><InputRadio Value='@lastBracket'/>&nbsp;@lastBracket</td><td style=padding-left:30px>Over @FormatUtilities.formatMoney(lastStartAmount-1)</td></tr>
-                                                </table>
-                                            </InputRadioGroup>
-                                        }
-                                    }
-
-                                    <br/><label>State of Residence:</label>
-                                    <select @bind=familyData.StateOfResidence>
-                                        <option value="ChoiceNeeded">ChoiceNeeded...</option><option value="AL">Alabama (AL)</option><option value="AK">Alaska (AK)</option><option value="AS">American Samoa (AS)</option><option value="AZ">Arizona (AZ)</option><option value="AR">Arkansas (AR)</option><option value="CA">California (CA)</option><option value="CO">Colorado (CO)</option><option value="CT">Connecticut (CT)</option><option value="DE">Delaware (DE)</option><option value="DC">District of Columbia (DC)</option><option value="FL">Florida (FL)</option><option value="GA">Georgia (GA)</option><option value="GU">Guam (GU)</option><option value="HI">Hawaii (HI)</option><option value="ID">Idaho (ID)</option><option value="IL">Illinois (IL)</option><option value="IN">Indiana (IN)</option><option value="IA">Iowa (IA)</option><option value="KS">Kansas (KS)</option><option value="KY">Kentucky (KY)</option><option value="LA">Louisiana (LA)</option><option value="ME">Maine (ME)</option><option value="MD">Maryland (MD)</option><option value="MA">Massachusetts (MA)</option><option value="MI">Michigan (MI)</option><option value="MN">Minnesota (MN)</option><option value="MS">Mississippi (MS)</option><option value="MO">Missouri (MO)</option><option value="MT">Montana (MT)</option><option value="NE">Nebraska (NE)</option><option value="NV">Nevada (NV)</option><option value="NH">New Hampshire (NH)</option><option value="NJ">New Jersey (NJ)</option><option value="NM">New Mexico (NM)</option><option value="NY">New York (NY)</option><option value="NC">North Carolina (NC)</option><option value="ND">North Dakota (ND)</option><option value="CM">Northern Mariana Islands (CM)</option><option value="OH">Ohio (OH)</option><option value="OK">Oklahoma (OK)</option><option value="OR">Oregon (OR)</option><option value="PA">Pennsylvania (PA)</option><option value="PR">Puerto Rico (PR)</option><option value="RI">Rhode Island (RI)</option><option value="SC">South Carolina (SC)</option><option value="SD">South Dakota (SD)</option><option value="TN">Tennessee (TN)</option><option value="TX">Texas (TX)</option><option value="VI">U.S. Virgin Islands (VI)</option><option value="UT">Utah (UT)</option><option value="VT">Vermont (VT)</option><option value="VA">Virginia (VA)</option><option value="WA">Washington (WA)</option><option value="WV">West Virginia (WV)</option><option value="WI">Wisconsin (WI)</option><option value="WY">Wyoming (WY)</option>
-                                    </select>
-                                    <br/><br/>
-
-                                    <label>State Marginal Tax Rate:</label> <input style=width:50px;text-align:right class=dollar type=text @bind-Value="familyData.StateMarginalTaxBracket" @bind-Value:event="oninput"/>%<br/><br/>
-                                    <br/><br/>
-                                </EditForm>
-                                <br/>
-                                break;
-                            case "people":
-                                <p><b>Worksheet:</b> </p>
-
-                                break;
-                            case "asset-allocation":
-                                <p><b>Worksheet:</b> </p>
-
-                                <EditForm Model="familyData" style=margin-left:25px>
-                                    <label>Desired Asset Allocation:</label><br/>
-                                    <label>Stock:</label> <input style=width:50px;text-align:right type=text @bind-Value=familyData.Stocks @bind-Value:event=oninput />%<br/>
-                                    <label>Bond:</label> <input style=width:50px;text-align:right type=text @bind-Value=familyData.Bonds @bind-Value:event=oninput />%<br/>
-                                    <hr/>
-                                    <label>Desired International allocation (% of Stock):</label><br/>
-                                    <label>International:</label> <input style=width:50px;text-align:right type=text @bind-Value=familyData.International @bind-Value:event=oninput />%<br/>
-                                </EditForm><br/>
-                                break;
-                            case "available-funds":
-                                <td>
-                                    <label>Account</label>
-                                    <select @bind=currentAccountIndex>
-                                        <option>Choose Account...</option>
-                                        @for (int i=0;i<familyData.Accounts.Count;i++) {
-                                            var account = familyData.Accounts[i];
-                                            <option value=@i>
-                                                @account.FullName
-                                            </option>
-                                        }
-                                    </select>
-                                    <br/>
-
-                                     @if(currentAccountIndex != null && currentAccountIndex != "Choose Account...") {
-                                        int index = int.Parse(currentAccountIndex);
-                                        var currentAccount = familyData.Accounts[index];
-                                        for (int i=0;i < currentAccount.AvailableFunds.Count; i++) {
-                                            var investment = currentAccount.AvailableFunds[i];
-                                            int invBuffer = i;
-                                            <div style=margin-top:10px;margin-left:80px;padding-left:3em;text-indent:-3em;>
-                                                <button @onclick='@(e=>deleteAvailableFund(e,currentAccount,invBuffer))'>❌</button>
-                                                <input @ref=tickerN style="width:70px;text-transform: uppercase;" type=text @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/>
-                                            </div>
-                                            <div style=margin-left:85px>
-                                                <input type=text @bind-Value=investment.Name @bind-Value:event=oninput placeholder='investment fullname' />
-                                                &nbsp;(
-                                                    <input style="width:70px" type=text @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput placeholder='expense ratio'/>
-                                                %)
-                                            </div>
-                                        }
-                                        <br/>
-                                        <button style=margin-left:80px @onclick='@(e=>addAvailableFund(e,currentAccount))'>➕</button>
-                                    }
-                                </td>
-                                break;
-                            case "additional-background":
-                                <td>
-                                    <textarea style=width:600px;height:300px @bind-Value=familyData.AdditionalBackground @bind-Value:event=oninput placeholder='additional background information'>
-                                        @familyData.AdditionalBackground
-                                    </textarea>
-                                </td>
-                                break;
-                            case "questions":
-                                <td>
-                                    @for (int i = 0; i < familyData.Questions.Count; i++) {
-                                        int iBuffer = i;
-                                        <label >@(i+1 + ". ")</label> 
-                                        <textarea style=width:500px;vertical-align:top @bind-Value=familyData.Questions[iBuffer] @bind-Value:event="oninput" placeholder="ask question">
-                                            @familyData.Questions[iBuffer]
-                                        </textarea>
-                                        <br/>
-                                        <br/>
-                                    }
-                                    <br/>
-                                        <button style=margin-left:80px @onclick=addQuestion>➕ Question</button>
-                                    <br/>
-                                    @code {
-                                        void addQuestion() {
-                                            familyData.Questions.Add("");
-                                        }
-                                    }
-                                </td>
-                                break;                                
-                            case "retirement-assets":
-                                @if(appData.ImportResult == null) {
-                                    <u><b>Current Retirement Assets:</b></u><br/>
-
-                                    var accountIndex = 0;
-                                    @foreach (var account in familyData.Accounts) {
-                                        int accBuffer = accountIndex;
-                                        accountIndex++;
-                                        var accountId = "account"+accBuffer;
-                                        <br/>
-                                        <div style=padding-left:3em;text-indent:-3em;>
-                                            <button @onclick='@(e=>deleteAccount(e,accBuffer))'>❌</button>
-                                            @if (familyData.PersonCount == 2) {
-                                            <select @ref=accountN @bind=account.Identifier>
-                                                <option>our</option>
-                                                @for(int p=0;p<familyData.PersonCount;p++)
-                                                {
-                                                    <option>@familyData.People[p].PossessiveID</option>
-                                                }
-                                            </select>
-                                            }
-                                            <select @ref=accountN @bind=account.AccountType>
-                                                <option>Account Type...</option>
-                                                <option>401k</option>
-                                                <option>403b</option>
-                                                <option>457b</option>
-                                                <option>529</option>
-                                                <option>Annuity (Non-Qualified)</option>
-                                                <option>Annuity (Qualified)</option>
-                                                <option>Brokerage</option>
-                                                <option>HSA</option>
-                                                <option>Inherited IRA</option>
-                                                <option>Inherited Roth IRA</option>
-                                                <option value="Traditional IRA">IRA</option>
-                                                <option>Life Insurance</option>
-                                                <option>Refundable Deposit</option>
-                                                <option>Rollover IRA</option>
-                                                <option>Roth 401k</option>
-                                                <option>Roth IRA</option>
-                                                <option>SEP IRA</option>
-                                                <option>SIMPLE IRA</option>
-                                                <option>Solo 401k</option>
-                                                <option>Taxable</option>
-                                                <option>Traditional IRA</option>
-                                            </select>
-                                            <span> at <input style="width:140px" type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' /></span><br/>
-                                            <span><label for=@accountId>Note: </label><input id=@accountId type=text @bind-value=account.Note @bind-value:event=oninput placeholder='account note'/></span>
-                                        </div>
-                                        
-                                        investmentIndex = 0;
-                                        @foreach (var investment in account.Investments) {
-                                            int invBuffer = investmentIndex;
-                                            investmentIndex++;
-                                            <div style=margin-top:10px;margin-left:20px;padding-left:3em;text-indent:-3em;>
-                                                <button @onclick='@(e=>deleteInvestment(e,accBuffer,invBuffer))'>❌</button>
-                                                <input @ref=tickerN style="width:70px;text-transform: uppercase;" type=text @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/>
-                                                $<input style="width:140px" type=text @bind-Value=investment.Price @bind-Value:event=oninput placeholder='' />
-                                                ✖️ <input style="width:140px" type=text @bind-Value=investment.SharesPIN @bind-Value:event=oninput placeholder='' /> shares
-                                                🟰 $<input style=width:100px type=text @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/>
-                                                <br/>
-                                            </div>
-                                        }
-                                        <button style=margin-left:20px @onclick='@(e=>addInvestment(e,accBuffer))'>➕</button>
-                                        <hr style=margin-left:40px/>
-                                        <div style=margin-left:40px>Account Total: @FormatUtilities.formatMoney(account.Value)</div>
-                                    }
-                                    <br/>
-                                    <hr/>
-                                    <div>Portfolio Size: @FormatUtilities.formatMoney(familyData.Value)</div>
-                                    <br/>
-                                    <div>
-                                        <button @onclick=addAccount>➕ Account</button> to manually enter another Account's info.
-                                    </div>
-                                    <br/>
-                                    <div>
-                                        <button @onclick=ShowImport>
-                                            @if(showImport){<span>Hide</span>}
-                                            Import Accounts
-                                        </button> to import Account info from a CSV/XLSX file.
-                                        @if(showError){<br/><br/><span style=color:red>ERROR: must be a CSV file from Ameriprise, eTrade, Fidelity, Merrill Edge, Schwab, or Vanguard or a XLSX file from Morgan Stanley.</span><br/>}
-                                        @if(showImport){
-                                            <br/>
-                                            <fieldset style=margin-left:20px>
-                                                <span>Download portfolio details from custodian website, and then "choose file", to import: </span><br/>
-                                                <InputFile multiple accept=".csv,.xlsx" OnChange="@((e) => OnDataFilesImport(e))" /><br/>
-                                                <ul>
-                                                    <li>Currently supports importing Ameriprise, eTrade, Fidelity, Merrill Edge, Morgan Stanley, Schwab, or Vanguard data files</li>
-                                                    <li>If your custodian's format isn't supported yet, we're happy to try to add support. If you can share your custodian's downloaded CSV file format (feel free to anonymize/change the data), please email it to suggestions@bogle.tools with details on what custodian it is from.</li>
-                                                    <li>CAUTION: only share personal info (like these files) to apps worthy of your trust!</li>
-                                                </ul>
-                                            </fieldset>
-                                        }
-                                    </div>
-                                    <br/>
-
-                                    @if(familyData.Value > 0) {
-                                    <br/>
-                                    <div>Preferred technique to represent the approximate size of your total portfolio (in <NavLink href="/portfolio">portfolio review</NavLink>):</div>
-                                    <InputRadioGroup @bind-Value=familyData.ValueStyle>
-                                        <InputRadio id=rounded Value='0' /> <label for=rounded>@FormatUtilities.formatMoneyThousands(familyData.Value)</label> <br/>
-                                        <InputRadio id=estimate Value='1' /> <label for=estimate>@estimatePortfolio(familyData)</label> <br/>
-                                        <InputRadio id=dollar Value='2' /> <label for=dollar>@FormatUtilities.formatMoney(familyData.Value)</label> <br/>
-                                    </InputRadioGroup>
-                                    }
-                                } else {
-                                    <EditForm Model=@appData.ImportResult>
-                                        <div>Data Files Contains These Accounts/Investments - Choose Which to Import:</div>
-                                        <br/>
-                                        <button @onclick=finishImport>Import selected accounts</button>
-                                        <button @onclick=cancelImport>Cancel Import</button>
-                                        <br/>
-                                        <br/>
-
-                                        @foreach (var error in appData.ImportResult.Errors)
-                                        {
-                                            <div style=font-weight:bold>Error: @error.Exception.Message</div>
-                                            @if(error.Exception.InnerException!=null){ <div>Failure location: <br/>@error.Exception.InnerException.StackTrace<br/><br/></div>};
-                                        }
-
-                                        <div><InputCheckbox @bind-Value=appData.ImportResult.ImportUpdatedAccounts /> UPDATE these EXISTING accounts in your data file:</div>
-                                        @foreach (var account in appData.ImportResult.UpdatedAccounts)
-                                        {
-                                            <div style=margin-left:40px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)</div>
-                                            @foreach (var investment in account.Investments)
-                                            {
-                                                <div style=margin-left:80px>@investment.Name (@investment.Ticker) @(investment.SharesPIN) shares =&gt; @FormatUtilities.formatMoney(investment.ValuePIN)</div>
-                                            }
-                                        }
-
-                                        <br/>
-                                        <div><InputCheckbox @bind-Value=appData.ImportResult.ImportNewAccounts /> ADD these NEW accounts in your data file:</div>
-                                        @foreach (var account in appData.ImportResult.NewAccounts)
-                                        {
-                                            <div style=margin-left:40px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)</div>
-                                            @foreach (var investment in account.Investments)
-                                            {
-                                                <div style=margin-left:80px>@investment.Name (@investment.Ticker) @(investment.SharesPIN) shares =&gt; @FormatUtilities.formatMoney(investment.ValuePIN)</div>
-                                            }
-                                        }
-                                    </EditForm>
-                                }
-                                break;
-                            case "contributions":
-                                <div>
-                                    Edit Savings Contribution at: <a href="/saving">/saving</a><br/><br/>
-
-                                    <span>
-                                        @((MarkupString)boldUnderline("Contributions:"))
-                                    </span><br/>
-                                    @if (familyData.PlannedSavings > 0) {
-                                        <span>Planned savings: @FormatUtilities.formatMoney(familyData.PlannedSavings)</span><br/><br/>
-                                    }
-
-                                    <span>Prioritized Investments:</span><br/>
-
-                                    @if (familyData.EmergencyFund.AmountToSave > 0) {
-                                        <span>@FormatUtilities.formatMoney(familyData.EmergencyFund.AmountToSave) in Emergency Fund</span><br/>
-                                        @((MarkupString)checkTotal(familyData.EmergencyFund.AmountToSave))
-                                    }
-                                    @if (familyData.PersonCount > 0 && familyData.People[0].EmployerPlan.AmountToSaveForMatch > 0) {
-                                        <span>@FormatUtilities.formatMoney(familyData.People[0].EmployerPlan.AmountToSaveForMatch) in @familyData.People[0].PossessiveID 401k (Match: @FormatUtilities.formatMoney(familyData.People[0].EmployerPlan.MatchAmount))</span><br/>
-                                        @((MarkupString)checkTotal(familyData.People[0].EmployerPlan.AmountToSaveForMatch))
-                                    }
-                                    @if (familyData.PersonCount > 1 && familyData.People[1].EmployerPlan.AmountToSaveForMatch > 0) {
-                                        <span>@FormatUtilities.formatMoney(familyData.People[1].EmployerPlan.AmountToSaveForMatch) in @familyData.People[1].PossessiveID 401k (Match: @FormatUtilities.formatMoney(familyData.People[1].EmployerPlan.MatchAmount))</span><br/>
-                                        @((MarkupString)checkTotal(familyData.People[1].EmployerPlan.AmountToSaveForMatch))
-                                    }
-                                    @if (familyData.HighDebts > 0) {
-                                        <span>@familyData.HighDebts in High Debts</span><br/>
-                                        @((MarkupString)checkTotal(familyData.HighDebts))
-                                    }
-                                    @if (familyData.PersonCount > 0  && (familyData.People[0].EmployerBenefits.Complete || familyData.People[0].EmployerPlan.AnnualSalary == 0 || familyData.People[0].HealthSavingsAccount.EligibleForHSA  || familyData.People[0].HealthSavingsAccount.EligibleForHSACatchUpOnly) && familyData.People[0].HealthSavingsAccount.AmountToSave > 0) {
-                                        <span>@FormatUtilities.formatMoney(familyData.People[0].HealthSavingsAccount.AmountToSave) in @familyData.People[0].PossessiveID HSA (Employer: @FormatUtilities.formatMoney(familyData.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
-                                        @((MarkupString)checkTotal(familyData.People[0].HealthSavingsAccount.AmountToSave))
-                                    }
-                                    @if (familyData.PersonCount > 1  && (familyData.People[1].EmployerBenefits.Complete || familyData.People[1].EmployerPlan.AnnualSalary == 0 || familyData.People[1].HealthSavingsAccount.EligibleForHSA  || familyData.People[1].HealthSavingsAccount.EligibleForHSACatchUpOnly) && familyData.People[1].HealthSavingsAccount.AmountToSave > 0) {
-                                        <span>@FormatUtilities.formatMoney(familyData.People[1].HealthSavingsAccount.AmountToSave) in @familyData.People[1].PossessiveID HSA (Employer: @FormatUtilities.formatMoney(familyData.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
-                                        @((MarkupString)checkTotal(familyData.People[1].HealthSavingsAccount.AmountToSave))
-                                    }
-                                    @if (familyData.AdjustedGrossIncome != null) {
-                                        if (familyData.PersonCount > 0) {
-                                            <span>@((MarkupString)GetRecommendedIRAMarkup(familyData.People[0]))</span><br/>
-                                            @((MarkupString)checkTotal(GetRecommdedIRAAmount(familyData.People[0])))
-                                        }
-                                        if(familyData.PersonCount > 1) {
-                                            <span>@((MarkupString)GetRecommendedIRAMarkup(familyData.People[1]))</span><br/>
-                                            @((MarkupString)checkTotal(GetRecommdedIRAAmount(familyData.People[1])))
-                                        }
-                                    }
-                                    @if (familyData.PersonCount > 0 && familyData.People[0].EmployerPlan.AmountToSaveForNonMatched > 0) {
-                                        <span>@FormatUtilities.formatMoney(familyData.People[0].EmployerPlan.AmountToSaveForNonMatched) in @familyData.People[0].PossessiveID 401k</span><br/>
-                                        @((MarkupString)checkTotal(familyData.People[0].EmployerPlan.AmountToSaveForNonMatched))
-                                    }
-                                    @if (familyData.PersonCount > 1 && familyData.People[1].EmployerPlan.AmountToSaveForNonMatched > 0) {
-                                        <span>@FormatUtilities.formatMoney(familyData.People[1].EmployerPlan.AmountToSaveForNonMatched) in @familyData.People[1].PossessiveID 401k</span><br/>
-                                        @((MarkupString)checkTotal(familyData.People[1].EmployerPlan.AmountToSaveForNonMatched))
-                                    }
-                                    @if (familyData.PersonCount > 0 && familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
-                                        <span>@FormatUtilities.formatMoney(familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyData.People[0].PossessiveID mega backdoor roth</span><br/>
-                                        @((MarkupString)checkTotal(familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
-                                    }
-                                    @if (familyData.PersonCount > 1 && familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
-                                        <span>@FormatUtilities.formatMoney(familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyData.People[1].PossessiveID mega backdoor roth</span><br/>
-                                        @((MarkupString)checkTotal(familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
-                                    }
-                                    @if (familyData.MediumDebts > 0) {
-                                        <span>@FormatUtilities.formatMoney(familyData.MediumDebts) in Medium Debts</span><br/>
-                                        @((MarkupString)checkTotal(familyData.MediumDebts))
-                                    }
-                                    @if (familyData.PlannedSavings > runningTotal) {
-                                        <span>@FormatUtilities.formatMoney(familyData.PlannedSavings-runningTotal) in Taxable</span><br/>
-                                        @((MarkupString)checkTotal(familyData.PlannedSavings-runningTotal))
-                                    } else {
-                                        <span>@FormatUtilities.formatMoney(0) in Taxable</span><br/>
-                                    }
-                                    @if (familyData.LowDebts > 0) {
-                                        <span>@FormatUtilities.formatMoney(familyData.LowDebts) in Low Debts</span><br/>
-                                        @((MarkupString)checkTotal(familyData.LowDebts))
-                                    }
-                                    <br/>
-                                </div>
-                                break;
-                        }
-                    <p>
-                        @if(step.description != "") {
-                            <b>Details:</b> <span>@((MarkupString)markupize(step.description))</span>
-                        }
-                    </p>
-
-                    <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
-                }
-            }
-        }
     }
 
 @code {
 
     async void doneEditing()
     {
-        var accounts = familyData.Accounts;
+        var accounts = appData.FamilyData.Accounts;
         foreach (var account in accounts) {
             account.Edit = false;
         }
@@ -1158,7 +683,7 @@
 
     void editAccount(MouseEventArgs e, int index)
     {
-        var accounts = familyData.Accounts.OrderByDescending(a=>a.Value).ToList();
+        var accounts = appData.FamilyData.Accounts.OrderByDescending(a=>a.Value).ToList();
         if (accountIndexEditing != null) {
             accounts[accountIndexEditing.Value].Edit = false;            
         }
@@ -1198,10 +723,10 @@
     public string checkTotal(int? itemTotal) {
         runningTotal += itemTotal ?? 0;
         if (!pastTotal) {
-            pastTotal = familyData.PlannedSavings <= runningTotal;
+            pastTotal = appData.FamilyData.PlannedSavings <= runningTotal;
 
             if (pastTotal) {
-                return "<div>-------<br/><div>Planned savings " + (familyData.PlannedSavings==runningTotal?"met":"exceeded") + " after " + FormatUtilities.formatMoney(itemTotal+(familyData.PlannedSavings-runningTotal)) + " towards previous step</div>-------<br/></div>";
+                return "<div>-------<br/><div>Planned savings " + (appData.FamilyData.PlannedSavings==runningTotal?"met":"exceeded") + " after " + FormatUtilities.formatMoney(itemTotal+(appData.FamilyData.PlannedSavings-runningTotal)) + " towards previous step</div>-------<br/></div>";
             }
         }
 
@@ -1259,29 +784,29 @@
 
     public string estimatePortfolio(FamilyData familyData) 
     {
-        if (familyData.Value >= 10000000) {
+        if (appData.FamilyData.Value >= 10000000) {
             return "8-figures";
-        } else if (familyData.Value >= 6666666) {
+        } else if (appData.FamilyData.Value >= 6666666) {
             return "high 7-figures";
-        } else if (familyData.Value >= 3333333) {
+        } else if (appData.FamilyData.Value >= 3333333) {
             return "mid 7-figures";
-        } else if (familyData.Value >= 1000000) {
+        } else if (appData.FamilyData.Value >= 1000000) {
             return "low 7-figures";
-        } else if (familyData.Value >= 666666) {
+        } else if (appData.FamilyData.Value >= 666666) {
             return "high 6-figures";
-        } else if (familyData.Value >= 333333) {
+        } else if (appData.FamilyData.Value >= 333333) {
             return "mid 6-figures";
-        } else if (familyData.Value >= 100000) {
+        } else if (appData.FamilyData.Value >= 100000) {
             return "low 6-figures";
-        } else if (familyData.Value >= 66666) {
+        } else if (appData.FamilyData.Value >= 66666) {
             return "high 5-figures";
-        } else if (familyData.Value >= 33333) {
+        } else if (appData.FamilyData.Value >= 33333) {
             return "mid 5-figures";
-        } else if (familyData.Value >= 10000) {
+        } else if (appData.FamilyData.Value >= 10000) {
             return "low 5-figures";
-        } else if (familyData.Value >= 1000) {
+        } else if (appData.FamilyData.Value >= 1000) {
             return "4-figures";
-        } else if (familyData.Value == 0) {
+        } else if (appData.FamilyData.Value == 0) {
             return "-";
         } else {
             return "less than $1,000";
@@ -1414,7 +939,6 @@
     private const string pageHeading = "Portfolio Tracker";
     private bool focusTicker = false;
     private bool focusAccount = false;
-    private bool showPortfolioAnalysis = true;
 
     private FamilyData familyData {
         get {
@@ -1434,8 +958,6 @@
 
     private ElementReference tickerN;
     private ElementReference accountN;
-    private bool showImport = false;
-    private bool showError  = false;
 
     private void ShowImport() {
         @* showImport = !showImport;
@@ -1495,21 +1017,6 @@
             await UpdateInvestmentPrice(investment);
         }
     }
-    
-    private async Task OnDataFilesImport(InputFileChangeEventArgs e)
-    {
-        var files = e.GetMultipleFiles();
-        appData.ImportResult = await Importer.ImportDataFiles(files, Funds, familyData.Accounts, familyData.PIN);
-        foreach (var account in appData.ImportResult.ImportedAccounts) 
-        {
-            account.Import = true;
-        }
-
-        Console.WriteLine($"{appData.ImportResult.DataFilesImported} files imported with {appData.ImportResult.ImportedAccounts.Count} accounts");
-        showImport = false;
-
-        Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
-    }
 
     private void finishImport()
     {
@@ -1528,7 +1035,7 @@
         {
             if (newAccount.Import)
             {
-                familyData.Accounts.Add(newAccount);
+                appData.FamilyData.Accounts.Add(newAccount);
             }
         }
 
@@ -1543,28 +1050,28 @@
     private void addInvestment(MouseEventArgs e, int accountIndex)
     {
         var newInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds };
-        familyData.Accounts[accountIndex].Investments.Add(newInvestment);
+        appData.FamilyData.Accounts[accountIndex].Investments.Add(newInvestment);
         focusTicker = true;
     }
 
     private void addInvestment2(MouseEventArgs e, int accountIndex) {
-        var account = familyData.Accounts.OrderByDescending(a=>a.Value).ToList()[accountIndex];
+        var account = appData.FamilyData.Accounts.OrderByDescending(a=>a.Value).ToList()[accountIndex];
         account.Investments.Add(new Investment(appData.FamilyData.PIN) { funds = Funds });
     }
 
     void deleteInvestment2(MouseEventArgs e, int accountIndex, int investmentIndex)
     {
-        var account = familyData.Accounts.OrderByDescending(a=>a.Value).ToList()[accountIndex];
+        var account = appData.FamilyData.Accounts.OrderByDescending(a=>a.Value).ToList()[accountIndex];
         var investmentToDelete = account.Investments.OrderByDescending(i=>i.Value).ToList()[investmentIndex];
         account.Investments.Remove(investmentToDelete);
-        familyData.UpdatePercentages();
+        appData.FamilyData.UpdatePercentages();
     }
 
     void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
     {
-        familyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
+        appData.FamilyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
         Navigation.NavigateTo("/portfolio/reload");
-        familyData.UpdatePercentages();
+        appData.FamilyData.UpdatePercentages();
     }
     void addAvailableFund(MouseEventArgs e, Account account)
     {
@@ -1589,10 +1096,10 @@
 
     private async void deleteAccount2(MouseEventArgs e, int accountIndex)
     {
-        var accountToDelete = familyData.Accounts.OrderByDescending(a=>a.Value).ToList()[accountIndex];
-        familyData.Accounts.Remove(accountToDelete);
+        var accountToDelete = appData.FamilyData.Accounts.OrderByDescending(a=>a.Value).ToList()[accountIndex];
+        appData.FamilyData.Accounts.Remove(accountToDelete);
         accountIndexEditing = null;
-        familyData.UpdatePercentages();
+        appData.FamilyData.UpdatePercentages();
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
     }
 
@@ -1606,9 +1113,9 @@
     }
     void deleteAccount(MouseEventArgs e, int accountIndex)
     {
-        familyData.Accounts.RemoveAt(accountIndex);
+        appData.FamilyData.Accounts.RemoveAt(accountIndex);
         Navigation.NavigateTo("/portfolio/reload");
-        familyData.UpdatePercentages();
+        appData.FamilyData.UpdatePercentages();
     }
 
     private async Task LoadPortfolioForTopic(string topicStr) {
@@ -1621,7 +1128,7 @@
             };
         var topicJsonUri = "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/portfolios/" + topicStr + ".json";
         var stream = await Http.GetStreamAsync(topicJsonUri);
-        familyData = await FamilyData.LoadFromJsonStream(appData, stream, options);
+        appData.FamilyData = await FamilyData.LoadFromJsonStream(appData, stream, options);
     }
 
     private async Task CopyTextToClipboard()
@@ -1644,7 +1151,7 @@
         var marketIsBeforeOpen = DateTime.Now < nextMarketOpen;
         bool marketIsOpen = DateTime.Now >= nextMarketOpen && DateTime.Now <= nextMarketClose;
         var marketIsAfterClose = DateTime.Now > nextMarketClose;
-        foreach (var account in familyData.Accounts)
+        foreach (var account in appData.FamilyData.Accounts)
         {
             foreach (var investment in account.Investments)
             {
@@ -1655,7 +1162,7 @@
                     fetchQuote = investment.LastUpdated == null || investment.LastUpdated?.Date != previousMarketClose.Date;
                 }
 
-                if (fetchQuote) {
+                if (fetchQuote && investment.Ticker != null) {
                     if (!quotes.ContainsKey(investment.Ticker)) {
                         quotes.Add(investment.Ticker, new List<Investment> () { investment });
                     } else {
@@ -1663,6 +1170,22 @@
                         investments.Add(investment);
                     }
                 }
+            }
+        }
+
+        List<string> rsuTickers = new();
+        for(int p=0;p<appData.FamilyData.PersonCount;p++) {
+            var person = appData.FamilyData.People[p];
+            foreach (var rsuGrant in person.RSUGrants) {
+                var ticker = rsuGrant.Ticker.ToUpper();
+                var grantInvestment = new Investment() { Ticker = ticker, GrantToUpdateQuote = rsuGrant };
+                if (!quotes.ContainsKey(ticker)) {
+                    quotes.Add(ticker, new List<Investment> () { grantInvestment });
+                } else {
+                    var investments = quotes[ticker];
+                    investments.Add(grantInvestment);
+                }
+                Console.WriteLine($"grantInvestment Count: {quotes[ticker].Count}");
             }
         }
 
@@ -1727,7 +1250,7 @@
     private int? PINEntry { get; set; }
     private void setPIN() {
         if (PINEntry != null) {
-            familyData.PIN = PINEntry;
+            appData.FamilyData.PIN = PINEntry;
         }
     }
 
@@ -1761,7 +1284,7 @@
     {
         double? change = 0.0;
         double? total = 0.0;
-        foreach (var investment in familyData.GroupedInvestments)
+        foreach (var investment in appData.FamilyData.GroupedInvestments)
         {
             total += investment.Value ?? 0.0;
             if (investment.PercentChange != null)
