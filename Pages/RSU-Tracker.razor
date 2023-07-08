@@ -1,4 +1,5 @@
 @page "/rsu-tracker"
+@page "/rsu-tracker/{View}"
 @inject HttpClient Http
 @inject IAppData appData
 @inject IRSData irsData
@@ -12,6 +13,21 @@
 </PageTitle>
 
 <style>
+    .mainTable {
+        border-collapse: collapse;
+        border-top: 1px solid rgba(0,0,0,0.2);
+    }
+    .mainTable thead tr th{
+        border-bottom: 1px solid #000000;
+    }
+    .mainTable th, .mainTable td {
+        border-left: 1px solid rgba(0,0,0,0.2);
+        border-right: 1px solid rgba(0,0,0,0.2);
+    }
+    .mainTable th, .mainTable td{ /* Added padding for better layout after collapsing */
+        padding: 4px 8px;
+    }
+
     .btn {
         color: white;
         padding: 10px 10px;
@@ -62,185 +78,187 @@
         <input style=width:50px;text-align:right type=text @bind-Value=PINEntry @bind-Value:event=oninput />
         <button @onclick=setPIN>Go</button>
     } else {
-        if (stepPath == null) {
-            var prevStep = steps[steps.Length - 1];
-            var nextStep = steps[0];
-            string prevPage = folderName + prevStep?.step;
-            string nextPage = folderName + nextStep?.step;
-            familyData.UpdatePercentages();
-            
-            <div style=float:left>
-                <h4 style="max-width:450px">
-                    @pageHeading
-                </h4>
-            </div>
-            <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
+        var prevStep = steps[steps.Length - 1];
+        var nextStep = steps[0];
+        string prevPage = folderName + prevStep?.step;
+        string nextPage = folderName + nextStep?.step;
+        
+        <div style=float:left>
+            <h4 style="max-width:450px">
+                @pageHeading
+            </h4>
+        </div>
+        <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
 
-            <div style=clear:left>
-                <table id=_reviewTable>
-                    @foreach (var step in steps) {
-                        var href = folderName + @step.step;
-                        <tr>
-                            @switch (step.step) {
-                                case "people": 
-                                    <td>
-                                        <a @onclick=toggleTaxFilingStatusEditing class="m-2" >✏️</a>
-                                        @((MarkupString)bold("Tax Filing Status:"))
-                                        @if (!taxFilingStatusEditing) {
-                                            @if (familyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@familyData.TaxFilingStatus</span> }
-                                            @if(familyData.PersonCount > 0) {
-                                                <span>&nbsp;@getPronoun(familyData.People[0], false)</span>
-                                            }
-                                            @if(familyData.PersonCount > 1) {
-                                                <span>&nbsp;and @getPronoun(familyData.People[1], false)</span>
-                                            }
-                                            <br/><hr/>
-                                        } else {
-                                            <select @bind=familyData.TaxFilingStatus>
-                                                <option value="ChoiceNeeded">ChoiceNeeded</option>
-                                                <option>Single</option>
-                                                <option value=MarriedFilingJointly>Married filing jointly</option>
-                                                <option value=MarriedFilingSeperately>Married filing seperately</option>
-                                                <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
-                                                <option value=HeadOfHousehold>Head of Household</option>
-                                            </select><br/><br/>
-                                            
-                                            @for (int i = 0; i < familyData.PersonCount; i++) {
-                                                var person = familyData.People[i];
-                                                int personIndex = i + 1;
-
-                                                <EditForm Model="person" style=margin-left:25px>
-                                                    @if(person?.FamilyData?.PersonCount>1){
-                                                        <b>Person @personIndex:</b><br/>
-                                                        <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
-                                                        <option value="ChoiceNeeded">ChoiceNeeded</option>
-                                                        <option>person @personIndex</option>
-                                                        <option>him</option>
-                                                        <option>her</option>
-                                                        <option>me</option>
-                                                        <option>them</option>
-                                                    </select><br/>}
-                                                </EditForm><br/>
-                                            }
+        <div style=clear:left>
+            <table id=_reviewTable>
+                @foreach (var step in steps) {
+                    var href = folderName + @step.step;
+                    <tr>
+                        @switch (step.step) {
+                            case "people": 
+                                <td>
+                                    <a @onclick=toggleTaxFilingStatusEditing class="m-2" >✏️</a>
+                                    @((MarkupString)bold("Tax Filing Status:"))
+                                    @if (!taxFilingStatusEditing) {
+                                        @if (familyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@familyData.TaxFilingStatus</span> }
+                                        @if(familyData.PersonCount > 0) {
+                                            <span>&nbsp;@getPronoun(familyData.People[0], false)</span>
                                         }
-                                    </td>
-                                   break;
-                                case "rsu-summary":
-                                    <td>
-                                        <a @onclick=editAccounts class="m-2" >✏️</a>
-                                        @((MarkupString)bold("RSU Summary:"))<br/>
-                                        @if (familyData.Accounts.Count > 0) {
-                                            if (appData.RSUView == null) { appData.RSUView = "Vest Events by Month"; }
-                                            <label>&nbsp;&nbsp;View:&nbsp;</label><InputSelect @bind-Value=appData.RSUView >
-                                                <option>Vest Events by Month</option>
-                                                <option>Vest Events by Grant</option>
-                                            </InputSelect>
-                                            
-                                            <br/>
-                                            <br/>
+                                        @if(familyData.PersonCount > 1) {
+                                            <span>&nbsp;and @getPronoun(familyData.People[1], false)</span>
+                                        }
+                                        <br/><hr/>
+                                    } else {
+                                        <select @bind=familyData.TaxFilingStatus>
+                                            <option value="ChoiceNeeded">ChoiceNeeded</option>
+                                            <option>Single</option>
+                                            <option value=MarriedFilingJointly>Married filing jointly</option>
+                                            <option value=MarriedFilingSeperately>Married filing seperately</option>
+                                            <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                                            <option value=HeadOfHousehold>Head of Household</option>
+                                        </select><br/><br/>
+                                        
+                                        @for (int i = 0; i < familyData.PersonCount; i++) {
+                                            var person = familyData.People[i];
+                                            int personIndex = i + 1;
 
-                                            <p>NOTE: This is an early prototype. We're considering adding a RSU Tracker. This version doesn't yet allow you to enter RSUs grant information, it is just displaying some randomly generated data.</p>
+                                            <EditForm Model="person" style=margin-left:25px>
+                                                @if(person?.FamilyData?.PersonCount>1){
+                                                    <b>Person @personIndex:</b><br/>
+                                                    <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
+                                                    <option value="ChoiceNeeded">ChoiceNeeded</option>
+                                                    <option>person @personIndex</option>
+                                                    <option>him</option>
+                                                    <option>her</option>
+                                                    <option>me</option>
+                                                    <option>them</option>
+                                                </select><br/>}
+                                            </EditForm><br/>
+                                        }
+                                    }
+                                </td>
+                                break;
+                            case "rsu-summary":
+                                <td>
+                                    <a @onclick=editAccounts class="m-2" >✏️</a>
+                                    @if (View == null) {
+                                        View = "by-year";
+                                    }
+                                    @{
+                                        var byYearBold = (View == "by-year") ? ";font-weight:bold" : ""; 
+                                        var byGrantBold = (View == "by-grant") ? ";font-weight:bold" : ""; 
+                                    }
 
-                                            @if(showEditAccountHelpers) {
-                                                <br/><i>Editing Retirement Assets:</i>
-                                                <br/><span>Click on account/investment, in "@EditAccountsViewName" view to edit.
-                                                <br/>Add/import accounts buttons are below the account list.
-                                                <br/>Details on <a href="/updating-portfolio">3 ways to update portfolios</a>.</span>
-                                            }
+                                    <label>&nbsp;&nbsp;View RSUs:&nbsp;</label>
+                                    <span>
 
-                                            @switch (appData.RSUView) {
-                                                case "Vest Events by Grant":
-                                                    @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
-                                                        var person = appData.FamilyData.People[p];
-                                                        <br/>
-                                                        <p>@person.PossessiveID RSU Grants:</p>
+                                        <a style='@byYearBold' href=/rsu-tracker>by year</a> | 
+                                        <a style='@byGrantBold' href=/rsu-tracker/by-grant>by grant</a>
+                                    </span>
+                                    <br/>
+                                    <br/>
+                                    @if(showEditAccountHelpers) {
+                                        <br/><i>Editing RSU Grants:</i>
+                                        <br/><span>Click on account/investment, in "@EditAccountsViewName" view to edit.
+                                        <br/>Add/import accounts buttons are below the account list.
+                                        <br/>Details on <a href="/updating-portfolio">3 ways to update portfolios</a>.</span>
+                                    }
 
-                                                        @if(person.RSUGrants.Count > 0) {
-                                                        <table>
-                                                            <tr style=vertical-align:bottom>
-                                                                <th style=padding-left:8px>Grant Date</th>
-                                                                <th style=padding-left:8px;text-align:center>Shares</th>
-                                                                <th style=padding-left:8px;text-align:center>Price</th>
-                                                                <th style=padding-left:8px;text-align:center>Value</th>
+                                    @switch (View) {
+                                        case "by-grant":
+                                            @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
+                                                var person = appData.FamilyData.People[p];
+                                                <p>@person.PossessiveID RSU Grants:</p>
+
+                                                @if(person.RSUGrants.Count > 0) {
+                                                    <table class=mainTable>
+                                                        <tr style='vertical-align:bottom;border:black sold 1px'>
+                                                            <th style=padding-left:8px>Vest Date</th>
+                                                            <th style=padding-left:8px;text-align:center>Shares</th>
+                                                            <th style=padding-left:8px;text-align:center>~Price</th>
+                                                            <th style=padding-left:8px;text-align:center>Value</th>
+                                                        </tr>
+                                                        @foreach (var rsuGrant in person.RSUGrants) {
+                                                            <tr style=vertical-align:bottom;color:white;background-Color:black>
+                                                                <td style=padding-left:8px;text-align:left colspan=4>@rsuGrant.Shares @rsuGrant.Ticker shares granted on @rsuGrant.Date.ToShortDateString()</td>
                                                             </tr>
-                                                            @foreach (var rsuGrant in person.RSUGrants) {
-                                                                <tr style=vertical-align:bottom;color:white;background-Color:black>
-                                                                    <td style=padding-left:8px>@rsuGrant.Date.ToShortDateString()</td>
-                                                                    <td style=padding-left:8px;text-align:center>@rsuGrant.Shares</td>
-                                                                    <td style=padding-left:8px;text-align:center>@FormatUtilities.formatMoney(rsuGrant.Price)</td>
-                                                                    <td style=padding-left:8px;text-align:center></td>
-                                                                </tr>
-                                                                @foreach (var vestEvent in rsuGrant.VestEvents.Where(ve=>ve.Date > DateTime.Now.Date)) {
-                                                                    <tr style=vertical-align:bottom>
-                                                                        <td style=padding-left:8px>@vestEvent.Date.ToShortDateString()</td>
-                                                                        <td style=padding-left:8px;text-align:center>@vestEvent.Shares</td>
-                                                                        <td style=padding-left:8px;text-align:center>@FormatUtilities.formatMoney(vestEvent.Price)</td>
-                                                                        <td style=padding-left:8px;text-align:center>~@FormatUtilities.formatMoney(vestEvent.Value)</td>
-                                                                    </tr>
-                                                                }
-                                                            }
-                                                        </table>
-                                                        } else {
-                                                            <p>add UI to add Grants</p>
-                                                        }
-                                                    }
-                                                    break;
-                                                case "Vest Events by Month":
-                                                    @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
-                                                        var person = appData.FamilyData.People[p];
-
-                                                        @if(person.RSUGrants.Count > 0) {
-                                                            var vestMonths = (from rsuGrant in person.RSUGrants  // First foreach loop
-                                                                from vestEvent in rsuGrant.VestEvents  // Second foreach loop
-                                                                where vestEvent.Date > DateTime.Now.Date
-                                                                group vestEvent by new { vestEvent.Date.Year, vestEvent.Date.Month }
-                                                                into grp
-                                                                select new { month = grp.Key.Month, year = grp.Key.Year, count = grp.Count(), shares = grp.Sum(ve=>ve.Shares), value = grp.Sum(ve=>ve.Value) });
-                                                                
-                                                            <br/>
-                                                            <p>@person.PossessiveID RSU Grants:</p>
-                                                            <table>
+                                                            @foreach (var vestEvent in rsuGrant.VestEvents.Where(ve=>ve.Date > DateTime.Now.Date)) {
                                                                 <tr style=vertical-align:bottom>
-                                                                    <th style=padding-left:8px>Vest Month</th>
-                                                                    <th style=padding-left:8px;text-align:center>Grants</th>
-                                                                    <th style=padding-left:8px;text-align:center>Shares</th>
-                                                                    <th style=padding-left:8px;text-align:center>Value</th>
+                                                                    <td style=padding-left:8px;text-align:right>@vestEvent.Date.ToShortDateString()</td>
+                                                                    <td style=padding-left:8px;text-align:center>@vestEvent.Shares</td>
+                                                                    <td style=padding-left:8px;text-align:center>@FormatUtilities.formatMoney(vestEvent.Price)</td>
+                                                                    <td style=padding-left:8px;text-align:right>~@FormatUtilities.formatMoney(vestEvent.Value)</td>
                                                                 </tr>
-                                                                @foreach (var vestMonth in vestMonths) {
-                                                                        <tr style=vertical-align:bottom>
-                                                                            <td style=padding-left:8px>@vestMonth.month-@vestMonth.year</td>
-                                                                            <td style=padding-left:8px;text-align:center>@vestMonth.count</td>
-                                                                            <td style=padding-left:8px;text-align:center>@vestMonth.shares</td>
-                                                                            <td style=padding-left:8px;text-align:center>~@FormatUtilities.formatMoney(vestMonth.value)</td>
-                                                                        </tr>
-                                                                }
-                                                            </table>
+                                                            }
+                                                            <tr><td colspan=4 style=font-size:4pt>&nbsp;</td></tr>
                                                         }
-                                                    }
-                                                    break;                                    
+                                                    </table>
+                                                    <br/>
+                                                } else {
+                                                    <p>add UI to add Grants</p>
+                                                }
                                             }
-                                        }
-                                        @if (appData.FamilyData.Accounts.Count == 0) {
-                                            <button style=margin-left:40px @onclick=addAccountInline title='add account'>➕</button>
-                                            <button @onclick=ShowImport title='import Accounts from a CSV/XLSX file'>
-                                                Import ⬆️
-                                            </button>
-                                        }
+                                            break;
+                                        case "by-year":
+                                            @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
+                                                var person = appData.FamilyData.People[p];
 
-                                        <hr/>
-                                    </td>
-                                    break;                                
-                                default:
-                                    break;
-                            }
-                        </tr>
-                    }          
-                </table>
-                <p>"Consider making a <a href="/saving">Saving Plan</a> for the year!"</p>
-            </div>
-            
-            <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
-        }
+                                                @if(person.RSUGrants.Count > 0) {
+                                                    var vestMonths = (from rsuGrant in person.RSUGrants  // First foreach loop
+                                                        from vestEvent in rsuGrant.VestEvents  // Second foreach loop
+                                                        where vestEvent.Date > DateTime.Now.Date
+                                                        group vestEvent by new { vestEvent.Date.Year, vestEvent.Date.Month }
+                                                        into grp
+                                                        select new { month = grp.Key.Month, year = grp.Key.Year, count = grp.Count(), shares = grp.Sum(ve=>ve.Shares), value = grp.Sum(ve=>ve.Value) });
+                                                        
+                                                    <br/>
+                                                    <p>@person.PossessiveID RSU Grants:</p>
+                                                    <table class=mainTable>
+                                                        <tr style=vertical-align:bottom>
+                                                            <th style=padding-left:8px>Vest Month</th>
+                                                            <th style=padding-left:8px;text-align:center>Grants</th>
+                                                            <th style=padding-left:8px;text-align:center>Shares</th>
+                                                            <th style=padding-left:8px;text-align:center>Value</th>
+                                                        </tr>
+                                                        @{int? lastYear = null;}
+                                                        @foreach (var vestMonth in vestMonths) {
+                                                            if (lastYear != vestMonth.year) {
+                                                                lastYear = vestMonth.year;
+                                                                <tr style=vertical-align:bottom;color:white;background-Color:black>
+                                                                    <td style=padding-left:8px;text-align:left colspan=4>@lastYear</td>
+                                                                </tr>
+                                                            }
+                                                            <tr style=vertical-align:bottom>
+                                                                <td style=padding-left:8px;text-align:right>@vestMonth.month-@vestMonth.year</td>
+                                                                <td style=padding-left:8px;text-align:center>@vestMonth.count</td>
+                                                                <td style=padding-left:8px;text-align:center>@vestMonth.shares</td>
+                                                                <td style=padding-left:8px;text-align:right>~@FormatUtilities.formatMoney(vestMonth.value)</td>
+                                                            </tr>
+                                                        }
+                                                        <tr><td colspan=4 style=font-size:4pt>&nbsp;</td></tr>
+                                                    </table>
+                                                }
+                                            }
+                                            break;                                    
+                                    }
+                                    @if (appData.FamilyData.Accounts.Count == 0) {
+                                        <button style=margin-left:40px @onclick=addAccountInline title='add account'>➕</button>
+                                        <button @onclick=ShowImport title='import Accounts from a CSV/XLSX file'>
+                                            Import ⬆️
+                                        </button>
+                                    }
+                                </td>
+                                break;                                
+                            default:
+                                break;
+                        }
+                    </tr>
+                }          
+            </table>
+        </div>
+        <br/>
+        <p>"Consider making a <a href="/saving">Saving Plan</a> for the year!"</p>
     }
 
 @code {
@@ -309,37 +327,6 @@
         return "";
     }
 
-    public int? GetRecommdedIRAAmount(Person person) {
-        switch(person.IRATypeRecommendation) {
-            case IRAType.DeductibleIRAThenBackdoorRoth:
-            case IRAType.DeductibleIRA:
-                return person.IRA.AmountToSave;
-            case IRAType.Roth:
-                return person.RothIRA.AmountToSave;
-            case IRAType.NondeductibleIRAThenBackdoorRoth:
-            case IRAType.NondeductibleIRA:
-                return person.IRA.AmountToSave;
-            default:
-                return null;
-        }
-    }
-
-    public string GetRecommendedIRAMarkup(Person person) {
-        switch(person.IRATypeRecommendation) {
-            case IRAType.DeductibleIRAThenBackdoorRoth:
-                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.formatMoney(person.IRA.DeductionAllowed) + " Deductible), then backdoor roth</span>";
-            case IRAType.DeductibleIRA:
-                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.formatMoney(person.IRA.DeductionAllowed) + " Deductible)</span>";
-            case IRAType.Roth:
-                return "<span>" + FormatUtilities.formatMoney(person.RothIRA.AmountToSave) + " in " + person.PossessiveID + " Roth IRA</span>";
-            case IRAType.NondeductibleIRAThenBackdoorRoth:
-                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " (nondeductible), then backdoor roth</span>";
-            case IRAType.NondeductibleIRA:
-                return "<span>$" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " (nondeductible)</span>";
-            default:
-                return "<p>do nothing</p>";
-        }
-    }
 
     public string getPronoun(Person person)
     {
@@ -355,37 +342,6 @@
         else
         {
             return "";
-        }
-    }
-
-    public string estimatePortfolio(FamilyData familyData) 
-    {
-        if (familyData.Value >= 10000000) {
-            return "8-figures";
-        } else if (familyData.Value >= 6666666) {
-            return "high 7-figures";
-        } else if (familyData.Value >= 3333333) {
-            return "mid 7-figures";
-        } else if (familyData.Value >= 1000000) {
-            return "low 7-figures";
-        } else if (familyData.Value >= 666666) {
-            return "high 6-figures";
-        } else if (familyData.Value >= 333333) {
-            return "mid 6-figures";
-        } else if (familyData.Value >= 100000) {
-            return "low 6-figures";
-        } else if (familyData.Value >= 66666) {
-            return "high 5-figures";
-        } else if (familyData.Value >= 33333) {
-            return "mid 5-figures";
-        } else if (familyData.Value >= 10000) {
-            return "low 5-figures";
-        } else if (familyData.Value >= 1000) {
-            return "4-figures";
-        } else if (familyData.Value == 0) {
-            return "-";
-        } else {
-            return "less than $1,000";
         }
     }
 
@@ -503,7 +459,7 @@
     }
 
     [Parameter]
-    public string? stepPath { get; set; }
+    public string? View { get; set; }
 
     public bool ShowMarkup { get; set; }
     public string? currentAccountIndex { get; set; }
@@ -513,6 +469,7 @@
     private const string pagePath = "/rsu-tracker";
     private const string folderName = pagePath + "/";
     private const string pageHeading = "RSU Tracker";
+    
     private bool focusTicker = false;
     private bool focusAccount = false;
     private bool showPortfolioAnalysis = true;
@@ -615,49 +572,6 @@
             await UpdateInvestmentPrice(investment);
         }
     }
-    
-    private async Task OnDataFilesImport(InputFileChangeEventArgs e)
-    {
-        var files = e.GetMultipleFiles();
-        appData.ImportResult = await Importer.ImportDataFiles(files, Funds, familyData.Accounts, familyData.PIN);
-        foreach (var account in appData.ImportResult.ImportedAccounts) 
-        {
-            account.Import = true;
-        }
-
-        showImport = false;
-
-        Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
-    }
-
-    private void finishImport()
-    {
-        if (appData.ImportResult == null) { return; }
-
-        foreach (var updatedAccount in appData.ImportResult.UpdatedAccounts)
-        {
-            if (updatedAccount.Import && updatedAccount.ReplaceAccount != null)
-            {
-                updatedAccount.ReplaceAccount.Investments.Clear();
-                updatedAccount.ReplaceAccount.Investments.AddRange(updatedAccount.Investments);
-            }
-        }
-
-        foreach (var newAccount in appData.ImportResult.NewAccounts)
-        {
-            if (newAccount.Import)
-            {
-                familyData.Accounts.Add(newAccount);
-            }
-        }
-
-        appData.ImportResult = null;
-    }
-
-    private void cancelImport()
-    {
-        appData.ImportResult = null;
-    }
 
     private void addInvestment(MouseEventArgs e, int accountIndex)
     {
@@ -684,17 +598,6 @@
         familyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
         Navigation.NavigateTo("/portfolio/reload");
         familyData.UpdatePercentages();
-    }
-    void addAvailableFund(MouseEventArgs e, Account account)
-    {
-        var newFund = new Investment(appData.FamilyData.PIN) { funds = Funds };
-        account.AvailableFunds.Add(newFund);
-        focusTicker = true;
-    }
-
-    void deleteAvailableFund(MouseEventArgs e, Account account, int investmentIndex)
-    {
-        account.AvailableFunds.RemoveAt(investmentIndex);
     }
 
     void addAccountInline()
@@ -730,27 +633,6 @@
         familyData.UpdatePercentages();
     }
 
-    private async Task LoadPortfolioForTopic(string topicStr) {
-        var options = new JsonSerializerOptions() 
-            {
-                Converters =
-                    {
-                        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                    }
-            };
-        var topicJsonUri = "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/portfolios/" + topicStr + ".json";
-        var stream = await Http.GetStreamAsync(topicJsonUri);
-        familyData = await FamilyData.LoadFromJsonStream(appData, stream, options);
-    }
-
-    private async Task CopyTextToClipboard()
-    {
-        var text = await JS.InvokeAsync<string>("getTableInnerText");
-        text = text.Replace("\n✏️\t","");
-        text = text.Replace("✏️\t","");
-        text = text.Replace("Show Portfolio Analysis\n", "");
-        await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
-    }
 
     private async Task refreshPrices() {
         refreshButtonText = "Updating...";
