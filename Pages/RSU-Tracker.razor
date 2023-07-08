@@ -159,9 +159,9 @@
                                     <br/>
                                     <br/>
                                     @if(showEditAccountHelpers) {
-                                        <br/><i>Editing RSU Grants:</i>
-                                        <br/><span>Click on grant table row in <a href=/rsu-tracker/by-grant>by grant</a> view
-                                        <br/>Button with '➕' will add a new grant to bottom of grants list.</span>
+                                        <i>Editing RSU Grants:</i>
+                                        <br/><span>'➕' button will add a new grant to bottom of grants list.
+                                        <br/>To edit grant details or to delete a grant, click on grant table row in <a href=/rsu-tracker/by-grant>by grant</a> view</span><br/><br/>
                                     }
 
                                     @switch (View) {
@@ -169,7 +169,7 @@
                                             @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
                                                 var pBuf = p;
                                                 var person = appData.FamilyData.People[p];
-                                                <p>@person.PossessiveID RSU Grants: <button @onclick='@(e=>addGrant(e,pBuf))' title='add grant'>➕</button>
+                                                <p><span style=font-size:14pt;font-weight:bold>@person.PossessiveID RSU Grants:</span> <button @onclick='@(e=>addGrant(e,pBuf))' title='add grant'>➕</button>
                                                     @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                     {
                                                         <button @onclick=@refreshPrices title='refresh quotes' style=min-width:80px;>@refreshButtonText</button>
@@ -184,7 +184,7 @@
                                                             <th style=padding-left:8px>Vest Date</th>
                                                             <th style=padding-left:8px;text-align:center>Shares</th>
                                                             <th style=padding-left:8px;text-align:center>~Price</th>
-                                                            <th style=padding-left:8px;text-align:center>Value</th>
+                                                            <th style=padding-left:8px;text-align:center>~Value</th>
                                                         </tr>
                                                         @{var grantCount = 0;}
                                                         @foreach (var rsuGrant in person.RSUGrants) {
@@ -199,10 +199,11 @@
                                                                         shares<br/>
                                                                         granted on 
                                                                         <input @onclick:stopPropagation="true" type=text @bind-value=rsuGrant.Date placeholder="date" /><br/>
-                                                                        <input @onclick:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.VestEventsCount /> vest events<br/>
-                                                                        every <input @onclick:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.VestPeriodMonths  /> months<br/>
+                                                                        <input @onclick:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.VestEventsCount /> vest events,<br/>
+                                                                        vest every <input @onclick:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.VestPeriodMonths  /> months<br/>
                                                                         last price: $<input @onclick:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.LastPrice placeholder="last price" /><br/>
                                                                         <button title='delete grant' @onclick='@(e=>deleteGrant(e,pBuf, grantIndex))'>❌ grant</button>
+                                                                        <button title='save grant' >save grant</button>
                                                                     </td>
                                                                 }
                                                             </tr>
@@ -218,6 +219,8 @@
                                                         }
                                                     </table>
                                                     <br/>
+                                                } else {
+                                                    <p>No RSU grants yet. Press ➕ button to track a Restricted Stock Unit grant from an employer.</p><br/>
                                                 }
                                             }
                                             break;
@@ -233,7 +236,7 @@
                                                     into grp
                                                     select new { month = grp.Key.Month, year = grp.Key.Year, count = grp.Count(), shares = grp.Sum(ve=>ve.Shares), value = grp.Sum(ve=>ve.Value) });
                                                     
-                                                <p>@person.PossessiveID RSU Grants: <button @onclick='@(e=>addGrant(e,pBuf))' title='add grant'>➕</button>
+                                                <p><span style=font-size:14pt;font-weight:bold>@person.PossessiveID RSU Grants:</span> <button @onclick='@(e=>addGrant(e,pBuf))' title='add grant'>➕</button>
                                                     @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                     {
                                                         <button @onclick=@refreshPrices title='refresh quotes' style=min-width:80px;>@refreshButtonText</button>
@@ -248,7 +251,7 @@
                                                             <th style=padding-left:8px>Vest Month</th>
                                                             <th style=padding-left:8px;text-align:center>Grants</th>
                                                             <th style=padding-left:8px;text-align:center>Shares</th>
-                                                            <th style=padding-left:8px;text-align:center>Value</th>
+                                                            <th style=padding-left:8px;text-align:center>~Value</th>
                                                         </tr>
                                                         @{int? lastYear = null;}
                                                         @foreach (var vestMonth in vestMonths) {
@@ -267,15 +270,12 @@
                                                         }
                                                         <tr><td colspan=4 style=font-size:4pt>&nbsp;</td></tr>
                                                     </table>
+                                                    <br/>
+                                                } else {
+                                                    <p>No RSU grants yet. Press ➕ button to track a Restricted Stock Unit grant from an employer.</p><br/>
                                                 }
                                             }
                                             break;                                    
-                                    }
-                                    @if (appData.FamilyData.Accounts.Count == 0) {
-                                        <button style=margin-left:40px @onclick=addAccountInline title='add account'>➕</button>
-                                        <button @onclick=ShowImport title='import Accounts from a CSV/XLSX file'>
-                                            Import ⬆️
-                                        </button>
                                     }
                                 </td>
                                 break;                                
@@ -285,9 +285,12 @@
                     </tr>
                 }          
             </table>
+            <div>
+                ~ - Predicting value at future vest events is impossible. Stock value could go up or down. Values shown are based on current value, which can be updated - details: <a href=/updating-portfolio>Updating RSU Latest Prices</a>
+            </div>
         </div>
         <br/>
-        <p>"Consider making a <a href="/saving">Saving Plan</a> for the year!"</p>
+        <p>"Consider making a <a href="/saving">Saving Plan</a> for the year or using the <a href="/saving">Portfolio Tracker</a>"</p>
     }
 
 @code {
@@ -308,17 +311,19 @@
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
     }
 
-    void deleteGrant(MouseEventArgs e, int personIndex, int grantIndex) {
+    async void deleteGrant(MouseEventArgs e, int personIndex, int grantIndex) {
         appData.FamilyData.People[personIndex].RSUGrants.RemoveAt(grantIndex);
+        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
     }
 
-    void toggleEdit(MouseEventArgs e, int personIndex, int grantIndex)
+    async void toggleEdit(MouseEventArgs e, int personIndex, int grantIndex)
     {
         var grant = appData.FamilyData.People[personIndex].RSUGrants[grantIndex];
         if (grant.Edit) {
             var created = CalculateVestEvents(grant);
             if (created) {
-                grant.Edit = !grant.Edit;
+                grant.Edit = false;
+                await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
             }
         } else {
             grant.Edit = true;
@@ -559,13 +564,17 @@
 
     private bool CalculateVestEvents(RSUGrant grant) {
         grant.VestEvents.Clear();
-        if (grant.Shares != null && grant.VestEventsCount != null && grant.VestPeriodMonths != null) {
-            var vestShares = (grant.Shares ?? 0) / (grant.VestEventsCount ?? 20);
+        if (grant.Shares != null && grant.VestEventsCount != null && grant.VestEventsCount != 0 && grant.VestPeriodMonths != null) {
+            double vestShares = (double)(grant.Shares ?? 0) / (double)grant.VestEventsCount;
+            double remainderShares = 0.0;
             if (grant.Date != null) {
                 for (int i=0; i < grant.VestEventsCount; i++) {
+                    remainderShares += vestShares - (int)vestShares;
+                    var currentVestShares = (int)vestShares + (int)remainderShares;
+                    remainderShares -= (int)remainderShares;
                     var vestEvent = new RSUVestEvent() { 
                         Date = grant.Date.Value.AddMonths((i+1) * grant.VestPeriodMonths.Value),
-                        Shares = vestShares,
+                        Shares = currentVestShares,
                         Price = grant.LastPrice
                     };
                     grant.VestEvents.Add(vestEvent);
@@ -641,128 +650,66 @@
             await UpdateInvestmentPrice(investment);
         }
     }
+    private async Task refreshPrices() {
+        refreshButtonText = "Updating...";
+        Dictionary<string,List<Investment>> quotes = new();
 
-    private void addInvestment(MouseEventArgs e, int accountIndex)
-    {
-        var newInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds };
-        familyData.Accounts[accountIndex].Investments.Add(newInvestment);
-        focusTicker = true;
-    }
-
-    private void addInvestment2(MouseEventArgs e, int accountIndex) {
-        var account = familyData.Accounts.OrderByDescending(a=>a.Value).ToList()[accountIndex];
-        account.Investments.Add(new Investment(appData.FamilyData.PIN) { funds = Funds });
-    }
-
-    void deleteInvestment2(MouseEventArgs e, int accountIndex, int investmentIndex)
-    {
-        var account = familyData.Accounts.OrderByDescending(a=>a.Value).ToList()[accountIndex];
-        var investmentToDelete = account.Investments.OrderByDescending(i=>i.Value).ToList()[investmentIndex];
-        account.Investments.Remove(investmentToDelete);
-        familyData.UpdatePercentages();
-    }
-
-    void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
-    {
-        familyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
-        Navigation.NavigateTo("/portfolio/reload");
-        familyData.UpdatePercentages();
-    }
-
-    void addAccountInline()
-    {
-        var newAccount = new Account(appData.FamilyData.PIN);
-        var newInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds };
-        newAccount.Investments.Add(newInvestment);
-        newAccount.Edit = true;
-        familyData?.Accounts.Add(newAccount);
-    }
-
-    private async void deleteAccount2(MouseEventArgs e, int accountIndex)
-    {
-        var accountToDelete = familyData.Accounts.OrderByDescending(a=>a.Value).ToList()[accountIndex];
-        familyData.Accounts.Remove(accountToDelete);
-        accountIndexEditing = null;
-        familyData.UpdatePercentages();
-        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
-    }
-
-    void addAccount()
-    {
-        var newAccount = new Account(appData.FamilyData.PIN);
-        var newInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds };
-        newAccount.Investments.Add(newInvestment);
-        familyData?.Accounts.Add(newAccount);
-        focusAccount = true;
-    }
-    void deleteAccount(MouseEventArgs e, int accountIndex)
-    {
-        familyData.Accounts.RemoveAt(accountIndex);
-        Navigation.NavigateTo("/portfolio/reload");
-        familyData.UpdatePercentages();
-    }
-
-
-        private async Task refreshPrices() {
-            refreshButtonText = "Updating...";
-            Dictionary<string,List<Investment>> quotes = new();
-
-            var now = DateTime.Now.Date;
-            var previousMarketClose = PreviousMarketClose(now).ToLocalTime();
-            var nextMarketClose = NextMarketClose(now).ToLocalTime();
-            var nextMarketOpen = new DateTime(nextMarketClose.Year,nextMarketClose.Month,nextMarketClose.Day,13,30,00).ToLocalTime();
-            var marketIsBeforeOpen = DateTime.Now < nextMarketOpen;
-            bool marketIsOpen = DateTime.Now >= nextMarketOpen && DateTime.Now <= nextMarketClose;
-            var marketIsAfterClose = DateTime.Now > nextMarketClose;
-            foreach (var account in appData.FamilyData.Accounts)
+        var now = DateTime.Now.Date;
+        var previousMarketClose = PreviousMarketClose(now).ToLocalTime();
+        var nextMarketClose = NextMarketClose(now).ToLocalTime();
+        var nextMarketOpen = new DateTime(nextMarketClose.Year,nextMarketClose.Month,nextMarketClose.Day,13,30,00).ToLocalTime();
+        var marketIsBeforeOpen = DateTime.Now < nextMarketOpen;
+        bool marketIsOpen = DateTime.Now >= nextMarketOpen && DateTime.Now <= nextMarketClose;
+        var marketIsAfterClose = DateTime.Now > nextMarketClose;
+        foreach (var account in appData.FamilyData.Accounts)
+        {
+            foreach (var investment in account.Investments)
             {
-                foreach (var investment in account.Investments)
-                {
-                    bool fetchQuote = false;
-                    if (investment.IsStock || investment.IsETF) {
-                        fetchQuote = investment.LastUpdated == null || (marketIsBeforeOpen && investment.LastUpdated < previousMarketClose) || marketIsOpen || (marketIsAfterClose && investment.LastUpdated < nextMarketClose);
-                    } else if (investment.IsFund) {
-                        fetchQuote = investment.LastUpdated == null || investment.LastUpdated?.Date != previousMarketClose.Date;
-                    }
-
-                    if (fetchQuote && investment.Ticker != null) {
-                        if (!quotes.ContainsKey(investment.Ticker)) {
-                            quotes.Add(investment.Ticker, new List<Investment> () { investment });
-                        } else {
-                            var investments = quotes[investment.Ticker];
-                            investments.Add(investment);
-                        }
-                    }
+                bool fetchQuote = false;
+                if (investment.IsStock || investment.IsETF) {
+                    fetchQuote = investment.LastUpdated == null || (marketIsBeforeOpen && investment.LastUpdated < previousMarketClose) || marketIsOpen || (marketIsAfterClose && investment.LastUpdated < nextMarketClose);
+                } else if (investment.IsFund) {
+                    fetchQuote = investment.LastUpdated == null || investment.LastUpdated?.Date != previousMarketClose.Date;
                 }
-            }
 
-            List<string> rsuTickers = new();
-            for(int p=0;p<appData.FamilyData.PersonCount;p++) {
-                var person = appData.FamilyData.People[p];
-                foreach (var rsuGrant in person.RSUGrants) {
-                    var ticker = rsuGrant.Ticker.ToUpper();
-                    var grantInvestment = new Investment() { Ticker = ticker, GrantToUpdateQuote = rsuGrant };
-                    if (!quotes.ContainsKey(ticker)) {
-                        quotes.Add(ticker, new List<Investment> () { grantInvestment });
+                if (fetchQuote && investment.Ticker != null) {
+                    if (!quotes.ContainsKey(investment.Ticker)) {
+                        quotes.Add(investment.Ticker, new List<Investment> () { investment });
                     } else {
-                        var investments = quotes[ticker];
-                        investments.Add(grantInvestment);
+                        var investments = quotes[investment.Ticker];
+                        investments.Add(investment);
                     }
                 }
             }
+        }
 
-            foreach (var quote in quotes)
-            {
-                try {
-                    await UpdateInvestmentsPrice(quote.Key, quote.Value);
-                } catch (Exception ex) {
-                    Console.WriteLine(ex.GetType().Name + ": " + ex.Message + " " + ex.StackTrace);
+        List<string> rsuTickers = new();
+        for(int p=0;p<appData.FamilyData.PersonCount;p++) {
+            var person = appData.FamilyData.People[p];
+            foreach (var rsuGrant in person.RSUGrants) {
+                var ticker = rsuGrant.Ticker.ToUpper();
+                var grantInvestment = new Investment() { Ticker = ticker, GrantToUpdateQuote = rsuGrant };
+                if (!quotes.ContainsKey(ticker)) {
+                    quotes.Add(ticker, new List<Investment> () { grantInvestment });
+                } else {
+                    var investments = quotes[ticker];
+                    investments.Add(grantInvestment);
                 }
             }
-
-            await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
-            refreshButtonText = "🔃 Quotes";
         }
+
+        foreach (var quote in quotes)
+        {
+            try {
+                await UpdateInvestmentsPrice(quote.Key, quote.Value);
+            } catch (Exception ex) {
+                Console.WriteLine(ex.GetType().Name + ": " + ex.Message + " " + ex.StackTrace);
+            }
+        }
+
+        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
+        refreshButtonText = "🔃 Quotes";
+    }
 
     enum MarketDay {
         MarketDay,

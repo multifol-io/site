@@ -30,7 +30,7 @@
                 bogle.tools can update
             </th>
         </tr>
-        <tr>
+        <tr style=background-color:lightgray>
             <td style=width:120px>
                 ticker names
             </td>
@@ -56,7 +56,7 @@
                 ✅
             </td>
         </tr>
-        <tr>
+        <tr style=background-color:lightgray>
             <td style=width:120px>
                 share quantity
             </td>
@@ -82,6 +82,20 @@
             <td>
             </td>
         </tr>
+        <tr style=background-color:lightgray>
+            <td style=width:120px>
+                latest share price for RSUs
+            </td>
+            <td>
+            </td>
+            <td style=text-align:center>
+                ✅
+            </td>            
+
+            <td style=text-align:center>
+                ✅
+            </td>
+        </tr>
     </table><br/>
 
     <p>
@@ -95,12 +109,15 @@
 
     <p><b>Enter/Update on bogle.tools</b><br/>
         You can initially enter or update account info by using "@Portfolio.EditAccountsViewName" view in <a href=/portfolio>Portfolio Tracker</a> and click on the pencil icon for entry/editing instructions.<br/>
-        Link: <a href=/portfolio>Portfolio Tracker</a>
+        Link: <a href=/portfolio>Portfolio Tracker</a><br/><br/>
+
+        Updating share price for RSUs can be done manually by editing the last price after clicking on a grant row.<br/>
+        Link: <a href=/rsu-tracker/by-grant>RSU Tracker - by grant view</a>
     </p>
 
     <p><b>bogle.tools Can Update</b><br/>
         If you provide an <a target=_new href="https://eodhistoricaldata.com?utm_source=bogle_tool&utm_medium=app&utm_campaign=friendly_bogle"↗>EODHistoricalData.com</a>
-        ↗️ API key, bogle.tools can use it to get 15min delayed quotes whenever you ask.
+        ↗️ API key, bogle.tools can use it to get 15min delayed quotes whenever you ask. Bogle.tools will attempt to update investment and RSU grant prices.
     <ol>
         <li>
             <a href="https://eodhistoricaldata.com/register?utm_source=bogle_tool&utm_medium=app&utm_campaign=friendly_bogle" target=_new>Register</a>↗️
