@@ -1269,7 +1269,7 @@
         switch (GetMarketDay(marketCloseDay)) {
             case MarketDay.Holiday:
             case MarketDay.WeekEnd:
-                return MarketClose(marketCloseDay, direction);
+                return MarketClose(marketCloseDay.AddDays(direction), direction);
             case MarketDay.HalfDay:
                 return new DateTime(marketCloseDay.Year, marketCloseDay.Month, marketCloseDay.Day, 17, 0, 0);
             default:

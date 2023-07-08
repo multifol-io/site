@@ -191,7 +191,7 @@
                                                             var grantIndex = grantCount++;
                                                             <tr style=vertical-align:bottom;color:white;background-Color:black @onclick='@(e=>toggleEdit(e,pBuf, grantIndex))'>
                                                                 @if (!rsuGrant.Edit) {
-                                                                    <td style=padding-left:8px;text-align:left colspan=4>@rsuGrant.Shares @rsuGrant.Ticker shares granted on @rsuGrant.Date.ToShortDateString()</td>
+                                                                    <td style=padding-left:8px;text-align:left colspan=4>@rsuGrant.Shares @rsuGrant.Ticker shares granted on @rsuGrant.Date?.ToShortDateString()</td>
                                                                 } else {
                                                                     <td style=padding-left:8px;text-align:left colspan=4>
                                                                         <input @onclick:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.Shares placeholder="shares" />
@@ -199,14 +199,14 @@
                                                                         shares<br/>
                                                                         granted on 
                                                                         <input @onclick:stopPropagation="true" type=text @bind-value=rsuGrant.Date placeholder="date" /><br/>
-                                                                        <input @onclick:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.VestEventsCount placeholder="vest events" /> vest events<br/>
+                                                                        <input @onclick:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.VestEventsCount /> vest events<br/>
                                                                         every <input @onclick:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.VestPeriodMonths  /> months<br/>
                                                                         last price: $<input @onclick:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.LastPrice placeholder="last price" /><br/>
                                                                         <button title='delete grant' @onclick='@(e=>deleteGrant(e,pBuf, grantIndex))'>❌ grant</button>
                                                                     </td>
                                                                 }
                                                             </tr>
-                                                            @foreach (var vestEvent in rsuGrant.VestEvents.Where(ve=>ve.Date > DateTime.Now.Date)) {
+                                                            @foreach (var vestEvent in rsuGrant.VestEvents.Where(ve=>ve.Date > DateOnly.FromDateTime(DateTime.Now))) {
                                                                 <tr style=vertical-align:bottom>
                                                                     <td style=padding-left:8px;text-align:right>@vestEvent.Date.ToShortDateString()</td>
                                                                     <td style=padding-left:8px;text-align:center>@vestEvent.Shares</td>
@@ -228,7 +228,7 @@
 
                                                 var vestMonths = (from rsuGrant in person.RSUGrants  // First foreach loop
                                                     from vestEvent in rsuGrant.VestEvents  // Second foreach loop
-                                                    where vestEvent.Date > DateTime.Now.Date
+                                                    where vestEvent.Date > DateOnly.FromDateTime(DateTime.Now)
                                                     group vestEvent by new { vestEvent.Date.Year, vestEvent.Date.Month }
                                                     into grp
                                                     select new { month = grp.Key.Month, year = grp.Key.Year, count = grp.Count(), shares = grp.Sum(ve=>ve.Shares), value = grp.Sum(ve=>ve.Value) });
@@ -315,7 +315,14 @@
     void toggleEdit(MouseEventArgs e, int personIndex, int grantIndex)
     {
         var grant = appData.FamilyData.People[personIndex].RSUGrants[grantIndex];
-        grant.Edit = !grant.Edit;
+        if (grant.Edit) {
+            var created = CalculateVestEvents(grant);
+            if (created) {
+                grant.Edit = !grant.Edit;
+            }
+        } else {
+            grant.Edit = true;
+        }
     }
 
     void addGrant(MouseEventArgs e, int personIndex)
@@ -543,22 +550,32 @@
             var person = appData.FamilyData.People[p];
 
             foreach (var grant in person.RSUGrants) {
-                grant.VestEvents.Clear();
-                if (grant.Shares != null) {
-                    var vestShares = (grant.Shares ?? 0) / (grant.VestEventsCount ?? 20);
-                    for (int i=0; i < grant.VestEventsCount; i++) {
-                        var vestEvent = new RSUVestEvent() { 
-                            Date = grant.Date.AddMonths((i+1) * grant.VestPeriodMonths),
-                            Shares = vestShares,
-                            Price = grant.LastPrice
-                        };
-                        grant.VestEvents.Add(vestEvent);
-                    }
-                }
+                CalculateVestEvents(grant);
             }
         }
 
         base.OnInitialized();
+    }
+
+    private bool CalculateVestEvents(RSUGrant grant) {
+        grant.VestEvents.Clear();
+        if (grant.Shares != null && grant.VestEventsCount != null && grant.VestPeriodMonths != null) {
+            var vestShares = (grant.Shares ?? 0) / (grant.VestEventsCount ?? 20);
+            if (grant.Date != null) {
+                for (int i=0; i < grant.VestEventsCount; i++) {
+                    var vestEvent = new RSUVestEvent() { 
+                        Date = grant.Date.Value.AddMonths((i+1) * grant.VestPeriodMonths.Value),
+                        Shares = vestShares,
+                        Price = grant.LastPrice
+                    };
+                    grant.VestEvents.Add(vestEvent);
+                }
+
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     private ElementReference tickerN;
@@ -816,7 +833,7 @@
         switch (GetMarketDay(marketCloseDay)) {
             case MarketDay.Holiday:
             case MarketDay.WeekEnd:
-                return MarketClose(marketCloseDay, direction);
+                return MarketClose(marketCloseDay.AddDays(direction), direction);
             case MarketDay.HalfDay:
                 return new DateTime(marketCloseDay.Year, marketCloseDay.Month, marketCloseDay.Day, 17, 0, 0);
             default:
