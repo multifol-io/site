@@ -226,22 +226,23 @@
                                                 var pBuf = p;
                                                 var person = appData.FamilyData.People[p];
 
+                                                var vestMonths = (from rsuGrant in person.RSUGrants  // First foreach loop
+                                                    from vestEvent in rsuGrant.VestEvents  // Second foreach loop
+                                                    where vestEvent.Date > DateTime.Now.Date
+                                                    group vestEvent by new { vestEvent.Date.Year, vestEvent.Date.Month }
+                                                    into grp
+                                                    select new { month = grp.Key.Month, year = grp.Key.Year, count = grp.Count(), shares = grp.Sum(ve=>ve.Shares), value = grp.Sum(ve=>ve.Value) });
+                                                    
+                                                <p>@person.PossessiveID RSU Grants: <button @onclick='@(e=>addGrant(e,pBuf))' title='add grant'>➕</button>
+                                                    @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
+                                                    {
+                                                        <button @onclick=@refreshPrices title='refresh quotes' style=min-width:80px;>@refreshButtonText</button>
+                                                    } else {
+                                                        <a href="/updating-portfolio">Update quotes</a>
+                                                    }
+                                                </p>
+
                                                 @if(person.RSUGrants.Count > 0) {
-                                                    var vestMonths = (from rsuGrant in person.RSUGrants  // First foreach loop
-                                                        from vestEvent in rsuGrant.VestEvents  // Second foreach loop
-                                                        where vestEvent.Date > DateTime.Now.Date
-                                                        group vestEvent by new { vestEvent.Date.Year, vestEvent.Date.Month }
-                                                        into grp
-                                                        select new { month = grp.Key.Month, year = grp.Key.Year, count = grp.Count(), shares = grp.Sum(ve=>ve.Shares), value = grp.Sum(ve=>ve.Value) });
-                                                        
-                                                    <p>@person.PossessiveID RSU Grants: <button @onclick='@(e=>addGrant(e,pBuf))' title='add grant'>➕</button>
-                                                        @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
-                                                        {
-                                                            <button @onclick=@refreshPrices title='refresh quotes' style=min-width:80px;>@refreshButtonText</button>
-                                                        } else {
-                                                            <a href="/updating-portfolio">Update quotes</a>
-                                                        }
-                                                    </p>
                                                     <table class=mainTable>
                                                         <tr style=vertical-align:bottom>
                                                             <th style=padding-left:8px>Vest Month</th>
