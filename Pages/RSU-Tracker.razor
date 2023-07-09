@@ -141,7 +141,7 @@
                                 break;
                             case "rsu-summary":
                                 <td>
-                                    <a @onclick=editAccounts class="m-2" >✏️</a>
+                                    <a @onclick=editGrants class="m-2" >✏️</a>
                                     @if (View == null) {
                                         View = "by-year";
                                     }
@@ -152,7 +152,6 @@
 
                                     <label>&nbsp;&nbsp;View RSUs:&nbsp;</label>
                                     <span>
-
                                         <a style='@byYearBold' href=/rsu-tracker>by year</a> | 
                                         <a style='@byGrantBold' href=/rsu-tracker/by-grant>by grant</a>
                                     </span>
@@ -350,8 +349,8 @@
         appData.FamilyData.People[personIndex].RSUGrants.Add(newGrant);
     }
 
-    void editAccounts() {
-        appData.PortfolioView = EditAccountsViewName;
+    void editGrants() {
+        Navigation.NavigateTo("/rsu-tracker/by-grant");
         showEditAccountHelpers = !showEditAccountHelpers;
     }
 
