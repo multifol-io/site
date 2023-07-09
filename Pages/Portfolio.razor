@@ -146,24 +146,6 @@
                                         <span>&nbsp;&nbsp;Desired International allocation: </span>
                                         <span><input style=width:50px;text-align:right type=text @bind-Value=appData.FamilyData.International @bind-Value:event=oninput />%</span>
                                     }
-
-
-                                    <br/>
-                                    @if (!double.IsNaN(appData.FamilyData.ActualStockAllocation) || !double.IsNaN(appData.FamilyData.ActualBondAllocation) || !double.IsNaN(appData.FamilyData.ActualInternationalStockAllocation)) {
-                                        <br/>
-                                        <fieldset>
-                                            @((MarkupString)bold("Actual Asset allocation: "))
-                                            <span>&nbsp;@if(assetAllocationEditing) {} else {@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation*100.0)} stocks / @FormatUtilities.formatPercent(appData.FamilyData.ActualBondAllocation*100.0) bonds</span><br/>
-                                            <span>&nbsp;&nbsp;Actual International allocation: </span>
-                                            <span>@FormatUtilities.formatPercent(appData.FamilyData.ActualInternationalStockAllocation*100.0)</span><br/>
-                                            <span>&nbsp;&nbsp;Actual Cash allocation: </span>
-                                            <span>@FormatUtilities.formatPercent(appData.FamilyData.ActualCashAllocation*100.0)</span><br/>
-                                            @if(appData.FamilyData.ActualOtherAllocation > 0.0) {
-                                                <span>&nbsp;&nbsp;Actual Unclassified allocation: </span>
-                                                <span>@FormatUtilities.formatPercent(appData.FamilyData.ActualOtherAllocation*100.0)</span><br/>
-                                            }
-                                        </fieldset>
-                                    }
                                     <hr/>
                                 </td>
                                 break;
@@ -173,10 +155,10 @@
                                     @((MarkupString)bold("Current Retirement Assets:"))<br/>
                                     @if (appData.FamilyData.Accounts.Count > 0) {
                                         if (View == null) {
-                                            View = "categories";
+                                            View = "allocations";
                                         }
                                         
-                                        var categoriesBold = (View == "categories") ? ";font-weight:bold" : ""; 
+                                        var allocationsBold = (View == "allocations") ? ";font-weight:bold" : ""; 
                                         var accountsBold = (View == "accounts") ? ";font-weight:bold" : "";
                                         var bogleheadsBold = (View == "bogleheads") ? ";font-weight:bold" : "";
                                         var custodiansBold = (View == "custodians") ? ";font-weight:bold" : "";
@@ -184,7 +166,7 @@
                                     
                                         <label>&nbsp;&nbsp;by</label>
                                         <span>
-                                            <a style="@categoriesBold" href=/portfolio>Categories</a> |
+                                            <a style="@allocationsBold" href=/portfolio>Allocations</a> |
                                             <a style="@accountsBold" href=/portfolio/accounts>Accounts</a> | 
                                             <a style="@custodiansBold" href=/portfolio/custodians>Custodians</a> | 
                                             <a style="@taxTypesBold" href=/portfolio/tax-types>Tax Types</a> | 
@@ -371,7 +353,7 @@
                                                     </tr>
                                                 </table>
                                                 break;
-                                            case "categories":
+                                            case "allocations":
                                                 bool alternateRow = false;
                                                 <table>
                                                     @if (appData.FamilyData.Accounts.Count > 0) {
@@ -383,11 +365,49 @@
                                                         </tr>
                                                     }
                                                     @{string? lastInvestmentCategory = null;}
+                                                    <tr style=vertical-align:bottom;color:white;background-Color:black>
+                                                        <td style=text-align:left colspan=4>
+                                                            Stocks&nbsp;@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation * 100.0)
+                                                        </td>
+                                                    </tr>                                                    
                                                     @foreach (var investment in appData.FamilyData.GroupedInvestments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.ValuePIN)) {
                                                         if (lastInvestmentCategory != investment.InvestmentOrderCategory) {
                                                             lastInvestmentCategory = investment.InvestmentOrderCategory;
                                                             <tr style=vertical-align:bottom;color:white;background-Color:black>
-                                                                <td style=text-align:left colspan=4>@lastInvestmentCategory</td>
+                                                                <td style=text-align:left colspan=4>
+                                                                    
+                                                                    @switch (lastInvestmentCategory) {
+                                                                        case "US Stocks":
+                                                                            <span>
+                                                                                &nbsp;&nbsp;&nbsp;&nbsp;@lastInvestmentCategory
+                                                                            </span>
+                                                                            break;
+                                                                        case "International Stocks":
+                                                                            <span>
+                                                                                &nbsp;&nbsp;&nbsp;&nbsp;@lastInvestmentCategory
+                                                                                <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualInternationalStockAllocation*100.0)</span>
+                                                                            </span>
+                                                                            break;
+                                                                        case "Bonds":
+                                                                            <span>
+                                                                                @lastInvestmentCategory
+                                                                                @FormatUtilities.formatPercent(appData.FamilyData.ActualBondAllocation*100.0)
+                                                                            </span>
+                                                                            break;
+                                                                        case "Cash":
+                                                                            <span>
+                                                                                @lastInvestmentCategory
+                                                                                @FormatUtilities.formatPercent(appData.FamilyData.ActualCashAllocation*100.0)
+                                                                            </span>
+                                                                            break;
+                                                                        case "Other":
+                                                                            <span>
+                                                                                @lastInvestmentCategory
+                                                                                @FormatUtilities.formatPercent(appData.FamilyData.ActualOtherAllocation*100.0)
+                                                                            </span>
+                                                                            break;
+                                                                    }
+                                                                </td>
                                                             </tr>
                                                         }
                                                         string bgColor = alternateRow ? "white" : "lightgray";
