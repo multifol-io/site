@@ -371,7 +371,14 @@
                                                                 <th style=padding-left:8px;text-align:center>Balance</th>
                                                             </tr>
                                                         }
+                                                        @{string? lastInvestmentCategory = null;}
                                                         @foreach (var investment in appData.FamilyData.GroupedInvestments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.ValuePIN)) {
+                                                            if (lastInvestmentCategory != investment.InvestmentOrderCategory) {
+                                                                lastInvestmentCategory = investment.InvestmentOrderCategory;
+                                                                <tr style=vertical-align:bottom;color:white;background-Color:black>
+                                                                    <td style=text-align:left colspan=4>@lastInvestmentCategory</td>
+                                                                </tr>
+                                                            }
                                                             string bgColor = alternateRow ? "white" : "lightgray";
                                                             <tr style=background-color:@bgColor>
                                                                 <td style=padding-left:8px;vertical-align:text-top title=@investment.Name>@investment.Ticker 

@@ -1,6 +1,5 @@
 using System.Text.Json.Serialization;
 
-
 public class RSUGrant {
     public DateOnly? Date { get; set; }
     public string? Ticker { get; set; }
