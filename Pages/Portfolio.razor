@@ -173,12 +173,13 @@
                                         <a @onclick=editAccounts class="m-2" >✏️</a>
                                         @((MarkupString)bold("Current Retirement Assets:"))<br/>
                                         @if (appData.FamilyData.Accounts.Count > 0) {
-                                            if (appData.PortfolioView == null) { appData.PortfolioView = "by Ticker"; }
+                                            if (appData.PortfolioView == null || appData.PortfolioView == "by Ticker") { appData.PortfolioView = "Ticker by Category"; }
                                             <label>&nbsp;&nbsp;View:&nbsp;</label><InputSelect @bind-Value=appData.PortfolioView >
                                                 <option>@EditAccountsViewName</option>
-                                                <option>by Ticker</option>
+                                                <option>Ticker by Category</option>
                                                 <option>Accounts by Custodian</option>
                                                 <option>Accounts by Tax Type</option>
+                                                <option>bogleheads.org Format</option>
                                             </InputSelect>
                                             @if(showEditAccountHelpers) {
                                                 <br/><i>Editing Retirement Assets:</i>
@@ -360,7 +361,7 @@
                                                         </tr>
                                                     </table>
                                                     break;
-                                                case "by Ticker":
+                                                case "Ticker by Category":
                                                     bool alternateRow = false;
                                                     <table>
                                                         @if (appData.FamilyData.Accounts.Count > 0) {
@@ -426,6 +427,17 @@
                                                             </td>
                                                         </tr>
                                                     </table>
+                                                    break;
+                                                case "bogleheads.org Format":
+                                                    @foreach (var account in familyData.Accounts.OrderBy(a=>a.PortfolioReviewOrder).ThenByDescending(a=>a.Value)) {
+                                                        <br/>
+                                                        @((MarkupString)bold((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "") + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + " (" + FormatUtilities.formatPercent(account.Percentage) + ")" ))
+                                                        <br/>
+                                                        @foreach (var investment in account.Investments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.ValuePIN)) {
+                                                            <span>&nbsp;&nbsp;&nbsp;&nbsp;@FormatUtilities.formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@(investment.ExpenseRatio!=null?investment.ExpenseRatio:"??")%)</span><br/>
+                                                        }
+                                                    }
+                                                    <br/>
                                                     break;
                                                 case "Accounts by Custodian":
                                                     <table>
