@@ -6,7 +6,6 @@ public class RSUGrant {
     public double? VestPercent { get; set; }
 
     private int? _VestEventsCount;
-    [JsonIgnore]
     public int? VestEventsCount { 
         get { return _VestEventsCount; }
         set {
