@@ -61,7 +61,7 @@ Retirement - bogle.tools
                     @pageHeading
                 </h4>
             </div>
-            <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
+            <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
 
             <p style=clear:left>If you're still working, maximize <a href="/saving">savings with a plan</a>. After you've collected <a href="/portfolio">your Portfolio</a> information, enter the information that will impact your retirement.</p>
             <div>
@@ -198,7 +198,7 @@ Retirement - bogle.tools
                         <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                         <hr/>
                     </div>
-                    <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
+                    <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
 
                     <h4 style=clear:left>@((MarkupString)markupize(step.priority))</h4>
 

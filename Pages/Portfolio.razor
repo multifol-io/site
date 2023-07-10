@@ -48,7 +48,7 @@
             @if(appData == null || appData.CurrentProfileName==null){<em>No active <a href=/profiles>profile</a>.</em>} 
             else {<em>Loading...</em>}
         </p>
-        <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
+        <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
             @if(appData.CurrentProfileName==null){<span>choose a</span>}else {<span>@appData.CurrentProfileName</span>}</a> profile
         </div>
     } else if (familyData != null && appData.FamilyData.PINProtected && appData.FamilyData.PIN == null) {
@@ -57,7 +57,7 @@
                 @pageHeading
             </h4>
         </div>
-        <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
+        <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
 
         <p style=clear:left>Need PIN</p>
         <input style=width:50px;text-align:right type=text @bind-Value=PINEntry @bind-Value:event=oninput />
@@ -74,7 +74,7 @@
                 @pageHeading
             </h4>
         </div>
-        <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
+        <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
 
         <div style=clear:left>
             <table id=_reviewTable>
@@ -212,7 +212,7 @@
                                                                 <label style=padding-left:8px>Custodian: </label><input style="width:140px" type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' />
                                                             </td>
                                                             <td >
-                                                                <div style=float:right><button @onclick=doneEditing>done</button></div>
+                                                                <div style=float:left;margin-left:50px><button @onclick=doneEditing>done</button></div>
                                                             </td>
                                                             </tr>
                                                             
@@ -251,7 +251,7 @@
                                                                 </select>
                                                                 </td>
                                                                 <td >
-                                                                    <div style=float:right><button @onclick='@(e=>deleteAccount2(e,accBuffer))' title='delete account'>❌ account</button></div>
+                                                                    <div style=float:left;margin-left:50px><button @onclick='@(e=>deleteAccount2(e,accBuffer))' title='delete account'>❌ account</button></div>
                                                                 </td>
                                                             </tr>
                                                             <tr style=color:white;background:black;><td colspan=4>
@@ -313,7 +313,7 @@
                                                                                 <option>@assetType</option>
                                                                             }
                                                                         </select>
-                                                                        <div style=float:right><button @onclick='@(e=>deleteInvestment2(e,accBuffer, invBuffer))' title='delete investment'>❌</button></div>
+                                                                        <div style=float:left;margin-left:50px><button @onclick='@(e=>deleteInvestment2(e,accBuffer, invBuffer))' title='delete investment'>❌</button></div>
                                                                     </td>
                                                                 </tr>
                                                             }

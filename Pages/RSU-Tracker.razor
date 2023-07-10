@@ -63,7 +63,7 @@
             @if(appData.CurrentProfileName==null){<em>No active <a href=/profiles>profile</a>.</em>} 
             else {<em>Loading...</em>}
         </p>
-        <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
+        <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
             @if(appData.CurrentProfileName==null){<span>choose a</span>}else {<span>@appData.CurrentProfileName</span>}</a> profile
         </div>
     } else if (familyData != null && familyData.PINProtected && familyData.PIN == null) {
@@ -72,7 +72,7 @@
                 @pageHeading
             </h4>
         </div>
-        <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
+        <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
 
         <p style=clear:left>Need PIN</p>
         <input style=width:50px;text-align:right type=text @bind-Value=PINEntry @bind-Value:event=oninput />
@@ -88,7 +88,7 @@
                 @pageHeading
             </h4>
         </div>
-        <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
+        <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
 
         <div style=clear:left>
             <table id=_reviewTable>

@@ -7,10 +7,10 @@
 <h4 style=float:left>FAQ</h4>
 
         @if(appData.CurrentProfileName==null){
-            <em style=float:right>No active <a href=/profiles>profile</a>.</em>
+            <em style=float:left;margin-left:50px>No active <a href=/profiles>profile</a>.</em>
         }
         else {
-            <div style=float:right><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
+            <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
                 @if(appData.CurrentProfileName==null){<span>choose a</span>}else {<span>@appData.CurrentProfileName</span>} profile</a>
             </div>
         }

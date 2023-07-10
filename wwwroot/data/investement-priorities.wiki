@@ -7,7 +7,7 @@ Investors should take care that any investment priority decision is aligned with
 ==Funding priority==
 Here is a general account funding priority that often works well for many people<ref name="mmm">{{cite web|url= https://forum.mrmoneymustache.com/investor-alley/investment-order/msg1333153/#msg1333153|title= Investment order|publisher=Mr. Money Mustache Forum|date=December 8, 2016}}</ref><ref>{{cite web|url= https://www.whitecoatinvestor.com/hrf_faq/what-order-should-i-fund-my-accounts-in/|title= What order should I fund my investing accounts in?|publisher=White Coat Investor|date=May 5, 2017}}</ref><ref>{{cite web|url= https://thefinancebuff.com/401k-roth-ira-then-back-at-401k.html |title= 401(k), Roth IRA, then Back at 401(k) |publisher=The Finance Buff|date=October 22, 2006}}</ref> (not all points will apply to everyone). Refer to Figure 1.
 
-{| style="float:right; padding: .5em .2em .5em .2em"
+{| style="float:left;margin-left:50px; padding: .5em .2em .5em .2em"
 |+ style="padding-left: 25px" |'''Figure 1. Prioritizing Investments'''
 | style="padding-left: 25px; padding-bottom: 10px; padding-top: 2px" |
 {| style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 6px, rgba(0, 0, 0, 0.23) 0px 1px 6px; margin: 0"
