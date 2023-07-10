@@ -3,7 +3,18 @@ using System.Text.Json.Serialization;
 public class RSUGrant {
     public DateOnly? Date { get; set; }
     public string? Ticker { get; set; }
-    public int? VestEventsCount { get; set; }
+    public double? VestPercent { get; set; }
+
+    private int? _VestEventsCount;
+    [JsonIgnore]
+    public int? VestEventsCount { 
+        get { return _VestEventsCount; }
+        set {
+            _VestEventsCount = value;
+            VestPercent = 100.0 / (double)_VestEventsCount.Value;
+        }
+     }
+    public int? FirstVestMonth { get; set;}
     public int? VestPeriodMonths { get; set;}
     public double Amount { get; set; }
     public double? Price { get; set; }

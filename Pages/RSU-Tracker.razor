@@ -193,13 +193,16 @@
                                                                     <td style=padding-left:8px;text-align:left colspan=4>@rsuGrant.Shares @rsuGrant.Ticker shares granted on @rsuGrant.Date?.ToShortDateString()</td>
                                                                 } else {
                                                                     <td style=padding-left:8px;text-align:left colspan=4>
-                                                                        <input @onclick:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.Shares placeholder="shares" />
+                                                                        <input @onclick:stopPropagation="true" type=text style=width:80px;text-align:right @bind-value=rsuGrant.Shares placeholder="shares" />
                                                                         <input @onclick:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.Ticker placeholder="ticker" />
                                                                         shares<br/>
                                                                         granted on 
                                                                         <input @onclick:stopPropagation="true" type=text @bind-value=rsuGrant.Date placeholder="date" /><br/>
-                                                                        <input @onclick:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.VestEventsCount /> vest events,<br/>
-                                                                        vest every <input @onclick:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.VestPeriodMonths  /> months<br/>
+                                                                        <br/>
+                                                                        vest <input @onclick:stopPropagation="true" type=text style=width:40px;text-align:right @bind-value=rsuGrant.VestPercent />% of shares<br/> 
+                                                                        every <input @onclick:stopPropagation="true" type=text style=width:40px;text-align:right @bind-value=rsuGrant.VestPeriodMonths  /> months<br/>
+                                                                        with first vest happening at month # <input @onclick:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.FirstVestMonth  /><br/>
+                                                                        <br/>
                                                                         last price: $<input @onclick:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.LastPrice placeholder="last price" /><br/>
                                                                         <button title='delete grant' @onclick='@(e=>deleteGrant(e,pBuf, grantIndex))'>❌ grant</button>
                                                                         <button title='save grant' >save grant</button>
@@ -331,7 +334,7 @@
 
     void addGrant(MouseEventArgs e, int personIndex)
     {
-        if (Navigation.Uri != "/rsu-tracker/by-grant") {
+        if (!Navigation.Uri.EndsWith("/rsu-tracker/by-grant")) {
             Navigation.NavigateTo("/rsu-tracker/by-grant");
         }
 
@@ -340,7 +343,8 @@
             : null;
         var newGrant = new RSUGrant();
         if (lastGrant != null) {
-            newGrant.VestEventsCount = lastGrant.VestEventsCount;
+            newGrant.VestPercent = lastGrant.VestPercent;
+            newGrant.FirstVestMonth = lastGrant.FirstVestMonth;
             newGrant.VestPeriodMonths = lastGrant.VestPeriodMonths;
             newGrant.LastPrice = lastGrant.LastPrice;
             newGrant.Ticker = lastGrant.Ticker;
@@ -563,20 +567,31 @@
 
     private bool CalculateVestEvents(RSUGrant grant) {
         grant.VestEvents.Clear();
-        if (grant.Shares != null && grant.VestEventsCount != null && grant.VestEventsCount != 0 && grant.VestPeriodMonths != null) {
-            double vestShares = (double)(grant.Shares ?? 0) / (double)grant.VestEventsCount;
+        if (grant.Shares != null && grant.VestPercent.HasValue && grant.VestPercent > 0.0 && grant.VestPeriodMonths.HasValue) {
+            double sharesRemaining = (double)grant.Shares;
             double remainderShares = 0.0;
             if (grant.Date != null) {
-                for (int i=0; i < grant.VestEventsCount; i++) {
+                var vestIndex = 0;
+                int vestMonth = 0;
+                while (sharesRemaining > 0.0) {
+                    var vestShares = grant.VestPercent.Value / 100.0 * (double)grant.Shares; 
                     remainderShares += vestShares - (int)vestShares;
-                    var currentVestShares = (int)vestShares + (int)remainderShares;
+                    var currentVestShares = (int)vestShares + (int)(remainderShares + .0000001);
                     remainderShares -= (int)remainderShares;
-                    var vestEvent = new RSUVestEvent() { 
-                        Date = grant.Date.Value.AddMonths((i+1) * grant.VestPeriodMonths.Value),
+                    if (vestIndex == 0) {
+                        vestMonth = grant.FirstVestMonth ?? grant.VestPeriodMonths.Value;
+                    } else {
+                        vestMonth += grant.VestPeriodMonths.Value;
+                    }
+                    var vestEvent = new RSUVestEvent() {
+                        Date = grant.Date.Value.AddMonths(vestMonth),
                         Shares = currentVestShares,
                         Price = grant.LastPrice
                     };
+
                     grant.VestEvents.Add(vestEvent);
+                    vestIndex++;
+                    sharesRemaining -= currentVestShares;
                 }
 
                 return true;

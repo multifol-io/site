@@ -750,7 +750,7 @@
 
     void editAccounts() {
         showEditAccountHelpers = !showEditAccountHelpers;
-        if (Navigation.Uri != "/portfolio/accounts") {
+        if (!Navigation.Uri.EndsWith("/portfolio/accounts")) {
             Navigation.NavigateTo("/portfolio/accounts");
         }
     }
