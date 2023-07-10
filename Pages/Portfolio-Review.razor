@@ -612,168 +612,23 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                 </td>
                                 break;                                
                             case "retirement-assets":
-                                @if(ImportResult == null) {
-                                    <p><b>Prerequisites:</b> </p>
+                                <p>         
+                                    Enter/edit your portfolio details at: <a href="/portfolio/accounts">Portfolio Tracker</a>, then return here to <a href=/portfolio-review>Portfolio Review</a> to address all the needed information.<br/>
+                                    <br/>
+                                </p>
 
-                                    <label style=margin-left:25px>Tax Filing Status:</label>
-                                    <select @bind=familyData.TaxFilingStatus>
-                                        <option value="ChoiceNeeded">ChoiceNeeded</option>
-                                        <option>Single</option>
-                                        <option value=MarriedFilingJointly>Married filing jointly</option>
-                                        <option value=MarriedFilingSeperately>Married filing seperately</option>
-                                        <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
-                                        <option value=HeadOfHousehold>Head of Household</option>
-                                    </select><br/>
-                                    <br/>
-
-                                    <u><b>Current Retirement Assets:</b></u><br/>
-
-                                    accountIndex = 0;
-                                    @foreach (var account in familyData.Accounts) {
-                                        int accBuffer = accountIndex;
-                                        accountIndex++;
-                                        var accountId = "account"+accBuffer;
-                                        <br/>
-                                        <div style=padding-left:3em;text-indent:-3em;>
-                                            <button @onclick='@(e=>deleteAccount(e,accBuffer))'>❌</button>
-                                            @if (familyData.PersonCount == 2) {
-                                            <select @ref=accountN @bind=account.Identifier>
-                                                <option>our</option>
-                                                @for(int p=0;p<familyData.PersonCount;p++)
-                                                {
-                                                    <option>@familyData.People[p].PossessiveID</option>
-                                                }
-                                            </select>
-                                            }
-                                            <select @ref=accountN @bind=account.AccountType>
-                                                <option>Account Type...</option>
-                                                <option>401k</option>
-                                                <option>403b</option>
-                                                <option>457b</option>
-                                                <option>529</option>
-                                                <option>Annuity (Non-Qualified)</option>
-                                                <option>Annuity (Qualified)</option>
-                                                <option>Brokerage</option>
-                                                <option>HSA</option>
-                                                <option>Inherited IRA</option>
-                                                <option>Inherited Roth IRA</option>
-                                                <option value="Traditional IRA">IRA</option>
-                                                <option>Life Insurance</option>
-                                                <option>Refundable Deposit</option>
-                                                <option>Rollover IRA</option>
-                                                <option>Roth 401k</option>
-                                                <option>Roth IRA</option>
-                                                <option>SEP IRA</option>
-                                                <option>SIMPLE IRA</option>
-                                                <option>Solo 401k</option>
-                                                <option>Taxable</option>
-                                                <option>Traditional IRA</option>
-                                            </select>
-                                            <span> at <input style="width:140px" type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' /></span><br/>
-                                            <span><label for=@accountId>Note: </label><input id=@accountId type=text @bind-value=account.Note @bind-value:event=oninput placeholder='account note'/></span>
-                                        </div>
-                                        
-                                        investmentIndex = 0;
-                                        @foreach (var investment in account.Investments) {
-                                            int invBuffer = investmentIndex;
-                                            investmentIndex++;
-                                            <div style=margin-top:10px;margin-left:20px;padding-left:3em;text-indent:-3em;>
-                                                <button @onclick='@(e=>deleteInvestment(e,accBuffer,invBuffer))'>❌</button>
-                                                <input @ref=tickerN style="width:70px;text-transform: uppercase;" type=text @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/>
-                                                Balance 🟰 $<input style=width:100px type=text @bind-Value=investment.Value @bind-Value:event=oninput placeholder='value'/>
-                                                <br/>
-                                                <span>@investment.AssetType</span>
-                                            </div>
-                                            <div style=margin-left:85px>
-                                                <input type=text @bind-Value=investment.Name @bind-Value:event=oninput placeholder='investment fullname' />
-                                                &nbsp;(
-                                                    <input style="width:70px" type=text @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput placeholder='expense ratio'/>
-                                                %)
-                                            </div>
-                                        }
-                                        <button style=margin-left:20px @onclick='@(e=>addInvestment(e,accBuffer))'>➕</button>
-                                        <hr style=margin-left:40px/>
-                                        <div style=margin-left:40px>Account Total: @FormatUtilities.formatMoney(account.Value)</div>
-                                    }
-                                    <br/>
-                                    <hr/>
-                                    <div>Portfolio Size: @FormatUtilities.formatMoney(familyData.Value)</div>
-                                    <br/>
-                                    <div>
-                                        <button @onclick=addAccount>➕ Account</button> to manually enter another Account's info.
-                                    </div>
-                                    <br/>
-                                    <div>
-                                        <button @onclick=ShowImport>
-                                            @if(showImport){<span>Hide</span>}
-                                            Import Accounts
-                                        </button> to import Account info from a CSV/XLSX file.
-                                        @if(showError){<br/><br/><span style=color:red>ERROR: must be a CSV file from Ameriprise, eTrade, Fidelity, Merrill Edge, Schwab, or Vanguard or a XLSX file from Morgan Stanley.</span><br/>}
-                                        @if(showImport){
-                                            <br/>
-                                            <fieldset style=margin-left:20px>
-                                                <span>Download portfolio details from custodian website, and then "choose file", to import: </span><br/>
-                                                <InputFile multiple accept=".csv,.xlsx" OnChange="@((e) => OnDataFilesImport(e))" /><br/>
-                                                <ul>
-                                                    <li>Currently supports importing Ameriprise, eTrade, Fidelity, Merrill Edge, Morgan Stanley, Schwab, or Vanguard data files</li>
-                                                    <li>If your custodian's format isn't supported yet, we're happy to try to add support. If you can share your custodian's downloaded CSV file format (feel free to anonymize/change the data), please email it to suggestions@bogle.tools with details on what custodian it is from.</li>
-                                                    <li>CAUTION: only share personal info (like these files) to apps worthy of your trust!</li>
-                                                </ul>
-                                            </fieldset>
-                                        }
-                                    </div>
-                                    <br/>
-
-                                    @if(familyData.Value > 0) {
-                                    <br/>
+                                @if(familyData.Value > 0) {
                                     <div>Preferred technique to represent the approximate size of your total portfolio (in <NavLink href="/portfolio-review">portfolio review</NavLink>):</div>
                                     <InputRadioGroup @bind-Value=familyData.ValueStyle>
                                         <InputRadio id=rounded Value='0' /> <label for=rounded>@FormatUtilities.formatMoneyThousands(familyData.Value)</label> <br/>
                                         <InputRadio id=estimate Value='1' /> <label for=estimate>@estimatePortfolio(familyData)</label> <br/>
                                         <InputRadio id=dollar Value='2' /> <label for=dollar>@FormatUtilities.formatMoney(familyData.Value)</label> <br/>
                                     </InputRadioGroup>
-                                    }
-                                } else {
-                                    <EditForm Model=@ImportResult>
-                                        <div>Data Files Contains These Accounts/Investments - Choose Which to Import:</div>
-                                        <br/>
-                                        <button @onclick=finishImport>Import selected accounts</button>
-                                        <button @onclick=cancelImport>Cancel Import</button>
-                                        <br/>
-                                        <br/>
-
-                                        @foreach (var error in ImportResult.Errors)
-                                        {
-                                            <div style=font-weight:bold>Error: @error.Exception.Message</div>
-                                            @if(error.Exception.InnerException!=null){ <div>Failure location: <br/>@error.Exception.InnerException.StackTrace<br/><br/></div>};
-                                        }
-
-                                        <div><InputCheckbox @bind-Value=ImportResult.ImportUpdatedAccounts /> UPDATE these EXISTING accounts in your data file:</div>
-                                        @foreach (var account in ImportResult.UpdatedAccounts)
-                                        {
-                                            <div style=margin-left:40px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)</div>
-                                            @foreach (var investment in account.Investments)
-                                            {
-                                                <div style=margin-left:80px>@investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)</div>
-                                            }
-                                        }
-
-                                        <br/>
-                                        <div><InputCheckbox @bind-Value=ImportResult.ImportNewAccounts /> ADD these NEW accounts in your data file:</div>
-                                        @foreach (var account in ImportResult.NewAccounts)
-                                        {
-                                            <div style=margin-left:40px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)</div>
-                                            @foreach (var investment in account.Investments)
-                                            {
-                                                <div style=margin-left:80px>@investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)</div>
-                                            }
-                                        }
-                                    </EditForm>
                                 }
                                 break;
                             case "contributions":
                                 <div>
-                                    Edit Savings Contribution at: <a href="/saving">/saving</a><br/><br/>
+                                    Edit Savings Contribution at: <a href="/saving">/saving</a>, then return here to <a href=/portfolio-review>Portfolio Review</a> to address all the needed information.<br/><br/>
 
                                     <span>
                                         @((MarkupString)boldUnderline("Contributions:"))
