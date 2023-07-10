@@ -1,11 +1,18 @@
 @page "/"
+@inject IAppData appData
+@inject NavigationManager Navigation
 
 <PageTitle>
 bogle.tools
 </PageTitle>
 
-<p style=font-size:large>"Take charge of your savings!"</p>
-<p>
+<p style=font-size:large;float:left>"Take charge of your savings!"</p>
+<div style=float:right>
+    <a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a>
+</div>
+
+
+<p style=clear:left>
     <a href='portfolio'>
         <span style="margin:3;font-Size:24pt">📈</span>
         Portfolio Tracker</a><br/>
@@ -36,6 +43,12 @@ bogle.tools
         RSU Tracker</a><br/>
         track Restricted Stock Unit grants
 </p>
-<!--<p><a href='retirement'><span style="margin:3;font-Size:24pt">🎉</span> Retirement Plan</a> - plan your retirement</p>-->
 <br/>
 
+@code {
+    private void navWithBackStack()
+    {
+        appData.LastPageUri = Navigation.Uri;
+        Navigation.NavigateTo("/profiles");
+    }
+}
