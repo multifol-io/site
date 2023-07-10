@@ -1,7 +1,7 @@
 [
     {
-        "step": "people",
-        "title": "People",
+        "step": "retirement-assets",
+        "title": "Retirement Assets",
         "number": 1,
         "summary": "",
         "priority": "",
@@ -9,8 +9,8 @@
         "description": ""
     },
     {
-        "step": "retirement-assets",
-        "title": "Retirement Assets",
+        "step": "people",
+        "title": "People",
         "number": 2,
         "summary": "",
         "priority": "",

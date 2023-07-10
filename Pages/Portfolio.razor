@@ -152,7 +152,7 @@
                             case "retirement-assets":
                                 <td>
                                     <a @onclick=editAccounts class="m-2" >✏️</a>
-                                    @((MarkupString)bold("Current Retirement Assets:"))<br/>
+                                    @((MarkupString)bold("Investable Assets"))
                                     @if (appData.FamilyData.Accounts.Count > 0) {
                                         if (View == null) {
                                             View = "allocations";
@@ -164,21 +164,14 @@
                                         var custodiansBold = (View == "custodians") ? ";font-weight:bold" : "";
                                         var taxTypesBold = (View == "tax-types") ? ";font-weight:bold" : "";
                                     
-                                        <label>&nbsp;&nbsp;by</label>
+                                        <label>&nbsp;by</label>
                                         <span>
-                                            <a style="@allocationsBold" href=/portfolio>Allocations</a> |
-                                            <a style="@accountsBold" href=/portfolio/accounts>Accounts</a> | 
-                                            <a style="@taxTypesBold" href=/portfolio/tax-types>Tax Types</a> | 
-                                            <a style="@custodiansBold" href=/portfolio/custodians>Custodians</a> | 
-                                            <a title="Bogleheads.org style" style="@bogleheadsBold" href=/portfolio/bogleheads>Accounts(BH)</a>
+                                            <a style="@allocationsBold" href=/portfolio>allocations</a> |
+                                            <a style="@accountsBold" href=/portfolio/accounts>accounts</a> | 
+                                            <a style="@taxTypesBold" href=/portfolio/tax-types>tax-types</a> | 
+                                            <a style="@custodiansBold" href=/portfolio/custodians>custodians</a> | 
+                                            <a title="Bogleheads.org style" style="@bogleheadsBold" href=/portfolio/bogleheads>accounts(bh)</a>
                                         </span><br/>
-
-                                        @if(showEditAccountHelpers) {
-                                            <br/><i>Editing Retirement Assets:</i>
-                                            <br/><span>Click on account/investment, in "@EditAccountsViewName" view to edit.
-                                            <br/>Add/import accounts buttons are below the account list.
-                                            <br/>Details on <a href="/updating-portfolio">3 ways to update portfolios</a>.</span>
-                                        }
 
                                         @switch (View) {
                                             case "accounts":
@@ -699,7 +692,23 @@
                                             Import ⬆️
                                         </button>
                                     }
-
+                                    @if(showEditAccountHelpers || appData.FamilyData.Accounts.Count == 0) {
+                                        <br/><br/><i>Editing Investable Assets:</i>
+                                        <ul>
+                                            <li>
+                                                To hand enter an account, click the add account button (➕) above.
+                                            </li>
+                                            <li>
+                                                To import accounts via a CSV file from the account custodian, click the import accounts button (Import ⬆️) above.
+                                            </li>
+                                            <li>
+                                                To edit existing accounts/investments, click on it above.
+                                            </li>
+                                        </ul>
+                                        <br/><span>See <a href="/updating-portfolio">3 ways to update portfolios</a> for more options to update accounts/investments.</span>
+                                        <br/>
+                                        <br/>
+                                    }
                                     <hr/>
                                 </td>
                                 break;                                
@@ -740,8 +749,10 @@
     }
 
     void editAccounts() {
-        Navigation.NavigateTo("/portfolio/accounts");
         showEditAccountHelpers = !showEditAccountHelpers;
+        if (Navigation.Uri != "/portfolio/accounts") {
+            Navigation.NavigateTo("/portfolio/accounts");
+        }
     }
 
     void toggleTaxFilingStatusEditing() {
@@ -752,8 +763,6 @@
         assetAllocationEditing = !assetAllocationEditing;
     }
 
-    public const string EditAccountsViewName = "Investments by Accounts";
-    
     bool showEditAccountHelpers = false;
     string refreshButtonText = "🔃 Quotes";
     bool assetAllocationEditing = false;
