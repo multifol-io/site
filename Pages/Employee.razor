@@ -1,0 +1,53 @@
+@page "/employee/{Organization}"
+@inject IAppData appData
+@inject NavigationManager Navigation
+
+<PageTitle>
+{Organization} employee
+</PageTitle>
+
+
+<h4 style=float:left>Advice for @Organization employees</h4>
+<div style=float:right;margin-left:50px>
+    <a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a>
+</div>
+<p style=clear:left>"Take charge of your savings!"</p>
+
+<p>
+    <a href='saving'>
+        <span style="margin:3;font-Size:24pt">💰</span>
+        Saving Plan</a><br/>
+        plan your annual savings
+</p>
+<p>
+    <a href='rsu-tracker'>
+        <span style="margin:3;font-Size:24pt">🔮</span>
+        RSU Tracker</a><br/>
+        track Restricted Stock Unit grants
+</p>
+
+<p>
+    <a href='portfolio'>
+        <span style="margin:3;font-Size:24pt">📈</span>
+        Portfolio Tracker</a><br/>
+        organize and analyze your portfolio
+</p>
+<p>
+    <a href='portfolio-review'>
+        <span style="margin:3;font-Size:24pt">🧐</span>
+        Portfolio Review</a><br/>
+        gather more info, and ask questions on bogleheads.org forum
+</p>
+<br/>
+
+@code {
+
+    [Parameter]
+    public string? Organization { get; set; }
+
+    private void navWithBackStack()
+    {
+        appData.LastPageUri = Navigation.Uri;
+        Navigation.NavigateTo("/profiles");
+    }
+}
