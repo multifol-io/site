@@ -77,13 +77,35 @@
 }
 <br/>
 @if(renameProfileName == null) {
-    @if(!importing){<label>Create new profile or import copy of profile:</label>} else {<label>Import shared profile:</label>}
+    @if(!importing){
+        <label>Create new profile:</label>
+    } else {
+        <label>Import shared profile:</label>
+    }
     <br/>
-    <InputText placeholder="@newProfileNamePlaceholder" @bind-Value="@newProfileName" />
-    @if(!importing){<button @onclick="createProfile">➕ new</button>} else
-    {<InputText placeholder="import code" @bind-Value="@copyCode" />}
-    <button @onclick="importProfile">➕ import copy</button>
-    @if(importing) { <button @onclick="cancelImport">cancel</button> }
+    
+    @if(!importing){
+        <ul>
+            <li>
+                <InputText placeholder="@newProfileNamePlaceholder" @bind-Value="@newProfileName" />
+                <button @onclick="createProfile">➕ new</button>
+            </li>
+        </ul>
+    } else {
+        <InputText placeholder="import code" @bind-Value="@copyCode" />
+        <InputText placeholder="@newProfileNamePlaceholder" @bind-Value="@newProfileName" />
+        <div>the user who shared their profile with you, will give you a import code (9 digit number)</div>
+    }
+    
+    @if (!importing) {
+        <br/><label>Import shared profile:</label>
+        <ul>
+            <li><button @onclick="importProfile">➕ import copy...</button></li>
+        </ul>
+    } else {
+        <br/><button @onclick="importProfile">➕ import copy</button>
+        <button @onclick="cancelImport">cancel</button>
+    }
 }
 
 <br/>
