@@ -11,4 +11,6 @@ public interface IAppData {
     public string PortfolioView { get; set; }
     public string RSUView { get; set; }
     public ImportResult? ImportResult { get; set; }
+    public bool ApplyStockSizeRules { get; set; }
+    public bool ApplyTaxEfficientPlacementRules { get; set; }
 }

@@ -25,5 +25,14 @@
         "priority": "",
         "returns": "",
         "description": ""
+    },
+    {
+        "step": "advice-settings",
+        "title": "Advice Settings",
+        "number": 4,
+        "summary": "",
+        "priority": "",
+        "returns": "",
+        "description": ""
     }
 ]

@@ -149,6 +149,12 @@
                                     <hr/>
                                 </td>
                                 break;
+                            case "advice-settings":
+                                @((MarkupString)bold("Portfolio Advice Settings:"))<span>&nbsp;(experimental)</span><br/>
+                                <InputCheckbox id=stockSizeRules style=margin-left:20px @bind-Value=appData.ApplyStockSizeRules /> <label for=stockSizeRules>&nbsp;Avoid large concentrations of an individual stock</label><br/>
+                                <InputCheckbox id=taxEfficientRules style=margin-left:20px @bind-Value=appData.ApplyTaxEfficientPlacementRules  /> <label for=taxEfficientRules>&nbsp;Give tax efficient placement advice</label><br/> 
+                                <br/>
+                                break;
                             case "retirement-assets":
                                 <td>
                                     <a @onclick=editAccounts class="m-2" >✏️</a>
@@ -255,6 +261,7 @@
 
                                                         var investmentIndex = 0;
                                                         foreach (var investment in account.Investments.OrderByDescending(i=>i.Value)) {
+                                                            var advice = Advisor.Advise(investment, account, appData);
                                                             int invBuffer = investmentIndex;
                                                             investmentIndex++;
                                                             string bgColor = alternateRow2 ? "white" : "lightgray";
@@ -265,6 +272,13 @@
                                                                     <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(investment.Price)</td>
                                                                     <td style=text-align:right;padding-left:8px>@if(account.Investments.Count>1){@FormatUtilities.formatMoney(investment.ValuePIN, decimalPlaces:0)}</td>
                                                                 </tr>
+                                                                @foreach (var adviceItem in advice) {
+                                                                    <tr style=background-color:@bgColor>
+                                                                        <td colspan=4 style=padding-left:16px>
+                                                                            <span style=background-color:yellow>@adviceItem</span>
+                                                                        </td>
+                                                                    </tr>
+                                                                }
                                                             } else {
                                                                 <tr style=background-color:@bgColor>
                                                                     <td style=padding-left:16px>
@@ -406,7 +420,7 @@
                                                         string bgColor = alternateRow ? "white" : "lightgray";
                                                         <tr style=background-color:@bgColor>
                                                             <td style=padding-left:8px;vertical-align:text-top title=@investment.Name>@investment.Ticker 
-                                                                @if (investment.IsStock && (investment.ValuePIN > appData.FamilyData.Value * .05)) {
+                                                                @if (appData.ApplyStockSizeRules && investment.IsStock && (investment.ValuePIN > appData.FamilyData.Value * .05)) {
                                                                     <sub title='@FormatUtilities.formatMoney(appData.FamilyData.Value*.05) is 5% of portfolio' style=background-color:yellow>&nbsp;&gt;5%</sub>
                                                                 }
                                                             </td>
@@ -456,7 +470,13 @@
                                                     @((MarkupString)bold((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "") + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + " (" + FormatUtilities.formatPercent(account.Percentage) + ")" ))
                                                     <br/>
                                                     @foreach (var investment in account.Investments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.ValuePIN)) {
+                                                        var advice = Advisor.Advise(investment, account, appData);
                                                         <span>&nbsp;&nbsp;&nbsp;&nbsp;@FormatUtilities.formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@(investment.ExpenseRatio!=null?investment.ExpenseRatio:"??")%)</span><br/>
+                                                        @foreach (var adviceItem in advice) {
+                                                            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=background-color:yellow>
+                                                                @adviceItem
+                                                            </span></span><br/>
+                                                        }
                                                     }
                                                     <br/>
                                                 }
