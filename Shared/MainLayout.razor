@@ -7,7 +7,35 @@
 
     <main>
         <article class="content px-4">
-            @Body
+            <MyErrorBoundary @ref="boundary">
+                <ChildContent>
+                    @Body
+                </ChildContent>
+                <ErrorContent>
+                    <div style="display: table; height: 400px; overflow: hidden;">
+                    <div style="display: table-cell; vertical-align: middle;">
+                        <div>
+                        <h4>bogle.tools ran into a problem. We're sorry!</h4> 
+                        To help us fix, please send the yellow text to the developer by:
+                        <ul>
+                            <li>email (Suggestions@bogle.tools)</li>
+                            <li>or via a bogleheads.org private message to "Rob Relyea"</li>
+                        </ul>
+
+                        <pre style=background-color:lightyellow>
+                            @boundary.CurrentException
+                        </pre>
+                        
+                        </div>
+                    </div>
+                    </div>
+                </ErrorContent>
+            </MyErrorBoundary>
         </article>
     </main>
+
 </div>
+
+@code {
+    private MyErrorBoundary boundary;
+}
