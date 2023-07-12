@@ -735,15 +735,21 @@
                                         <button @onclick=ShowImport title='import Accounts from a CSV/XLSX file'>
                                             Import ⬆️
                                         </button>
+                                        <button @onclick=showOpenBH title='open Accounts (into a new profile) from a bogleheads.org Portfolio Review'>
+                                            Import(bh)
+                                        </button>
                                     }
                                     @if(showEditAccountHelpers || appData.FamilyData.Accounts.Count == 0) {
                                         <br/><br/><i>Editing Investable Assets:</i>
                                         <ul>
                                             <li>
-                                                To hand enter an account, click the add account button (➕) above.
+                                                To hand enter an account, click the add account button "➕" above.
                                             </li>
                                             <li>
-                                                To import accounts via a CSV file from the account custodian, click the import accounts button (Import ⬆️) above.
+                                                To import accounts via a CSV file from the account custodian, click the import accounts button "Import ⬆️" above.
+                                            </li>
+                                            <li>
+                                                To import accounts from an existing portfolio review on bogleheads.org, click the import accounts button "Import ⬆️" above.
                                             </li>
                                             <li>
                                                 To edit existing accounts/investments, click on it above.
@@ -1065,6 +1071,14 @@
             showError = false;
         } *@
         Navigation.NavigateTo("/import-accounts");
+    }
+
+    private void showOpenBH() {
+        @* showImport = !showImport;
+        if (!showImport) {
+            showError = false;
+        } *@
+        Navigation.NavigateTo("/load-accounts-bh");
     }
 
     private async Task UpdateInvestmentPrice(Investment investment)

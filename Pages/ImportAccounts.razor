@@ -1,4 +1,5 @@
 @page "/import-accounts"
+@page "/load-accounts-bh"
 @inject IAppData appData
 @inject NavigationManager Navigation
 @inject IList<Fund> Funds
@@ -15,68 +16,76 @@
 <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
 
 <div style=clear:left>
+
+
 @if (appData.ImportResult == null) {
-    @if(showError){<br/><br/><span style=color:red>ERROR: must be a CSV file from Ameriprise, eTrade, Fidelity, Merrill Edge, Schwab, or Vanguard or a XLSX file from Morgan Stanley.</span><br/>}
-    <br/>
-    
-    <p>As mentioned in <a href=/updating-portfolio>/updating-portfolio</a> there are 3 ways to enter/update data about your portolio. Importing CSV files is one of those techniques.</p>
+    @if (csvImport) {
+        @if(showError){<br/><br/><span style=color:red>ERROR: must be a CSV file from Ameriprise, eTrade, Fidelity, Merrill Edge, Schwab, or Vanguard or a XLSX file from Morgan Stanley.</span><br/>}
+        <br/>
+        
+        <p>As mentioned in <a href=/updating-portfolio>/updating-portfolio</a> there are 3 ways to enter/update data about your portolio. Importing CSV files is one of those techniques.</p>
 
-    <ol>
-        <li><b>Download CSV file</b>: download portfolio details (CSV file) from custodian website (see Detailed steps below for each supported Custodian)</li>
-        <li><b>Import CSV file</b>: Click "Choose Files" button to import new or updated account information into your <a href=/profiles>active bogle.tools profile's</a> portfolio</li>
-        <li><b>Choose Account Type</b>: Choose Account Type for each new account</li>
-        <li><b>Cost Basis</b>: Enter/verify Cost Basis for each taxable investment</li>
-    </ol>
-
-    <fieldset style=margin-left:20px>
-        <InputFile multiple accept=".csv,.xlsx" OnChange="@((e) => OnDataFilesImport(e))" /><br/>
-        <ul>
-            <li>CAUTION: only share personal info (like these files) to apps worthy of your trust! See our privacy details in our <a href=/FAQ>FAQ</a></li>
-        </ul>
-    </fieldset><br/>
-
-        <p><b>Detailed steps for Vanguard accounts</b>:
         <ol>
-            <li>Log into <a target=_new href=https://vanguard.com>vanguard.com</a>↗️</li>
-            <li>Click on the <a target=_new href=https://holdings.web.vanguard.com>Holdings</a>↗️ link</li>
-            <li>Click on the <a target=_new href=https://personal1.vanguard.com/ofu-open-fin-exchange-webapp/ofx-welcome>Download Center</a>↗️ link to the right</li>
-            <li>Step 1 - Choose "A spreadsheet-compatible CSV File"</li>
-            <li>Step 2 - Choose any date range (I choose 18 months, but bogle.tools doesn't use this transaction information yet, so 1 month is fine too)</li>
-            <li>Step 3 - Choose all accounts you'd like to export holdings info about</li>
-            <li>Press Download button on bottom right of page - a file named OfxDownload.csv will be downloaded via your browser</li>
-            <li>Click "Choose File" button on this page, find and choose the OfxDownload.csv file in Downloads folder</li>
-            <li>Choose Account Type for each new account and enter/verify Cost Basis for each taxable investment</li>
-            <li>For Taxable accounts, update Cost Basis by copying "Total cost" of each investment from <a target=_new href=https://cost-basis.web.vanguard.com/unrealized>Vanguard's Cost Basis view</a>↗️</li>
+            <li><b>Download CSV file</b>: download portfolio details (CSV file) from custodian website (see Detailed steps below for each supported Custodian)</li>
+            <li><b>Import CSV file</b>: Click "Choose Files" button to import new or updated account information into your <a href=/profiles>active bogle.tools profile's</a> portfolio</li>
+            <li><b>Choose Account Type</b>: Choose Account Type for each new account</li>
+            <li><b>Cost Basis</b>: Enter/verify Cost Basis for each taxable investment</li>
         </ol>
-        </p>
 
-        <p><b>Detailed steps for Fidelity accounts</b>:
-        <ol>
-            <li>Log into <a target=_new href=https://fidelity.com>fidelity.com</a>↗️</li>
-            <li>Click on the <a target=_new href=https://digital.fidelity.com/ftgw/digital/portfolio/positions>Positions</a>↗️ link</li>
-            <li>Click on the <a target=_new href=https://personal1.vanguard.com/ofu-open-fin-exchange-webapp/ofx-welcome>Download image</a>↗️ (<img src=/images/fidelity-download-csv.png />) link</li>
-            <li>a file named Portfolio_Positions_[DATE].csv will be downloaded via your browser</li>
-            <li>Click "Choose File" button on this page, find and choose the Portfolio_Positions_[DATE].csv file in Downloads folder</li>
-        </ol>
-        </p>
+        <fieldset style=margin-left:20px>
+            <InputFile multiple accept=".csv,.xlsx" OnChange="@((e) => OnDataFilesImport(e))" /><br/>
+            <ul>
+                <li>CAUTION: only share personal info (like these files) to apps worthy of your trust! See our privacy details in our <a href=/FAQ>FAQ</a></li>
+            </ul>
+        </fieldset><br/>
 
-        <p><b>Basic steps for Ameriprise, eTrade, Merrill Edge, Morgan Stanley, or Schwab accounts</b>:
-        <ol>
-            <li>Log into that website</li>
-            <li>Find and download the data file</li>
-            <li>Click "Choose File" button on this page, find and choose the file that you downloaded</li>
-            <li>please email <a href=mailto:suggestions@bogle.tools>suggestions@bogle.tools</a> with more details so these steps can be enhanced</li>
-        </ol>
-        </p>
-
-        <p><b>Other Custodians</b>:
+            <p><b>Detailed steps for Vanguard accounts</b>:
             <ol>
-                <li>If your custodian's format isn't supported yet, we're happy to try to add support</li>
-                <li>download the CSV file for your account(s) from another Custodian</li>
-                <li>anonymize/change the data in that CSV file (using a text editor)</li>
-                <li>email it to <a href=mailto:suggestions@bogle.tools>suggestions@bogle.tools</a> with details on what custodian it is from.</li>
+                <li>Log into <a target=_new href=https://vanguard.com>vanguard.com</a>↗️</li>
+                <li>Click on the <a target=_new href=https://holdings.web.vanguard.com>Holdings</a>↗️ link</li>
+                <li>Click on the <a target=_new href=https://personal1.vanguard.com/ofu-open-fin-exchange-webapp/ofx-welcome>Download Center</a>↗️ link to the right</li>
+                <li>Step 1 - Choose "A spreadsheet-compatible CSV File"</li>
+                <li>Step 2 - Choose any date range (I choose 18 months, but bogle.tools doesn't use this transaction information yet, so 1 month is fine too)</li>
+                <li>Step 3 - Choose all accounts you'd like to export holdings info about</li>
+                <li>Press Download button on bottom right of page - a file named OfxDownload.csv will be downloaded via your browser</li>
+                <li>Click "Choose File" button on this page, find and choose the OfxDownload.csv file in Downloads folder</li>
+                <li>Choose Account Type for each new account and enter/verify Cost Basis for each taxable investment</li>
+                <li>For Taxable accounts, update Cost Basis by copying "Total cost" of each investment from <a target=_new href=https://cost-basis.web.vanguard.com/unrealized>Vanguard's Cost Basis view</a>↗️</li>
             </ol>
-        </p>
+            </p>
+
+            <p><b>Detailed steps for Fidelity accounts</b>:
+            <ol>
+                <li>Log into <a target=_new href=https://fidelity.com>fidelity.com</a>↗️</li>
+                <li>Click on the <a target=_new href=https://digital.fidelity.com/ftgw/digital/portfolio/positions>Positions</a>↗️ link</li>
+                <li>Click on the <a target=_new href=https://personal1.vanguard.com/ofu-open-fin-exchange-webapp/ofx-welcome>Download image</a>↗️ (<img src=/images/fidelity-download-csv.png />) link</li>
+                <li>a file named Portfolio_Positions_[DATE].csv will be downloaded via your browser</li>
+                <li>Click "Choose File" button on this page, find and choose the Portfolio_Positions_[DATE].csv file in Downloads folder</li>
+            </ol>
+            </p>
+
+            <p><b>Basic steps for Ameriprise, eTrade, Merrill Edge, Morgan Stanley, or Schwab accounts</b>:
+            <ol>
+                <li>Log into that website</li>
+                <li>Find and download the data file</li>
+                <li>Click "Choose File" button on this page, find and choose the file that you downloaded</li>
+                <li>please email <a href=mailto:suggestions@bogle.tools>suggestions@bogle.tools</a> with more details so these steps can be enhanced</li>
+            </ol>
+            </p>
+
+            <p><b>Other Custodians</b>:
+                <ol>
+                    <li>If your custodian's format isn't supported yet, we're happy to try to add support</li>
+                    <li>download the CSV file for your account(s) from another Custodian</li>
+                    <li>anonymize/change the data in that CSV file (using a text editor)</li>
+                    <li>email it to <a href=mailto:suggestions@bogle.tools>suggestions@bogle.tools</a> with details on what custodian it is from.</li>
+                </ol>
+            </p>
+    } else { // BH format import
+        <p>Please paste in the text from a Bogleheads Portfolio Reivew post. Please include "Portfolio Size:" and "Current Retirement Assets:" in the content.</p>
+        <button @onclick=importBH>load</button><br/>
+        <textarea cols=80 rows=80 @bind-value="bhContent" @bind-value:event="oninput" />
+    }
 }
 else
 {
@@ -106,12 +115,26 @@ else
                     {
                         string bgColor = alternateRow ? "white" : "lightgray";
                         alternateRow = !alternateRow;
-                        <div style=margin-left:16px;background-color:@bgColor>@investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)<br/>
-                        @if(account.ReplaceAccount.AccountType == "Taxable" && investment.AssetType != AssetType.Cash_MoneyMarket) {
-                            <span>@account.AccountType</span>
-                            <label>Cost Basis: </label>
-                            <span>$</span><input type=text style=width:100px;text-align:right @bind-Value=investment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
-                        }
+                        <div style=margin-left:16px;background-color:@bgColor>
+                            @investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)<br/>
+                            @if(account.ReplaceAccount.AccountType == "Taxable" && investment.AssetType != AssetType.Cash_MoneyMarket) {
+                                <div>@account.AccountType
+                                    &nbsp;<label>Cost Basis: </label>
+                                    <span>$</span>
+                                    <input type=text style=width:100px;text-align:right @bind-Value=investment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
+                                </div>
+                            }
+                            <label style=padding-left:16px>Asset Type:</label>
+                            @if(investment.AssetType == AssetType.Unknown || investment.AssetType == null) {
+                                <select @bind=investment.AssetType>
+                                    @foreach (AssetType assetType in (AssetType[]) Enum.GetValues(typeof(AssetType))) {
+                                        <option>@assetType</option>
+                                    }
+                                </select>
+                            } else {
+                                <span>@investment.AssetType</span>
+                            }
+                            <br/>
                         </div>
                     }
                     <br/>
@@ -173,6 +196,14 @@ else
                         <label>Cost Basis: </label>
                         <span>$</span><input type=text style=width:100px;text-align:right @bind-Value=investment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
                     }
+                    @if(investment.AssetType == AssetType.Unknown || investment.AssetType == null) {
+                        <label style=padding-left:16px>Asset Type:</label>
+                        <select @bind=investment.AssetType>
+                            @foreach (AssetType assetType in (AssetType[]) Enum.GetValues(typeof(AssetType))) {
+                                <option>@assetType</option>
+                            }
+                        </select>
+                    }
                     </div>
                 }
                 <br/>
@@ -183,11 +214,105 @@ else
 </div>
 
 @code {
+    private async Task importBH() {
+        ImportResult importResult = new();
+
+        bool assetParsing = false;
+        Account? account = null;
+        Investment? investment = null;
+        double? portfolioSize = null;
+        foreach (var line in bhContent.Split('\n')) {
+            if (line.StartsWith("Portfolio Size:")) {
+                var tSize = line.Substring("Portfolio Size:".Length).Trim();
+                double multiplier = 1.0;
+                if (tSize.ToLowerInvariant().EndsWith("m")) {
+                    multiplier = 1000000.0;
+                    tSize = tSize.Substring(0,tSize.Length-1);
+                } else if (tSize.ToLowerInvariant().EndsWith("k")) {
+                    multiplier = 1000.0;
+                    tSize = tSize.Substring(0,tSize.Length-1);
+                }
+
+                portfolioSize = FormatUtilities.ParseDouble(tSize, allowCurrency:true) * multiplier;
+            } else if (line.StartsWith("Current Retirement Assets:")) {
+                assetParsing = true;
+            } else if (line.StartsWith("Contributions:")) {
+                assetParsing = false;
+            } else if (assetParsing) {
+                if (string.IsNullOrEmpty(line.Trim())) {
+                        // blank line - ignore
+                } else if (string.IsNullOrWhiteSpace(line.Substring(0,1))) {
+                    if (account != null) {
+                        // investment line
+                        int percentIndex = line.IndexOf("%");
+                        int afterLeftParenIndex = line.IndexOf("(") + 1;
+                        int rightParenIndex = line.IndexOf(")");
+                        int afterLeftParenIndex2 = line.IndexOf("(",rightParenIndex+1 ) + 1;
+                        int rightParenIndex2 = line.IndexOf(")",rightParenIndex+1);
+                        var percentOfPortfolio = double.Parse(line.Substring(0,percentIndex));
+                        var investmentName = line.Substring(percentIndex + 1, afterLeftParenIndex - 1 - (percentIndex + 1)).Trim();
+                        string? ticker = null;
+                        try {
+                            ticker = line.Substring(afterLeftParenIndex, rightParenIndex - afterLeftParenIndex).ToUpperInvariant();
+                            if (ticker.Length > 9) {
+                                if (ticker.IndexOf(" ") < 0) {
+                                    ticker = ticker.Substring(0,8);
+                                } else {
+                                    ticker = null;
+                                }
+                            }
+                        } catch (Exception) {
+                        }
+
+                        double? expRatio = null;
+                        try {
+                            var erRatioString = line.Substring(afterLeftParenIndex2, rightParenIndex2 - afterLeftParenIndex2);
+                            erRatioString = erRatioString.Replace(System.Globalization.CultureInfo.CurrentCulture.NumberFormat.PercentSymbol, "");
+                            expRatio = double.Parse(erRatioString);
+                        } catch (Exception) {
+                        }
+
+                        AssetType assetType = AssetType.Unknown;
+                        if (!string.IsNullOrEmpty(ticker)) {
+                            foreach (var fund in Funds) {
+                                if (fund.Ticker == ticker) {
+                                    assetType = fund.AssetType ?? AssetType.Unknown;
+                                }
+                            }
+                        }
+                        investment = new Investment() { Name = investmentName, Ticker = ticker, ExpenseRatio = expRatio, ValuePIN = portfolioSize * percentOfPortfolio / 100, AssetType = assetType };
+                        account?.Investments.Add(investment);
+                    } else {
+                        Console.WriteLine("invalid account, skipping nested line: \"" + line + "\"");
+                    }
+                } else {
+                    // account line
+                    int atIndex = line.IndexOf(" at ");
+                    int atEndIndex = atIndex + " at ".Length;
+                    int leftParenIndex = line.IndexOf("(");
+
+                    if (atIndex > -1) {
+                        var custodian = line.Substring(atEndIndex, leftParenIndex - atEndIndex).Trim();
+                        var accountType = line.Substring(0, atIndex).Trim();
+                        //TODO: parse prefix
+                        account = new Account() { Custodian = custodian, AccountType = accountType, Import = true };
+                        importResult.NewAccounts.Add(account);
+                    } else {
+                        account = null;
+                        Console.WriteLine("invalid account: " + line);
+                    }
+                }
+            }
+        }
+
+        appData.ImportResult = importResult;
+    }
+
     private async Task OnDataFilesImport(InputFileChangeEventArgs e)
     {
         var files = e.GetMultipleFiles();
         appData.ImportResult = await Importer.ImportDataFiles(files, Funds, appData.FamilyData.Accounts, appData.FamilyData.PIN);
-        foreach (var account in appData.ImportResult.ImportedAccounts) 
+        foreach (var account in appData.ImportResult.NewAccounts) 
         {
             account.Import = true;
         }
@@ -251,6 +376,20 @@ else
         Navigation.NavigateTo("/profiles");
     }
     
+    protected override async Task OnInitializedAsync()
+    {
+        csvImport = Navigation.Uri.EndsWith("/import-accounts");
+        pageHeading = csvImport ? "Import Accounts via CSV files" : "Import Accounts from Bogleheads Portfolio Review format";
+
+        if (!csvImport) {
+            bhContent = "Portfolio Size:\n\nCurrent Retirement Assets:";
+        }
+
+        base.OnInitialized();
+    }
+
     private bool showError { get; set; }
-    private string pageHeading = "Import Accounts";
+    private string pageHeading;
+    private bool csvImport = false;
+    private string bhContent;
 }

@@ -1,7 +1,6 @@
+using System.Globalization;
+
 public static class FormatUtilities {
-
-
-
     public static string formatMoney(int? amount) 
     {
         return String.Format("${0:#,0.##}", amount);
@@ -89,4 +88,36 @@ public static class FormatUtilities {
     {
         return String.Format("{0:#,0.0000}", amount);
     }
+
+    public static double? ParseDoubleOrNull(string? value, bool allowCurrency = false) {
+        return (value == null ? null : ParseDouble(value, allowCurrency));
+    }
+    
+    public static double ParseDouble(string value, bool allowCurrency = false) {
+        double doubleValue;
+        var numberStyles = (allowCurrency ? currency : numbers);
+        double.TryParse(FormatUtilities.TrimQuotes(value), numberStyles,
+                        CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
+                        out doubleValue);
+        return doubleValue;
+    }
+
+    public static string TrimQuotes(string input) {
+        if (string.IsNullOrEmpty(input)) { return input; }
+        int start = 0;
+        int end = input.Length;
+
+        if (end > 1 && input[end-1] == '"') {
+            end--;
+        }
+
+        if (input[0] == '"') {
+            start++;
+            end--;
+        }
+        return input.Substring(start, end);
+    }
+    
+    private static NumberStyles numbers = NumberStyles.Float | NumberStyles.AllowThousands;
+    private static NumberStyles currency = NumberStyles.AllowCurrencySymbol | numbers;
 }

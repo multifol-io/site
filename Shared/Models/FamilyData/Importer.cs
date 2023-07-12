@@ -1,7 +1,6 @@
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Components.Forms;
-using System.Globalization;
 
 
 
@@ -120,21 +119,21 @@ public class Importer {
             var headerChunks = line.Split(',');
             var headerChunksLen = headerChunks.Length;
 
-            if (headerChunksLen > 1 && TrimQuotes(headerChunks[0]) == ("COB Date") && TrimQuotes(headerChunks[1]) == "Security #") {
+            if (headerChunksLen > 1 && FormatUtilities.TrimQuotes(headerChunks[0]) == ("COB Date") && FormatUtilities.TrimQuotes(headerChunks[1]) == "Security #") {
                 //MERRILL EDGE
                 Dictionary<string,Account> accountLookup = new();
 
                 var chunks = await SplitCsvLine(lines[lineIndex++]);
                 while (chunks.Count > 0 && chunks[0] != "")
                 {
-                    var accountNum = TrimQuotes(chunks[7]);
-                    var accountRegistration = TrimQuotes(chunks[6]);
-                    var accountNickname = TrimQuotes(chunks[5]);
-                    var symbol = TrimQuotes(chunks[2]);
-                    string? investmentName = TrimQuotes(chunks[4]);
-                    double shares = ParseDouble(chunks[8]);
-                    double value = ParseDouble(chunks[10] ?? "0.0", allowCurrency:true);
-                    double costBasis = value - ParseDouble(chunks[11] ?? "0.0", allowCurrency:true);
+                    var accountNum = FormatUtilities.TrimQuotes(chunks[7]);
+                    var accountRegistration = FormatUtilities.TrimQuotes(chunks[6]);
+                    var accountNickname = FormatUtilities.TrimQuotes(chunks[5]);
+                    var symbol = FormatUtilities.TrimQuotes(chunks[2]);
+                    string? investmentName = FormatUtilities.TrimQuotes(chunks[4]);
+                    double shares = FormatUtilities.ParseDouble(chunks[8]);
+                    double value = FormatUtilities.ParseDouble(chunks[10] ?? "0.0", allowCurrency:true);
+                    double costBasis = value - FormatUtilities.ParseDouble(chunks[11] ?? "0.0", allowCurrency:true);
 
                     if (value < 0.0 || value > 1.0) {
                         Account? newAccount = null;
@@ -189,15 +188,15 @@ public class Importer {
                         if (symbol == "Pending Activity")
                         {
                             investmentName = symbol;
-                            value = ParseDouble(chunks[6], allowCurrency:true);
+                            value = FormatUtilities.ParseDouble(chunks[6], allowCurrency:true);
                             symbol = "PENDING";
                             expenseRatio = 0.0;
                         } else {
                             investmentName = chunks[3];
-                            value = ParseDouble(chunks[7], allowCurrency:true);
-                            price = ParseDouble(chunks[5], allowCurrency:true);
-                            shares = ParseDouble(chunks[4]);
-                            costBasis = ParseDouble(chunks[13], allowCurrency:true);
+                            value = FormatUtilities.ParseDouble(chunks[7], allowCurrency:true);
+                            price = FormatUtilities.ParseDouble(chunks[5], allowCurrency:true);
+                            shares = FormatUtilities.ParseDouble(chunks[4]);
+                            costBasis = FormatUtilities.ParseDouble(chunks[13], allowCurrency:true);
                         }
 
                         if (value < 0.0 || value > 1.0) {
@@ -252,9 +251,9 @@ public class Importer {
                             var accountNumber = chunks[0];
                             var symbol = chunks[2];
                             var investmentName = chunks[1];
-                            double shares = ParseDouble(chunks[3]);
-                            double price = ParseDouble(chunks[4], allowCurrency:true);
-                            double value = ParseDouble(chunks[5], allowCurrency:true);
+                            double shares = FormatUtilities.ParseDouble(chunks[3]);
+                            double price = FormatUtilities.ParseDouble(chunks[4], allowCurrency:true);
+                            double value = FormatUtilities.ParseDouble(chunks[5], allowCurrency:true);
                             // costBasis not available in CSV
                                             
                             if (value < 0.0 || value > 1.0) {
@@ -290,7 +289,7 @@ public class Importer {
                         consecutiveBlanks++;
                     } else {
                         consecutiveBlanks = 0;
-                        var fundAndAccountNum = TrimQuotes(chunks[0]).Split('-');
+                        var fundAndAccountNum = FormatUtilities.TrimQuotes(chunks[0]).Split('-');
                         var fundNumber = fundAndAccountNum[0];
                         var accountNum = fundAndAccountNum[1];
                         string? symbol = null;
@@ -305,8 +304,8 @@ public class Importer {
                             }
                         }
 
-                        double shares = ParseDouble(chunks[3]);
-                        double value = ParseDouble(chunks[4], allowCurrency:true);
+                        double shares = FormatUtilities.ParseDouble(chunks[3]);
+                        double value = FormatUtilities.ParseDouble(chunks[4], allowCurrency:true);
                         // costBasis not available in CSV
 
                                         
@@ -338,7 +337,7 @@ public class Importer {
                 chunks = await SplitCsvLine(lines[lineIndex++]); // accountInfo
                 Account newAccount = new(PIN) {
                         Custodian = "ETrade",
-                        Note = TrimQuotes(chunks[0])
+                        Note = FormatUtilities.TrimQuotes(chunks[0])
                     };
                 importedAccounts.Add(newAccount);
 
@@ -363,9 +362,9 @@ public class Importer {
                     var symbol = chunks[0];
                     string? investmentName = null;
 
-                    double shares = ParseDouble(chunks[4]);
-                    double value = ParseDouble(chunks[9], allowCurrency:true);
-                    double costBasis = value - ParseDouble(chunks[7], allowCurrency:true);
+                    double shares = FormatUtilities.ParseDouble(chunks[4]);
+                    double value = FormatUtilities.ParseDouble(chunks[9], allowCurrency:true);
+                    double costBasis = value - FormatUtilities.ParseDouble(chunks[7], allowCurrency:true);
 
                     if (chunks[0] == "CASH") {
                         shares = value;
@@ -406,9 +405,9 @@ public class Importer {
                         while (lineIndex < lines.Length - 1 && chunks[0] != "\"") {
                             var symbol = chunks[0].Substring(1); // front quote wasn't removed by split.
                             string? investmentName = null;
-                            double shares = ParseDouble(chunks[2]);
-                            double value = ParseDouble(chunks[6], allowCurrency:true);
-                            double costBasis = ParseDouble(chunks[9], allowCurrency:true);
+                            double shares = FormatUtilities.ParseDouble(chunks[2]);
+                            double value = FormatUtilities.ParseDouble(chunks[6], allowCurrency:true);
+                            double costBasis = FormatUtilities.ParseDouble(chunks[9], allowCurrency:true);
                             switch (symbol) {
                                 case "Cash & Cash Investments":
                                     symbol = "CASH";
@@ -456,7 +455,7 @@ public class Importer {
                         int count = 0;
                         foreach (var chunk in chunks)
                         {
-                            switch (TrimQuotes(chunk))
+                            switch (FormatUtilities.TrimQuotes(chunk))
                             {
                                 case "Mkt. Value":
                                     valueCol = i;
@@ -515,8 +514,8 @@ public class Importer {
                         var investmentName = GetValue(chunks, descriptionCol);
                         var accountName = GetValue(chunks, accountNameCol)!;
                         var accountDescription = GetValue(chunks, accountDescriptionCol)!;
-                        var quantity = ParseDoubleOrNull(GetValue(chunks, quantityCol));
-                        var value = ParseDoubleOrNull(GetValue(chunks, valueCol), allowCurrency:true);
+                        var quantity = FormatUtilities.ParseDoubleOrNull(GetValue(chunks, quantityCol));
+                        var value = FormatUtilities.ParseDoubleOrNull(GetValue(chunks, valueCol), allowCurrency:true);
                         
                         var newAccount = StoreInvestment(accountLookup, importedAccounts, funds, "Ameriprise", value, accountDescription!.Substring(accountDescription.Length-4), symbol, investmentName, quantity, costBasis:null, PIN:PIN);
                     }
@@ -567,7 +566,7 @@ public class Importer {
 
     private static string? GetValue(List<string> chunks, int? columnIndex)
     {
-        return (columnIndex.HasValue ? TrimQuotes(chunks[columnIndex.Value]) : null);
+        return (columnIndex.HasValue ? FormatUtilities.TrimQuotes(chunks[columnIndex.Value]) : null);
     }
 
     public static async Task<List<Account>> ImportXLSX(Stream stream, IList<Fund> funds, int? PIN) {
@@ -608,9 +607,9 @@ public class Importer {
 
                     string? investmentName = GetValue(GetCell(wsPart, "B" + row.ToString()), stringTable);
                     string? symbol = GetValue(GetCell(wsPart, "D" + row.ToString()), stringTable);
-                    double shares = ParseDouble(GetCell(wsPart, "I" + row.ToString()).InnerText, allowCurrency:false);
-                    double value = ParseDouble(GetCell(wsPart, "J" + row.ToString()).InnerText, allowCurrency:true);
-                    double costBasis = ParseDouble(GetCell(wsPart, "N" + row.ToString()).InnerText, allowCurrency:true);
+                    double shares = FormatUtilities.ParseDouble(GetCell(wsPart, "I" + row.ToString()).InnerText, allowCurrency:false);
+                    double value = FormatUtilities.ParseDouble(GetCell(wsPart, "J" + row.ToString()).InnerText, allowCurrency:true);
+                    double costBasis = FormatUtilities.ParseDouble(GetCell(wsPart, "N" + row.ToString()).InnerText, allowCurrency:true);
 
                     if (value < 0.0 || value > 1.0) {
                         Account? newAccount = null;
@@ -648,21 +647,7 @@ public class Importer {
         return wsPart.Worksheet.Descendants<Cell>().Where(c => c.CellReference.Value == cellReference)?.FirstOrDefault();
     }
 
-    private static string TrimQuotes(string input) {
-        if (string.IsNullOrEmpty(input)) { return input; }
-        int start = 0;
-        int end = input.Length;
 
-        if (end > 1 && input[end-1] == '"') {
-            end--;
-        }
-
-        if (input[0] == '"') {
-            start++;
-            end--;
-        }
-        return input.Substring(start, end);
-    }
 
     // TODO: testing ETrade scenarios, i don't think this routine works well...a string split with commas, and no spaces, returns a list with 1 item.
     // don't fix without doing a full walkthrough to make sure all file formats work.
@@ -690,20 +675,4 @@ public class Importer {
 
         return str;
     }
-
-    private static double? ParseDoubleOrNull(string? value, bool allowCurrency = false) {
-        return (value == null ? null : ParseDouble(value, allowCurrency));
-    }
-    
-    private static double ParseDouble(string value, bool allowCurrency = false) {
-        double doubleValue;
-        var numberStyles = (allowCurrency ? currency : numbers);
-        double.TryParse(TrimQuotes(value), numberStyles,
-                        CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                        out doubleValue);
-        return doubleValue;
-    }
-
-    private static NumberStyles numbers = NumberStyles.Float | NumberStyles.AllowThousands;
-    private static NumberStyles currency = NumberStyles.AllowCurrencySymbol | numbers;
 }
