@@ -59,8 +59,8 @@
                         }
                         @if (renameProfileName == null)
                         {
-                            <button @onclick="@(e=>deleteProfile(e,profileName))">Del</button>
-                            <button @onclick="@(e=>copyToProfile(e,profileName))">Copy To...</button>
+                            <button @onclick="@(e=>deleteProfile(e,profileName))">del</button>
+                            <button @onclick="@(e=>copyToProfile(e,profileName))">copy to...</button>
                         }
                         @if(profileName==appData.CurrentProfileName && profileName.ToUpper().EndsWith("-PIN"))
                         {

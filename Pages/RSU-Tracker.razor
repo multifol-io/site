@@ -60,11 +60,18 @@
     @if (steps == null || appData == null || familyData == null)
     {
         <p>
-            @if(appData.CurrentProfileName==null){<em>No active <a href=/profiles>profile</a>.</em>} 
-            else {<em>Loading...</em>}
+            @if(appData.CurrentProfileName==null){
+                <em>No active <a href=/profiles>profile</a>.</em>
+            } else {
+                <em>Loading...</em>
+            }
         </p>
-        <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
-            @if(appData.CurrentProfileName==null){<span>choose a</span>}else {<span>@appData.CurrentProfileName</span>}</a> profile
+        <div style=float:left;margin-left:50px>
+            <a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
+                @if(appData.CurrentProfileName==null){
+                    <span>choose a</span>}else {<span>@appData.CurrentProfileName</span>
+                }
+            </a> profile
         </div>
     } else if (familyData != null && familyData.PINProtected && familyData.PIN == null) {
         <div style=float:left>
@@ -171,9 +178,9 @@
                                                 <p><span style=font-size:14pt;font-weight:bold>@person.PossessiveID RSU Grants:</span> <button @onclick='@(e=>addGrant(e,pBuf))' title='add grant'>➕</button>
                                                     @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                     {
-                                                        <button @onclick=@refreshPrices title='refresh quotes' style=min-width:80px;>@refreshButtonText</button>
+                                                        <button @onclick=@refreshPrices title='update prices' style=min-width:80px;>@refreshButtonText</button>
                                                     } else {
-                                                        <a href="/updating-portfolio">Update quotes</a>
+                                                        <a href="/updating-portfolio">Update prices</a>
                                                     }
                                                 </p>
 
@@ -188,22 +195,22 @@
                                                         @{var grantCount = 0;}
                                                         @foreach (var rsuGrant in person.RSUGrants) {
                                                             var grantIndex = grantCount++;
-                                                            <tr style=vertical-align:bottom;color:white;background-Color:black @onclick='@(e=>toggleEdit(e,pBuf, grantIndex))'>
+                                                            <tr style=vertical-align:bottom;color:white;background-Color:black @onmousedown='@(e=>toggleEdit(e,pBuf, grantIndex))'>
                                                                 @if (!rsuGrant.Edit) {
                                                                     <td style=padding-left:8px;text-align:left colspan=4>@rsuGrant.Shares @rsuGrant.Ticker shares granted on @rsuGrant.Date?.ToShortDateString()</td>
                                                                 } else {
                                                                     <td style=padding-left:8px;text-align:left colspan=4>
-                                                                        <input @onclick:stopPropagation="true" type=text style=width:80px;text-align:right @bind-value=rsuGrant.Shares placeholder="shares" />
-                                                                        <input @onclick:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.Ticker placeholder="ticker" />
+                                                                        <input @onmousedown:stopPropagation="true" type=text style=width:80px;text-align:right @bind-value=rsuGrant.Shares placeholder="shares" />
+                                                                        <input @onmousedown:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.Ticker placeholder="ticker" />
                                                                         shares<br/>
                                                                         granted on 
-                                                                        <input @onclick:stopPropagation="true" type=text @bind-value=rsuGrant.Date placeholder="date" /><br/>
+                                                                        <input @onmousedown:stopPropagation="true" type=text @bind-value=rsuGrant.Date placeholder="date" /><br/>
                                                                         <br/>
-                                                                        vest <input @onclick:stopPropagation="true" type=text style=width:40px;text-align:right @bind-value=rsuGrant.VestPercent />% of shares<br/> 
-                                                                        every <input @onclick:stopPropagation="true" type=text style=width:40px;text-align:right @bind-value=rsuGrant.VestPeriodMonths  /> months<br/>
-                                                                        with first vest happening at month # <input @onclick:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.FirstVestMonth  /><br/>
+                                                                        vest <input @onmousedown:stopPropagation="true" type=text style=width:40px;text-align:right @bind-value=rsuGrant.VestPercent />% of shares<br/> 
+                                                                        every <input @onmousedown:stopPropagation="true" type=text style=width:40px;text-align:right @bind-value=rsuGrant.VestPeriodMonths  /> months<br/>
+                                                                        with first vest happening at month # <input @onmousedown:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.FirstVestMonth  /><br/>
                                                                         <br/>
-                                                                        last price: $<input @onclick:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.LastPrice placeholder="last price" /><br/>
+                                                                        last price: $<input @onmousedown:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.LastPrice placeholder="last price" /><br/>
                                                                         <button title='delete grant' @onclick='@(e=>deleteGrant(e,pBuf, grantIndex))'>❌ grant</button>
                                                                         <button title='save grant' >save grant</button>
                                                                     </td>
@@ -241,9 +248,9 @@
                                                 <p><span style=font-size:14pt;font-weight:bold>@person.PossessiveID RSU Grants:</span> <button @onclick='@(e=>addGrant(e,pBuf))' title='add grant'>➕</button>
                                                     @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
                                                     {
-                                                        <button @onclick=@refreshPrices title='refresh quotes' style=min-width:80px;>@refreshButtonText</button>
+                                                        <button @onclick=@refreshPrices title='update prices' style=min-width:80px;>@refreshButtonText</button>
                                                     } else {
-                                                        <a href="/updating-portfolio">Update quotes</a>
+                                                        <a href="/updating-portfolio">Update prices</a>
                                                     }
                                                 </p>
 
@@ -369,7 +376,7 @@
     public const string EditAccountsViewName = "Investments by Accounts";
     
     bool showEditAccountHelpers = false;
-    string refreshButtonText = "🔃 Quotes";
+    string refreshButtonText = "🔃 Prices";
     bool assetAllocationEditing = false;
     bool taxFilingStatusEditing = false;
     int? accountIndexEditing = null;
@@ -722,7 +729,7 @@
         }
 
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
-        refreshButtonText = "🔃 Quotes";
+        refreshButtonText = "🔃 Prices";
     }
 
     enum MarketDay {

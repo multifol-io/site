@@ -385,15 +385,16 @@
                                                                     
                                                                     @switch (lastInvestmentCategory) {
                                                                         case "US Stocks":
-                                                                            <span>
+                                                                            <div style=text-align:right;width:275px;background-color:DimGray>
                                                                                 &nbsp;&nbsp;&nbsp;&nbsp;@lastInvestmentCategory
-                                                                            </span>
+                                                                                <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation*100.0 * (1.0-appData.FamilyData.ActualInternationalStockAllocation))</span>
+                                                                            </div>
                                                                             break;
                                                                         case "International Stocks":
-                                                                            <span>
+                                                                            <div style=text-align:right;width:275px;background-color:DimGray>
                                                                                 &nbsp;&nbsp;&nbsp;&nbsp;@lastInvestmentCategory
                                                                                 <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualInternationalStockAllocation*100.0)</span>
-                                                                            </span>
+                                                                            </div>
                                                                             break;
                                                                         case "Bonds":
                                                                             <span>
