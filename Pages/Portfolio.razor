@@ -420,7 +420,7 @@
                                                                         case "International Stocks":
                                                                             <div style=text-align:right;width:275px;background-color:DimGray>
                                                                                 &nbsp;&nbsp;&nbsp;&nbsp;@lastInvestmentCategory
-                                                                                <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualInternationalStockAllocation*100.0)</span>
+                                                                                <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation*appData.FamilyData.ActualInternationalStockAllocation*100.0) [@FormatUtilities.formatPercent(appData.FamilyData.ActualInternationalStockAllocation*100.0)]</span>
                                                                             </div>
                                                                             break;
                                                                         case "Bonds":
