@@ -244,68 +244,82 @@ else
                 } else if (string.IsNullOrWhiteSpace(line.Substring(0,1))) {
                     if (account != null) {
                         // investment line
-                        int percentIndex = line.IndexOf("%");
-                        int afterLeftParenIndex = line.IndexOf("(") + 1;
-                        int rightParenIndex = line.IndexOf(")");
-                        int afterLeftParenIndex2 = line.IndexOf("(",rightParenIndex+1 ) + 1;
-                        int rightParenIndex2 = line.IndexOf(")",rightParenIndex+1);
-                        var percentOfPortfolio = double.Parse(line.Substring(0,percentIndex));
-                        var investmentName = line.Substring(percentIndex + 1, afterLeftParenIndex - 1 - (percentIndex + 1)).Trim();
-                        string? ticker = null;
-                        try {
-                            ticker = line.Substring(afterLeftParenIndex, rightParenIndex - afterLeftParenIndex).ToUpperInvariant();
-                            if (ticker.Length > 9) {
-                                if (ticker.IndexOf(" ") < 0) {
-                                    ticker = ticker.Substring(0,8);
-                                } else {
-                                    ticker = null;
-                                }
-                            }
-                        } catch (Exception) {
-                        }
-
-                        double? expRatio = null;
-                        try {
-                            var erRatioString = line.Substring(afterLeftParenIndex2, rightParenIndex2 - afterLeftParenIndex2);
-                            erRatioString = erRatioString.Replace(System.Globalization.CultureInfo.CurrentCulture.NumberFormat.PercentSymbol, "");
-                            expRatio = double.Parse(erRatioString);
-                        } catch (Exception) {
-                        }
-
-                        AssetType assetType = AssetType.Unknown;
-                        if (!string.IsNullOrEmpty(ticker)) {
-                            foreach (var fund in Funds) {
-                                if (fund.Ticker == ticker) {
-                                    assetType = fund.AssetType ?? AssetType.Unknown;
-                                }
-                            }
-                        }
-                        investment = new Investment() { Name = investmentName, Ticker = ticker, ExpenseRatio = expRatio, ValuePIN = portfolioSize * percentOfPortfolio / 100, AssetType = assetType };
+                        investment = ParseInvestmentLine(line, portfolioSize ?? 100.0);
                         account?.Investments.Add(investment);
                     } else {
                         Console.WriteLine("invalid account, skipping nested line: \"" + line + "\"");
                     }
                 } else {
                     // account line
+                    string? custodian = null;
                     int atIndex = line.IndexOf(" at ");
                     int atEndIndex = atIndex + " at ".Length;
+                    
                     int leftParenIndex = line.IndexOf("(");
+                    if (leftParenIndex == -1) { leftParenIndex = line.Length; }
 
-                    if (atIndex > -1) {
-                        var custodian = line.Substring(atEndIndex, leftParenIndex - atEndIndex).Trim();
-                        var accountType = line.Substring(0, atIndex).Trim();
-                        //TODO: parse prefix
-                        account = new Account() { Custodian = custodian, AccountType = accountType, Import = true };
-                        importResult.NewAccounts.Add(account);
-                    } else {
-                        account = null;
-                        Console.WriteLine("invalid account: " + line);
+                    if (atIndex == -1) {
+                        if (leftParenIndex > -1) {
+                            atIndex = leftParenIndex;
+                        } else {
+                            atIndex = line.Length;
+                        }
                     }
+                    var accountType = line.Substring(0, atIndex).Trim();
+                    if (atIndex != line.Length) {
+                        custodian = line.Substring(atEndIndex, leftParenIndex - atEndIndex).Trim();
+                        //TODO: parse prefix
+                    }
+                    account = new Account() { Custodian = custodian, AccountType = accountType, Import = true };
+                    importResult.NewAccounts.Add(account);
                 }
             }
         }
 
         appData.ImportResult = importResult;
+    }
+
+// right: 35% ProShares UltraPro S&P500 (UPRO) (.91%)
+// bad1: 5% VTCLX Vanguard Tax-Managed Capital Appreciation .09er
+// bad2: 10% (VTIVX-Vanguard TR 2045 Fund) (0.08)
+    private Investment ParseInvestmentLine(string line, double portfolioSize) {
+        int percentIndex = line.IndexOf("%");
+        int afterLeftParenIndex = line.IndexOf("(") + 1;
+        int rightParenIndex = line.IndexOf(")");
+        int afterLeftParenIndex2 = line.IndexOf("(",rightParenIndex+1 ) + 1;
+        int rightParenIndex2 = line.IndexOf(")",rightParenIndex+1);
+        var percentOfPortfolio = double.Parse(line.Substring(0,percentIndex));
+        var investmentName = line.Substring(percentIndex + 1, afterLeftParenIndex - 1 - (percentIndex + 1)).Trim();
+        string? ticker = null;
+        try {
+            ticker = line.Substring(afterLeftParenIndex, rightParenIndex - afterLeftParenIndex).ToUpperInvariant();
+            if (ticker.Length > 9) {
+                if (ticker.IndexOf(" ") < 0) {
+                    ticker = ticker.Substring(0,8);
+                } else {
+                    ticker = null;
+                }
+            }
+        } catch (Exception) {
+        }
+
+        double? expRatio = null;
+        try {
+            var erRatioString = line.Substring(afterLeftParenIndex2, rightParenIndex2 - afterLeftParenIndex2);
+            erRatioString = erRatioString.Replace(System.Globalization.CultureInfo.CurrentCulture.NumberFormat.PercentSymbol, "");
+            expRatio = double.Parse(erRatioString);
+        } catch (Exception) {
+        }
+
+        AssetType assetType = AssetType.Unknown;
+        if (!string.IsNullOrEmpty(ticker)) {
+            foreach (var fund in Funds) {
+                if (fund.Ticker == ticker) {
+                    assetType = fund.AssetType ?? AssetType.Unknown;
+                }
+            }
+        }
+        return new Investment() { Name = investmentName, Ticker = ticker, ExpenseRatio = expRatio, ValuePIN = portfolioSize * percentOfPortfolio / 100, AssetType = assetType };
     }
 
     private async Task OnDataFilesImport(InputFileChangeEventArgs e)
