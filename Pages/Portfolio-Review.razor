@@ -137,7 +137,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                             @if (familyData.FederalMarginalTaxBracket != null) { <span>&nbsp;@familyData.FederalMarginalTaxBracket Federal, @familyData.StateMarginalTaxBracket% State</span> }
                                             <br/><br/>
                                             @((MarkupString)bold("State of Residence:"))
-                                            @if (familyData.StateMarginalTaxBracket != null) { <span>&nbsp;@familyData.StateOfResidence</span> }
+                                            <span>&nbsp;@familyData.StateOfResidence</span>
                                         </span>
                                         <br/><br/>
                                     </td>
@@ -474,7 +474,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                             <InputRadioGroup @bind-Value=familyData.FederalMarginalTaxBracket>
                                                 <label>Tax Bracket (@familyData.TaxFilingStatus):</label><br/>
                                                 <table style="margin-left:20px">
-                                                    <tr><th></th><th></th></tr>
+                                                    <tr><th>Bracket</th><th style=padding-left:30px>Taxable Income<sub>1</sub></th></tr>
                                                 @foreach (var taxBracket in taxFiler.TaxBrackets)
                                                 {
                                                     if (lastBracket != null) {
@@ -486,6 +486,8 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                                 }
                                                     <tr><td><InputRadio Value='@lastBracket'/>&nbsp;@lastBracket</td><td style=padding-left:30px>Over @FormatUtilities.formatMoney(lastStartAmount-1)</td></tr>
                                                 </table>
+                                                <br/>
+                                                <p><sub>1</sub> Brackets for ordinary income are based on taxable income, which is line 15 on your 1040 for most people. If you have a lot of long term capital gains or qualified dividends, the tax bracket for your ordinary income tax bracket may be lower. - <a target=_blank href=https://www.bogleheads.org/wiki/Progressive_tax#Taxable_income>more details on Taxable Income</a>↗️</p>
                                             </InputRadioGroup>
                                         }
                                     }
@@ -934,7 +936,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
     [Parameter]
     public string? TopicValue { get; set; }
 
-    public bool ShowMarkup { get; set; }
+    public bool ShowMarkup { get; set; } = true;
     public string? currentAccountIndex { get; set; }
     private Step[]? steps;
     public int accountIndex = 0;
