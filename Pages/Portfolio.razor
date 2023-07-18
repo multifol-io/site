@@ -396,6 +396,7 @@
                                                             }
                                                             if (groupCategories == 1 && (investment.InvestmentOrderCategory == "Bonds" || investment.InvestmentOrderCategory == "Cash" || investment.InvestmentOrderCategory == "Other")) {
                                                                 groupCategories++;
+                                                                <tr><td style=font-size:5pt>&nbsp;</td></tr>
                                                                 <tr style=vertical-align:bottom;color:white;background-Color:black>
                                                                     <td style=text-align:left colspan=4>
                                                                         Fixed Assets &nbsp;@FormatUtilities.formatPercent((appData.FamilyData.ActualBondAllocation + appData.FamilyData.ActualCashAllocation) * 100.0)
@@ -404,6 +405,7 @@
                                                             }
                                                             if (groupCategories == 2 && investment.InvestmentOrderCategory == "Other") {
                                                                 groupCategories++;
+                                                                <tr><td style=font-size:5pt>&nbsp;</td></tr>
                                                                 <tr style=vertical-align:bottom;color:white;background-Color:black>
                                                                     <td style=text-align:left colspan=4>
                                                                         Other &nbsp;@FormatUtilities.formatPercent(appData.FamilyData.ActualOtherAllocation * 100.0)
@@ -414,35 +416,40 @@
 
                                                         if (lastInvestmentCategory != investment.InvestmentOrderCategory) {
                                                             lastInvestmentCategory = investment.InvestmentOrderCategory;
-                                                            <tr style=vertical-align:bottom;color:white;background-Color:black>
+                                                            <tr style=vertical-align:bottom;color:white;background-Color:DimGray>
                                                                 <td style=text-align:left colspan=4>
                                                                     
                                                                     @switch (lastInvestmentCategory) {
                                                                         case "US Stocks":
-                                                                            <div style=text-align:right;width:275px;background-color:DimGray>
-                                                                                &nbsp;&nbsp;&nbsp;&nbsp;@lastInvestmentCategory
+                                                                            alternateRow = false;
+                                                                            <div style=margin-left:.4in;background-color:DimGray>
+                                                                                @lastInvestmentCategory
                                                                                 <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation*100.0 * (1.0-appData.FamilyData.ActualInternationalStockAllocation))</span>
                                                                             </div>
                                                                             break;
                                                                         case "International Stocks":
-                                                                            <div style=text-align:right;width:275px;background-color:DimGray>
-                                                                                &nbsp;&nbsp;&nbsp;&nbsp;@lastInvestmentCategory
+                                                                            alternateRow = false;
+                                                                            <div style=margin-left:.4in;background-color:DimGray>
+                                                                                @lastInvestmentCategory
                                                                                 <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation*appData.FamilyData.ActualInternationalStockAllocation*100.0) [@FormatUtilities.formatPercent(appData.FamilyData.ActualInternationalStockAllocation*100.0)]</span>
                                                                             </div>
                                                                             break;
                                                                         case "Bonds":
-                                                                            <div style=text-align:right;width:275px;background-color:DimGray>
+                                                                            alternateRow = false;
+                                                                            <div style=margin-left:.4in;background-color:DimGray>
                                                                                 @lastInvestmentCategory
                                                                                 <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualBondAllocation*100.0)</span>
                                                                             </div>
                                                                             break;
                                                                         case "Cash":
-                                                                            <div style=text-align:right;width:275px;background-color:DimGray>
+                                                                            alternateRow = false;
+                                                                            <div style=margin-left:.4in;background-color:DimGray>
                                                                                 @lastInvestmentCategory
                                                                                 <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualCashAllocation*100.0)</span>
                                                                             </div>
                                                                             break;
                                                                         default:
+                                                                            alternateRow = false;
                                                                             break;
                                                                     }
                                                                 </td>
