@@ -792,7 +792,7 @@
 
     void editAccount(MouseEventArgs e, int index)
     {
-        var accounts = appData.FamilyData.Accounts.OrderByDescending(a=>a.Value).ToList();
+        var accounts = appData.FamilyData.Accounts;
         if (accountIndexEditing != null) {
             accounts[accountIndexEditing.Value].Edit = false;            
         }
@@ -1172,14 +1172,14 @@
     }
 
     private void addInvestment2(MouseEventArgs e, int accountIndex) {
-        var account = appData.FamilyData.Accounts.OrderByDescending(a=>a.Value).ToList()[accountIndex];
+        var account = appData.FamilyData.Accounts[accountIndex];
         account.Investments.Add(new Investment(appData.FamilyData.PIN) { funds = Funds });
     }
 
     void deleteInvestment2(MouseEventArgs e, int accountIndex, int investmentIndex)
     {
-        var account = appData.FamilyData.Accounts.OrderByDescending(a=>a.Value).ToList()[accountIndex];
-        var investmentToDelete = account.Investments.OrderByDescending(i=>i.Value).ToList()[investmentIndex];
+        var account = appData.FamilyData.Accounts[accountIndex];
+        var investmentToDelete = account.Investments[investmentIndex];
         account.Investments.Remove(investmentToDelete);
         appData.FamilyData.UpdatePercentages();
     }
@@ -1213,7 +1213,7 @@
 
     private async void deleteAccount2(MouseEventArgs e, int accountIndex)
     {
-        var accountToDelete = appData.FamilyData.Accounts.OrderByDescending(a=>a.Value).ToList()[accountIndex];
+        var accountToDelete = appData.FamilyData.Accounts.[accountIndex];
         appData.FamilyData.Accounts.Remove(accountToDelete);
         accountIndexEditing = null;
         appData.FamilyData.UpdatePercentages();
