@@ -561,11 +561,14 @@
     {
         steps = await Http.GetFromJsonAsync<Step[]>("data/rsu-tracker-steps.json");
         Navigation.LocationChanged += LocationChanged;
-        for(int p=0;p<appData.FamilyData.PersonCount;p++) {
-            var person = appData.FamilyData.People[p];
 
-            foreach (var grant in person.RSUGrants) {
-                CalculateVestEvents(grant);
+        if (appData != null && appData.FamilyData != null) {
+            for(int p=0;p<appData.FamilyData.PersonCount;p++) {
+                var person = appData.FamilyData.People[p];
+
+                foreach (var grant in person.RSUGrants) {
+                    CalculateVestEvents(grant);
+                }
             }
         }
 

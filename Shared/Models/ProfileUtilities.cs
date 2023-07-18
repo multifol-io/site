@@ -56,13 +56,17 @@ public static class ProfileUtilities
         };
         
         var loadedFamilyData = await FamilyData.LoadFromJson(appData, storedJson, options);
-        foreach (var account in loadedFamilyData.Accounts) {
-            if (string.IsNullOrEmpty(account.Identifier) || account.Identifier == "our") {
-                account.Owner = 0;
-            } else if (account.Identifier == loadedFamilyData.People[0].PossessiveID) {
-                account.Owner = 1;
-            } else if (loadedFamilyData.PersonCount == 2 && account.Identifier == loadedFamilyData.People[1].PossessiveID) {
-                account.Owner = 2;
+        if (loadedFamilyData == null) {
+            // error loading profile. how should we handle this?
+        } else {
+            foreach (var account in loadedFamilyData.Accounts) {
+                if (string.IsNullOrEmpty(account.Identifier) || account.Identifier == "our") {
+                    account.Owner = 0;
+                } else if (account.Identifier == loadedFamilyData.People[0].PossessiveID) {
+                    account.Owner = 1;
+                } else if (loadedFamilyData.PersonCount == 2 && account.Identifier == loadedFamilyData.People[1].PossessiveID) {
+                    account.Owner = 2;
+                }
             }
         }
 
