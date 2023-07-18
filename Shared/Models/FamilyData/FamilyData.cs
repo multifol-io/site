@@ -181,6 +181,19 @@ public class FamilyData
         }
     }
 
+    public string TaxFilingString {
+        get {
+            return TaxFilingStatus switch
+            {
+                TaxFilingStatus.Single => "Single",
+                TaxFilingStatus.MarriedFilingJointly => "Married filing jointly",
+                TaxFilingStatus.MarriedFilingSeperately => "Married filing separately",
+                TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart => "Married filing separately (and living apart)",
+                _ => "Choice needed",
+            };
+        }
+    }
+
     public int? AdjustedGrossIncome { get; set; }
     public int? IncomeTaxPaid { get; set; }
     public int? TaxableToInvest { get; set; }

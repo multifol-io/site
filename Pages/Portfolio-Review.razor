@@ -131,7 +131,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                     <td>
                                         <span>
                                             @((MarkupString)bold("Tax Filing Status:"))
-                                            @if (familyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@familyData.TaxFilingStatus</span> }
+                                            @if (familyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@familyData.TaxFilingString</span> }
                                             <br/><br/>
                                             @((MarkupString)bold("Tax Rate:"))
                                             @if (familyData.FederalMarginalTaxBracket != null) { <span>&nbsp;@familyData.FederalMarginalTaxBracket Federal, @familyData.StateMarginalTaxBracket% State</span> }
@@ -445,8 +445,8 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                         <option value="ChoiceNeeded">ChoiceNeeded</option>
                                         <option>Single</option>
                                         <option value=MarriedFilingJointly>Married filing jointly</option>
-                                        <option value=MarriedFilingSeperately>Married filing seperately</option>
-                                        <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                                        <option value=MarriedFilingSeperately>Married filing separately</option>
+                                        <option value=MarriedFilingSeperatelyAndLivingApart>Married filing separately (and living apart)</option>
                                         <option value=HeadOfHousehold>Head of Household</option>
                                     </select><br/>
                                     <br/>
@@ -462,7 +462,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                                 isMatch = taxFiler.TaxFilingStatus == "MarriedFilingSeperately";
                                                 break;
                                             default:
-                                                isMatch = taxFiler.TaxFilingStatus == familyData.TaxFilingStatus.ToString();
+                                                isMatch = taxFiler.TaxFilingStatus == familyData.TaxFilingString.ToString();
                                                 break;
                                         }
                                         if (isMatch)
@@ -472,7 +472,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
 
                                             <br/>
                                             <InputRadioGroup @bind-Value=familyData.FederalMarginalTaxBracket>
-                                                <label>Tax Bracket (@familyData.TaxFilingStatus):</label><br/>
+                                                <label>Tax Bracket (@familyData.TaxFilingString):</label><br/>
                                                 <table style="margin-left:20px">
                                                     <tr><th>Bracket</th><th style=padding-left:30px>Taxable Income<sub>1</sub></th></tr>
                                                 @foreach (var taxBracket in taxFiler.TaxBrackets)
@@ -510,8 +510,8 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                     <option value="ChoiceNeeded">ChoiceNeeded</option>
                                     <option>Single</option>
                                     <option value=MarriedFilingJointly>Married filing jointly</option>
-                                    <option value=MarriedFilingSeperately>Married filing seperately</option>
-                                    <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                                    <option value=MarriedFilingSeperately>Married filing separately</option>
+                                    <option value=MarriedFilingSeperatelyAndLivingApart>Married filing separately (and living apart)</option>
                                     <option value=HeadOfHousehold>Head of Household</option>
                                 </select><br/><br/>
                                 

@@ -108,7 +108,7 @@
                                     <a @onclick=toggleTaxFilingStatusEditing class="m-2" >✏️</a>
                                     @((MarkupString)bold("Tax Filing Status:"))
                                     @if (!taxFilingStatusEditing) {
-                                        @if (familyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@familyData.TaxFilingStatus</span> }
+                                        @if (familyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@familyData.TaxFilingString</span> }
                                         @if(familyData.PersonCount > 0) {
                                             <span>&nbsp;@getPronoun(familyData.People[0], false)</span>
                                         }
@@ -121,8 +121,8 @@
                                             <option value="ChoiceNeeded">ChoiceNeeded</option>
                                             <option>Single</option>
                                             <option value=MarriedFilingJointly>Married filing jointly</option>
-                                            <option value=MarriedFilingSeperately>Married filing seperately</option>
-                                            <option value=MarriedFilingSeperatelyAndLivingApart>Married filing seperately (and living apart)</option>
+                                            <option value=MarriedFilingSeperately>Married filing separately</option>
+                                            <option value=MarriedFilingSeperatelyAndLivingApart>Married filing separately (and living apart)</option>
                                             <option value=HeadOfHousehold>Head of Household</option>
                                         </select><br/><br/>
                                         
