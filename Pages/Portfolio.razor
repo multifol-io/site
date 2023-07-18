@@ -225,6 +225,7 @@
                                                                         <option>Annuity (Qualified)</option>
                                                                         <option>Brokerage</option>
                                                                         <option>HSA</option>
+                                                                        <option>Individual</option>
                                                                         <option>Inherited IRA</option>
                                                                         <option>Inherited Roth IRA</option>
                                                                         <option value="Traditional IRA">IRA</option>
@@ -746,14 +747,16 @@
                                                 To hand enter an account, click the add account button "➕" above.
                                             </li>
                                             <li>
-                                                To import accounts via a CSV file from the account custodian, click the import accounts button "Import ⬆️" above.
+                                                To import accounts via a CSV file from the account custodian (Vanguard, Fidelity, Schwab, etc...), click the import accounts button "Import ⬆️" above.
                                             </li>
                                             <li>
-                                                To import accounts from an existing portfolio review on bogleheads.org, click the import accounts button "Import(bh)" above.
+                                                To import accounts from an existing portfolio review on bogleheads.org, click the "Import(bh)" button above.
                                             </li>
-                                            <li>
-                                                To edit existing accounts/investments, click on it above.
-                                            </li>
+                                            @if (appData.FamilyData.Accounts.Count > 0) {
+                                                <li>
+                                                    To edit existing accounts/investments, click on it above.
+                                                </li>
+                                            }
                                         </ul>
                                         <br/><span>See <a href="/updating-portfolio">3 ways to update portfolios</a> for more options to update accounts/investments.</span>
                                         <br/>
@@ -1291,13 +1294,15 @@
         for(int p=0;p<appData.FamilyData.PersonCount;p++) {
             var person = appData.FamilyData.People[p];
             foreach (var rsuGrant in person.RSUGrants) {
-                var ticker = rsuGrant.Ticker.ToUpper();
-                var grantInvestment = new Investment() { Ticker = ticker, GrantToUpdateQuote = rsuGrant };
-                if (!quotes.ContainsKey(ticker)) {
-                    quotes.Add(ticker, new List<Investment> () { grantInvestment });
-                } else {
-                    var investments = quotes[ticker];
-                    investments.Add(grantInvestment);
+                if (!string.IsNullOrEmpty(rsuGrant.Ticker)) {
+                    var ticker = rsuGrant.Ticker.ToUpper();
+                    var grantInvestment = new Investment() { Ticker = ticker, GrantToUpdateQuote = rsuGrant };
+                    if (!quotes.ContainsKey(ticker)) {
+                        quotes.Add(ticker, new List<Investment> () { grantInvestment });
+                    } else {
+                        var investments = quotes[ticker];
+                        investments.Add(grantInvestment);
+                    }
                 }
             }
         }

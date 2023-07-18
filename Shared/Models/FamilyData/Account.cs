@@ -185,6 +185,7 @@ public class Account
                     return "Post-Tax";
                 case "Annuity (Non-Qualified)":
                 case "Brokerage":
+                case "Individual":
                 case "Taxable":
                     return "Taxable";
                 case "Refundable Deposit":
@@ -204,7 +205,7 @@ public class Account
             var ownerCategory = (Owner + 1) * 6; // 6=Joint, 12=First Person, 18= Second Person
             return AccountType switch
             {
-                "Annuity (Non-Qualified)" or "Brokerage" or "Taxable" => 1 + Owner,
+                "Annuity (Non-Qualified)" or "Brokerage" or "Individual" or "Taxable" => 1 + Owner,
                 "401k" or "403b" or "457b" or "Roth 401k" or "SIMPLE IRA" or "Solo 401k" or "SEP IRA" => 2 + ownerCategory,
                 "Annuity (Qualified)" or "Inherited IRA" or "Traditional IRA" or "Rollover IRA" => 3 + ownerCategory,
                 "Inherited Roth IRA" or "Roth IRA" => 4 + ownerCategory,
