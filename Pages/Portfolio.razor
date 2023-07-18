@@ -191,7 +191,7 @@
                                                         </tr>
                                                     }
                                                     @{var accountIndex = 0;}
-                                                    @foreach (var account in appData.FamilyData.Accounts.OrderByDescending(a=>a.Value)) {
+                                                    @foreach (var account in appData.FamilyData.Accounts) {
                                                         bool alternateRow2 = false;
                                                         int accBuffer = accountIndex;
                                                         accountIndex++;
@@ -266,7 +266,7 @@
                                                         }
 
                                                         var investmentIndex = 0;
-                                                        foreach (var investment in account.Investments.OrderByDescending(i=>i.Value)) {
+                                                        foreach (var investment in account.Investments) {
                                                             var advice = Advisor.Advise(investment, account, appData);
                                                             int invBuffer = investmentIndex;
                                                             investmentIndex++;

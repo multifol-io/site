@@ -95,11 +95,14 @@ public class EmployerPlan : INotifyPropertyChanged {
                     if (MatchB > 0 && matchBLimit == 1.0) contribution += MaxMatch / (MatchB / 100.0);
                     if (MatchB > 0 && matchBLimit < 1.0) contribution += AnnualSalary * matchBLimit;
                 }
+            } else {
+                contribution = 0.0;
             }
 
             return (int?)contribution;
         }
     }
+
     public int? MatchAmount { 
         get
         {
