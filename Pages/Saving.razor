@@ -69,7 +69,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                     @pageHeading <h6 style=display:inline>for @appData.CurrentProfileName profile</h6>
                 </h4>
             </div>
-            <div style=clear:left><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault >(manage profiles)</a></div>
+            <div style=clear:left;margin-left:1.5in><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault >(manage profiles)</a></div>
 
             <p style=clear:left>To save money efficiently, you should prioritize the most efficient techniques. This tool has integrated the advice from <a target=_blank href="https://www.bogleheads.org/wiki/Prioritizing_investments">Bogleheads Prioritizing Investments wiki</a> ↗️. Review and complete the steps below.</p>
 
@@ -420,16 +420,19 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                     string prevPage = folderName + prevStep?.step;
                     string nextPage = folderName + nextStep?.step;
 
-
                     <div style=float:left>
                         <h4 style="max-width:450px">
-                            <NavLink href=@pagePath>@pageHeading</NavLink> &gt; @step.title (@step.number)<br/>
+                            <NavLink href=@pagePath>@pageHeading</NavLink> <h6 style=display:inline>for @appData.CurrentProfileName profile</h6>
                         </h4>
+                    </div>
+                    <div style=clear:left;margin-left:1.5in><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault >(manage profiles)</a></div>
+
+                    <div style=clear:left>
+                        <h4>@step.title (@step.number)</h4>
                         <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
                         <hr/>
                     </div>
-                    <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
-
+                    
                     <h4 style=clear:left>@((MarkupString)markupize(step.priority))</h4>
 
                     <p class="article"><b>Summary:</b> @((MarkupString)markupize(step.summary))</p>
