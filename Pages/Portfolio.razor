@@ -1213,7 +1213,7 @@
 
     private async void deleteAccount2(MouseEventArgs e, int accountIndex)
     {
-        var accountToDelete = appData.FamilyData.Accounts.[accountIndex];
+        var accountToDelete = appData.FamilyData.Accounts[accountIndex];
         appData.FamilyData.Accounts.Remove(accountToDelete);
         accountIndexEditing = null;
         appData.FamilyData.UpdatePercentages();
