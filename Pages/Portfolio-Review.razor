@@ -68,10 +68,10 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
             
             <div style=float:left>
                 <h4 style="max-width:450px">
-                    @pageHeading
+                    @pageHeading <h6 style=display:inline>for @appData.CurrentProfileName profile</h6>
                 </h4>
             </div>
-            <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
+            <div style=clear:left><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault >(manage profiles)</a></div>
 
             <p style=clear:left>
                 Bogleheads.org forum enables you to <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Ask Portfolio Questions</a> ↗️.

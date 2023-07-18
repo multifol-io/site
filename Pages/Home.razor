@@ -6,13 +6,12 @@
 bogle.tools
 </PageTitle>
 
-<p style=float:left>"Take charge of your savings!"</p>
-<div style=float:left;margin-left:50px>
-    <a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
-        @appData.CurrentProfileName profile
-    </a>
+<div style=float:left>
+    <h4 style="max-width:450px">
+        @pageHeading <h6 style=display:inline>for @appData.CurrentProfileName profile</h6>
+    </h4>
 </div>
-
+<div style=clear:left><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault >(manage profiles)</a></div>
 
 <p style=clear:left>
     <a href='portfolio'>
@@ -46,6 +45,7 @@ bogle.tools
         track Restricted Stock Unit grants
 </p>
 <br/>
+<p>"Take charge of your savings!"</p>
 
 @code {
     private void navWithBackStack()
@@ -53,4 +53,6 @@ bogle.tools
         appData.LastPageUri = Navigation.Uri;
         Navigation.NavigateTo("/profiles");
     }
+
+    private string pageHeading = "Bogle.tools";
 }

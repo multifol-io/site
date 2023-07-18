@@ -71,10 +71,10 @@
         
         <div style=float:left>
             <h4 style="max-width:450px">
-                @pageHeading
+                @pageHeading <h6 style=display:inline>for @appData.CurrentProfileName profile</h6>
             </h4>
         </div>
-        <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
+        <div style=clear:left><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault >(manage profiles)</a></div>
 
         <div style=clear:left>
             <table id=_reviewTable>

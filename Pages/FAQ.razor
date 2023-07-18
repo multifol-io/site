@@ -4,16 +4,12 @@
 
 <PageTitle>FAQ - bogle.tools</PageTitle>
 
-<h4 style=float:left>FAQ</h4>
-
-        @if(appData.CurrentProfileName==null){
-            <em style=float:left;margin-left:50px>No active <a href=/profiles>profile</a>.</em>
-        }
-        else {
-            <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
-                @if(appData.CurrentProfileName==null){<span>choose a</span>}else {<span>@appData.CurrentProfileName</span>} profile</a>
-            </div>
-        }
+<div style=float:left>
+    <h4 style="max-width:450px">
+        @pageHeading <h6 style=display:inline>for @appData.CurrentProfileName profile</h6>
+    </h4>
+</div>
+<div style=clear:left><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault >(manage profiles)</a></div>
 
 <p style=clear:left>
 This site provides useful tools to optimize personal finances:
@@ -68,4 +64,6 @@ See <a href="/updating-portfolio">3 ways to update portfolios</a>.</p>
         appData.LastPageUri = Navigation.Uri;
         Navigation.NavigateTo("/profiles");
     }
+
+    string pageHeading = "Help/FAQ";
 }

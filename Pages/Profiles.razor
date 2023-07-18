@@ -50,7 +50,7 @@
                     @if(!importing) {
                         @if (renameProfileName == null || renameProfileName == profileName)
                         {
-                            renameButtonText = renameProfileName == profileName ? "Rename" : "Rename...";
+                            renameButtonText = renameProfileName == profileName ? "rename" : "rename...";
                             <button @onclick="@(e=>renameProfile(e,profileName))">@renameButtonText</button>
                         }
                         @if (renameProfileName == profileName)
@@ -72,6 +72,14 @@
             alternateRow = !alternateRow;
         }
     </table>
+    @if (!string.IsNullOrEmpty(log)) {
+        <br/>
+        <p>
+            Note: once a copy is retrieved via this URL, it will no longer be available at that URL.
+        </p>
+        <code>@log</code>
+        <br/>
+    }
 } else {
     <p>Choose a profile name to store your data locally.</p>
 }
@@ -109,7 +117,6 @@
 }
 
 <br/>
-<span>@log</span>
 @code {
     private string? newProfileNamePlaceholder = "new profile name";
     private ElementReference renameBox;

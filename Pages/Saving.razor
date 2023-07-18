@@ -66,10 +66,10 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
 
             <div style=float:left>
                 <h4 style="max-width:450px">
-                    @pageHeading
+                    @pageHeading <h6 style=display:inline>for @appData.CurrentProfileName profile</h6>
                 </h4>
             </div>
-            <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
+            <div style=clear:left><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault >(manage profiles)</a></div>
 
             <p style=clear:left>To save money efficiently, you should prioritize the most efficient techniques. This tool has integrated the advice from <a target=_blank href="https://www.bogleheads.org/wiki/Prioritizing_investments">Bogleheads Prioritizing Investments wiki</a> ↗️. Review and complete the steps below.</p>
 
