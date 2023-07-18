@@ -27,7 +27,16 @@ public class Account
     [JsonIgnore]
     public int Owner { get; set; }
     public string? Identifier { get; set; }
-    public string AccountType { get; set; }
+    private string _AccountType;
+    public string AccountType {
+        get { return _AccountType; }
+        set {
+            _AccountType = value;
+            if (Identifier == "our" && TaxType != "Taxable" && TaxType != "Other") {
+                Identifier = null;
+            }
+        }
+    }
     public string? Custodian { get; set; }
     public string? Note { get; set; }
     public double Value { 

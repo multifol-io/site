@@ -215,42 +215,51 @@
                                                             </td>
                                                             </tr>
                                                             
-                                                            <tr style=color:white;background:black;padding-left:8px><td colspan=3>
-                                                                @if (appData.FamilyData.PersonCount == 2) {
-                                                                    <select style=margin-left:8px @ref=accountN @bind=account.Identifier>
-                                                                        <option>our</option>
-                                                                        @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
-                                                                            <option>@appData.FamilyData.People[p].PossessiveID</option>
-                                                                        }
-                                                                    </select>
-                                                                }
-                                                                <select style=margin-left:8px @ref=accountN @bind=account.AccountType>
-                                                                    <option>Account Type...</option>
-                                                                    <option>401k</option>
-                                                                    <option>403b</option>
-                                                                    <option>457b</option>
-                                                                    <option>529</option>
-                                                                    <option>Annuity (Non-Qualified)</option>
-                                                                    <option>Annuity (Qualified)</option>
-                                                                    <option>Brokerage</option>
-                                                                    <option>HSA</option>
-                                                                    <option>Inherited IRA</option>
-                                                                    <option>Inherited Roth IRA</option>
-                                                                    <option value="Traditional IRA">IRA</option>
-                                                                    <option>Life Insurance</option>
-                                                                    <option>Refundable Deposit</option>
-                                                                    <option>Rollover IRA</option>
-                                                                    <option>Roth 401k</option>
-                                                                    <option>Roth IRA</option>
-                                                                    <option>SEP IRA</option>
-                                                                    <option>SIMPLE IRA</option>
-                                                                    <option>Solo 401k</option>
-                                                                    <option>Taxable</option>
-                                                                    <option>Traditional IRA</option>
-                                                                </select>
+                                                            <tr style=color:white;background:black;padding-left:8px>
+                                                                <td colspan=3>
+                                                                    <label style=padding-left:8px>Account Type:</label>
+                                                                    <select style=margin-left:8px @ref=accountN @bind=account.AccountType>
+                                                                        <option>choice needed</option>
+                                                                        <option>401k</option>
+                                                                        <option>403b</option>
+                                                                        <option>457b</option>
+                                                                        <option>529</option>
+                                                                        <option>Annuity (Non-Qualified)</option>
+                                                                        <option>Annuity (Qualified)</option>
+                                                                        <option>Brokerage</option>
+                                                                        <option>HSA</option>
+                                                                        <option>Inherited IRA</option>
+                                                                        <option>Inherited Roth IRA</option>
+                                                                        <option value="Traditional IRA">IRA</option>
+                                                                        <option>Life Insurance</option>
+                                                                        <option>Refundable Deposit</option>
+                                                                        <option>Rollover IRA</option>
+                                                                        <option>Roth 401k</option>
+                                                                        <option>Roth IRA</option>
+                                                                        <option>SEP IRA</option>
+                                                                        <option>SIMPLE IRA</option>
+                                                                        <option>Solo 401k</option>
+                                                                        <option>Taxable</option>
+                                                                        <option>Traditional IRA</option>
+                                                                    </select> 
                                                                 </td>
                                                                 <td >
                                                                     <div style=float:left;margin-left:50px><button @onclick='@(e=>deleteAccount2(e,accBuffer))' title='delete account'>❌ account</button></div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr style=color:white;background:black;padding-left:8px>
+                                                                <td colspan=4>
+                                                                    @if (appData.FamilyData.PersonCount == 2) {
+                                                                        <label style=padding-left:8px>Owner:</label>
+                                                                        <select style=margin-left:8px @ref=accountN @bind=account.Identifier>
+                                                                            @if(account.TaxType == "Taxable" || account.TaxType == "Other") {
+                                                                                <option>our</option>
+                                                                            }
+                                                                            @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
+                                                                                <option>@appData.FamilyData.People[p].PossessiveID</option>
+                                                                            }
+                                                                        </select>
+                                                                    }
                                                                 </td>
                                                             </tr>
                                                             <tr style=color:white;background:black;><td colspan=4>
