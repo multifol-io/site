@@ -125,6 +125,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                             }
                                         }
                                         <br/>
+                                        <br/>
                                     </td>
                                     break;
                                 case "tax-status":
@@ -166,7 +167,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                             <legend>
                                                 <InputCheckbox id=showPortfolioAnalysis @bind-Value=showPortfolioAnalysis /> 
                                                 <label for=showPortfolioAnalysis>Show Portfolio Analysis</label>
-                                            </legend>
+                                            </legend><br/>
                                            <fieldset>
  
                                                 @if (showPortfolioAnalysis) {
@@ -630,7 +631,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                 break;
                             case "contributions":
                                 <div>
-                                    Edit Savings Contribution at: <a href="/saving">/saving</a>, then return here to <a href=/portfolio-review>Portfolio Review</a> to address all the needed information.<br/><br/>
+                                    Enter/edit your Savings Contribution at: <a href="/saving">Saving Plan</a>, then return here to <a href=/portfolio-review>Portfolio Review</a> to address all the needed information.<br/><br/>
 
                                     <span>
                                         @((MarkupString)boldUnderline("Contributions:"))

@@ -197,10 +197,7 @@
                                                         accountIndex++;
                                                         <tr style=color:white;background:black; @onclick='@(e=>editAccount(e,accBuffer))'>
                                                             <td colspan=3>
-                                                                @((account.Custodian != null ? account.Custodian + " ": "")+ account.Note)
-                                                                <span>(@account.Identifier</span>
-                                                                @if(!string.IsNullOrEmpty(account.Identifier)) { <span>&nbsp;@account.AccountType)</span> }
-                                                                else { <span>@account.AccountType)</span> }
+                                                                @account.Title
                                                             </td>
                                                             <td style=text-align:right;padding-left:8px>
                                                                 @FormatUtilities.formatMoney(account.Value, decimalPlaces:0)
@@ -547,10 +544,7 @@
                                                                 string bgColor = alternateRow4 ? "white" : "lightgray";
                                                                 <tr style=background:@bgColor;>
                                                                     <td colspan=1>&nbsp;&nbsp;
-                                                                        @((account.Custodian != null ? account.Custodian + " ": "")+ account.Note)
-                                                                        <span>(@account.Identifier</span>
-                                                                        @if(!string.IsNullOrEmpty(account.Identifier)) { <span>&nbsp;@account.AccountType)</span> }
-                                                                        else { <span>@account.AccountType)</span> }
+                                                                        @account.Title
                                                                     </td>
                                                                     <td style=text-align:right;padding-left:8px>
                                                                         @FormatUtilities.formatMoney(account.Value)
@@ -659,10 +653,7 @@
                                                                 string bgColor2 = alternateRow3 ? "white" : "lightgray";
                                                                 <tr style=background:@bgColor2;>
                                                                     <td colspan=4>&nbsp;&nbsp;
-                                                                        @((account.Custodian != null ? account.Custodian + " ": "")+ account.Note)
-                                                                        <span>(@account.Identifier</span>
-                                                                        @if(!string.IsNullOrEmpty(account.Identifier)) { <span>&nbsp;@account.AccountType)</span> }
-                                                                        else { <span>@account.AccountType)</span> }
+                                                                        @account.Title
                                                                     </td>
                                                                 </tr>
                                                                 <tr style=background:@bgColor2;>
