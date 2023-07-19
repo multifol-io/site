@@ -202,16 +202,24 @@ public class Account
 
     public int PortfolioReviewOrder {
         get {
-            var ownerCategory = (Owner + 1) * 6; // 6=Joint, 12=First Person, 18= Second Person
-            return AccountType switch
+            var ownerCategory = (Owner + 1) * 7; // 7=Joint, 14=First Person, 21= Second Person
+            int order = AccountType switch
             {
                 "Annuity (Non-Qualified)" or "Brokerage" or "Individual" or "Taxable" => 1 + Owner,
-                "401k" or "403b" or "457b" or "Roth 401k" or "SIMPLE IRA" or "Solo 401k" or "SEP IRA" => 2 + ownerCategory,
-                "Annuity (Qualified)" or "Inherited IRA" or "Traditional IRA" or "Rollover IRA" => 3 + ownerCategory,
-                "Inherited Roth IRA" or "Roth IRA" => 4 + ownerCategory,
-                "HSA" => 5 + ownerCategory,
-                _ => 6 + ownerCategory,
+                "401k" or "403b" or "457b" or "Roth 401k" or "SIMPLE IRA" or "Solo 401k" or "SEP IRA" => 3 + ownerCategory,
+                "Annuity (Qualified)" or "Inherited IRA" or "Traditional IRA" or "Rollover IRA" => 4 + ownerCategory,
+                "Inherited Roth IRA" or "Roth IRA" => 5 + ownerCategory,
+                "HSA" => 6 + ownerCategory,
+                _ => 7 + ownerCategory,
             };
+
+            if (AccountType == "401k" && CurrentEmployerRetirementFund) {
+                order--;
+            }
+
+            return order;
         }
     }
+
+    public bool CurrentEmployerRetirementFund { get; set; }
 }
