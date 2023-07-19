@@ -186,6 +186,11 @@
                             <option>Traditional IRA</option>
                         </select>
                     </div>
+                    @if (account.AccountType == "401k") {
+                        <div style=margin-left:8px;background-color:black;color:white>
+                            <InputCheckbox id=currentEmployer style=margin-left:20px @bind-Value=account.CurrentEmployerRetirementFund /> <label for=currentEmployer>&nbsp;Current Employer</label><br/>
+                        </div>
+                    }
 
                     @foreach (var investment in account.Investments)
                     {

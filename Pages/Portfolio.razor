@@ -261,8 +261,9 @@
                                                                 </td>
                                                             </tr>
                                                             @if (account.AccountType == "401k") {
-                                                                <tr style=color:white;background:black;><td colspan=4>
-                                                                    <InputCheckbox id=currentEmployer style=margin-left:20px @bind-Value=account.CurrentEmployerRetirementFund /> <label for=currentEmployer>&nbsp;Current Employer</label><br/>
+                                                                <tr style=color:white;background:black;>
+                                                                    <td colspan=4>
+                                                                        <InputCheckbox id=currentEmployer style=margin-left:20px @bind-Value=account.CurrentEmployerRetirementFund /> <label for=currentEmployer>&nbsp;Current Employer</label><br/>
                                                                     </td>
                                                                 </tr>
                                                             }
