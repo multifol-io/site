@@ -513,7 +513,7 @@
                                             case "bogleheads":
                                                 @foreach (var account in familyData.Accounts.OrderBy(a=>a.PortfolioReviewOrder).ThenByDescending(a=>a.Value)) {
                                                     @((MarkupString)bold((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "")
-                                                     + (account.AccountType == "401k" ? (account.CurrentEmployerRetirementFund ? "<span>current employer&nbsp;</span>" : "<span>previous employer&nbsp;</span>") : "") 
+                                                     + (account.AccountType == "401k" ? (account.CurrentEmployerRetirementFund ? "<span>current&nbsp;</span>" : "<span>previous&nbsp;</span>") : "") 
                                                      + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + " (" + FormatUtilities.formatPercent(account.Percentage) + ")" ))
                                                     <br/>
                                                     @foreach (var investment in account.Investments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.ValuePIN)) {
