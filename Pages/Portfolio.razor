@@ -84,7 +84,7 @@
                         @switch (step.step) {
                             case "people": 
                                 <td>
-                                    <a @onclick=toggleTaxFilingStatusEditing class="m-2" >✏️</a>
+                                    <a @onclick=toggleTaxFilingStatusEditing class="m-2 btn" >✏️</a>
                                     @((MarkupString)bold("Tax Filing Status:"))
                                     @if (!taxFilingStatusEditing) {
                                         @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@appData.FamilyData.TaxFilingString</span> }
@@ -127,7 +127,7 @@
                                 break;
                             case "asset-allocation":
                                 <td>
-                                    <a @onclick=toggleAssetAllocationEditing  class="m-2" >✏️</a>
+                                    <a @onclick=toggleAssetAllocationEditing class="m-2 btn" >✏️</a>
                                     @((MarkupString)bold("Desired Asset allocation:"))
                                     @if(!assetAllocationEditing) { 
                                         if (appData.FamilyData.Stocks != null && appData.FamilyData.Bonds != null) {
@@ -157,7 +157,7 @@
                                 break;
                             case "retirement-assets":
                                 <td>
-                                    <a @onclick=editAccounts class="m-2" >✏️</a>
+                                    <a @onclick=editAccounts class="m-2 btn" >✏️</a>
                                     @((MarkupString)bold("Investable Assets"))
                                     @if (appData.FamilyData.Accounts.Count > 0) {
                                         if (View == null) {
