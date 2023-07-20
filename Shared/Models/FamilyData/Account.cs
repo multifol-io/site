@@ -170,14 +170,15 @@ public class Account
                 case "401k":
                 case "403b":
                 case "457b":
+                case "SEP IRA":
+                case "Solo 401k":
+                case "SIMPLE IRA":
+                    return "Pre-Tax(work)";
                 case "Annuity (Qualified)":
                 case "Inherited IRA":
-                case "SIMPLE IRA":
                 case "Traditional IRA":
                 case "Rollover IRA":
-                case "Solo 401k":
-                case "SEP IRA":
-                    return "Pre-Tax";
+                    return "Pre-Tax(other)";
                 case "Inherited Roth IRA":
                 case "Roth 401k":
                 case "Roth IRA":
@@ -213,7 +214,7 @@ public class Account
                 _ => 7 + ownerCategory,
             };
 
-            if (AccountType == "401k" && CurrentEmployerRetirementFund) {
+            if (TaxType == "Pre-Tax(work)" && CurrentEmployerRetirementFund) {
                 order--;
             }
 

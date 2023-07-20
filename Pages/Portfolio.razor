@@ -260,7 +260,7 @@
                                                                     }
                                                                 </td>
                                                             </tr>
-                                                            @if (account.AccountType == "401k") {
+                                                            @if (account.TaxType == "Pre-Tax(work)") {
                                                                 <tr style=color:white;background:black;>
                                                                     <td colspan=4>
                                                                         <InputCheckbox id=currentEmployer style=margin-left:20px @bind-Value=account.CurrentEmployerRetirementFund /> <label for=currentEmployer>&nbsp;Current Employer</label><br/>
@@ -513,7 +513,7 @@
                                             case "bogleheads":
                                                 @foreach (var account in familyData.Accounts.OrderBy(a=>a.PortfolioReviewOrder).ThenByDescending(a=>a.Value)) {
                                                     @((MarkupString)bold((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "")
-                                                     + (account.AccountType == "401k" ? (account.CurrentEmployerRetirementFund ? "<span>current&nbsp;</span>" : "<span>previous&nbsp;</span>") : "") 
+                                                     + (account.TaxType == "Pre-Tax(work)" ? (account.CurrentEmployerRetirementFund ? "<span>current&nbsp;</span>" : "<span>previous&nbsp;</span>") : "") 
                                                      + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + " (" + FormatUtilities.formatPercent(account.Percentage) + ")" ))
                                                     <br/>
                                                     @foreach (var investment in account.Investments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.ValuePIN)) {
@@ -615,10 +615,11 @@
                                                     @foreach (var group in groupByTaxType) {
                                                         bool alternateRow3 = false;
                                                         <tr style=color:white;background:black>
-                                                            <td>@group.TaxType
+                                                            <td>@(group.TaxType.StartsWith("Pre-Tax") ? "Pre-Tax" : group.TaxType)
                                                                 @switch (group.TaxType)
                                                                 {
-                                                                    case "Pre-Tax":
+                                                                    case "Pre-Tax(work)":
+                                                                    case "Pre-Tax(other)":
                                                                         <sub>1</sub>
                                                                         showFootnotes[0] = true;
                                                                         break;
@@ -641,7 +642,8 @@
                                                             </td>
                                                             <td style=text-align:right;padding-left:8px>
                                                                 @switch (group.TaxType) {
-                                                                    case "Pre-Tax":
+                                                                    case "Pre-Tax(work)":
+                                                                    case "Pre-Tax(other)":
                                                                         <span>@FormatUtilities.formatMoneyNarrow(group.Value)</span>
                                                                         break;
                                                                     case "Taxable":
@@ -676,7 +678,8 @@
                                                                 <tr style=background:@bgColor2;>
                                                                     <td style=text-align:right;padding-left:8px colspan=2>
                                                                         @switch (group.TaxType) {
-                                                                            case "Pre-Tax":
+                                                                            case "Pre-Tax(work)":
+                                                                            case "Pre-Tax(other)":
                                                                                 <span>@FormatUtilities.formatMoneyNarrow(account.Value)</span>
                                                                                 break;
                                                                             case "Taxable":

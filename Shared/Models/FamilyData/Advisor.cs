@@ -3,7 +3,8 @@ public static class Advisor {
     public static List<string> Advise(Investment investment, Account account, IAppData appData) {
         List<string> adviceItems = new();
         switch (account.TaxType) {
-            case "Pre-Tax":                
+            case "Pre-Tax(work)":                
+            case "Pre-Tax(other)":                
                 switch (investment.AssetType) {
                     case AssetType.InternationalStock:
                     case AssetType.InternationalStock_ETF:
