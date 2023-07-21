@@ -165,39 +165,24 @@ public class Account
     }
 
     public string TaxType {
-        get { 
-            switch (AccountType) {
-                case "401k":
-                case "403b":
-                case "457b":
-                case "SEP IRA":
-                case "Solo 401k":
-                case "SIMPLE IRA":
-                    return "Pre-Tax(work)";
-                case "Annuity (Qualified)":
-                case "Inherited IRA":
-                case "Traditional IRA":
-                case "Rollover IRA":
-                    return "Pre-Tax(other)";
-                case "Inherited Roth IRA":
-                case "Roth 401k":
-                case "Roth IRA":
-                case "HSA":
-                    return "Post-Tax";
-                case "Annuity (Non-Qualified)":
-                case "Brokerage":
-                case "Individual":
-                case "Taxable":
-                    return "Taxable";
-                case "Refundable Deposit":
-                    return "Refundable Deposits";
-                case "Life Insurance":
-                    return "For Beneficiaries (POD)";
-                case "529":
-                    return "Education Savings";
-                default:
-                    return "Other";
-            }
+        get {
+            return AccountType switch
+            {
+                "401k" or "403b" or "457b" or "SEP IRA" or "Solo 401k" or "SIMPLE IRA" => "Pre-Tax(work)",
+                "Annuity (Qualified)" or "Inherited IRA" or "Traditional IRA" or "Rollover IRA" => "Pre-Tax(other)",
+                "Inherited Roth IRA" or "Roth 401k" or "Roth IRA" or "HSA" => "Post-Tax",
+                "Annuity (Non-Qualified)" or "Brokerage" or "Individual" or "Taxable" => "Taxable",
+                "Refundable Deposit" => "Refundable Deposits",
+                "Life Insurance" => "For Beneficiaries (POD)",
+                "529" => "Education Savings",
+                _ => "Other",
+            };
+        }
+    }
+
+    public string TaxType2 { 
+        get {
+            return TaxType.StartsWith("Pre-Tax") ? "Pre-Tax" : TaxType;
         }
     }
 

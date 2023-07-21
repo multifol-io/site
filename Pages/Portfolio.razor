@@ -84,7 +84,7 @@
                         @switch (step.step) {
                             case "people": 
                                 <td>
-                                    <a @onclick=toggleTaxFilingStatusEditing class="m-2 btn" >✏️</a>
+                                    <a @onclick=toggleTaxFilingStatusEditing style=margin:0px;padding:0px;width:20px class="m-2 btn" >✏️</a>
                                     @((MarkupString)bold("Tax Filing Status:"))
                                     @if (!taxFilingStatusEditing) {
                                         @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@appData.FamilyData.TaxFilingString</span> }
@@ -127,7 +127,7 @@
                                 break;
                             case "asset-allocation":
                                 <td>
-                                    <a @onclick=toggleAssetAllocationEditing class="m-2 btn" >✏️</a>
+                                    <a @onclick=toggleAssetAllocationEditing style=margin:0px;padding:0px;width:20px class="m-2 btn" >✏️</a>
                                     @((MarkupString)bold("Desired Asset allocation:"))
                                     @if(!assetAllocationEditing) { 
                                         if (appData.FamilyData.Stocks != null && appData.FamilyData.Bonds != null) {
@@ -157,7 +157,7 @@
                                 break;
                             case "retirement-assets":
                                 <td>
-                                    <a @onclick=editAccounts class="m-2 btn" >✏️</a>
+                                    <a @onclick=editAccounts style=margin:0px;padding:0px;width:20px class="m-2 btn" >✏️</a>
                                     @((MarkupString)bold("Investable Assets"))
                                     @if (appData.FamilyData.Accounts.Count > 0) {
                                         if (View == null) {
@@ -603,7 +603,7 @@
                                                         </tr>
                                                     }
                                                     @{var groupByTaxType = appData.FamilyData.Accounts
-                                                        .GroupBy(a => a.TaxType)
+                                                        .GroupBy(a => a.TaxType2)
                                                         .Select(g => new
                                                         {
                                                             TaxType = g.Key,
@@ -615,11 +615,10 @@
                                                     @foreach (var group in groupByTaxType) {
                                                         bool alternateRow3 = false;
                                                         <tr style=color:white;background:black>
-                                                            <td>@(group.TaxType.StartsWith("Pre-Tax") ? "Pre-Tax" : group.TaxType)
+                                                            <td>@group.TaxType
                                                                 @switch (group.TaxType)
                                                                 {
-                                                                    case "Pre-Tax(work)":
-                                                                    case "Pre-Tax(other)":
+                                                                    case "Pre-Tax":
                                                                         <sub>1</sub>
                                                                         showFootnotes[0] = true;
                                                                         break;
@@ -639,11 +638,11 @@
                                                                         showFootnotes[3] = true;
                                                                         break;
                                                                 }
+                                                                <span>&nbsp;@FormatUtilities.formatPercent(group.Value/appData.FamilyData.Value*100.0)</span>
                                                             </td>
                                                             <td style=text-align:right;padding-left:8px>
                                                                 @switch (group.TaxType) {
-                                                                    case "Pre-Tax(work)":
-                                                                    case "Pre-Tax(other)":
+                                                                    case "Pre-Tax":
                                                                         <span>@FormatUtilities.formatMoneyNarrow(group.Value)</span>
                                                                         break;
                                                                     case "Taxable":
@@ -668,7 +667,7 @@
                                                         List<Investment> groupInvestments = new();
                                                         @foreach (var account in appData.FamilyData.Accounts.OrderByDescending(a=>a.Value))
                                                         {
-                                                            if (account.TaxType == group.TaxType) {
+                                                            if (account.TaxType2 == group.TaxType) {
                                                                 string bgColor2 = alternateRow3 ? "white" : "lightgray";
                                                                 <tr style=background:@bgColor2;>
                                                                     <td colspan=4>&nbsp;&nbsp;
@@ -678,8 +677,7 @@
                                                                 <tr style=background:@bgColor2;>
                                                                     <td style=text-align:right;padding-left:8px colspan=2>
                                                                         @switch (group.TaxType) {
-                                                                            case "Pre-Tax(work)":
-                                                                            case "Pre-Tax(other)":
+                                                                            case "Pre-Tax":
                                                                                 <span>@FormatUtilities.formatMoneyNarrow(account.Value)</span>
                                                                                 break;
                                                                             case "Taxable":

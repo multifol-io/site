@@ -105,7 +105,7 @@
                         @switch (step.step) {
                             case "people": 
                                 <td>
-                                    <a @onclick=toggleTaxFilingStatusEditing class="m-2 btn" >✏️</a>
+                                    <a @onclick=toggleTaxFilingStatusEditing style=margin:0px;padding:0px;width:20px class="m-2 btn" >✏️</a>
                                     @((MarkupString)bold("Tax Filing Status:"))
                                     @if (!taxFilingStatusEditing) {
                                         @if (familyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@familyData.TaxFilingString</span> }
@@ -148,7 +148,7 @@
                                 break;
                             case "rsu-summary":
                                 <td>
-                                    <a @onclick=editGrants class="m-2 btn" >✏️</a>
+                                    <a @onclick=editGrants style=margin:0px;padding:0px;width:20px class="m-2 btn" >✏️</a>
                                     @if (View == null) {
                                         View = "by-year";
                                     }
