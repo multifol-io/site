@@ -463,13 +463,15 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                     @foreach (var taxFiler in familyData.AppData.IRSData.TaxRateData.TaxData.TaxFilers)
                                     {
                                         bool isMatch = false;
+                                        Console.WriteLine(familyData.TaxFilingString.ToString());
+
                                         switch (familyData.TaxFilingStatus.ToString())
                                         {
                                             case "MarriedFilingSeperatelyAndLivingApart":
                                                 isMatch = taxFiler.TaxFilingStatus == "MarriedFilingSeperately";
                                                 break;
                                             default:
-                                                isMatch = taxFiler.TaxFilingStatus == familyData.TaxFilingString.ToString();
+                                                isMatch = taxFiler.TaxFilingStatus == familyData.TaxFilingStatus.ToString();
                                                 break;
                                         }
                                         if (isMatch)
