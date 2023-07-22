@@ -13,6 +13,21 @@
 </PageTitle>
 
 <style>
+    .mainTable {
+        border-collapse: collapse;
+        border-top: 1px solid rgba(0,0,0,0.2);
+    }
+    .mainTable thead tr th{
+        border-bottom: 1px solid #000000;
+    }
+    .mainTable th, .mainTable td {
+        border-left: 1px solid rgba(0,0,0,0.2);
+        border-right: 1px solid rgba(0,0,0,0.2);
+    }
+    .mainTable th, .mainTable td{ /* Added padding for better layout after collapsing */
+        padding: 4px 8px;
+    }
+
     .btn {
         color: white;
         padding: 10px 10px;
@@ -181,7 +196,7 @@
 
                                         @switch (View) {
                                             case "accounts":
-                                                <table>
+                                                <table class=mainTable>
                                                     @if (appData.FamilyData.Accounts.Count > 0) {
                                                         <tr style=vertical-align:bottom>
                                                             <th style=padding-left:8px>Ticker</th>
@@ -376,7 +391,7 @@
                                                 break;
                                             case "allocations":
                                                 bool alternateRow = false;
-                                                <table>
+                                                <table class=mainTable>
                                                     @if (appData.FamilyData.Accounts.Count > 0) {
                                                         <tr style=vertical-align:bottom>
                                                             <th style=padding-left:8px>Ticker</th>
@@ -390,9 +405,13 @@
                                                         int groupCategories = 0;
                                                     }
              
-                                                                                          
+                                                    @{var groupSize = 0;}
                                                     @foreach (var investment in appData.FamilyData.GroupedInvestments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.ValuePIN)) {
                                                         if (lastInvestmentCategory != investment.InvestmentOrderCategory) {
+                                                            if (groupSize > 0) {
+                                                                groupSize = 0;
+                                                                <tr><td style=font-size:3pt>&nbsp;</td></tr>
+                                                            }
                                                             if (groupCategories == 0) {
                                                                 groupCategories++;
                                                                 <tr style=vertical-align:bottom;color:white;background-Color:black>
@@ -403,7 +422,6 @@
                                                             }
                                                             if (groupCategories == 1 && (investment.InvestmentOrderCategory == "Bonds" || investment.InvestmentOrderCategory == "Cash" || investment.InvestmentOrderCategory == "Other")) {
                                                                 groupCategories++;
-                                                                <tr><td style=font-size:5pt>&nbsp;</td></tr>
                                                                 <tr style=vertical-align:bottom;color:white;background-Color:black>
                                                                     <td style=text-align:left colspan=4>
                                                                         Fixed Assets &nbsp;@FormatUtilities.formatPercent((appData.FamilyData.ActualBondAllocation + appData.FamilyData.ActualCashAllocation) * 100.0)
@@ -412,7 +430,6 @@
                                                             }
                                                             if (groupCategories == 2 && investment.InvestmentOrderCategory == "Other") {
                                                                 groupCategories++;
-                                                                <tr><td style=font-size:5pt>&nbsp;</td></tr>
                                                                 <tr style=vertical-align:bottom;color:white;background-Color:black>
                                                                     <td style=text-align:left colspan=4>
                                                                         Other &nbsp;@FormatUtilities.formatPercent(appData.FamilyData.ActualOtherAllocation * 100.0)
@@ -423,33 +440,37 @@
 
                                                         if (lastInvestmentCategory != investment.InvestmentOrderCategory) {
                                                             lastInvestmentCategory = investment.InvestmentOrderCategory;
+                                                            if (groupSize > 0) {
+                                                                groupSize = 0;
+                                                                <tr><td style=font-size:3pt>&nbsp;</td></tr>
+                                                            }
                                                             <tr style=vertical-align:bottom;color:white;background-Color:DimGray>
                                                                 <td style=text-align:left colspan=4>
                                                                     @switch (lastInvestmentCategory) {
                                                                         case "US Stocks":
                                                                             alternateRow = false;
-                                                                            <div style=margin-left:.4in;background-color:DimGray>
+                                                                            <div style=margin-left:8px;background-color:DimGray>
                                                                                 @lastInvestmentCategory
                                                                                 <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation*100.0 * (1.0-appData.FamilyData.ActualInternationalStockAllocation))</span>
                                                                             </div>
                                                                             break;
                                                                         case "International Stocks":
                                                                             alternateRow = false;
-                                                                            <div style=margin-left:.4in;background-color:DimGray>
+                                                                            <div style=margin-left:8px;background-color:DimGray>
                                                                                 @lastInvestmentCategory
                                                                                 <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation*appData.FamilyData.ActualInternationalStockAllocation*100.0) [@FormatUtilities.formatPercent(appData.FamilyData.ActualInternationalStockAllocation*100.0)]</span>
                                                                             </div>
                                                                             break;
                                                                         case "Bonds":
                                                                             alternateRow = false;
-                                                                            <div style=margin-left:.4in;background-color:DimGray>
+                                                                            <div style=margin-left:8px;background-color:DimGray>
                                                                                 @lastInvestmentCategory
                                                                                 <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualBondAllocation*100.0)</span>
                                                                             </div>
                                                                             break;
                                                                         case "Cash":
                                                                             alternateRow = false;
-                                                                            <div style=margin-left:.4in;background-color:DimGray>
+                                                                            <div style=margin-left:8px;background-color:DimGray>
                                                                                 @lastInvestmentCategory
                                                                                 <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualCashAllocation*100.0)</span>
                                                                             </div>
@@ -463,6 +484,7 @@
                                                         }
                                                         string bgColor = alternateRow ? "white" : "lightgray";
                                                         string ftsize = investment.Ticker.Length > 5 ? ";font-size:8pt" : "";
+                                                        groupSize++;
                                                         <tr style=background-color:@bgColor>
                                                             <td style=padding-left:8px;vertical-align:text-top;@ftsize title=@investment.Name>@investment.Ticker 
                                                                 @if (appData.ApplyStockSizeRules && investment.IsStock && (investment.ValuePIN > appData.FamilyData.Value * .05)) {
@@ -529,7 +551,7 @@
                                                 }
                                                 break;
                                             case "custodians":
-                                                <table>
+                                                <table class=mainTable>
                                                     @if (appData.FamilyData.Accounts.Count > 0) {
                                                         <tr style=vertical-align:bottom>
                                                             <th style=padding-left:8px>Custodian</th>
@@ -593,7 +615,7 @@
                                                 break;                                                    
                                             case "tax-types":
                                                 var showFootnotes = new bool[4];
-                                                <table>
+                                                <table class=mainTable>
                                                     @if (appData.FamilyData.Accounts.Count > 0) {
                                                         <tr style=vertical-align:bottom>
                                                             <th>Tax-Type</th>
@@ -615,7 +637,7 @@
                                                     @foreach (var group in groupByTaxType) {
                                                         bool alternateRow3 = false;
                                                         <tr style=color:white;background:black>
-                                                            <td>@group.TaxType
+                                                            <td font-size:smaller>@group.TaxType
                                                                 @switch (group.TaxType)
                                                                 {
                                                                     case "Pre-Tax":
@@ -638,7 +660,6 @@
                                                                         showFootnotes[3] = true;
                                                                         break;
                                                                 }
-                                                                <span>&nbsp;@FormatUtilities.formatPercent(group.Value/appData.FamilyData.Value*100.0)</span>
                                                             </td>
                                                             <td style=text-align:right;padding-left:8px>
                                                                 @switch (group.TaxType) {
@@ -663,6 +684,11 @@
                                                                 }
                                                             </td>
                                                             <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoneyNarrow(group.Value)</td>
+                                                        </tr>
+                                                        <tr style=color:white;background:black>
+                                                            <td colspan=4>
+                                                                @FormatUtilities.formatPercent(group.Value/appData.FamilyData.Value*100.0)
+                                                            </td>
                                                         </tr>
                                                         List<Investment> groupInvestments = new();
                                                         @foreach (var account in appData.FamilyData.Accounts.OrderByDescending(a=>a.Value))

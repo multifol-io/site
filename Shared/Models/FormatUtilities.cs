@@ -73,7 +73,7 @@ public static class FormatUtilities {
     }
     public static string formatPercent3WithColor(double? amount)
     {
-        return amount.HasValue ? "<span style=color:"+ (amount < 0 ? "red>" : "green>") + String.Format("{0:#,#.###}%", amount)+"</span>" : "";
+        return amount.HasValue ? "<span style=color:"+ (amount < 0 ? "red>" : "green>") + String.Format("{0:#,0.###}%", amount)+"</span>" : "";
     }
 
     public static string formatDouble(double? amount) 
