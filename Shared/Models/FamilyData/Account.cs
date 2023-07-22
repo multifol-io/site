@@ -37,7 +37,16 @@ public class Account
     public string AccountType {
         get { return _AccountType; }
         set {
-            _AccountType = value;
+            // migrate old values on 7/22/2023
+            _AccountType = value switch
+            {
+                "401k" => "401(k)",
+                "403b" => "403(b)",
+                "457b" => "457(b)",
+                "Roth 401k" => "Roth 401(k)",
+                "Solo 401k" => "Solo 401(k)",
+                _ => value,
+            };
             if (Identifier == "our" && TaxType != "Taxable" && TaxType != "Other") {
                 Identifier = null;
             }
@@ -156,7 +165,7 @@ public class Account
     {
         if (Note.Contains("401K") || Note.Contains("401k"))
         {
-            AccountType = "401k";
+            AccountType = "401(k)";
         }
         else if (Note.Contains("HSA") || Note.Contains("Health Savings Account"))
         {
@@ -168,9 +177,9 @@ public class Account
         get {
             return AccountType switch
             {
-                "401k" or "403b" or "457b" or "SEP IRA" or "Solo 401k" or "SIMPLE IRA" => "Pre-Tax(work)",
+                "401(k)" or "403(b)" or "457(b)" or "457(b) Governmental" or "SEP IRA" or "Solo 401(k)" or "SIMPLE IRA" => "Pre-Tax(work)",
                 "Annuity (Qualified)" or "Inherited IRA" or "Traditional IRA" or "Rollover IRA" => "Pre-Tax(other)",
-                "Inherited Roth IRA" or "Roth 401k" or "Roth IRA" or "HSA" => "Post-Tax",
+                "Inherited Roth IRA" or "Roth 401(k)" or "Roth IRA" or "HSA" => "Post-Tax",
                 "Annuity (Non-Qualified)" or "Brokerage" or "Individual" or "Taxable" => "Taxable",
                 "Refundable Deposit" => "Refundable Deposits",
                 "Life Insurance" => "For Beneficiaries (POD)",
@@ -192,7 +201,7 @@ public class Account
             int order = AccountType switch
             {
                 "Annuity (Non-Qualified)" or "Brokerage" or "Individual" or "Taxable" => 1 + Owner,
-                "401k" or "403b" or "457b" or "Roth 401k" or "SIMPLE IRA" or "Solo 401k" or "SEP IRA" => 3 + ownerCategory,
+                "401(k)" or "403(b)" or "457(b)" or "457(b) Governmental" or "Roth 401(k)" or "SIMPLE IRA" or "Solo 401(k)" or "SEP IRA" => 3 + ownerCategory,
                 "Annuity (Qualified)" or "Inherited IRA" or "Traditional IRA" or "Rollover IRA" => 4 + ownerCategory,
                 "Inherited Roth IRA" or "Roth IRA" => 5 + ownerCategory,
                 "HSA" => 6 + ownerCategory,
