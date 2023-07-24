@@ -70,7 +70,7 @@
     {
         ProfileUtilities.LocalStorageAccessor = LocalStorageAccessor;
 
-        var profileNames = await appData.CalculateProfileNames();
+        var profileNames = await ProfileUtilities.GetProfileNames();
 
         if (appData.CurrentProfileName != null && profileNames.Contains(appData.CurrentProfileName))
         {

@@ -484,7 +484,7 @@
                                                             </tr>
                                                         }
                                                         string bgColor = alternateRow ? "white" : "lightgray";
-                                                        string ftsize = investment.Ticker.Length > 5 ? ";font-size:8pt" : "";
+                                                        string ftsize = investment.Ticker?.Length > 5 ? ";font-size:8pt" : "";
                                                         groupSize++;
                                                         <tr style=background-color:@bgColor>
                                                             <td style=padding-left:8px;vertical-align:text-top;@ftsize title=@investment.Name>@investment.Ticker 
@@ -1253,6 +1253,8 @@
         newAccount.Investments.Add(newInvestment);
         newAccount.Edit = true;
         familyData?.Accounts.Add(newAccount);
+        
+        Navigation.NavigateTo("/portfolio/accounts");
     }
 
     private async void deleteAccount2(MouseEventArgs e, int accountIndex)

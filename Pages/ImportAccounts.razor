@@ -3,6 +3,7 @@
 @inject IAppData appData
 @inject NavigationManager Navigation
 @inject IList<Fund> Funds
+@inject HttpClient Http
 
 <PageTitle>
 @pageHeading
@@ -81,9 +82,11 @@
                     </ol>
                 </p>
         } else { // BH format import
-            <p>Please paste in the text from a Bogleheads Portfolio Reivew post. Please include "Portfolio Size:" and "Current Retirement Assets:" in the content.</p>
+            <p>Please paste in the text from a Bogleheads Portfolio Reivew post. Following correct format will improve chances of parsing working.</p>
             <button @onclick=importBH>load</button><br/>
-            <textarea cols=80 rows=80 @bind-value="bhContent" @bind-value:event="oninput" />
+            <textarea cols=100 rows=50 @bind-value="bhContent" @bind-value:event="oninput" />
+
+
         }
     }
     else
@@ -227,110 +230,12 @@
 @code {
     private async Task importBH() {
         ImportResult importResult = new();
-
-        bool assetParsing = false;
-        Account? account = null;
-        Investment? investment = null;
-        double? portfolioSize = null;
-        foreach (var line in bhContent.Split('\n')) {
-            if (line.StartsWith("Portfolio Size:")) {
-                var tSize = line.Substring("Portfolio Size:".Length).Trim();
-                double multiplier = 1.0;
-                if (tSize.ToLowerInvariant().EndsWith("m")) {
-                    multiplier = 1000000.0;
-                    tSize = tSize.Substring(0,tSize.Length-1);
-                } else if (tSize.ToLowerInvariant().EndsWith("k")) {
-                    multiplier = 1000.0;
-                    tSize = tSize.Substring(0,tSize.Length-1);
-                }
-
-                portfolioSize = FormatUtilities.ParseDouble(tSize, allowCurrency:true) * multiplier;
-            } else if (line.StartsWith("Current Retirement Assets:")) {
-                assetParsing = true;
-            } else if (line.StartsWith("Contributions:")) {
-                assetParsing = false;
-            } else if (assetParsing) {
-                if (string.IsNullOrEmpty(line.Trim())) {
-                        // blank line - ignore
-                } else if (string.IsNullOrWhiteSpace(line.Substring(0,1))) {
-                    if (account != null) {
-                        // investment line
-                        investment = ParseInvestmentLine(line, portfolioSize ?? 100.0);
-                        account?.Investments.Add(investment);
-                    } else {
-                        Console.WriteLine("invalid account, skipping nested line: \"" + line + "\"");
-                    }
-                } else {
-                    // account line
-                    string? custodian = null;
-                    int atIndex = line.IndexOf(" at ");
-                    int atEndIndex = atIndex + " at ".Length;
-                    
-                    int leftParenIndex = line.IndexOf("(");
-                    if (leftParenIndex == -1) { leftParenIndex = line.Length; }
-
-                    if (atIndex == -1) {
-                        if (leftParenIndex > -1) {
-                            atIndex = leftParenIndex;
-                        } else {
-                            atIndex = line.Length;
-                        }
-                    }
-                    var accountType = line.Substring(0, atIndex).Trim();
-                    if (atIndex != line.Length) {
-                        custodian = line.Substring(atEndIndex, leftParenIndex - atEndIndex).Trim();
-                        //TODO: parse prefix
-                    }
-                    account = new Account() { Custodian = custodian, AccountType = accountType, Import = true };
-                    importResult.NewAccounts.Add(account);
-                }
-            }
+        var lines = bhContent.Split('\n');
+        var importedFamilyData = ImportPortfolioReview.ParsePortfolioReview(lines, appData, Funds);
+        if (importedFamilyData.Accounts.Count > 0) {
+            importResult.NewAccounts.AddRange(importedFamilyData.Accounts);
+            appData.ImportResult = importResult;
         }
-
-        appData.ImportResult = importResult;
-    }
-
-// right: 35% ProShares UltraPro S&P500 (UPRO) (.91%)
-// bad1: 5% VTCLX Vanguard Tax-Managed Capital Appreciation .09er
-// bad2: 10% (VTIVX-Vanguard TR 2045 Fund) (0.08)
-    private Investment ParseInvestmentLine(string line, double portfolioSize) {
-        int percentIndex = line.IndexOf("%");
-        int afterLeftParenIndex = line.IndexOf("(") + 1;
-        int rightParenIndex = line.IndexOf(")");
-        int afterLeftParenIndex2 = line.IndexOf("(",rightParenIndex+1 ) + 1;
-        int rightParenIndex2 = line.IndexOf(")",rightParenIndex+1);
-        var percentOfPortfolio = double.Parse(line.Substring(0,percentIndex));
-        var investmentName = line.Substring(percentIndex + 1, afterLeftParenIndex - 1 - (percentIndex + 1)).Trim();
-        string? ticker = null;
-        try {
-            ticker = line.Substring(afterLeftParenIndex, rightParenIndex - afterLeftParenIndex).ToUpperInvariant();
-            if (ticker.Length > 9) {
-                if (ticker.IndexOf(" ") < 0) {
-                    ticker = ticker.Substring(0,8);
-                } else {
-                    ticker = null;
-                }
-            }
-        } catch (Exception) {
-        }
-
-        double? expRatio = null;
-        try {
-            var erRatioString = line.Substring(afterLeftParenIndex2, rightParenIndex2 - afterLeftParenIndex2);
-            erRatioString = erRatioString.Replace(System.Globalization.CultureInfo.CurrentCulture.NumberFormat.PercentSymbol, "");
-            expRatio = double.Parse(erRatioString);
-        } catch (Exception) {
-        }
-
-        AssetType assetType = AssetType.Unknown;
-        if (!string.IsNullOrEmpty(ticker)) {
-            foreach (var fund in Funds) {
-                if (fund.Ticker == ticker) {
-                    assetType = fund.AssetType ?? AssetType.Unknown;
-                }
-            }
-        }
-        return new Investment() { Name = investmentName, Ticker = ticker, ExpenseRatio = expRatio, ValuePIN = portfolioSize * percentOfPortfolio / 100, AssetType = assetType };
     }
 
     private async Task OnDataFilesImport(InputFileChangeEventArgs e)
@@ -407,7 +312,55 @@
         pageHeading = csvImport ? "Import Accounts via CSV files" : "Import Accounts from Bogleheads Portfolio Review format";
 
         if (!csvImport) {
-            bhContent = "Portfolio Size:\n\nCurrent Retirement Assets:";
+            bhContent = "";
+            for (int i=0; i<3; i++) {
+                var forumStream = await Http.GetStreamAsync($"https://api.bogle.tools/api/getforum?forum=1&start=" + (i * 50).ToString() + "&search=portfolio");
+                string topicList = new StreamReader(forumStream).ReadToEnd();
+                var topicList2 = "409135 portfolio review - NYC 54/53\n"
+                    + "408853 Portfolio Review - 38 y/o Consultant, Soon to be Married\n"
+                    + "408867 Portfolio review for a 36 year old new poster\n"
+                    + "408844 Portfolio Review - used space before units '1.35 M'\n"
+                    + "348471 Portfolio review (2 year update) - > 100% by design \n"
+                    + "407996 portfolio review - TODO - misses 2nd - 7th accounts \n"
+                    + "407956 Portfolio Sanity Check -- TODO - misses assets $$ \n"
+                    + "408103 Portfolio review – before life gets more expensive! -- TODO - should be able to harvest\n"
+                    + "408017 Portfolio Check-up / New to this -- TODO - sholld be able to harvest retirement assets\n"
+                    + "407986 Portfolio advice: Simplifying, Planning, and (hopefully) retiring one day - NaN for each INV\n"
+                    + "408057 Portfolio review for the first time - thanks -- TODO - should 2.8% iBond harvest better?\n"
+                    + "408865 Long-time Boglehead - 2023 Portfolio Refresh-- TODO - got right accounts, but Nan% for each INV\n"
+                    + "78881 A young boglehead portfolio review - TODO - doesn't yet harvest 'just north of $50k'\n"
+                    + "385354 Portfolio Question -- Poor harvesting by design\n"
+                    + "409223 Portfolio Review Request - 1 Year Post Edward Jones To DIY Portfolio -- Poor harvesting by design\n"; 
+                var topicLines = topicList.Split('\n');
+
+                foreach (var topicLine in topicLines) {
+                    if (topicLine.IndexOf(" ") > -1) {
+                        var topic = topicLine[0..topicLine.IndexOf(" ")];
+                        if (topic != "6212") { // don't parse "asking portfolio questions"
+                            var topicStream = await Http.GetStreamAsync($"https://api.bogle.tools/api/gettopic?topic={topic}");
+                            string postContent = new StreamReader(topicStream).ReadToEnd().Replace("<br>","").Replace("<em class=\"text-italics\">","").Replace("</em>","").Replace("<strong class=\"text-strong\">","").Replace("</strong>","").Replace("<span style=\"text-decoration:underline\">","").Replace("</span>","");
+                            var importedFamilyData = ImportPortfolioReview.ParsePortfolioReview(postContent.Split("\n"), appData, Funds);
+                            if (importedFamilyData.Accounts.Count > 0) {
+                                bhContent += $"t={topicLine}\n{importedFamilyData.Value} in {importedFamilyData.Accounts.Count} account(s)\n";
+                                foreach (var account in importedFamilyData.Accounts) {
+                                    bhContent += account.AccountType + " " + account.Custodian + "\n";
+                                    foreach (var investment in account.Investments) {
+                                        bhContent += $"  {FormatUtilities.formatPercent3(investment.Value/importedFamilyData.Value*100.0)} {investment.Name} ({investment.Ticker}) ({investment.ExpenseRatio}%)\n";
+                                    }
+                                }
+                            } else {
+                                bhContent += $"t={topicLine}\n{importedFamilyData.Value} in {importedFamilyData.Accounts.Count} account(s)\n";
+                            }
+
+                            if (importedFamilyData.Title != null && importedFamilyData.Title.StartsWith("Error")) {
+                                bhContent += importedFamilyData.Title + "\n";
+                            }
+
+                            bhContent += "\n";
+                       }
+                    }
+                }
+            }
         }
 
         base.OnInitialized();

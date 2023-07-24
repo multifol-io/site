@@ -141,7 +141,7 @@
         {
             await doImportProfile();
             importing = false;
-            profileNames = await appData.CalculateProfileNames();
+            profileNames = await ProfileUtilities.GetProfileNames();
             newProfileNamePlaceholder = "new profile name";
         }
     }
@@ -189,7 +189,7 @@
         }
         else
         {
-            profileNames = await appData.CalculateProfileNames();
+            profileNames = await ProfileUtilities.GetProfileNames();
             if (newName != renameProfileName && !string.IsNullOrEmpty(newName) && !profileNames.Contains(newName))
             {
                 await LocalStorageAccessor.RenameKey(renameProfileName, newName);
@@ -202,7 +202,7 @@
                 renameProfileName = null;
             }
 
-            profileNames = await appData.CalculateProfileNames();
+            profileNames = await ProfileUtilities.GetProfileNames();
         }
     }
 
@@ -226,7 +226,7 @@
             appData.FamilyData = null;
         }
 
-        profileNames = await appData.CalculateProfileNames();
+        profileNames = await ProfileUtilities.GetProfileNames();
     }
 
     private async Task createProfile()
@@ -234,13 +234,13 @@
         if (!string.IsNullOrEmpty(newProfileName)) {
             await ProfileUtilities.Save(newProfileName, new FamilyData(appData));
             newProfileName = "";
-            profileNames = await appData.CalculateProfileNames();
+            profileNames = await ProfileUtilities.GetProfileNames();
         }
     }
 
     protected override async Task OnInitializedAsync()
     {
-        profileNames = await appData.CalculateProfileNames();
+        profileNames = await ProfileUtilities.GetProfileNames();
 
         if (copyCode != null)
         {
