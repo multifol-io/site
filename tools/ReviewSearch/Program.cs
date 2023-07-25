@@ -146,7 +146,7 @@ static async Task ProcessTopic(string topic, string title, double? minPortfolio,
             Console.WriteLine();
         }
 
-        if (importedFamilyData.Title != null && importedFamilyData.Title.StartsWith("Error")) {
+        if (importedFamilyData.Title != null && false) {
             Console.WriteLine(importedFamilyData.Title + "\n");
         }
     }
@@ -192,6 +192,7 @@ static async Task ProcessTopics(double? minPortfolio, double? maxPortfolio, int?
         + "348471 Portfolio review (2 year update) - > 100% by design \n"
         + "385354 Portfolio Question -- Poor harvesting by design\n"
         + "409223 Portfolio Review Request - 1 Year Post Edward Jones To DIY Portfolio -- Poor harvesting by design\n"
+        + "406482 TODO - portfolio size parsing problem\n"
         + "407956 Portfolio Sanity Check -- TODO - misses assets $$ \n"
         + "408103 Portfolio review – before life gets more expensive! -- TODO - cannot parse badly formatted investments\n"
         + "408017 Portfolio Check-up / New to this -- TODO - sholld be able to harvest retirement assets\n"
