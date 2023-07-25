@@ -28,22 +28,8 @@ namespace api
             topic = topic ?? data?.topic;
             start = start ?? data?.start;
 
-            string url = $"https://www.bogleheads.org/forum/viewtopic.php?t={topic}&start={start}";
-            var httpClient = new HttpClient();
             try {
-                var topicPageHtml = await httpClient.GetStringAsync(url);
-                
-                int c = 0;
-                var preContent = "<div class=\"content\">";
-                var preContentLoc = topicPageHtml.IndexOf(preContent, c);
-               // while (preContentLoc > -1) {
-                    var startOfContent = preContentLoc + preContent.Length;
-                    var endOfContent = topicPageHtml.IndexOf("</div>", startOfContent);
-                    var content = topicPageHtml[startOfContent..endOfContent];
-                    c = endOfContent;
-                    //preContentLoc = topicPageHtml.IndexOf(preContent, c);
-                // }
-                
+                var content = await ForumUtilities.GetTopicPost(topic, start);
                 return new OkObjectResult(content);
             }
             catch (Exception ex) {

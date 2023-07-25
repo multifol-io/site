@@ -30,32 +30,8 @@ namespace api
             start = start ?? data?.start;
             search = search ?? data?.search;
 
-            string url = $"https://www.bogleheads.org/forum/viewforum.php?f={forum}&start={start}";
-            var httpClient = new HttpClient();
-            string topics = null;
             try {
-                var forumPageHtml = await httpClient.GetStringAsync(url);
-                // <a href="./viewtopic.php?t=409019&amp;sid=0269177a9b5bb8119cf05d88ff03905c" class="topictitle">Considering shifting investment strategies to a Bogleheads approach</a>	
-                
-                int c = 0;
-                var preTopic = "<a href=\"./viewtopic.php?t=";
-                var preTopicLoc = forumPageHtml.IndexOf(preTopic, c);
-                while (preTopicLoc > -1) {
-                    var startOfTopicId = preTopicLoc + preTopic.Length;
-                    var ampLoc = forumPageHtml.IndexOf("&", startOfTopicId);
-                    var topicStr = forumPageHtml[startOfTopicId..ampLoc];
-
-                    var contentStartLoc = forumPageHtml.IndexOf(">", ampLoc);
-                    var contentEndLoc = forumPageHtml.IndexOf("</a>", ampLoc);
-                    var titleStr = forumPageHtml[(contentStartLoc+1)..(contentEndLoc)];
-                    if (search == null || titleStr.ToLowerInvariant().Contains(search.ToLowerInvariant())) {
-                        topics += topicStr + " " + titleStr + "\n";
-                    }
-
-                    c = ampLoc;
-                    preTopicLoc = forumPageHtml.IndexOf(preTopic, c);
-                }
-                
+                var topics = await ForumUtilities.GetTopicsFromForum(forum, int.Parse(start), search);
                 return new OkObjectResult(topics);
             }
             catch (Exception ex) {
