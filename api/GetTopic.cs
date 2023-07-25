@@ -29,7 +29,7 @@ namespace api
             start = start ?? data?.start;
 
             try {
-                var content = await ForumUtilities.GetTopicPost(topic, start);
+                var content = await ForumUtilities.GetTopicPost(topic, start, cachePath:null);
                 return new OkObjectResult(content);
             }
             catch (Exception ex) {

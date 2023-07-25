@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using api;
 
-string cacheLocation = "c:\reviews";
+string cacheLocation = @"c:\reviews";
 HttpClient httpClient = new();
 
 var fundsUri = new Uri("https://bogle.tools/data/funds.json");
@@ -25,9 +25,10 @@ funds?.AddRange(Stocks);
 AppData appData = new();
 double? minPortfolio = null;
 double? maxPortfolio = null;
-
+int? minAge = null;
+int? maxAge = null;
 if (args.Length == 0) {
-    await ProcessTopics(minPortfolio, maxPortfolio, appData, funds!);
+    await ProcessTopics(minPortfolio, maxPortfolio, minAge, maxAge, appData, funds!);
 } else {
     int argIndex = 0;
     bool skip = false;
@@ -35,12 +36,12 @@ if (args.Length == 0) {
     int pages = 1;
     bool full = false;
     bool all = false;
+    List<string> topics = new();
     foreach (var arg in args) {
         if (skip) {
             // skip already processed arg
             skip = false;
         } else if (arg.StartsWith('-')) {
-
             switch (arg) {
                 case "-s":
                 case "--start":
@@ -60,6 +61,14 @@ if (args.Length == 0) {
                     maxPortfolio = double.Parse(args[argIndex+1]);
                     skip = true;
                     break;
+                case "--minAge":
+                    minAge = int.Parse(args[argIndex+1]);
+                    skip = true;
+                    break;
+                case "--maxAge":
+                    maxAge = int.Parse(args[argIndex+1]);
+                    skip = true;
+                    break;
                 case "-f":
                 case "--full":
                     full = true;
@@ -68,28 +77,41 @@ if (args.Length == 0) {
                 case "--all":
                     all = true;
                     break;
+                case "--cachefiles":
+                case "-cf":
+                    foreach (var file in Directory.GetFiles(@"c:\reviews")) {
+                        var fileInfo = new FileInfo(file);
+                        topics.Add(Path.GetFileNameWithoutExtension(fileInfo.Name));
+                    }
+                    break;
                 default:
                     Console.WriteLine("unknown switch: " + arg);
                     return -1;
             }
         } else {
-            await ProcessTopic(arg, title:"", minPortfolio, maxPortfolio, showDetails:full, appData, funds!);
+            topics.Add(arg);
         }
 
         argIndex++;
     }
 
     if (start != null) {
-        await ProcessForumPages((int)start, pages, minPortfolio, maxPortfolio, filter:(all?null:"portfolio"), showDetails:full, appData, funds!);
+        await ProcessForumPages((int)start, pages, minPortfolio, maxPortfolio, minAge, maxAge, filter:(all?null:"portfolio"), showDetails:full, appData, funds!);
+    } else if (topics.Count > 0) {
+        foreach (var topic in topics) {
+            await ProcessTopic(topic, title:"", minPortfolio, maxPortfolio, minAge, maxAge, showDetails:full, appData, funds!);
+        }
     }
 }
 
 return 0;
 
-static async Task ProcessTopic(string topic, string title, double? minPortfolio, double? maxPortfolio, bool showDetails, IAppData appData, IList<Fund> funds) {
+static async Task ProcessTopic(string topic, string title, double? minPortfolio, double? maxPortfolio, int? minAge, int? maxAge, bool showDetails, IAppData appData, IList<Fund> funds) {
     HttpClient httpClient = new();
-    var topicStream = await httpClient.GetStreamAsync($"https://api.bogle.tools/api/gettopic?topic={topic}");
-    string postContent = new StreamReader(topicStream).ReadToEnd().Replace("<br>","").Replace("<em class=\"text-italics\">","").Replace("</em>","").Replace("<strong class=\"text-strong\">","").Replace("</strong>","").Replace("<span style=\"text-decoration:underline\">","").Replace("</span>","");
+
+    string postContent = await ForumUtilities.GetTopicPost(topic, "0", @"c:\reviews");
+
+    postContent = postContent.Replace("<br>","").Replace("<em class=\"text-italics\">","").Replace("</em>","").Replace("<strong class=\"text-strong\">","").Replace("</strong>","").Replace("<span style=\"text-decoration:underline\">","").Replace("</span>","");
     var importedFamilyData = ImportPortfolioReview.ParsePortfolioReview(postContent.Split("\n"), appData, funds);
 
     bool isMatch = true;
@@ -101,8 +123,17 @@ static async Task ProcessTopic(string topic, string title, double? minPortfolio,
         isMatch = importedFamilyData.Value <= maxPortfolio;
     }
 
+    //TODO: consider Person[1] too
+    if (minAge.HasValue && maxAge.HasValue) {
+        isMatch = importedFamilyData.People[0].Age >= minAge && importedFamilyData.People[0].Age <= maxAge;
+    } else if (minAge.HasValue) {
+        isMatch = importedFamilyData.People[0].Age >= minAge;
+    } else if (maxAge.HasValue) {
+        isMatch = importedFamilyData.People[0].Age <= maxAge;
+    }
+
     if (isMatch) {
-        Console.WriteLine($"{topic},${importedFamilyData.Value},{importedFamilyData.Accounts.Count},'{title}'");
+        Console.WriteLine($"{topic},${importedFamilyData.Value},{importedFamilyData.Accounts.Count},{importedFamilyData.People[0].Age}"+(importedFamilyData.People[1].Age != null ? $"/{importedFamilyData.People[1].Age}" : "") + $",'{title}'");
 
         if (showDetails) {
             foreach (var account in importedFamilyData.Accounts) {
@@ -121,7 +152,7 @@ static async Task ProcessTopic(string topic, string title, double? minPortfolio,
     }
 }
 
-static async Task ProcessForumPages(int start, int pages, double? minPortfolio, double? maxPortfolio, string? filter, bool showDetails, IAppData appData, IList<Fund> funds) {
+static async Task ProcessForumPages(int start, int pages, double? minPortfolio, double? maxPortfolio, int? minAge, int? maxAge, string? filter, bool showDetails, IAppData appData, IList<Fund> funds) {
     HttpClient httpClient = new();
     
     for (int i=start; i<start+pages; i++) {
@@ -132,11 +163,11 @@ static async Task ProcessForumPages(int start, int pages, double? minPortfolio, 
         //     Console.WriteLine(topicLine);
         // }
 
-        await ProcessTopicLines(topicLines, minPortfolio, maxPortfolio, showDetails:showDetails, appData, funds);
+        await ProcessTopicLines(topicLines, minPortfolio, maxPortfolio, minAge, maxAge, showDetails:showDetails, appData, funds);
     }
 }
 
-static async Task ProcessTopicLines(string[] topicLines, double? minPortfolio, double? maxPortfolio, bool showDetails, IAppData appData, IList<Fund> funds) {
+static async Task ProcessTopicLines(string[] topicLines, double? minPortfolio, double? maxPortfolio, int? minAge, int? maxAge, bool showDetails, IAppData appData, IList<Fund> funds) {
     foreach (var topicLine in topicLines) {
         var spaceLoc = topicLine.IndexOf(" ");
         if (spaceLoc > -1) {
@@ -145,13 +176,13 @@ static async Task ProcessTopicLines(string[] topicLines, double? minPortfolio, d
 
             if (topic != "6212") { // don't parse "asking portfolio questions"
                 // Console.WriteLine(topic + " " + title);
-                await ProcessTopic(topic, title, minPortfolio, maxPortfolio, showDetails, appData, funds);
+                await ProcessTopic(topic, title, minPortfolio, maxPortfolio, minAge, maxAge, showDetails, appData, funds);
             }
         }
     }
 }
 
-static async Task ProcessTopics(double? minPortfolio, double? maxPortfolio, IAppData appData, IList<Fund> funds) {
+static async Task ProcessTopics(double? minPortfolio, double? maxPortfolio, int? minAge, int? maxAge, IAppData appData, IList<Fund> funds) {
         string topicList = "409135 portfolio review - NYC 54/53\n"
         + "408853 Portfolio Review - 38 y/o Consultant, Soon to be Married\n"
         + "408867 Portfolio review for a 36 year old new poster\n"
@@ -169,5 +200,5 @@ static async Task ProcessTopics(double? minPortfolio, double? maxPortfolio, IApp
         + "407996 portfolio review - TODO - misses 2nd - 7th accounts \n";
 
         var topicLines = topicList.Split('\n');
-        await ProcessTopicLines(topicLines, minPortfolio, maxPortfolio, showDetails:false, appData, funds);
+        await ProcessTopicLines(topicLines, minPortfolio, maxPortfolio, minAge, maxAge, showDetails:false, appData, funds);
 }

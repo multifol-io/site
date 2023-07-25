@@ -65,11 +65,59 @@ public static class ImportPortfolioReview {
                             afterPortfolioSize = portfolioSize != 0.0;
                         }
                     }
-                } else if (tLine.ToLowerInvariant().StartsWith("current retirement assets")) {
+                } else if (tLine.StartsWith("age")) {
+                    var colonLoc = tLine.IndexOf(":");
+                    var dashLoc = tLine.IndexOf("-");
+                    var equalsLoc = tLine.IndexOf("=");
+                    var portfolioLoc = tLine.IndexOf("portfolio");
+                    int useLoc;
+                    if (colonLoc > portfolioLoc) {
+                        useLoc = colonLoc;
+                    } else if (equalsLoc > portfolioLoc) {
+                        useLoc = equalsLoc;
+                    } else if (dashLoc > portfolioLoc) {
+                        useLoc = dashLoc;
+                    } else {
+                        useLoc = -1;
+                    }
+
+                    if (useLoc > -1) {
+                        var valueStr = tLine[(useLoc+1)..tLine.Length].Trim();
+                        var okAge = int.TryParse(valueStr, out int age1);
+                        if (okAge) {
+                            importedFamilyData.People[0].Age = age1;
+                            //TODO: 2nd age...
+                        } else {
+                            string number = "";
+                            int personIndex = 0;
+                            int charIndex = 0;
+                            foreach (var c in valueStr.ToCharArray()) {
+                                bool isDigit = char.IsDigit(c);
+                                if (isDigit) {
+                                    number += c;
+                                }
+
+                                if (!isDigit || charIndex == valueStr.Length) {
+                                    if (number != "") {
+                                        var age = int.Parse(number);
+                                        if (personIndex < 2) {
+                                            importedFamilyData.People[personIndex].Age = age;
+                                        }
+
+                                        personIndex++;
+                                        number = "";
+                                    }
+
+                                    charIndex++;
+                                }
+                            }
+                        }
+                    }
+                } else if (tLine.StartsWith("current retirement assets")) {
                     assetParsing = true;
-                } else if (tLine.ToLowerInvariant().Contains("contributions")) {
+                } else if (tLine.Contains("contributions")) {
                     assetParsing = false;
-                } else if (tLine.ToLowerInvariant().Contains("questions")) {
+                } else if (tLine.Contains("questions")) {
                     assetParsing = false;
                 } else if (string.IsNullOrEmpty(tLine)) {
                     account = null;

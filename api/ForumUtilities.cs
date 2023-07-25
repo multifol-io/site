@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -10,8 +11,8 @@ namespace api {
             var httpClient = new HttpClient();
             string topics = null;
             var forumPageHtml = await httpClient.GetStringAsync(url);
+
             // <a href="./viewtopic.php?t=409019&amp;sid=0269177a9b5bb8119cf05d88ff03905c" class="topictitle">Considering shifting investment strategies to a Bogleheads approach</a>	
-            
             int c = 0;
             var preTopic = "<a href=\"./viewtopic.php?t=";
             var preTopicLoc = forumPageHtml.IndexOf(preTopic, c);
@@ -34,22 +35,33 @@ namespace api {
             return topics;
         }
 
-        public static async Task<string> GetTopicPost(string topic, string start) {
-            string url = $"https://www.bogleheads.org/forum/viewtopic.php?t={topic}&start={start}";
-            var httpClient = new HttpClient();
-            var topicPageHtml = await httpClient.GetStringAsync(url);
+        public static async Task<string> GetTopicPost(string topic, string start, string? cachePath) {
+            string topicPageHtml = null;
+            string htmlFileName = null;
+
+            if (cachePath != null) {
+                htmlFileName = Path.Combine(cachePath, topic + ".html");
+                if (File.Exists(htmlFileName)) {
+                    topicPageHtml = await File.ReadAllTextAsync(htmlFileName);
+                }
+            }
+
+            if (topicPageHtml == null) {
+                string url = $"https://www.bogleheads.org/forum/viewtopic.php?t={topic}&start={start}";
+                var httpClient = new HttpClient();
+                topicPageHtml = await httpClient.GetStringAsync(url);
+
+                if (cachePath != null) {
+                    await File.WriteAllTextAsync(htmlFileName, topicPageHtml);
+                }
+            }
             
             int c = 0;
             var preContent = "<div class=\"content\">";
             var preContentLoc = topicPageHtml.IndexOf(preContent, c);
-            // while (preContentLoc > -1) {
-                var startOfContent = preContentLoc + preContent.Length;
-                var endOfContent = topicPageHtml.IndexOf("</div>", startOfContent);
-                var content = topicPageHtml[startOfContent..endOfContent];
-                c = endOfContent;
-                //preContentLoc = topicPageHtml.IndexOf(preContent, c);
-            // }
-            
+            var startOfContent = preContentLoc + preContent.Length;
+            var endOfContent = topicPageHtml.IndexOf("</div>", startOfContent);
+            var content = topicPageHtml[startOfContent..endOfContent];
             return content;
         }
     }
