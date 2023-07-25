@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>ReviewSearch</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../Shared/Models/ImportPortfolioReview.cs" />
+    <Compile Include="../Shared/Models/FamilyData/*.cs" />
+    <Compile Include="../Shared/Models/IRS/*.cs" />
+    <Compile Include="../Shared/Models/Fund.cs" />
+    <Compile Include="../Shared/Models/EmployerBenefits.cs" />
+    <Compile Include="../Shared/Models/FormatUtilities.cs" />
+    <Compile Include="../Shared/Models/ImportResult.cs" />
+    <Compile Include="../api/ForumUtilities.cs" />
+  </ItemGroup>
+
+</Project>
