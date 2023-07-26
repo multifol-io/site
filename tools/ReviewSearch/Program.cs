@@ -42,7 +42,7 @@ if (args.Length == 0) {
             // skip already processed arg
             skip = false;
         } else if (arg.StartsWith('-')) {
-            switch (arg) {
+            switch (arg.ToLowerInvariant()) {
                 case "-s":
                 case "--start":
                     start = int.Parse(args[argIndex+1]);
@@ -61,11 +61,11 @@ if (args.Length == 0) {
                     maxPortfolio = double.Parse(args[argIndex+1]);
                     skip = true;
                     break;
-                case "--minAge":
+                case "--minage":
                     minAge = int.Parse(args[argIndex+1]);
                     skip = true;
                     break;
-                case "--maxAge":
+                case "--maxage":
                     maxAge = int.Parse(args[argIndex+1]);
                     skip = true;
                     break;
