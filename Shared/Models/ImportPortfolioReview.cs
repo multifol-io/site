@@ -24,6 +24,7 @@ public static class ImportPortfolioReview {
                         || tLine.Contains("retirement portfolio")
                         || tLine.Contains("retirement assets")
                         || tLine.Contains("total invested assets")
+                        || tLine.Contains("total investments")
                         || tLine.Contains("current portfolio")
                         || tLine.Contains("portfolio:")
                     ) ) {
@@ -69,7 +70,7 @@ public static class ImportPortfolioReview {
                             var words = valueStr.Split(' ','-');
                             double multiplier = 0.0;
                             int wordIndex = 0;
-                            switch (words[wordIndex]) {
+                            switch (words[wordIndex].ToLowerInvariant()) {
                                 case "low":
                                 case "lower":
                                     if (words[wordIndex+1] == "to" && words[wordIndex+2] == "mid") {
@@ -89,7 +90,7 @@ public static class ImportPortfolioReview {
                             }
 
                             wordIndex++;
-                            switch (words[wordIndex]) {
+                            switch (words[wordIndex].ToLowerInvariant()) {
                                 case "5":
                                 case "five":
                                     multiplier *= 10000;
