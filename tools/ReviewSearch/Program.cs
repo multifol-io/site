@@ -165,10 +165,7 @@ static async Task ProcessForumPages(int start, int pages, double? minPortfolio, 
     for (int i=start; i<start+pages; i++) {
         string? topics = await ForumUtilities.GetTopicsFromForum("1", i*50, filter);
         var topicLines = topics.Split('\n');
-        // Console.WriteLine($"start: {i*50}");
-        // foreach (var topicLine in topicLines) {
-        //     Console.WriteLine(topicLine);
-        // }
+        Console.WriteLine($"start page:{i}  post:{i*50}");
 
         await ProcessTopicLines(topicLines, minPortfolio, maxPortfolio, minAge, maxAge, debug:debug, showDetails:showDetails, appData, funds);
     }
