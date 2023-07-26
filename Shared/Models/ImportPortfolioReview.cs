@@ -166,10 +166,11 @@ public static class ImportPortfolioReview {
                                 portfolioSize = FormatUtilities.ParseDouble(tSize, allowCurrency:true) * multiplier;
                                 importedFamilyData.Title += "  size: " + portfolioSize;
                                 afterPortfolioSize = portfolioSize != 0.0;
+                                importedFamilyData.Title += $"|13.4";
                             }
                         }
                     }
-                } else if (tLine.StartsWith("age") || tLine.StartsWith("my age")) {
+                } else if (importedFamilyData.People[0].Age == null && (tLine.StartsWith("age") || tLine.Contains(" age:") || tLine.StartsWith("my age") || tLine.StartsWith("me:"))) {
                     afterAge = true;
                     importedFamilyData.Title += "|6";
                     var colonLoc = tLine.IndexOf(":");
@@ -192,11 +193,13 @@ public static class ImportPortfolioReview {
                         var okAge = int.TryParse(valueStr, out int age1);
                         if (okAge) {
                             importedFamilyData.People[0].Age = age1;
+                            importedFamilyData.Title += "|6.1";
                             //TODO: 2nd age...
                         } else {
                             string number = "";
                             int personIndex = 0;
                             int charIndex = 0;
+
                             foreach (var c in valueStr.ToCharArray()) {
                                 charIndex++;
                                 bool isDigit = char.IsDigit(c);
@@ -209,6 +212,7 @@ public static class ImportPortfolioReview {
                                         var age = int.Parse(number);
                                         if (personIndex < 2) {
                                             importedFamilyData.People[personIndex].Age = age;
+                                            importedFamilyData.Title += $"|6.2:{age}";
                                         }
 
                                         personIndex++;
@@ -228,7 +232,7 @@ public static class ImportPortfolioReview {
                 } else if (tLine.StartsWith("available funds")) {
                     importedFamilyData.Title += "|2.1";
                     assetParsing = false;                    
-                } else if (tLine.Contains("questions")) {
+                } else if (tLine.StartsWith("questions")) {
                     importedFamilyData.Title += "|3";
                     assetParsing = false;
                 } else if (string.IsNullOrEmpty(tLine)) {

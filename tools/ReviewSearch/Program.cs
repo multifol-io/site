@@ -198,6 +198,8 @@ static async Task ProcessTopics(double? minPortfolio, double? maxPortfolio, int?
         + "409223 Portfolio Review Request - 1 Year Post Edward Jones To DIY Portfolio -- Poor harvesting by design\n"
         + "404458 TODO - data looks mostly good...nothing harvested\n"
         + "406482 TODO - portfolio size parsing problem\n"
+        + "409111 TODO - misses Taxable section, so less than 100%\n"
+        + "396366 TODO portfolio size way off\n"
         + "407956 Portfolio Sanity Check -- TODO - misses assets $$ \n"
         + "408103 Portfolio review – before life gets more expensive! -- TODO - cannot parse badly formatted investments\n"
         + "408017 Portfolio Check-up / New to this -- TODO - sholld be able to harvest retirement assets\n"
