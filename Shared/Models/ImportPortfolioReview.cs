@@ -12,7 +12,8 @@ public static class ImportPortfolioReview {
             var tLine = line.ToLowerInvariant().Trim();
             try {
                 importedFamilyData.Title += "\n" + tLine;
-                if (tLine.Contains("current retirement assets")) {
+                if (tLine.Contains("current retirement assets")
+                    || tLine.Contains("current retirement investment assets")) {
                     importedFamilyData.Title += "|1";
                     assetParsing = true;
                 } else if (afterAge && !afterPortfolioSize && 
@@ -54,10 +55,60 @@ public static class ImportPortfolioReview {
                         var spaceLoc = valueStr.IndexOf(" ");
                         string? tSize = null;
 
-                    importedFamilyData.Title += $"|5.2 {spaceLoc}";
+                        importedFamilyData.Title += $"|5.2 {spaceLoc}";
 
                         if (spaceLoc > -1) {
                             tSize = valueStr[0..spaceLoc].Trim();
+                        } else {
+                            tSize = valueStr.Substring(0).Trim();
+                        }
+
+                        if (tSize != null && (tSize == "upper" || tSize == "high" ||tSize == "lower" || tSize == "mid" || tSize == "low"))
+                        {
+                            var words = valueStr.Split(' ','-');
+                            double multiplier = 0.0;
+                            int wordIndex = 0;
+                            switch (words[wordIndex]) {
+                                case "low":
+                                case "lower":
+                                    if (words[wordIndex+1] == "to" && words[wordIndex+2] == "mid") {
+                                        multiplier = 3.75;
+                                        wordIndex += 2;
+                                    } else {
+                                        multiplier = 2.5;
+                                    }
+                                    break;
+                                case "mid":
+                                    multiplier = 5;
+                                    break;
+                                case "high":
+                                case "upper":
+                                    multiplier = 7.5;
+                                    break;
+                            }
+
+                            wordIndex++;
+                            switch (words[wordIndex]) {
+                                case "5":
+                                case "five":
+                                    multiplier *= 10000;
+                                    break;
+                                case "6":
+                                case "six":
+                                    multiplier *= 100000;
+                                    break;
+                                case "7":
+                                case "seven":
+                                    multiplier *= 1000000;
+                                    break;
+                                case "8":
+                                case "eight":
+                                    multiplier *= 10000000;
+                                    break;
+                            }
+
+                            portfolioSize = multiplier;
+                        } else if (tSize != null) {
                             var nextSpaceLoc = valueStr.IndexOf(" ", spaceLoc+1);
                             if (nextSpaceLoc == -1) {
                                 nextSpaceLoc = valueStr.Length;
@@ -77,35 +128,36 @@ public static class ImportPortfolioReview {
                                     tSize += "k";
                                     break;
                             }
-                        } else {
-                            tSize = valueStr.Substring(0).Trim();
                         }
+
+                        if (portfolioSize == null) {
                             importedFamilyData.Title += "  tsize: " + tSize;
 
-                        double multiplier = 1.0;
-                        if (tSize != null) {
-                            if (tSize.ToLowerInvariant().EndsWith("mm")) {
-                                multiplier = 1000000.0;
-                                tSize = tSize[..^2];
-                            } else if (tSize.ToLowerInvariant().EndsWith("m")) {
-                                multiplier = 1000000.0;
-                                tSize = tSize[..^1];
-                            } else if (tSize.ToLowerInvariant().EndsWith("k")) {
-                                multiplier = 1000.0;
-                                tSize = tSize[..^1];
-                            }
+                            double multiplier = 1.0;
+                            if (tSize != null) {
+                                if (tSize.ToLowerInvariant().EndsWith("mm")) {
+                                    multiplier = 1000000.0;
+                                    tSize = tSize[..^2];
+                                } else if (tSize.ToLowerInvariant().EndsWith("m")) {
+                                    multiplier = 1000000.0;
+                                    tSize = tSize[..^1];
+                                } else if (tSize.ToLowerInvariant().EndsWith("k")) {
+                                    multiplier = 1000.0;
+                                    tSize = tSize[..^1];
+                                }
 
-                            if (tSize.StartsWith("~")) {
-                                tSize = tSize.Substring(1);
-                            }
+                                if (tSize.StartsWith("~")) {
+                                    tSize = tSize.Substring(1);
+                                }
 
-                            if (tSize.Length > 1 && tSize.Substring(tSize.Length - 1) == ",") {
-                                tSize = tSize[..^2];
-                            }
+                                if (tSize.Length > 1 && tSize.Substring(tSize.Length - 1) == ",") {
+                                    tSize = tSize[..^2];
+                                }
 
-                            portfolioSize = FormatUtilities.ParseDouble(tSize, allowCurrency:true) * multiplier;
-                            importedFamilyData.Title += "  size: " + portfolioSize;
-                            afterPortfolioSize = portfolioSize != 0.0;
+                                portfolioSize = FormatUtilities.ParseDouble(tSize, allowCurrency:true) * multiplier;
+                                importedFamilyData.Title += "  size: " + portfolioSize;
+                                afterPortfolioSize = portfolioSize != 0.0;
+                            }
                         }
                     }
                 } else if (tLine.StartsWith("age")) {
@@ -160,6 +212,7 @@ public static class ImportPortfolioReview {
                 } else if (tLine.StartsWith("contributions") 
                     || tLine.StartsWith("new annual contributions")
                     || tLine.StartsWith("annual contributions")
+                    || tLine.EndsWith("annual contributions")
                     || tLine.StartsWith("annual retirement contributions")) {
                     importedFamilyData.Title += "|2";
                     assetParsing = false;
