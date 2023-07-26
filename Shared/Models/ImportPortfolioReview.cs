@@ -160,7 +160,7 @@ public static class ImportPortfolioReview {
                             }
                         }
                     }
-                } else if (tLine.StartsWith("age")) {
+                } else if (tLine.StartsWith("age") || tLine.StartsWith("my age")) {
                     afterAge = true;
                     importedFamilyData.Title += "|6";
                     var colonLoc = tLine.IndexOf(":");
@@ -302,7 +302,7 @@ public static class ImportPortfolioReview {
     }
 
     private static bool StartsWithNumber(string line) {
-        return line.Length > 0 && (Char.IsDigit(line[0]) || line[0] == '.');
+        return line.Length > 0 && (Char.IsDigit(line[0]) || line[0] == '.' || line[0] == '$');
     }
 
     // right: 35% ProShares UltraPro S&P500 (UPRO) (.91%)
@@ -310,7 +310,7 @@ public static class ImportPortfolioReview {
     // bad2: 10% (VTIVX-Vanguard TR 2045 Fund) (0.08)
     private static Investment ParseInvestmentLine(string line, double portfolioSize, IList<Fund> funds, FamilyData importedFamilyData) {
         line = line.Trim();
-        double? percentOfPortfolio;
+        double? percentOfPortfolio = null;
         int percentIndex = line.IndexOf("%");
         int firstSpaceLoc = line.IndexOf(" ");
         int firstTabLoc = line.IndexOf('\t');
@@ -320,17 +320,14 @@ public static class ImportPortfolioReview {
             
             if (percentIndex > -1 && percentIndex < firstSpaceLoc) {
                 importedFamilyData.Title += "|13";
-                percentOfPortfolio = double.Parse(line[..percentIndex]);
+                percentOfPortfolio = FormatUtilities.ParseDouble(line[..percentIndex], allowCurrency:true);
             } else if (percentIndex > -1 && percentIndex < firstTabLoc) {
                 importedFamilyData.Title += "|13.5";
-                percentOfPortfolio = double.Parse(line[..percentIndex]);
+                percentOfPortfolio = FormatUtilities.ParseDouble(line[..percentIndex], allowCurrency:true);
             } else if (firstSpaceLoc > -1) {
                 importedFamilyData.Title += "|14";
                 percentIndex = firstSpaceLoc;
-                percentOfPortfolio = double.Parse(line[..firstSpaceLoc]);
-            } else {
-                importedFamilyData.Title += "|15";
-                percentOfPortfolio = double.Parse(line);
+                percentOfPortfolio = FormatUtilities.ParseDouble(line[..firstSpaceLoc], allowCurrency:true);
             }
         } catch (Exception) {
             importedFamilyData.Title += "|16";
