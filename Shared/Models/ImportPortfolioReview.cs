@@ -157,9 +157,15 @@ public static class ImportPortfolioReview {
                             }
                         }
                     }
-                } else if (tLine.Contains("contributions")) {
+                } else if (tLine.StartsWith("contributions") 
+                    || tLine.StartsWith("new annual contributions")
+                    || tLine.StartsWith("annual contributions")
+                    || tLine.StartsWith("annual retirement contributions")) {
                     importedFamilyData.Title += "|2";
                     assetParsing = false;
+                } else if (tLine.StartsWith("available funds")) {
+                    importedFamilyData.Title += "|2.1";
+                    assetParsing = false;                    
                 } else if (tLine.Contains("questions")) {
                     importedFamilyData.Title += "|3";
                     assetParsing = false;
@@ -286,10 +292,12 @@ public static class ImportPortfolioReview {
         string? ticker = null;
         double? expRatio = null;
 
-        string? investmentName;
+        string? investmentName = null;
         if (afterLeftParenIndex > 0)
         {
-            investmentName = line[(percentIndex + 1)..(afterLeftParenIndex - 1)].Trim();
+            if (percentIndex < afterLeftParenIndex) {
+                investmentName = line[(percentIndex + 1)..(afterLeftParenIndex - 1)].Trim();
+            }
 
             try
             {
