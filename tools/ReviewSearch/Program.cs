@@ -27,8 +27,10 @@ double? minPortfolio = null;
 double? maxPortfolio = null;
 int? minAge = null;
 int? maxAge = null;
+bool debug = false;
+
 if (args.Length == 0) {
-    await ProcessTopics(minPortfolio, maxPortfolio, minAge, maxAge, appData, funds!);
+    await ProcessTopics(minPortfolio, maxPortfolio, minAge, maxAge, debug, appData, funds!);
 } else {
     int argIndex = 0;
     bool skip = false;
@@ -69,6 +71,10 @@ if (args.Length == 0) {
                     maxAge = int.Parse(args[argIndex+1]);
                     skip = true;
                     break;
+                case "-d":
+                case "--debug":
+                    debug = true;
+                    break;
                 case "-f":
                 case "--full":
                     full = true;
@@ -96,23 +102,23 @@ if (args.Length == 0) {
     }
 
     if (start != null) {
-        await ProcessForumPages((int)start, pages, minPortfolio, maxPortfolio, minAge, maxAge, filter:(all?null:"portfolio"), showDetails:full, appData, funds!);
+        await ProcessForumPages((int)start, pages, minPortfolio, maxPortfolio, minAge, maxAge, filter:(all?null:"portfolio"), debug:debug, showDetails:full, appData, funds!);
     } else if (topics.Count > 0) {
         foreach (var topic in topics) {
-            await ProcessTopic(topic, title:"", minPortfolio, maxPortfolio, minAge, maxAge, showDetails:full, appData, funds!);
+            await ProcessTopic(topic, title:"", minPortfolio, maxPortfolio, minAge, maxAge, debug:debug, showDetails:full, appData, funds!);
         }
     }
 }
 
 return 0;
 
-static async Task ProcessTopic(string topic, string title, double? minPortfolio, double? maxPortfolio, int? minAge, int? maxAge, bool showDetails, IAppData appData, IList<Fund> funds) {
+static async Task ProcessTopic(string topic, string title, double? minPortfolio, double? maxPortfolio, int? minAge, int? maxAge, bool debug, bool showDetails, IAppData appData, IList<Fund> funds) {
     HttpClient httpClient = new();
 
     string postContent = await ForumUtilities.GetTopicPost(topic, "0", @"c:\reviews");
 
     postContent = postContent.Replace("<br>","").Replace("<em class=\"text-italics\">","").Replace("</em>","").Replace("<strong class=\"text-strong\">","").Replace("</strong>","").Replace("<span style=\"text-decoration:underline\">","").Replace("</span>","");
-    var importedFamilyData = ImportPortfolioReview.ParsePortfolioReview(postContent.Split("\n"), appData, funds);
+    var importedFamilyData = ImportPortfolioReview.ParsePortfolioReview(postContent.Split("\n"), debug:debug, appData, funds);
 
     bool isMatchPortfolio = true;
     if (minPortfolio.HasValue && maxPortfolio.HasValue) {
@@ -147,13 +153,13 @@ static async Task ProcessTopic(string topic, string title, double? minPortfolio,
             Console.WriteLine();
         }
 
-        if (importedFamilyData.Title != null && false) {
+        if (importedFamilyData.Title != null && debug) {
             Console.WriteLine(importedFamilyData.Title + "\n");
         }
     }
 }
 
-static async Task ProcessForumPages(int start, int pages, double? minPortfolio, double? maxPortfolio, int? minAge, int? maxAge, string? filter, bool showDetails, IAppData appData, IList<Fund> funds) {
+static async Task ProcessForumPages(int start, int pages, double? minPortfolio, double? maxPortfolio, int? minAge, int? maxAge, string? filter, bool debug, bool showDetails, IAppData appData, IList<Fund> funds) {
     HttpClient httpClient = new();
     
     for (int i=start; i<start+pages; i++) {
@@ -164,11 +170,11 @@ static async Task ProcessForumPages(int start, int pages, double? minPortfolio, 
         //     Console.WriteLine(topicLine);
         // }
 
-        await ProcessTopicLines(topicLines, minPortfolio, maxPortfolio, minAge, maxAge, showDetails:showDetails, appData, funds);
+        await ProcessTopicLines(topicLines, minPortfolio, maxPortfolio, minAge, maxAge, debug:debug, showDetails:showDetails, appData, funds);
     }
 }
 
-static async Task ProcessTopicLines(string[] topicLines, double? minPortfolio, double? maxPortfolio, int? minAge, int? maxAge, bool showDetails, IAppData appData, IList<Fund> funds) {
+static async Task ProcessTopicLines(string[] topicLines, double? minPortfolio, double? maxPortfolio, int? minAge, int? maxAge, bool debug, bool showDetails, IAppData appData, IList<Fund> funds) {
     foreach (var topicLine in topicLines) {
         var spaceLoc = topicLine.IndexOf(" ");
         if (spaceLoc > -1) {
@@ -177,13 +183,13 @@ static async Task ProcessTopicLines(string[] topicLines, double? minPortfolio, d
 
             if (topic != "6212") { // don't parse "asking portfolio questions"
                 // Console.WriteLine(topic + " " + title);
-                await ProcessTopic(topic, title, minPortfolio, maxPortfolio, minAge, maxAge, showDetails, appData, funds);
+                await ProcessTopic(topic, title, minPortfolio, maxPortfolio, minAge, maxAge, debug:debug, showDetails, appData, funds);
             }
         }
     }
 }
 
-static async Task ProcessTopics(double? minPortfolio, double? maxPortfolio, int? minAge, int? maxAge, IAppData appData, IList<Fund> funds) {
+static async Task ProcessTopics(double? minPortfolio, double? maxPortfolio, int? minAge, int? maxAge, bool debug, IAppData appData, IList<Fund> funds) {
         string topicList = "409135 portfolio review - NYC 54/53\n"
         + "408853 Portfolio Review - 38 y/o Consultant, Soon to be Married\n"
         + "408867 Portfolio review for a 36 year old new poster\n"
@@ -203,5 +209,5 @@ static async Task ProcessTopics(double? minPortfolio, double? maxPortfolio, int?
         + "407996 portfolio review - TODO - misses 2nd - 7th accounts \n";
 
         var topicLines = topicList.Split('\n');
-        await ProcessTopicLines(topicLines, minPortfolio, maxPortfolio, minAge, maxAge, showDetails:false, appData, funds);
+        await ProcessTopicLines(topicLines, minPortfolio, maxPortfolio, minAge, maxAge, debug:debug, showDetails:false, appData, funds);
 }

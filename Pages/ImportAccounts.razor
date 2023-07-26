@@ -231,7 +231,7 @@
     private async Task importBH() {
         ImportResult importResult = new();
         var lines = bhContent.Split('\n');
-        var importedFamilyData = ImportPortfolioReview.ParsePortfolioReview(lines, appData, Funds);
+        var importedFamilyData = ImportPortfolioReview.ParsePortfolioReview(lines, debug:false, appData, Funds);
         if (importedFamilyData.Accounts.Count > 0) {
             importResult.NewAccounts.AddRange(importedFamilyData.Accounts);
             appData.ImportResult = importResult;

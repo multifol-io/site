@@ -1,5 +1,5 @@
 public static class ImportPortfolioReview {
-     public static FamilyData ParsePortfolioReview(string[] lines, IAppData appData, IList<Fund> funds) {
+     public static FamilyData ParsePortfolioReview(string[] lines, bool debug, IAppData appData, IList<Fund> funds) {
         double? portfolioSize = null;
         bool? assetParsing = null;
         bool afterAge = false;
@@ -230,7 +230,7 @@ public static class ImportPortfolioReview {
                 } else if (assetParsing.HasValue && assetParsing.Value && StartsWithNumber(tLine) && account != null) {
                     importedFamilyData.Title += "|4";
                     try {
-                        investment = ParseInvestmentLine(line, portfolioSize ?? 100.0, funds, importedFamilyData);
+                        investment = ParseInvestmentLine(line, portfolioSize ?? 100.0, debug:debug, funds, importedFamilyData);
                         account?.Investments.Add(investment);
                         assetParsing = true;
                     } catch (Exception ex) {
@@ -250,7 +250,7 @@ public static class ImportPortfolioReview {
                     importedFamilyData.Title += "|9";
                     account = ParseAccountLine(lastLine!, importedFamilyData);
                     try {
-                        investment = ParseInvestmentLine(line, portfolioSize ?? 100.0, funds, importedFamilyData);
+                        investment = ParseInvestmentLine(line, portfolioSize ?? 100.0, debug:debug, funds, importedFamilyData);
                         account?.Investments.Add(investment);
                         assetParsing = true;
                     } catch (Exception ex) {
@@ -308,7 +308,7 @@ public static class ImportPortfolioReview {
     // right: 35% ProShares UltraPro S&P500 (UPRO) (.91%)
     // bad1: 5% VTCLX Vanguard Tax-Managed Capital Appreciation .09er
     // bad2: 10% (VTIVX-Vanguard TR 2045 Fund) (0.08)
-    private static Investment ParseInvestmentLine(string line, double portfolioSize, IList<Fund> funds, FamilyData importedFamilyData) {
+    private static Investment ParseInvestmentLine(string line, double portfolioSize, bool debug, IList<Fund> funds, FamilyData importedFamilyData) {
         line = line.Trim();
         double? percentOfPortfolio = null;
         int percentIndex = line.IndexOf("%");
@@ -328,10 +328,17 @@ public static class ImportPortfolioReview {
                 importedFamilyData.Title += "|14";
                 percentIndex = firstSpaceLoc;
                 percentOfPortfolio = FormatUtilities.ParseDouble(line[..firstSpaceLoc], allowCurrency:true);
+                if (percentOfPortfolio > 100) {
+                    percentOfPortfolio = null;
+                }
             }
         } catch (Exception) {
             importedFamilyData.Title += "|16";
             percentOfPortfolio = null;
+        }
+
+        if (portfolioSize != 0.0 && line.StartsWith("$")) {
+            percentOfPortfolio = percentOfPortfolio! / portfolioSize * 100.0;
         }
 
         importedFamilyData.Title += $"|12 ({percentOfPortfolio}%)";
