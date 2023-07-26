@@ -315,7 +315,12 @@ public static class ImportPortfolioReview {
     }
 
     private static bool StartsWithNumber(string line) {
-        return line.Length > 0 && (Char.IsDigit(line[0]) || line[0] == '.' || line[0] == '$');
+        return line.Length > 1 && 
+            (Char.IsDigit(line[0]) 
+                || line[0] == '.' 
+                || line[0] == '$' 
+                || (line[0] == '(')
+            );
     }
 
     // right: 35% ProShares UltraPro S&P500 (UPRO) (.91%)
@@ -323,6 +328,10 @@ public static class ImportPortfolioReview {
     // bad2: 10% (VTIVX-Vanguard TR 2045 Fund) (0.08)
     private static Investment ParseInvestmentLine(string line, double portfolioSize, bool debug, IList<Fund> funds, FamilyData importedFamilyData) {
         line = line.Trim();
+        if (line.Length > 1 && line[0] == '(') {
+            line = line[1..];
+        }
+
         double? percentOfPortfolio = null;
         int percentIndex = line.IndexOf("%");
         int firstSpaceLoc = line.IndexOf(" ");
