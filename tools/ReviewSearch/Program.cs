@@ -114,26 +114,27 @@ static async Task ProcessTopic(string topic, string title, double? minPortfolio,
     postContent = postContent.Replace("<br>","").Replace("<em class=\"text-italics\">","").Replace("</em>","").Replace("<strong class=\"text-strong\">","").Replace("</strong>","").Replace("<span style=\"text-decoration:underline\">","").Replace("</span>","");
     var importedFamilyData = ImportPortfolioReview.ParsePortfolioReview(postContent.Split("\n"), appData, funds);
 
-    bool isMatch = true;
+    bool isMatchPortfolio = true;
     if (minPortfolio.HasValue && maxPortfolio.HasValue) {
-        isMatch = importedFamilyData.Value >= minPortfolio && importedFamilyData.Value <= maxPortfolio;
+        isMatchPortfolio = importedFamilyData.Value >= minPortfolio && importedFamilyData.Value <= maxPortfolio;
     } else if (minPortfolio.HasValue) {
-        isMatch = importedFamilyData.Value >= minPortfolio;
+        isMatchPortfolio = importedFamilyData.Value >= minPortfolio;
     } else if (maxPortfolio.HasValue) {
-        isMatch = importedFamilyData.Value <= maxPortfolio;
+        isMatchPortfolio = importedFamilyData.Value <= maxPortfolio;
     }
 
+    bool isMatchAge = true;
     //TODO: consider Person[1] too
     if (minAge.HasValue && maxAge.HasValue) {
-        isMatch = importedFamilyData.People[0].Age >= minAge && importedFamilyData.People[0].Age <= maxAge;
+        isMatchAge = importedFamilyData.People[0].Age >= minAge && importedFamilyData.People[0].Age <= maxAge;
     } else if (minAge.HasValue) {
-        isMatch = importedFamilyData.People[0].Age >= minAge;
+        isMatchAge = importedFamilyData.People[0].Age >= minAge;
     } else if (maxAge.HasValue) {
-        isMatch = importedFamilyData.People[0].Age <= maxAge;
+        isMatchAge = importedFamilyData.People[0].Age <= maxAge;
     }
 
-    if (isMatch) {
-        Console.WriteLine($"{topic},${importedFamilyData.Value},{importedFamilyData.Accounts.Count},{importedFamilyData.People[0].Age}"+(importedFamilyData.People[1].Age != null ? $"/{importedFamilyData.People[1].Age}" : "") + $",'{title}'");
+    if (isMatchAge && isMatchPortfolio) {
+        Console.WriteLine($"{topic},${importedFamilyData.Value},{importedFamilyData.Accounts.Count},{importedFamilyData.People[0].Age}"+(importedFamilyData.People[1].Age != null ? $",{importedFamilyData.People[1].Age}" : ",") + $",'{title}'");
 
         if (showDetails) {
             foreach (var account in importedFamilyData.Accounts) {
