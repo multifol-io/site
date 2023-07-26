@@ -116,6 +116,13 @@ public static class ImportPortfolioReview {
                             }
 
                             var nextWord = valueStr[(spaceLoc+1)..nextSpaceLoc]?.ToLowerInvariant();
+                            if (nextWord != null) {
+                                var nextWordLen = nextWord.Length;
+                                if (nextWordLen >= 1 && !char.IsAsciiLetter(nextWord[nextWordLen - 1])) {
+                                    nextWord = nextWord[..^1];
+                                }
+                            }
+
                             switch (nextWord) {
                                 case "m":
                                 case "mm":
