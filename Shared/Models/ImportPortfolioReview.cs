@@ -23,6 +23,7 @@ public static class ImportPortfolioReview {
                         || tLine.Contains("your portfolio")
                         || tLine.Contains("retirement portfolio")
                         || tLine.Contains("retirement assets")
+                        || tLine.Contains("total invested assets")
                         || tLine.Contains("current portfolio")
                         || tLine.Contains("portfolio:")
                     ) ) {
@@ -242,10 +243,10 @@ public static class ImportPortfolioReview {
                     importedFamilyData.Accounts.Add(account);
                     assetParsing = true;                    
                 }  else if (assetParsing.HasValue && assetParsing.Value && !StartsWithNumber(tLine)) {
-                    importedFamilyData.Title += "|8";
-                    account = ParseAccountLine(line, importedFamilyData);
-                    importedFamilyData.Accounts.Add(account);
-                    assetParsing = true;
+                    // importedFamilyData.Title += "|8";
+                    // account = ParseAccountLine(line, importedFamilyData);
+                    // importedFamilyData.Accounts.Add(account);
+                    // assetParsing = true;
                 } else if (!assetParsing.HasValue && afterPortfolioSize && StartsWithNumber(tLine)) {
                     importedFamilyData.Title += "|9";
                     account = ParseAccountLine(lastLine!, importedFamilyData);
