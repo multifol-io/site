@@ -77,6 +77,11 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                 Bogleheads.org forum enables you to <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Ask Portfolio Questions</a> ↗️.
                 This tool helps collect background info, on top of your <a href=/portfolio>Portfolio Tracker</a> and <a href=/saving>Savings Plan</a>, and helps format your review.
             </p>
+            <p style=font-size:smaller>When ready to post to the forum, ensure that the inline formatting markup is shown. Rich text formatting like bold and underline help readability of your post!<br/>
+                <InputCheckbox id=showMarkup style=margin-left:20px @bind-Value=ShowMarkup /> <label for=showMarkup>Show inline formatting markup: [b]bold text[/b]</label> <button style=margin-left:20px @onclick=CopyTextToClipboard>Copy content to clipboard</button>
+            </p>
+
+            <hr/>
             <div>
                 <p ><b>Press edit (✏️) to complete each step:</b></p>
 
@@ -162,37 +167,6 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                     <td>
                                         @((MarkupString)bold("Portfolio Size:"))&nbsp;@(familyData.ValueStyle==0?FormatUtilities.formatMoneyThousands(familyData.Value):(familyData.ValueStyle==1?estimatePortfolio(familyData):FormatUtilities.formatMoney(familyData.Value)))<br/>
                                         <br/>
-                                        @if (familyData.Accounts.Count > 0) {
- 
-                                            <legend>
-                                                <InputCheckbox id=showPortfolioAnalysis @bind-Value=showPortfolioAnalysis /> 
-                                                <label for=showPortfolioAnalysis>Show Portfolio Analysis</label>
-                                            </legend><br/>
-                                           <fieldset>
- 
-                                                @if (showPortfolioAnalysis) {
-                                                    @if (!double.IsNaN(familyData.ActualStockAllocation) || !double.IsNaN(familyData.ActualBondAllocation) || !double.IsNaN(familyData.ActualInternationalStockAllocation)) {
-                                                        @((MarkupString)bold("Actual Asset allocation: "))
-                                                        <span>&nbsp;@FormatUtilities.formatPercent(familyData.ActualStockAllocation*100.0) stocks / @FormatUtilities.formatPercent(familyData.ActualBondAllocation*100.0) bonds</span><br/>
-                                                        <span>&nbsp;&nbsp;Actual International allocation: </span>
-                                                        <span>@FormatUtilities.formatPercent(familyData.ActualInternationalStockAllocation*100.0)</span><br/>
-                                                        <span>&nbsp;&nbsp;Actual Cash allocation: </span>
-                                                        <span>@FormatUtilities.formatPercent(familyData.ActualCashAllocation*100.0)</span><br/>
-                                                        @if(familyData.ActualOtherAllocation > 0.0) {
-                                                            <span>&nbsp;&nbsp;Actual Unclassified allocation: </span>
-                                                            <span>@FormatUtilities.formatPercent(familyData.ActualOtherAllocation*100.0)</span><br/>
-                                                        }
-                                                        <br/>
-                                                    }
-
-                                                    @((MarkupString)bold("Weighted Expense Ratio: "))
-                                                    <span>&nbsp;@FormatUtilities.formatPercent3(familyData.OverallER) or @FormatUtilities.formatMoney(familyData.ExpensesTotal) per year</span>
-                                                    @if (familyData.InvestmentsMissingER > 0){<span>&nbsp;(@familyData.InvestmentsMissingER investment(s) missing ER)</span><br/>}
-                                                }
-                                            </fieldset>
-                                            <br/>
-                                        }
-
                                         @((MarkupString)boldUnderline("Current Retirement Assets:"))<br/>
                                         @foreach (var account in familyData.Accounts.OrderBy(a=>a.PortfolioReviewOrder).ThenByDescending(a=>a.Value)) {
                                             <br/>
@@ -327,19 +301,11 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                     }          
                 </table>
                 <br/>
-
-                <p>Copy the correct format for your post:</p>
-                <InputCheckbox id=showMarkup style=margin-left:20px @bind-Value=ShowMarkup /> <label for=showMarkup>Use forum post markup: [b]bold[/b]</label><br/>
-                <br/>
-                <button style=margin-left:20px @onclick=CopyTextToClipboard>Copy to clipboard</button><br/>
-                <hr/>
-
             </div>
             
             <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
 
-            <p>"Consider using the <a href="/portfolio">Portfolio Tracker</a> and making a <a href="/saving">Savings Plan</a>!"</p>
-
+            <p>"Consider looking at an analysis of your portfolio in <a href="/portfolio">Portfolio Tracker</a>: actual asset allocation & annual expense ratio fee total."</p>
         }
         else
         {
@@ -955,7 +921,6 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
     private const string pageHeading = "Portfolio Review";
     private bool focusTicker = false;
     private bool focusAccount = false;
-    private bool showPortfolioAnalysis = true;
 
     private FamilyData familyData {
         get {

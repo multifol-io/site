@@ -769,11 +769,13 @@
                                                 break;
                                         }
                                         <br/>
-                                        <fieldset>
-                                            @((MarkupString)bold("Weighted Expense Ratio: "))
-                                            <span>&nbsp;@FormatUtilities.formatPercent3(appData.FamilyData.OverallER) or @FormatUtilities.formatMoney(appData.FamilyData.ExpensesTotal) /year</span>
-                                            @if (appData.FamilyData.InvestmentsMissingER > 0){<br/><span>&nbsp;(@appData.FamilyData.InvestmentsMissingER investment(s) missing ER)</span><br/>}
-                                        </fieldset>
+                                        @if (!Navigation.Uri.EndsWith("/accounts")) {
+                                            <fieldset>
+                                                @((MarkupString)bold("Weighted Expense Ratio: "))
+                                                <span>&nbsp;@FormatUtilities.formatPercent3(appData.FamilyData.OverallER) or @FormatUtilities.formatMoney(appData.FamilyData.ExpensesTotal) /year</span>
+                                                @if (appData.FamilyData.InvestmentsMissingER > 0){<br/><span>&nbsp;(@appData.FamilyData.InvestmentsMissingER investment(s) missing ER)</span><br/>}
+                                            </fieldset>
+                                        }
                                     }
                                     @if (appData.FamilyData.Accounts.Count == 0) {
                                         <button style=margin-left:40px @onclick=addAccountInline title='add account'>➕</button>
