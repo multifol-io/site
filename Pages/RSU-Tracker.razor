@@ -210,9 +210,11 @@
                                                                         every <input @onmousedown:stopPropagation="true" type=text style=width:40px;text-align:right @bind-value=rsuGrant.VestPeriodMonths  /> months<br/>
                                                                         with first vest happening at month # <input @onmousedown:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.FirstVestMonth  /><br/>
                                                                         <br/>
-                                                                        last price: $<input @onmousedown:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.LastPrice placeholder="last price" /><br/>
-                                                                        <button title='delete grant' @onclick='@(e=>deleteGrant(e,pBuf, grantIndex))'>❌ grant</button>
-                                                                        <button title='save grant' >save grant</button>
+                                                                        last price: $<input @onmousedown:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.LastPrice placeholder="last price" />
+                                                                        <div style=text-align:right>
+                                                                            <button title='delete grant' @onclick='@(e=>deleteGrant(e,pBuf, grantIndex))'>❌ grant</button>
+                                                                            <button title='save grant' >save grant</button>
+                                                                        </div>
                                                                     </td>
                                                                 }
                                                             </tr>

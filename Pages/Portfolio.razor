@@ -219,12 +219,10 @@
                                                             </td>
                                                         </tr>
                                                         @if(account.Edit) {
-                                                            <tr style=color:white;background:black;padding-left:8px><td colspan=3>
+                                                            <tr style=color:white;background:black;padding-left:8px><td colspan=4>
                                                                 <label style=padding-left:8px>Custodian: </label><input style="width:140px" type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' />
                                                             </td>
-                                                            <td >
-                                                                <div style=float:left;margin-left:50px><button @onclick=doneEditing>done</button></div>
-                                                            </td>
+
                                                             </tr>
                                                             
                                                             <tr style=color:white;background:black;padding-left:8px>
@@ -258,7 +256,6 @@
                                                                     </select> 
                                                                 </td>
                                                                 <td >
-                                                                    <div style=float:left;margin-left:50px><button @onclick='@(e=>deleteAccount2(e,accBuffer))' title='delete account'>❌ account</button></div>
                                                                 </td>
                                                             </tr>
                                                             <tr style=color:white;background:black;padding-left:8px>
@@ -285,6 +282,12 @@
                                                             }
                                                             <tr style=color:white;background:black;><td colspan=4>
                                                                 <label style=padding-left:8px>Note: </label><input type=text @bind-value=account.Note @bind-value:event=oninput placeholder='account note'/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr style=color:white;background:black;>
+                                                                <td colspan=4 style=text-align:right>
+                                                                    <button @onclick='@(e=>deleteAccount2(e,accBuffer))' title='delete account'>❌ account</button>
+                                                                    <button @onclick=doneEditing>save account</button>
                                                                 </td>
                                                             </tr>
                                                         }
@@ -350,9 +353,13 @@
                                                                                 <option>@assetType</option>
                                                                             }
                                                                         </select>
-                                                                        <div style=float:left;margin-left:50px><button @onclick='@(e=>deleteInvestment2(e,accBuffer, invBuffer))' title='delete investment'>❌</button></div>
                                                                     </td>
                                                                 </tr>
+                                                                <tr style=background-color:@bgColor>
+                                                                    <td colspan=4 style=text-align:right>
+                                                                       <button @onclick='@(e=>deleteInvestment2(e,accBuffer, invBuffer))' title='delete investment'>❌ investment</button>
+                                                                    </td>
+                                                                </tr>                                                                
                                                             }
 
                                                             alternateRow2 = !alternateRow2;
@@ -361,9 +368,9 @@
                                                             <tr style=background:black;color:white>
                                                                 <td colspan=4><button @onclick='@(e=>addInvestment2(e,accBuffer))' style=margin-left:20px>➕ Investment</button></td>
                                                             </tr>
-                                                        } else {
-                                                            <tr style=height:4;background:white;font-size:4pt;><td>&nbsp;</td></tr>
                                                         }
+                                                        
+                                                        <tr style=height:4;background:white;font-size:4pt;><td>&nbsp;</td></tr>
                                                     }
                                                     <tr>
                                                         <td colspan=2>
