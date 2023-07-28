@@ -140,7 +140,7 @@ static async Task ProcessTopic(string topic, string title, double? minPortfolio,
     }
 
     if (isMatchAge && isMatchPortfolio) {
-        Console.WriteLine($"{topic},${importedFamilyData.Value},{importedFamilyData.Accounts.Count},{importedFamilyData.People[0].Age}"+(importedFamilyData.People[1].Age != null ? $",{importedFamilyData.People[1].Age}" : ",") + $",'{title}'");
+        Console.WriteLine($"{topic},${importedFamilyData.Value},{importedFamilyData.Accounts.Count},{importedFamilyData.People[0].Age}"+(importedFamilyData.People[1].Age != null ? $",{importedFamilyData.People[1].Age}" : ",") + $",{importedFamilyData.PercentTotal},'{title}'");
 
         if (showDetails) {
             foreach (var account in importedFamilyData.Accounts) {

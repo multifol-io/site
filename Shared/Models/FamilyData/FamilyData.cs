@@ -31,6 +31,9 @@ public class FamilyData
     }
 
     [JsonIgnore]
+    public double PercentTotal { get; set; }
+    
+    [JsonIgnore]
     public IAppData AppData { get; set;}    
 
     public string Title { get; set; }

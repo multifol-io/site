@@ -282,6 +282,13 @@ public static class ImportPortfolioReview {
             }
         }
 
+        if (importedFamilyData.PercentTotal > 190) {
+            foreach (var account2 in importedFamilyData.Accounts) {
+                foreach (var investment2 in account2.Investments) {
+                    investment2.ValuePIN = investment2.ValuePIN / importedFamilyData.PercentTotal * 100.0;
+                }
+            }
+        }
         return importedFamilyData;
     }
 
@@ -421,6 +428,7 @@ public static class ImportPortfolioReview {
             }
         }
 
+        importedFamilyData.PercentTotal += percentOfPortfolio ?? 0.0;  //keep running total to see when people use 100% per account
         return new Investment() { Name = investmentName, Ticker = ticker, ExpenseRatio = expRatio, ValuePIN = portfolioSize * percentOfPortfolio / 100, AssetType = assetType };
     }
 }
