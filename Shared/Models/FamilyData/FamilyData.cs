@@ -224,7 +224,19 @@ public class FamilyData
             _Year = value;
         }
     }
-    public string? StateMarginalTaxBracket { get; set; }
+
+    [JsonIgnore] // Transition to StateTaxRate on 7/28/2023 - https://github.com/bogle-tools/site/issues/208
+    public string? StateMarginalTaxBracket {
+        get {
+            return StateTaxRate;
+        }
+        set {
+            StateTaxRate = value;
+        }
+    }
+    
+    public string? StateTaxRate { get; set; }
+    
     public string? StateOfResidence { get; set; }
 
     public double? Stocks { get; set; }
