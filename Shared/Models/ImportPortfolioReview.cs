@@ -265,6 +265,7 @@ public static class ImportPortfolioReview {
                     try {
                         investment = ParseInvestmentLine(line, portfolioSize ?? 100.0, debug:debug, funds, importedFamilyData);
                         account?.Investments.Add(investment);
+                        importedFamilyData.Accounts.Add(account);
                         assetParsing = true;
                     } catch (Exception ex) {
                         Console.WriteLine(ex.ToString());
@@ -282,13 +283,14 @@ public static class ImportPortfolioReview {
             }
         }
 
-        if (importedFamilyData.PercentTotal > 190) {
+        if (importedFamilyData.PercentTotal > 150) {
             foreach (var account2 in importedFamilyData.Accounts) {
                 foreach (var investment2 in account2.Investments) {
                     investment2.ValuePIN = investment2.ValuePIN / importedFamilyData.PercentTotal * 100.0;
                 }
             }
         }
+
         return importedFamilyData;
     }
 
