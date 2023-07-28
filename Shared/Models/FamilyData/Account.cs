@@ -189,6 +189,8 @@ public class Account
         }
     }
 
+    public double? AfterTaxPercentage { get; set; }
+
     public string TaxType2 { 
         get {
             return TaxType.StartsWith("Pre-Tax") ? "Pre-Tax" : TaxType;

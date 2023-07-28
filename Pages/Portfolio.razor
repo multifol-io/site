@@ -219,16 +219,22 @@
                                                             </td>
                                                         </tr>
                                                         @if(account.Edit) {
-                                                            <tr style=color:white;background:black;padding-left:8px><td colspan=4>
-                                                                <label style=padding-left:8px>Custodian: </label><input style="width:140px" type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' />
-                                                            </td>
-
-                                                            </tr>
-                                                            
                                                             <tr style=color:white;background:black;padding-left:8px>
-                                                                <td colspan=3>
-                                                                    <label style=padding-left:8px>Account Type:</label>
-                                                                    <select style=margin-left:8px @ref=accountN @bind=account.AccountType>
+                                                                <td colspan=4>
+                                                                    @if (appData.FamilyData.PersonCount == 2) {
+                                                                        <label style=padding-left:8px>Owner:</label>
+                                                                        <select style=margin-left:4px @ref=accountN @bind=account.Identifier>
+                                                                            @if(account.TaxType == "Taxable" || account.TaxType == "Other") {
+                                                                                <option>our</option>
+                                                                            }
+                                                                            @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
+                                                                                <option>@appData.FamilyData.People[p].PossessiveID</option>
+                                                                            }
+                                                                        </select>
+                                                                    }
+
+                                                                    <label style=padding-left:8px>Type:</label>
+                                                                    <select style=margin-left:4px @ref=accountN @bind=account.AccountType>
                                                                         <option>choice needed</option>
                                                                         <option>401(k)</option>
                                                                         <option>403(b)</option>
@@ -255,29 +261,20 @@
                                                                         <option>Traditional IRA</option>
                                                                     </select> 
                                                                 </td>
-                                                                <td >
-                                                                </td>
                                                             </tr>
                                                             <tr style=color:white;background:black;padding-left:8px>
                                                                 <td colspan=4>
-                                                                    @if (appData.FamilyData.PersonCount == 2) {
-                                                                        <label style=padding-left:8px>Owner:</label>
-                                                                        <select style=margin-left:8px @ref=accountN @bind=account.Identifier>
-                                                                            @if(account.TaxType == "Taxable" || account.TaxType == "Other") {
-                                                                                <option>our</option>
-                                                                            }
-                                                                            @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
-                                                                                <option>@appData.FamilyData.People[p].PossessiveID</option>
-                                                                            }
-                                                                        </select>
-                                                                    }
+                                                                    <label style=padding-left:8px>at</label> <input style="width:140px" type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' />
                                                                 </td>
                                                             </tr>
                                                             @if (account.TaxType == "Pre-Tax(work)") {
                                                                 <tr style=color:white;background:black;>
-                                                                    <td colspan=4>
-                                                                        <InputCheckbox id=currentEmployer style=margin-left:20px @bind-Value=account.CurrentEmployerRetirementFund /> <label for=currentEmployer>&nbsp;Current Employer</label><br/>
+                                                                    <td colspan=2>
+                                                                        <InputCheckbox id=currentEmployer style=margin-left:20px @bind-Value=account.CurrentEmployerRetirementFund /> <label for=currentEmployer>&nbsp;Current Employer</label>
                                                                     </td>
+                                                                    @* <td colspan="2">
+                                                                        <label style=padding-left:8px>After Tax %:</label> <input type=text id=currentEmployer style=margin-left:8px;width:60px @bind-Value=account.AfterTaxPercentage @bind-Value:event=onchange />
+                                                                    </td> *@
                                                                 </tr>
                                                             }
                                                             <tr style=color:white;background:black;><td colspan=4>
@@ -338,7 +335,7 @@
                                                                 </tr>
                                                                 
                                                                 <tr style=background-color:@bgColor>
-                                                                    <td colspan=4><label style=padding-left:16px>Name:</label><input width= type=text style=width:320px @bind-Value=investment.Name @bind-Value:event=oninput placeholder='name'/></td>
+                                                                    <td colspan=4><label style=padding-left:16px>Name:</label><input type=text style=width:300px @bind-Value=investment.Name @bind-Value:event=oninput placeholder='name'/></td>
                                                                 </tr>
                                                                 <tr style=background-color:@bgColor>
                                                                     <td colspan=4>
