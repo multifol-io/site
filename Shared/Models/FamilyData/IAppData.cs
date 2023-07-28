@@ -12,4 +12,5 @@ public interface IAppData {
     public ImportResult? ImportResult { get; set; }
     public bool ApplyStockSizeRules { get; set; }
     public bool ApplyTaxEfficientPlacementRules { get; set; }
+    public bool AllowAfterTaxPercentage { get; set;}
 }

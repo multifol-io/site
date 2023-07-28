@@ -165,9 +165,10 @@
                                 </td>
                                 break;
                             case "advice-settings":
-                                @((MarkupString)bold("Portfolio Advice Settings:"))<span>&nbsp;(experimental)</span><br/>
-                                <InputCheckbox id=stockSizeRules style=margin-left:20px @bind-Value=appData.ApplyStockSizeRules /> <label for=stockSizeRules>&nbsp;Avoid large concentrations of an individual stock</label><br/>
-                                <InputCheckbox id=taxEfficientRules style=margin-left:20px @bind-Value=appData.ApplyTaxEfficientPlacementRules  /> <label for=taxEfficientRules>&nbsp;Give tax efficient placement advice</label><br/> 
+                                @((MarkupString)bold("Advanced Portfolio Settings:"))<span>&nbsp;(experimental)</span><br/>
+                                <InputCheckbox id=stockSizeRules style=margin-left:20px @bind-Value=appData.ApplyStockSizeRules /> <label for=stockSizeRules>&nbsp;Show warning if &gt; 5% concentration of an individual stock</label><br/>
+                                <InputCheckbox id=taxEfficientRules style=margin-left:20px @bind-Value=appData.ApplyTaxEfficientPlacementRules  /> <label for=taxEfficientRules>&nbsp;Show advice for tax efficient placement</label><br/> 
+                                <InputCheckbox id=allowAfterTaxPercentage style=margin-left:20px @bind-Value=appData.AllowAfterTaxPercentage  /> <label for=allowAfterTaxPercentage>&nbsp;Track After-Tax Percentage for Account that might have Pre and Post-Tax contributions</label><br/> 
                                 <br/>
                                 break;
                             case "retirement-assets":
@@ -272,9 +273,11 @@
                                                                     <td colspan=2>
                                                                         <InputCheckbox id=currentEmployer style=margin-left:20px @bind-Value=account.CurrentEmployerRetirementFund /> <label for=currentEmployer>&nbsp;Current Employer</label>
                                                                     </td>
-                                                                    @* <td colspan="2">
-                                                                        <label style=padding-left:8px>After Tax %:</label> <input type=text id=currentEmployer style=margin-left:8px;width:60px @bind-Value=account.AfterTaxPercentage @bind-Value:event=onchange />
-                                                                    </td> *@
+                                                                    <td colspan="2">
+                                                                        @if (appData.AllowAfterTaxPercentage) {
+                                                                            <label style=padding-left:8px>After Tax %:</label> <input type=text id=currentEmployer style=margin-left:8px;width:60px @bind-Value=account.AfterTaxPercentage @bind-Value:event=onchange />
+                                                                        }
+                                                                    </td>
                                                                 </tr>
                                                             }
                                                             <tr style=color:white;background:black;><td colspan=4>
