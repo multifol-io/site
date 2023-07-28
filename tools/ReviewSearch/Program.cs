@@ -201,7 +201,7 @@ static async Task ProcessTopics(double? minPortfolio, double? maxPortfolio, int?
         + "409111 TODO - misses Taxable section, so less than 100%\n"
         + "396366 TODO portfolio size way off\n"
         + "379612 TODO account with only a percentage on next line\n"
-        + "391553 TODO this person assigned 100% to each account"
+        + "391553 TODO this person assigned 100% to each account\n"
         + "401670 TODO perhaps stop parsing accounts after reached 100%"
         + "407956 Portfolio Sanity Check -- TODO - misses assets $$ \n"
         + "408103 Portfolio review – before life gets more expensive! -- TODO - cannot parse badly formatted investments\n"
