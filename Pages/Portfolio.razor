@@ -355,6 +355,17 @@
                                                                         </select>
                                                                     </td>
                                                                 </tr>
+                                                                @if (investment.AssetType == global::AssetType.StocksAndBonds_ETF || investment.AssetType == global::AssetType.StocksAndBonds_Fund) {
+                                                                    <tr style=background-color:@bgColor>
+                                                                        <td colspan=4 style=text-align:right>
+                                                                            <div style=margin-right:50px><label>US Stock:</label> <input type=text style=width:60px @bind-Value=investment.USStockPercent @bind-Value:event=oninput placeholder='US Stock'/>%</div>
+                                                                            <div style=margin-right:50px><label>International Stock:</label> <input type=text style=width:60px @bind-Value=investment.InternationalStockPercent @bind-Value:event=oninput placeholder='International Stock'/>%</div>
+                                                                            <div style=margin-right:50px><label>US Bonds:</label> <input type=text style=width:60px @bind-Value=investment.USBondsPercent @bind-Value:event=oninput placeholder='US Bonds'/>%</div>
+                                                                            <div style=margin-right:50px><label>International Bonds:</label> <input type=text style=width:60px @bind-Value=investment.InternationalBondsPercent @bind-Value:event=oninput placeholder='International Bonds'/>%</div>
+                                                                            <div style=margin-right:50px><label>Cash:</label> <input type=text style=width:60px @bind-Value=investment.CashPercent @bind-Value:event=oninput placeholder='Cash'/>%</div>
+                                                                        </td>
+                                                                    </tr>
+                                                                }
                                                                 <tr style=background-color:@bgColor>
                                                                     <td colspan=4 style=text-align:right>
                                                                        <button @onclick='@(e=>deleteInvestment2(e,accBuffer, invBuffer))' title='delete investment'>❌ investment</button>

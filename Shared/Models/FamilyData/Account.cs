@@ -131,6 +131,9 @@ public class Account
                     case AssetType.Bond:
                     case AssetType.Bond_ETF:
                     case AssetType.Bond_Fund:
+                    case AssetType.InternationalBond:
+                    case AssetType.InternationalBond_ETF:
+                    case AssetType.InternationalBond_Fund:
                         familyData.BondBalance += investment.Value;
                         break;
                     case AssetType.Cash:
@@ -138,10 +141,13 @@ public class Account
                     case AssetType.Cash_MoneyMarket:
                         familyData.CashBalance += investment.Value;
                         break;
-                    //TODO: provide way for people to give usstock/intlstock/bond/cash mix
                     case AssetType.StocksAndBonds_ETF:
                     case AssetType.StocksAndBonds_Fund:
-                        familyData.OtherBalance += investment.Value;
+                        familyData.StockBalance += investment.Value * investment.GetPercentage(AssetType.USStock);
+                        familyData.InternationalStockBalance += investment.Value * investment.GetPercentage(AssetType.InternationalStock);
+                        familyData.BondBalance += investment.Value * investment.GetPercentage(AssetType.Bond);
+                        familyData.BondBalance += investment.Value * investment.GetPercentage(AssetType.InternationalBond);
+                        familyData.CashBalance += investment.Value * investment.GetPercentage(AssetType.Cash);
                         break;
                     case AssetType.Unknown:
                         familyData.OtherBalance += investment.Value;

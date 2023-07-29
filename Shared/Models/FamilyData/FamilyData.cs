@@ -365,31 +365,25 @@ public class FamilyData
             {
                 foreach (var investment in account.Investments)
                 {
-                    var key = string.IsNullOrEmpty(investment.Ticker) ? investment.Name ?? Random.Shared.ToString(): investment.Ticker;
-                    Investment? matchingInvestment;
-                    if (!_GroupedInvestments.ContainsKey(key))
-                    {
-                        matchingInvestment = new Investment(PIN) { Name = investment.Name, AssetType = investment.AssetType, Ticker = investment.Ticker, PercentChange = investment.PercentChange, LastUpdated = investment.LastUpdated, SharesPIN = null, Price = investment.Price, PreviousClose = investment.PreviousClose, ValuePIN = 0.0 };
-                        _GroupedInvestments.Add(key, matchingInvestment);
-                    }
-                    else
-                    {
-                        matchingInvestment = _GroupedInvestments[key];
-                    }
-
-                    if (investment.SharesPIN != null) {
-                        if (matchingInvestment.SharesPIN == null)
-                        {
-                            matchingInvestment.SharesPIN = investment.SharesPIN;
+                    var key = string.IsNullOrEmpty(investment.Ticker) ? investment.Name ?? Random.Shared.ToString() : investment.Ticker;
+                    if (investment.AssetType == AssetType.StocksAndBonds_ETF || investment.AssetType == AssetType.StocksAndBonds_Fund) {
+                        if (investment.GetPercentage(AssetType.USStock) > 0.0) {
+                            GetGroup(_GroupedInvestments, investment, key+"-S", assetType:AssetType.USStock);
                         }
-                        else
-                        {
-                            matchingInvestment.SharesPIN += investment.SharesPIN;
+                        if (investment.GetPercentage(AssetType.InternationalStock) > 0.0) {
+                            GetGroup(_GroupedInvestments, investment, key+"-IS", assetType:AssetType.InternationalStock);
                         }
-                    } 
-                    
-                    if (investment.ValuePIN != null) {
-                        matchingInvestment.ValuePIN += investment.ValuePIN;
+                        if (investment.GetPercentage(AssetType.Bond) > 0.0) {
+                            GetGroup(_GroupedInvestments, investment, key+"-B", assetType:AssetType.Bond);
+                        }
+                        if (investment.GetPercentage(AssetType.InternationalBond) > 0.0) {
+                            GetGroup(_GroupedInvestments, investment, key+"-IB", assetType:AssetType.InternationalBond);
+                        }
+                        if (investment.GetPercentage(AssetType.Cash) > 0.0) {
+                            GetGroup(_GroupedInvestments, investment, key+"-C", assetType:AssetType.Cash);
+                        }
+                    } else {
+                        var matchingInvestment = GetGroup(_GroupedInvestments, investment, key, assetType:null);
                     }
                 }
             }
@@ -413,6 +407,38 @@ public class FamilyData
             
             return listInvestments.OrderByDescending(i=>i.Value).ToList();
         }
+    }
+
+    private Investment GetGroup(Dictionary<string, Investment> _GroupedInvestments, Investment investment, string? key, AssetType? assetType) {
+        Investment? matchingInvestment;
+        if (_GroupedInvestments.ContainsKey(key: key))
+        {
+            matchingInvestment = _GroupedInvestments[key];
+        }
+        else
+        {
+            matchingInvestment = new Investment(PIN) { Name = investment.Name, AssetType = assetType == null ? investment.AssetType : assetType, Ticker = key, PercentChange = investment.PercentChange, LastUpdated = investment.LastUpdated, SharesPIN = null, Price = investment.GetPrice(assetType, investment.Price), PreviousClose = investment.PreviousClose, ValuePIN = 0.0 };
+            _GroupedInvestments.Add(key, matchingInvestment);
+        }
+
+        if (investment.SharesPIN != null)
+        {
+            if (matchingInvestment.SharesPIN == null)
+            {
+                matchingInvestment.SharesPIN = investment.SharesPIN;
+            }
+            else
+            {
+                matchingInvestment.SharesPIN += investment.SharesPIN;
+            }
+        }
+
+        if (investment.ValuePIN != null)
+        {
+            matchingInvestment.ValuePIN += investment.ValuePIN;
+        }
+
+        return matchingInvestment;
     }
 
     public string? AdditionalBackground { get; set; }

@@ -59,6 +59,36 @@ public class Investment
         }
     }
 
+    public double? GetPrice(AssetType? assetType, double? price) {
+        if (assetType == null) { return price; }
+        else {
+            return assetType switch
+            {
+                global::AssetType.USStock or 
+                global::AssetType.InternationalStock or
+                global::AssetType.Bond or
+                global::AssetType.InternationalBond or
+                global::AssetType.Cash => price * GetPercentage(assetType),
+                _ => throw new ArgumentException("unexpected " + assetType.ToString()),
+            };
+        }
+    }
+
+    public double? GetPercentage(AssetType? assetType) {
+        if (assetType == null) { return 100.0 / 100.0; }
+        else {
+            return assetType switch
+            {
+                global::AssetType.USStock => USStockPercent / 100.0,
+                global::AssetType.InternationalStock => InternationalStockPercent / 100.0,
+                global::AssetType.Bond => USBondsPercent / 100.0,
+                global::AssetType.InternationalBond => InternationalBondsPercent / 100.0,
+                global::AssetType.Cash => CashPercent / 100.0,
+                _ => throw new ArgumentException("unexpected " + assetType.ToString()),
+            };
+        }
+    }
+
     private void AutoComplete(Fund fund) {
         if (fund == null) {
             Name = null;
@@ -82,55 +112,44 @@ public class Investment
     public bool IsETF {
         get {
             var assetType = AssetType ?? global::AssetType.Unknown;
-            switch (assetType) {
-                case  global::AssetType.USStock_ETF:
-                case  global::AssetType.InternationalStock_ETF:
-                case  global::AssetType.Bond_ETF:
-                    return true;
-                default:
-                    return false;
-            }
+            return assetType switch
+            {
+                global::AssetType.USStock_ETF or global::AssetType.InternationalStock_ETF or global::AssetType.Bond_ETF or global::AssetType.InternationalBond_ETF or global::AssetType.StocksAndBonds_ETF => true,
+                _ => false,
+            };
         }
     }
 
     [JsonIgnore]
     public bool IsStock {
         get {
-            switch (AssetType) {
-                case global::AssetType.USStock:
-                case global::AssetType.InternationalStock:
-                    return true;
-                default:
-                    return false;
-            }
+            return AssetType switch
+            {
+                global::AssetType.USStock or global::AssetType.InternationalStock => true,
+                _ => false,
+            };
         }
     }
 
     [JsonIgnore]
     public bool IsFund {
         get {
-            switch (AssetType) {
-                case global::AssetType.USStock_Fund:
-                case global::AssetType.InternationalStock_Fund:
-                case global::AssetType.Bond_Fund:
-                    return true;
-                default:
-                    return false;
-            }
+            return AssetType switch
+            {
+                global::AssetType.USStock_Fund or global::AssetType.InternationalStock_Fund or global::AssetType.Bond_Fund or global::AssetType.InternationalBond_Fund or global::AssetType.StocksAndBonds_Fund => true,
+                _ => false,
+            };
         }
     }
 
     [JsonIgnore]
     public bool IsCash {
         get {
-            switch (AssetType) {
-                case global::AssetType.Cash:
-                case global::AssetType.Cash_BankAccount:
-                case global::AssetType.Cash_MoneyMarket:
-                    return true;
-                default:
-                    return false;
-            }
+            return AssetType switch
+            {
+                global::AssetType.Cash or global::AssetType.Cash_BankAccount or global::AssetType.Cash_MoneyMarket => true,
+                _ => false,
+            };
         }
     }
 
@@ -163,6 +182,12 @@ public class Investment
         }
     }
 
+    public double USStockPercent { get; set; }
+    public double InternationalStockPercent { get; set; }
+    public double USBondsPercent { get; set; }
+    public double InternationalBondsPercent { get; set; }
+    public double CashPercent { get; set; }
+
     private AssetType? _AssetType;
     [JsonPropertyName("AssetType2")]
     public AssetType? AssetType {
@@ -178,7 +203,7 @@ public class Investment
             {
                 global::AssetType.USStock or global::AssetType.USStock_ETF or global::AssetType.USStock_Fund or global::AssetType.Stock=> 1,
                 global::AssetType.InternationalStock or global::AssetType.InternationalStock_ETF or global::AssetType.InternationalStock_Fund => 2,
-                global::AssetType.Bond or global::AssetType.Bond_ETF or global::AssetType.Bond_Fund => 3,
+                global::AssetType.Bond or global::AssetType.Bond_ETF or global::AssetType.Bond_Fund or global::AssetType.InternationalBond or global::AssetType.InternationalBond_ETF or global::AssetType.InternationalBond_Fund => 3,
                 global::AssetType.StocksAndBonds_ETF or global::AssetType.StocksAndBonds_Fund => 4,
                 global::AssetType.Cash or global::AssetType.Cash_BankAccount or global::AssetType.Cash_MoneyMarket => 5,
                 _ => 6,
