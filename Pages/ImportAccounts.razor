@@ -93,13 +93,42 @@
     {
         bool alternateRow;
         <EditForm Model=@appData.ImportResult>
-            <div>Data Files Contains These Accounts/Investments - Choose Which to Import, and fill in related info about them, then choose "Import selected accounts" button:</div>
+            <br/>
+            <div>Those data file(s) contain info on @(appData.ImportResult.UpdatedAccounts.Count+appData.ImportResult.NewAccounts.Count) accounts</div>
+            <br/>
+            Each account should be labeled with the correct owner and account type.<br/>
+            - First, choose/verify your Tax Filing Status: <select @bind=appData.FamilyData.TaxFilingStatus>
+                <option value="ChoiceNeeded">ChoiceNeeded</option>
+                <option>Single</option>
+                <option value=MarriedFilingJointly>Married filing jointly</option>
+                <option value=MarriedFilingSeperately>Married filing separately</option>
+                <option value=MarriedFilingSeperatelyAndLivingApart>Married filing separately (and living apart)</option>
+                <option value=HeadOfHousehold>Head of Household</option>
+            </select><br/>
+            @for (int i = 0; i < appData.FamilyData.PersonCount; i++) {
+                var person = appData.FamilyData.People[i];
+                int personIndex = i + 1;
+
+                @if (i == 0) {
+                    <div>- Then choose pronouns/unique identifiers for each person:</div>
+                }
+                @if(person?.FamilyData?.PersonCount>1){
+                    <label style=padding-left:16px>Person @personIndex - Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
+                    <option value="ChoiceNeeded">ChoiceNeeded</option>
+                    <option>person @personIndex</option>
+                    <option>him</option>
+                    <option>her</option>
+                    <option>me</option>
+                    <option>them</option>
+                </select><br/>}
+            }
+            <span>- Then choose which account(s) to import, and fill in related info about them, then choose "Import selected accounts" button::</span><br/>
             <br/>
             <button @onclick=finishImport>Import selected accounts</button>
             <button @onclick=cancelImport>Cancel Import</button>
             <br/>
             <br/>
-
+            
             @foreach (var error in appData?.ImportResult.Errors)
             {
                 <div style=font-weight:bold>Error: @error.Exception.Message</div>
@@ -218,11 +247,11 @@
                     <br/>
                 }
             }
-            <br/>
-            <br/>
 
             <button @onclick=finishImport>Import selected accounts</button>
             <button @onclick=cancelImport>Cancel Import</button>
+            <br/>
+            <br/>
         </EditForm>
     }
 </div>
@@ -310,58 +339,6 @@
     {
         csvImport = Navigation.Uri.EndsWith("/import-accounts");
         pageHeading = csvImport ? "Import Accounts via CSV files" : "Import Accounts from Bogleheads Portfolio Review format";
-
-        if (!csvImport) {
-            @* bhContent = "";
-            for (int i=0; i<3; i++) {
-                var forumStream = await Http.GetStreamAsync($"https://api.bogle.tools/api/getforum?forum=1&start=" + (i * 50).ToString() + "&search=portfolio");
-                string topicList = new StreamReader(forumStream).ReadToEnd();
-                var topicList2 = "409135 portfolio review - NYC 54/53\n"
-                    + "408853 Portfolio Review - 38 y/o Consultant, Soon to be Married\n"
-                    + "408867 Portfolio review for a 36 year old new poster\n"
-                    + "408844 Portfolio Review - used space before units '1.35 M'\n"
-                    + "348471 Portfolio review (2 year update) - > 100% by design \n"
-                    + "407996 portfolio review - TODO - misses 2nd - 7th accounts \n"
-                    + "407956 Portfolio Sanity Check -- TODO - misses assets $$ \n"
-                    + "408103 Portfolio review – before life gets more expensive! -- TODO - should be able to harvest\n"
-                    + "408017 Portfolio Check-up / New to this -- TODO - sholld be able to harvest retirement assets\n"
-                    + "407986 Portfolio advice: Simplifying, Planning, and (hopefully) retiring one day - NaN for each INV\n"
-                    + "408057 Portfolio review for the first time - thanks -- TODO - should 2.8% iBond harvest better?\n"
-                    + "408865 Long-time Boglehead - 2023 Portfolio Refresh-- TODO - got right accounts, but Nan% for each INV\n"
-                    + "78881 A young boglehead portfolio review - TODO - doesn't yet harvest 'just north of $50k'\n"
-                    + "385354 Portfolio Question -- Poor harvesting by design\n"
-                    + "409223 Portfolio Review Request - 1 Year Post Edward Jones To DIY Portfolio -- Poor harvesting by design\n"; 
-                var topicLines = topicList.Split('\n');
-
-                foreach (var topicLine in topicLines) {
-                    if (topicLine.IndexOf(" ") > -1) {
-                        var topic = topicLine[0..topicLine.IndexOf(" ")];
-                        if (topic != "6212") { // don't parse "asking portfolio questions"
-                            var topicStream = await Http.GetStreamAsync($"https://api.bogle.tools/api/gettopic?topic={topic}");
-                            string postContent = new StreamReader(topicStream).ReadToEnd().Replace("<br>","").Replace("<em class=\"text-italics\">","").Replace("</em>","").Replace("<strong class=\"text-strong\">","").Replace("</strong>","").Replace("<span style=\"text-decoration:underline\">","").Replace("</span>","");
-                            var importedFamilyData = ImportPortfolioReview.ParsePortfolioReview(postContent.Split("\n"), appData, Funds);
-                            if (importedFamilyData.Accounts.Count > 0) {
-                                bhContent += $"t={topicLine}\n{importedFamilyData.Value} in {importedFamilyData.Accounts.Count} account(s)\n";
-                                foreach (var account in importedFamilyData.Accounts) {
-                                    bhContent += account.AccountType + " " + account.Custodian + "\n";
-                                    foreach (var investment in account.Investments) {
-                                        bhContent += $"  {FormatUtilities.formatPercent3(investment.Value/importedFamilyData.Value*100.0)} {investment.Name} ({investment.Ticker}) ({investment.ExpenseRatio}%)\n";
-                                    }
-                                }
-                            } else {
-                                bhContent += $"t={topicLine}\n{importedFamilyData.Value} in {importedFamilyData.Accounts.Count} account(s)\n";
-                            }
-
-                            if (importedFamilyData.Title != null && importedFamilyData.Title.StartsWith("Error")) {
-                                bhContent += importedFamilyData.Title + "\n";
-                            }
-
-                            bhContent += "\n";
-                       }
-                    }
-                }
-            } *@
-        }
 
         base.OnInitialized();
     }
