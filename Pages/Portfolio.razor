@@ -366,7 +366,7 @@
                                                                             <div style=margin-right:50px><label>International Bonds:</label> <input type=text style=width:60px @bind-Value=investment.InternationalBondsPercent @bind-Value:event=oninput />%</div>
                                                                             <div style=margin-right:50px><label>Cash:</label> <input type=text style=width:60px @bind-Value=investment.CashPercent @bind-Value:event=oninput />%</div>
                                                                             <div style=margin-right:50px><label><b>Total:</b></label>
-                                                                                <span style=text-align:left;background-color:yellow;width:60px;display:inline-block>
+                                                                                <span style=text-align:left;width:60px;display:inline-block>
                                                                                     @((investment.USStockPercent??0.0)+(investment.InternationalStockPercent??0.0)+(investment.USBondsPercent??0.0)+(investment.InternationalBondsPercent??0.0)+(investment.CashPercent??0.0))%
                                                                                 </span>
                                                                             </div>
