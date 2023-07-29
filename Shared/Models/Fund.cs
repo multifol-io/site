@@ -12,4 +12,15 @@ public class Fund
     public AssetType? AssetType { get; set; }
     [JsonPropertyName("vanguardFundId")]
     public string? VanguardFundId { get; set;  }
+
+    [JsonPropertyName("stock")]
+    public double? StockAlloc { get; set; }
+    [JsonPropertyName("intlstock")]
+    public double? IntlStockAlloc { get; set; }
+    [JsonPropertyName("bondalloc")]
+    public double? BondAlloc { get; set; }
+    [JsonPropertyName("intlbondalloc")]
+    public double? IntlBondAlloc { get; set; }
+    [JsonPropertyName("cash")]
+    public double? CashAlloc { get; set; }
 }

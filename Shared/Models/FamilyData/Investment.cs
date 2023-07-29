@@ -104,6 +104,10 @@ public class Investment
             AssetType = fund.AssetType;
             VanguardFundId = fund.VanguardFundId;
             AutoCompleted = true;
+            USStockPercent = fund.StockAlloc;
+            InternationalStockPercent = fund.IntlStockAlloc;
+            USBondsPercent = fund.BondAlloc;
+            InternationalBondsPercent = fund.IntlBondAlloc;
         }
     }
     public string? VanguardFundId { get; set;  }
@@ -182,11 +186,11 @@ public class Investment
         }
     }
 
-    public double USStockPercent { get; set; }
-    public double InternationalStockPercent { get; set; }
-    public double USBondsPercent { get; set; }
-    public double InternationalBondsPercent { get; set; }
-    public double CashPercent { get; set; }
+    public double? USStockPercent { get; set; }
+    public double? InternationalStockPercent { get; set; }
+    public double? USBondsPercent { get; set; }
+    public double? InternationalBondsPercent { get; set; }
+    public double? CashPercent { get; set; }
 
     private AssetType? _AssetType;
     [JsonPropertyName("AssetType2")]
