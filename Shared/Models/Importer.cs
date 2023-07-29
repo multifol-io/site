@@ -97,22 +97,20 @@ public class Importer {
                     double value = FormatUtilities.ParseDouble(chunks[10] ?? "0.0", allowCurrency:true);
                     double costBasis = value - FormatUtilities.ParseDouble(chunks[11] ?? "0.0", allowCurrency:true);
 
-                    if (value < 0.0 || value > 1.0) {
-                        Account? newAccount = null;
-                        accountLookup.TryGetValue(accountNum, out newAccount);
-                        if (newAccount == null)
-                        {
-                            newAccount = new(PIN) {
-                                Custodian = "Merrill Edge",
-                                Note = "*" + accountNum.Substring(accountNum.Length - 4) + " " + accountNickname + " " + accountRegistration
-                            };
-                            importedAccounts.Add(newAccount);
-                            accountLookup.Add(accountNum, newAccount);
-                        }
-                        
-                        Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null), Value = value, SharesPIN = shares, CostBasis = costBasis };
-                        newAccount?.Investments.Add(newInvestment);
+                    Account? newAccount = null;
+                    accountLookup.TryGetValue(accountNum, out newAccount);
+                    if (newAccount == null)
+                    {
+                        newAccount = new(PIN) {
+                            Custodian = "Merrill Edge",
+                            Note = "*" + accountNum.Substring(accountNum.Length - 4) + " " + accountNickname + " " + accountRegistration
+                        };
+                        importedAccounts.Add(newAccount);
+                        accountLookup.Add(accountNum, newAccount);
                     }
+                    
+                    Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null), Value = value, SharesPIN = shares, CostBasis = costBasis };
+                    newAccount?.Investments.Add(newInvestment);
 
                     chunks = await SplitCsvLine(lines[lineIndex++]);
                 }
@@ -161,30 +159,28 @@ public class Importer {
                             costBasis = FormatUtilities.ParseDouble(chunks[13], allowCurrency:true);
                         }
 
-                        if (value < 0.0 || value > 1.0) {
-                            if (lastAccountNumber != accountNumber)
-                            {
-                                newAccount = new(PIN) {
-                                    Custodian = "Fidelity",
-                                    Note = "*"+ accountNumber.Substring(accountNumber.Length-4,4)
-                                };
-                                newAccount.GuessAccountType();
-                                importedAccounts.Add(newAccount);
-                                lastAccountNumber = accountNumber;
-                            }
-
-                            Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, SharesPIN = shares, CostBasis = costBasis };
-                            if (expenseRatio != null)
-                            {
-                                newInvestment.ExpenseRatio = expenseRatio;
-                            }
-
-                            if (newInvestment.Ticker == "PENDING") {
-                                newInvestment.AssetType = global::AssetType.Cash;
-                            }
-
-                            newAccount?.Investments.Add(newInvestment);
+                        if (lastAccountNumber != accountNumber)
+                        {
+                            newAccount = new(PIN) {
+                                Custodian = "Fidelity",
+                                Note = "*"+ accountNumber.Substring(accountNumber.Length-4,4)
+                            };
+                            newAccount.GuessAccountType();
+                            importedAccounts.Add(newAccount);
+                            lastAccountNumber = accountNumber;
                         }
+
+                        Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, SharesPIN = shares, CostBasis = costBasis };
+                        if (expenseRatio != null)
+                        {
+                            newInvestment.ExpenseRatio = expenseRatio;
+                        }
+
+                        if (newInvestment.Ticker == "PENDING") {
+                            newInvestment.AssetType = global::AssetType.Cash;
+                        }
+
+                        newAccount?.Investments.Add(newInvestment);
                     } 
                     catch (Exception e)
                     {
@@ -218,18 +214,16 @@ public class Importer {
                             double value = FormatUtilities.ParseDouble(chunks[5], allowCurrency:true);
                             // costBasis not available in CSV
                                             
-                            if (value < 0.0 || value > 1.0) {
-                                if (newAccount == null) {
-                                    newAccount = new(PIN) {
-                                        Custodian = "Vanguard",
-                                        Note = "*"+ accountNumber.Substring(accountNumber.Length-4,4)
-                                    };
-                                    importedAccounts.Add(newAccount);
-                                }
-
-                                Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, SharesPIN = shares };
-                                newAccount?.Investments.Add(newInvestment);
+                            if (newAccount == null) {
+                                newAccount = new(PIN) {
+                                    Custodian = "Vanguard",
+                                    Note = "*"+ accountNumber.Substring(accountNumber.Length-4,4)
+                                };
+                                importedAccounts.Add(newAccount);
                             }
+
+                            Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, SharesPIN = shares };
+                            newAccount?.Investments.Add(newInvestment);
 
                             line = lines[lineIndex++];
                         }
@@ -270,23 +264,20 @@ public class Importer {
                         double value = FormatUtilities.ParseDouble(chunks[4], allowCurrency:true);
                         // costBasis not available in CSV
 
-                                        
-                        if (value < 0.0 || value > 1.0) {
-                            Account? newAccount = null;
-                            accountLookup.TryGetValue(accountNum, out newAccount);
-                            if (newAccount == null)
-                            {
-                                newAccount = new(PIN) {
-                                    Custodian = "Vanguard",
-                                    Note = "*" + accountNum.Substring(accountNum.Length - 4)
-                                };
-                                importedAccounts.Add(newAccount);
-                                accountLookup.Add(accountNum, newAccount);
-                            }
-                                                    
-                            Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null) , Value = value, SharesPIN = shares };
-                            newAccount?.Investments.Add(newInvestment);
+                        Account? newAccount = null;
+                        accountLookup.TryGetValue(accountNum, out newAccount);
+                        if (newAccount == null)
+                        {
+                            newAccount = new(PIN) {
+                                Custodian = "Vanguard",
+                                Note = "*" + accountNum.Substring(accountNum.Length - 4)
+                            };
+                            importedAccounts.Add(newAccount);
+                            accountLookup.Add(accountNum, newAccount);
                         }
+                                                
+                        Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null) , Value = value, SharesPIN = shares };
+                        newAccount?.Investments.Add(newInvestment);
                     }
 
                     lineIndex++;
@@ -332,10 +323,8 @@ public class Importer {
                         shares = value;
                     }
 
-                    if (value < 0.0 || value > 1.0) {
-                        Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null), Value = value, SharesPIN = shares, CostBasis = costBasis };
-                        newAccount?.Investments.Add(newInvestment);
-                    }
+                    Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null), Value = value, SharesPIN = shares, CostBasis = costBasis };
+                    newAccount?.Investments.Add(newInvestment);
 
                     chunks = await SplitCsvLine(lines[lineIndex++]);
                 }
@@ -384,10 +373,8 @@ public class Importer {
                                     break;
                             }
 
-                            if (value < 0.0 || value > 1.0) {
-                                Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null), Value = value, SharesPIN = shares, CostBasis = costBasis };
-                                newAccount?.Investments.Add(newInvestment);
-                            }
+                            Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Name = (investmentName != null ? investmentName : null), Value = value, SharesPIN = shares, CostBasis = costBasis };
+                            newAccount?.Investments.Add(newInvestment);
 
                             chunks = lines[lineIndex++].Split("\",\"");
                         }
@@ -506,22 +493,20 @@ public class Importer {
     {
         Account? newAccount = null;
 
-        if (value < 0.0 || value > 1.0) {
-            accountLookup.TryGetValue(account, out newAccount);
-            if (newAccount == null)
-            {
-                newAccount = new(PIN) {
-                    Custodian = custodian,
-                    Note = "*" + account
-                };
-                newAccount.GuessAccountType();
-                importedAccounts.Add(newAccount);
-                accountLookup.Add(account, newAccount);
-            }
-
-            Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Name = investmentName, Value = value, SharesPIN = shares, CostBasis = costBasis };
-            newAccount?.Investments.Add(newInvestment);
+        accountLookup.TryGetValue(account, out newAccount);
+        if (newAccount == null)
+        {
+            newAccount = new(PIN) {
+                Custodian = custodian,
+                Note = "*" + account
+            };
+            newAccount.GuessAccountType();
+            importedAccounts.Add(newAccount);
+            accountLookup.Add(account, newAccount);
         }
+
+        Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Name = investmentName, Value = value, SharesPIN = shares, CostBasis = costBasis };
+        newAccount?.Investments.Add(newInvestment);
 
         return newAccount;
     }
@@ -573,24 +558,20 @@ public class Importer {
                     double value = FormatUtilities.ParseDouble(GetCell(wsPart, "J" + row.ToString()).InnerText, allowCurrency:true);
                     double costBasis = FormatUtilities.ParseDouble(GetCell(wsPart, "N" + row.ToString()).InnerText, allowCurrency:true);
 
-                    if (value < 0.0 || value > 1.0) {
-                        Account? newAccount = null;
-                        accountLookup.TryGetValue(accountName, out newAccount);
-                        if (newAccount == null)
-                        {
-                            newAccount = new(PIN) {
-                                Custodian = "Morgan Stanley",
-                                Note = "*" + accountName
-                            };
-                            newAccount.GuessAccountType();
-                            accountLookup.Add(accountName, newAccount);
-                            importedAccounts.Add(newAccount);
-                        }
+                accountLookup.TryGetValue(accountName, out Account? newAccount);
+                if (newAccount == null) {
+                    newAccount = new(PIN) {
+                        Custodian = "Morgan Stanley",
+                        Note = "*" + accountName
+                    };
+                    newAccount.GuessAccountType();
+                    accountLookup.Add(accountName, newAccount);
+                    importedAccounts.Add(newAccount);
+                }
 
-                        Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Name = investmentName, Value = value, SharesPIN = shares, CostBasis = costBasis };
-                        newAccount?.Investments.Add(newInvestment);
-                    }
-                    row++;
+                Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Name = investmentName, Value = value, SharesPIN = shares, CostBasis = costBasis };
+                newAccount?.Investments.Add(newInvestment);
+                row++;
             }
         }
 
