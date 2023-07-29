@@ -108,6 +108,7 @@ public class Investment
             InternationalStockPercent = fund.IntlStockAlloc;
             USBondsPercent = fund.BondAlloc;
             InternationalBondsPercent = fund.IntlBondAlloc;
+            CashPercent = fund.CashAlloc;
         }
     }
     public string? VanguardFundId { get; set;  }

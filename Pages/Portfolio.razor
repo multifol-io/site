@@ -303,7 +303,9 @@
                                                                     <td style=padding-left:8px title=@investment.Name>@investment.Ticker</td>
                                                                     <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleTwoDecimal(investment.SharesPIN)</td>
                                                                     <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(investment.Price)</td>
-                                                                    <td style=text-align:right;padding-left:8px>@if(account.Investments.Count>1){@FormatUtilities.formatMoney(investment.ValuePIN, decimalPlaces:0)}</td>
+                                                                    <td style=text-align:right;padding-left:8px>
+                                                                        @FormatUtilities.formatMoney(investment.ValuePIN, decimalPlaces:0)
+                                                                    </td>
                                                                 </tr>
                                                                 @foreach (var adviceItem in advice) {
                                                                     <tr style=background-color:@bgColor>
@@ -358,11 +360,16 @@
                                                                 @if (investment.AssetType == global::AssetType.StocksAndBonds_ETF || investment.AssetType == global::AssetType.StocksAndBonds_Fund) {
                                                                     <tr style=background-color:@bgColor>
                                                                         <td colspan=4 style=text-align:right>
-                                                                            <div style=margin-right:50px><label>US Stock:</label> <input type=text style=width:60px @bind-Value=investment.USStockPercent @bind-Value:event=oninput placeholder='US Stock'/>%</div>
-                                                                            <div style=margin-right:50px><label>International Stock:</label> <input type=text style=width:60px @bind-Value=investment.InternationalStockPercent @bind-Value:event=oninput placeholder='International Stock'/>%</div>
-                                                                            <div style=margin-right:50px><label>US Bonds:</label> <input type=text style=width:60px @bind-Value=investment.USBondsPercent @bind-Value:event=oninput placeholder='US Bonds'/>%</div>
-                                                                            <div style=margin-right:50px><label>International Bonds:</label> <input type=text style=width:60px @bind-Value=investment.InternationalBondsPercent @bind-Value:event=oninput placeholder='International Bonds'/>%</div>
-                                                                            <div style=margin-right:50px><label>Cash:</label> <input type=text style=width:60px @bind-Value=investment.CashPercent @bind-Value:event=oninput placeholder='Cash'/>%</div>
+                                                                            <div style=margin-right:50px><label>US Stock:</label> <input type=text style=width:60px @bind-Value=investment.USStockPercent @bind-Value:event=oninput />%</div>
+                                                                            <div style=margin-right:50px><label>International Stock:</label> <input type=text style=width:60px @bind-Value=investment.InternationalStockPercent @bind-Value:event=oninput />%</div>
+                                                                            <div style=margin-right:50px><label>US Bonds:</label> <input type=text style=width:60px @bind-Value=investment.USBondsPercent @bind-Value:event=oninput />%</div>
+                                                                            <div style=margin-right:50px><label>International Bonds:</label> <input type=text style=width:60px @bind-Value=investment.InternationalBondsPercent @bind-Value:event=oninput />%</div>
+                                                                            <div style=margin-right:50px><label>Cash:</label> <input type=text style=width:60px @bind-Value=investment.CashPercent @bind-Value:event=oninput />%</div>
+                                                                            <div style=margin-right:50px><label><b>Total:</b></label>
+                                                                                <span style=text-align:left;background-color:yellow;width:60px;display:inline-block>
+                                                                                    @((investment.USStockPercent??0.0)+(investment.InternationalStockPercent??0.0)+(investment.USBondsPercent??0.0)+(investment.InternationalBondsPercent??0.0)+(investment.CashPercent??0.0))%
+                                                                                </span>
+                                                                            </div>
                                                                         </td>
                                                                     </tr>
                                                                 }

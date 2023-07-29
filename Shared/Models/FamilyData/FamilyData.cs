@@ -365,7 +365,7 @@ public class FamilyData
             {
                 foreach (var investment in account.Investments)
                 {
-                    var key = string.IsNullOrEmpty(investment.Ticker) ? investment.Name ?? Random.Shared.ToString() : investment.Ticker;
+                    var key = string.IsNullOrEmpty(investment.Ticker) ? investment.Name ?? "missing ticker and name" : investment.Ticker;
                     if (investment.AssetType == AssetType.StocksAndBonds_ETF || investment.AssetType == AssetType.StocksAndBonds_Fund) {
                         if (investment.GetPercentage(AssetType.USStock) > 0.0) {
                             GetGroup(_GroupedInvestments, investment, key+"-S", assetType:AssetType.USStock);
