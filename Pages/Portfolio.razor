@@ -402,8 +402,7 @@
                                                             <label>Accounts: </label><br/>
                                                             <button @onclick=addAccountInline title='add account'>➕</button>
                                                             <button @onclick=ShowImport title='to import Account info from a CSV/XLSX file'>
-                                                                <span>Import</span>
-                                                                ⬆️
+                                                                Import CSV... ⬆️
                                                             </button>
                                                         </td>
                                                         <td style=text-align:right;padding-left:8px colspan=2>
@@ -805,7 +804,7 @@
                                     @if (appData.FamilyData.Accounts.Count == 0) {
                                         <button style=margin-left:40px @onclick=addAccountInline title='add account'>➕</button>
                                         <button @onclick=ShowImport title='import Accounts from a CSV/XLSX file'>
-                                            Import ⬆️
+                                            Import CSV... ⬆️
                                         </button>
                                         <button @onclick=showOpenBH title='open Accounts (into a new profile) from a bogleheads.org Portfolio Review'>
                                             Import(bh)
@@ -818,7 +817,7 @@
                                                 To hand enter an account, click the add account button "➕" above.
                                             </li>
                                             <li>
-                                                To import accounts via a CSV file from the account custodian (Vanguard, Fidelity, Schwab, etc...), click the import accounts button "Import ⬆️" above.
+                                                To import accounts via a CSV file from the account custodian (Vanguard, Fidelity, Schwab, etc...), click the import accounts button "Import CSV... ⬆️" above.
                                             </li>
                                             <li>
                                                 To import accounts from an existing portfolio review on bogleheads.org, click the "Import(bh)" button above.
