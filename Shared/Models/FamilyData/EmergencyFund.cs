@@ -27,4 +27,26 @@ public class EmergencyFund {
     [DefaultValue(false)]
     public bool ShowDollars { get; set; }
     public bool Complete { get { return AmountToSave != null; } }
+
+    public string? FreeformAnswer { get; set; } = null;
+    public string? AnswerType { get; set; }
+
+    public string? Answer {
+        get {
+            switch (AnswerType) {
+                case "months":
+                    if (CurrentMonths != null) {
+                        return $"{CurrentMonths} months"; 
+                    } else {
+                        return $"missing data";
+                    }
+                case "dollars":
+                    return FormatUtilities.formatMoney(CurrentBalance);
+                case "freeform":
+                    return FreeformAnswer;
+                default:
+                    return null;
+            }
+        }
+    }
 }

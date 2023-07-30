@@ -40,7 +40,6 @@ public class FamilyData
     public RetirementData RetirementData { get; set; }
     public EmergencyFund EmergencyFund { get; set; } = new();
 
-
     public bool DebtsComplete {
         get {
             return ((Debts.Count == 0 && DebtFree == TriState.True) || Debts.Count > 0);
@@ -239,6 +238,7 @@ public class FamilyData
     
     public string? StateOfResidence { get; set; }
 
+    public bool NotSureNeedHelpWithAssetAllocation { get; set; }
     public double? Stocks { get; set; }
     public double? Bonds { get; set; }
     public int? International { get; set; }

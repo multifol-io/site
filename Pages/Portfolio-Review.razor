@@ -110,11 +110,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                 case "emergency-fund":
                                    <td style=text-align:left>
                                         @((MarkupString)bold("Emergency funds:"))
-                                        @if (familyData.EmergencyFund.CurrentMonths != null) {
-                                            <span>&nbsp;@familyData.EmergencyFund.CurrentMonthsString months</span>
-                                        } else if (familyData.EmergencyFund.ShowDollars) {
-                                            <span>&nbsp;@FormatUtilities.formatMoney(familyData.EmergencyFund.CurrentBalance)</span>
-                                        }
+                                        <span>@familyData.EmergencyFund.Answer</span>
                                         <br/><br/>
                                    </td>
                                    break;
@@ -156,9 +152,12 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                         } else {
                                             <br/>
                                         }
-                                        <span>&nbsp;&nbsp;Desired International allocation: </span>
                                         @if (familyData.International != null) {
-                                            <span>@familyData.International%</span>
+                                            <span>&nbsp;&nbsp;Desired International allocation: </span>
+                                            <span>@familyData.International%</span><br/>
+                                        }
+                                        @if (familyData.NotSureNeedHelpWithAssetAllocation) {
+                                            <span>&nbsp;&nbsp;Not sure, need help</span>
                                         }
                                         <br/><br/>
                                     </td>
@@ -337,19 +336,33 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
 
                         @switch (step.step) {
                             case "emergency-fund":
+                                var months = "months";
+                                var dollars = "dollars";
+                                var freeform = "freeform";
+                                if (familyData.EmergencyFund.AnswerType == null) { familyData.EmergencyFund.AnswerType = "months"; }
+
                                 <p><b>Worksheet:</b> </p>
 
                                 <EditForm Model="familyData" style=margin-left:25px>
-                                    <label>Current Emergency Fund:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/><br/><br/>
-                                    <label>➗ Monthly Expenses:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /><br/><br/>
-                                    <hr style=width:300px />
-                                    <div style=text-align:right;width:275px>@familyData.EmergencyFund.CurrentMonthsString months</div>
-                                    @if(familyData.EmergencyFund.CurrentMonths == null && familyData.EmergencyFund.CurrentBalance != null) {
-                                        <br/><br/>
-                                        <InputCheckbox id=ShowDollars @bind-Value=familyData.EmergencyFund.ShowDollars /> <label for=ShowDollars>Only publish amount, since I haven't yet estimated monthly expenses</label><br/>
-                                        <span>(Months is MORE useful than a dollar amount.)</span>
-                                    }
+                                    <InputRadioGroup @bind-Value=familyData.EmergencyFund.AnswerType>
+                                        <span>(preferred)&nbsp;</span><InputRadio Value="months" />
+                                        <span style=text-align:right;width:275px>
+                                            <label>Current Emergency Fund:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/>
+                                            <label>➗ Monthly Expenses:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /> 🟰 @if (familyData.EmergencyFund.CurrentMonths != null)
+                                             { <span>"@familyData.EmergencyFund.CurrentMonths months"</span> } else { <span>'missing data'</span>}
+                                        </span>
+                                        <br/>
+                                        <InputRadio style="margin-left:80px" Value="dollars" />
+                                        <label>Current Emergency Fund:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/>
+                                        <br/>
+                                        <InputRadio style="margin-left:80px" Value="freeform" /> <label for=freeFormEF>Other answer:</label> <input type=text @bind-Value=familyData.EmergencyFund.FreeformAnswer @bind-Value:event="oninput" />
+                                    </InputRadioGroup>
                                 </EditForm><br/>
+
+                                <label>Use this answer for review:</label><br/>
+                                <span style=padding-left:20px>
+                                    @familyData.EmergencyFund.Answer
+                                </span>
                                 break;
                             case "debts":
                                 <p><b>Worksheet:</b> </p>
@@ -517,11 +530,13 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
 
                                 <EditForm Model="familyData" style=margin-left:25px>
                                     <label>Desired Asset Allocation:</label><br/>
-                                    <label>Stock:</label> <input style=width:50px;text-align:right type=text @bind-Value=familyData.Stocks @bind-Value:event=oninput />%<br/>
-                                    <label>Bond:</label> <input style=width:50px;text-align:right type=text @bind-Value=familyData.Bonds @bind-Value:event=oninput />%<br/>
+                                    <label style=padding-left:20px>Stock:</label> <input style=width:50px;text-align:right type=text @bind-Value=familyData.Stocks @bind-Value:event=oninput />%<br/>
+                                    <label style=padding-left:20px>Bond:</label> <input style=width:50px;text-align:right type=text @bind-Value=familyData.Bonds @bind-Value:event=oninput />%<br/>
                                     <hr/>
-                                    <label>Desired International allocation (% of Stock):</label><br/>
-                                    <label>International:</label> <input style=width:50px;text-align:right type=text @bind-Value=familyData.International @bind-Value:event=oninput />%<br/>
+                                    <label style=padding-left:20px>Desired International allocation (% of Stock):</label><br/>
+                                    <label style=padding-left:40px>International:</label> <input style=width:50px;text-align:right type=text @bind-Value=familyData.International @bind-Value:event=oninput />%<br/>
+                                    <br/>
+                                    <InputCheckbox @bind-Value=familyData.NotSureNeedHelpWithAssetAllocation /> <label>Do not know, need help</label><br/>
                                 </EditForm><br/>
                                 break;
                             case "available-funds":
