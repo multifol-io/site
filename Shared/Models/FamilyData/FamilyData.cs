@@ -248,7 +248,7 @@ public class FamilyData
         set {
             _Stocks = value;
             if (_Stocks != null && Bonds == null) { Bonds = 100.0 - _Stocks; }
-            if (_Stocks != null || _Bonds != null) { AssetAllocationError = ((_Bonds + _Stocks) != 100.0); }
+            if (_Stocks != null || _Bonds != null) { AssetAllocationError = ((_Bonds + _Stocks) > 100.0); }
         }
     }
 
@@ -260,7 +260,7 @@ public class FamilyData
         set {
             _Bonds = value;
             if (_Bonds != null && Stocks == null) { Stocks = 100.0 - _Bonds; }
-            if (_Stocks != null || _Bonds != null) { AssetAllocationError = ((_Bonds + _Stocks) != 100.0); }
+            if (_Stocks != null || _Bonds != null) { AssetAllocationError = ((_Bonds + _Stocks) > 100.0); }
         }
     }
 
