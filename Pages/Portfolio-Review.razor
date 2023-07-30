@@ -529,9 +529,10 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                 <p><b>Worksheet:</b> </p>
 
                                 <EditForm Model="familyData" style=margin-left:25px>
-                                    <label>Desired Asset Allocation:</label><br/>
-                                    <label style=padding-left:20px>Stock:</label> <input style=width:50px;text-align:right type=text @bind-Value=familyData.Stocks @bind-Value:event=oninput />%<br/>
-                                    <label style=padding-left:20px>Bond:</label> <input style=width:50px;text-align:right type=text @bind-Value=familyData.Bonds @bind-Value:event=oninput />%<br/>
+                                    <label>Desired Asset Allocation:</label> <br/>
+                                    <label style=padding-left:20px>Stocks:</label> <input style=width:50px;text-align:right type=text @bind=familyData.Stocks />%<br/>
+                                    <label style=padding-left:20px>Bonds:</label> <input style=width:50px;text-align:right type=text @bind=familyData.Bonds />%<br/>
+                                    @if (familyData.AssetAllocationError) { <span style=background-color:yellow>&nbsp;Stocks and Bonds should equal 100%</span><br/> }
                                     <hr/>
                                     <label style=padding-left:20px>Desired International allocation (% of Stock):</label><br/>
                                     <label style=padding-left:40px>International:</label> <input style=width:50px;text-align:right type=text @bind-Value=familyData.International @bind-Value:event=oninput />%<br/>

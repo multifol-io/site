@@ -239,8 +239,34 @@ public class FamilyData
     public string? StateOfResidence { get; set; }
 
     public bool NotSureNeedHelpWithAssetAllocation { get; set; }
-    public double? Stocks { get; set; }
-    public double? Bonds { get; set; }
+
+    private double? _Stocks;
+    public double? Stocks { 
+        get {
+            return _Stocks;
+        }
+        set {
+            _Stocks = value;
+            if (_Stocks != null && Bonds == null) { Bonds = 100.0 - _Stocks; }
+            if (_Stocks != null || _Bonds != null) { AssetAllocationError = ((_Bonds + _Stocks) != 100.0); }
+        }
+    }
+
+    private double? _Bonds;
+    public double? Bonds { 
+        get {
+            return _Bonds;
+        }
+        set {
+            _Bonds = value;
+            if (_Bonds != null && Stocks == null) { Stocks = 100.0 - _Bonds; }
+            if (_Stocks != null || _Bonds != null) { AssetAllocationError = ((_Bonds + _Stocks) != 100.0); }
+        }
+    }
+
+    [JsonIgnore]
+    public bool AssetAllocationError { get; set; }
+
     public int? International { get; set; }
 
     public double? StockBalance { get; set; }
