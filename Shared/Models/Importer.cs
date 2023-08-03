@@ -1,6 +1,7 @@
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Components.Forms;
+using System;
 
 public class Importer {
     public static async Task<ImportResult> ImportDataFiles(IReadOnlyList<IBrowserFile> files, IList<Fund> funds, List<Account> existingAccounts, int? PIN)
@@ -80,6 +81,9 @@ public class Importer {
             string? line = lines[lineIndex++];
             var headerChunks = line.Split(',');
             var headerChunksLen = headerChunks.Length;
+            foreach (var headerChunk in headerChunks) {
+                Console.WriteLine(headerChunk);
+            }
 
             if (headerChunksLen > 1 && FormatUtilities.TrimQuotes(headerChunks[0]) == ("COB Date") && FormatUtilities.TrimQuotes(headerChunks[1]) == "Security #") {
                 //MERRILL EDGE
@@ -380,6 +384,55 @@ public class Importer {
                         }
                     }
                 }
+            }
+            else if (headerChunksLen > 1 && headerChunks[0] == "\"Account Type\"" && headerChunks[1] == "\"Account Name\"" && headerChunks[2] == "\"Ticker\"")
+            {
+                // T Rowe Price
+                // "Account Type","Account Name","Ticker","Account Number","Owners","Quantity","Price","Change","Market Value","Daily $ Change","Daily % Change","PRR"
+                // "Rollover IRA","Total Equity Market Index Fund","POMIX","7777-7","Robert","3","$49.33","$0.52","$1","$1","1.07%","9.97%"
+                // "Roth IRA","Total Equity Market Index Fund","POMIX","1111-1","Robert","4","$49.33","$0.52","$2","$2","1.07%","13.98%"
+                // "Transfer On Death","Total Equity Market Index Fund","POMIX","2222-2","Robert","6","$49.33","$0.52","$3","$3","1.07%","7.19%"
+                int lastAccountStartLineIndex = -1;
+                line = null;
+                Account? newAccount = null;
+                string lastAccountNumber = null;
+                while (lastAccountStartLineIndex != lineIndex - 1) {
+                    lastAccountStartLineIndex = lineIndex;
+                    if (line == null || line == "") {
+                        newAccount = null;
+                        line = lines[lineIndex++];
+                        while (line != "")
+                        {
+                            Console.WriteLine(line);
+                            var chunks = line.Split(',');
+                            var accountNumber = chunks[3];
+                            var symbol = chunks[2];
+                            var investmentName = chunks[1];
+                            double shares = FormatUtilities.ParseDouble(chunks[5]);
+                            double price = FormatUtilities.ParseDouble(chunks[6], allowCurrency:true);
+                            double value = FormatUtilities.ParseDouble(chunks[8], allowCurrency:true);
+                            // costBasis not available in CSV
+                                            
+                            if (lastAccountNumber != accountNumber) {
+                                newAccount = new(PIN) {
+                                    Custodian = "T Rowe Price",
+                                    Note = string.Concat("*", accountNumber.AsSpan(accountNumber.Length-4,4))
+                                };
+                                importedAccounts.Add(newAccount);
+                            }
+
+                            Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, SharesPIN = shares };
+                            newAccount?.Investments.Add(newInvestment);
+
+                            if (lineIndex < lines.Length -1) {
+                                line = lines[lineIndex++];
+                            } else {
+                                line = "";
+                            }
+                        }
+                    }
+                }
+
             }
             else if (headerChunks[0] == "\"AMERIPRISE BROKERAGE\"")
             {

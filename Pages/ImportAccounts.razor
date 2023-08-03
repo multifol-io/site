@@ -19,7 +19,7 @@
 <div style=clear:left>
     @if (appData.ImportResult == null) {
         @if (csvImport) {
-            @if(showError){<br/><br/><span style=color:red>ERROR: must be a CSV file from Ameriprise, eTrade, Fidelity, Merrill Edge, Schwab, or Vanguard or a XLSX file from Morgan Stanley.</span><br/>}
+            @if(showError){<br/><br/><span style=color:red>ERROR: must be a CSV file from Ameriprise, eTrade, Fidelity, Merrill Edge, Schwab, T Rowe Price, or Vanguard or a XLSX file from Morgan Stanley.</span><br/>}
             <br/>
             
             <p>As mentioned in <a href=/updating-portfolio>/updating-portfolio</a> there are 3 ways to enter/update data about your portolio. Importing CSV files is one of those techniques.</p>
@@ -64,7 +64,7 @@
                 </ol>
                 </p>
 
-                <p><b>Basic steps for Ameriprise, eTrade, Merrill Edge, Morgan Stanley, or Schwab accounts</b>:
+                <p><b>Basic steps for Ameriprise, eTrade, Merrill Edge, Morgan Stanley, T Rowe Price, or Schwab accounts</b>:
                 <ol>
                     <li>Log into that website</li>
                     <li>Find and download the data file</li>
@@ -109,10 +109,11 @@
                 var person = appData.FamilyData.People[i];
                 int personIndex = i + 1;
 
-                @if (i == 0) {
-                    <div>- Then choose pronouns/unique identifiers for each person:</div>
-                }
+
                 @if(person?.FamilyData?.PersonCount>1){
+                    @if (i == 0) {
+                        <div>- Then choose pronouns/unique identifiers for each person:</div>
+                    }
                     <label style=padding-left:16px>Person @personIndex - Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
                     <option value="ChoiceNeeded">ChoiceNeeded</option>
                     <option>person @personIndex</option>
