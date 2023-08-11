@@ -134,6 +134,7 @@
             {
                 <div style=font-weight:bold>Error: @error.Exception.Message</div>
                 @if(error.Exception.InnerException!=null){ <div>Failure location: <br/>@error.Exception.InnerException.StackTrace<br/><br/></div>};
+                @if(error.Exception.InnerException!=null){ <div>Failure: <br/>@error.Exception.InnerException<br/><br/></div>};
             }
 
             @if(appData.ImportResult.UpdatedAccounts.Count > 0) {
