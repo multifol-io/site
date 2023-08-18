@@ -52,7 +52,8 @@ JsonSerializerOptions options = new() {
 
 var Funds = await JsonSerializer.DeserializeAsync<List<Fund>>(fundsJson.Content.ReadAsStream(), options);
 var Stocks = await JsonSerializer.DeserializeAsync<List<Fund>>(stocksJson.Content.ReadAsStream(), options);
-Funds.AddRange(Stocks);
+if (Funds is not null && Stocks is not null) {
+    Funds.AddRange(Stocks);
     builder.Services.AddSingleton<IList<Fund>>(Funds);
-
+}
 await builder.Build().RunAsync();

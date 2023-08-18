@@ -23,7 +23,7 @@
                         </ul>
 
                         <pre style=background-color:lightyellow>
-                            @boundary.CurrentException
+                            @boundary?.CurrentException
                         </pre>
                         
                         </div>
@@ -37,5 +37,5 @@
 </div>
 
 @code {
-    private MyErrorBoundary boundary;
+    private MyErrorBoundary? boundary;
 }

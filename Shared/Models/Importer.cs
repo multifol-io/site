@@ -15,7 +15,6 @@ public class Importer {
             {
                 if (file.Name.ToLower().EndsWith(".csv"))
                 {
-                    string? content = null;
                     try {
                         var importedAccountsCSV = await Importer.ImportCSV(file, funds, PIN);
                         result.ImportedAccounts.AddRange(importedAccountsCSV);
@@ -582,7 +581,7 @@ public class Importer {
                 var accountDescription = GetValue(chunks, accountDescriptionCol)!;
                 var quantity = FormatUtilities.ParseDoubleOrNull(GetValue(chunks, quantityCol));
                 var value = FormatUtilities.ParseDoubleOrNull(GetValue(chunks, valueCol), allowCurrency:true);
-                if (symbol.ToUpper() == "CASH") {
+                if (symbol is not null && symbol.ToUpper() == "CASH") {
                     symbol = null;
                     investmentName = "Cash";
                 }
@@ -630,22 +629,15 @@ public class Importer {
         using (var document = SpreadsheetDocument.Open(ms, false))
         {
             // Retrieve a reference to the workbook part.
-            WorkbookPart wbPart = document.WorkbookPart;
+            WorkbookPart wbPart = document.WorkbookPart!;
 
             // Find the sheet with the supplied name, and then use that to retrieve a reference to the first worksheet.
-            Sheet theSheet = wbPart?.Workbook.Descendants<Sheet>().Where(s => s?.Name == "Holdings Ungrouped").FirstOrDefault();
-
-            // Throw an exception if there is no sheet.
-            if (theSheet == null)
-            {
-                throw new ArgumentException("sheetName");
-            }
-
-            WorksheetPart wsPart = (WorksheetPart)(wbPart.GetPartById(theSheet.Id));
+            Sheet theSheet = wbPart.Workbook.Descendants<Sheet>().Where(s => s?.Name == "Holdings Ungrouped").FirstOrDefault() ?? throw new ArgumentException("sheetName");
+            WorksheetPart wsPart = (WorksheetPart)wbPart.GetPartById(theSheet.Id);
             // For shared strings, look up the value in the shared strings table.
             var stringTable = 
                 wbPart.GetPartsOfType<SharedStringTablePart>()
-                .FirstOrDefault();
+                .FirstOrDefault() ?? throw new ArgumentException("stringTable");
 
             int row = 11;
             bool contentOver = false;

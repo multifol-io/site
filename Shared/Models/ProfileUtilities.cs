@@ -8,9 +8,9 @@ public static class ProfileUtilities
     public static string Value { get; set; } = "";
     public static string storedJson { get; set; } = "";
 
-    public static LocalStorageAccessor? LocalStorageAccessor { get; set; }
+    public static LocalStorageAccessor LocalStorageAccessor { get; set; }
 
-    public static async Task Save(string key, FamilyData familyData)
+    public static async Task Save(string? key, FamilyData? familyData)
     {
         var options = new JsonSerializerOptions() 
         {
@@ -22,14 +22,19 @@ public static class ProfileUtilities
                     new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
                 }
         };
-        var familyDataJson = JsonSerializer.Serialize(familyData, options);
 
-        await Save(key, familyDataJson);
+        if (familyData is not null) {
+            var familyDataJson = JsonSerializer.Serialize(familyData, options);
+
+            await Save(key, familyDataJson);
+        }
     }
 
-    public static async Task Save(string key, string familyDataJson)
+    public static async Task Save(string? key, string familyDataJson)
     {
-        await LocalStorageAccessor.SetValueAsync(key, familyDataJson);
+        if (key is not null) {
+            await LocalStorageAccessor.SetValueAsync(key, familyDataJson);
+        }
     }
 
 
@@ -45,6 +50,11 @@ public static class ProfileUtilities
         {
             throw new ArgumentNullException(nameof(appData));
         }
+
+        if (appData.CurrentProfileName == null)
+        {
+            throw new ArgumentNullException("appData.CurrentProfileName");
+        }
         
         storedJson = await LocalStorageAccessor.GetValueAsync<string>(appData.CurrentProfileName);
         var options = new JsonSerializerOptions() 
@@ -55,7 +65,7 @@ public static class ProfileUtilities
                 }
         };
         
-        var loadedFamilyData = await FamilyData.LoadFromJson(appData, storedJson, options);
+        var loadedFamilyData = FamilyData.LoadFromJson(appData, storedJson, options);
         if (loadedFamilyData == null) {
             // error loading profile. how should we handle this?
         } else {
@@ -68,9 +78,9 @@ public static class ProfileUtilities
                     account.Owner = 2;
                 }
             }
-        }
 
-        appData.FamilyData = loadedFamilyData;
+            appData.FamilyData = loadedFamilyData;
+        }
     }
 
     public static async Task Clear(IAppData appData, string key, IRSData irsData)

@@ -46,7 +46,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
     @if (steps == null || appData == null || familyData == null)
     {
         <p>
-            @if(appData.CurrentProfileName==null){<em>No active <a href=/profiles>profile</a>.</em>} 
+            @if(appData!.CurrentProfileName==null){<em>No active <a href=/profiles>profile</a>.</em>} 
             else {<em>Loading...</em>}
         </p>
         <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
@@ -91,23 +91,25 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                         </select><br/>
                         @for (int i = 0; i < familyData.PersonCount; i++) {
                             var person = familyData.People[i];
-                            <span>Person @(i+1):</span><br/>
-                            <div style=margin-left:25px>
-                                <label>Age:</label> <input style=width:60px type=number min=0 max=125 @bind-Value=person.Age @bind-Value:event=oninput /><br/>
-                                @if (familyData.PersonCount > 1) {
-                                    <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
-                                        <option value="ChoiceNeeded">ChoiceNeeded</option>
-                                        <option>person @(i+1)</option>
-                                        <option>him</option>
-                                        <option>her</option>
-                                        <option>me</option>
-                                        <option>them</option>
-                                    </select><br/>
-                                }
+                            if (person is not null) {
+                                <span>Person @(i+1):</span><br/>
+                                <div style=margin-left:25px>
+                                    <label>Age:</label> <input style=width:60px type=number min=0 max=125 @bind-Value=person.Age @bind-Value:event=oninput /><br/>
+                                    @if (familyData.PersonCount > 1) {
+                                        <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
+                                            <option value="ChoiceNeeded">ChoiceNeeded</option>
+                                            <option>person @(i+1)</option>
+                                            <option>him</option>
+                                            <option>her</option>
+                                            <option>me</option>
+                                            <option>them</option>
+                                        </select><br/>
+                                    }
 
-                                <label>Employer:</label> <input style=width:200px type=text @bind-Value=person.EmployerBenefits.Company @bind-Value:event=oninput /><br/>
-                                <label>Annual Salary:</label> $<input type=text class=dollar @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
-                            </div>
+                                    <label>Employer:</label> <input style=width:200px type=text @bind-Value=person.EmployerBenefits!.Company @bind-Value:event=oninput /><br/>
+                                    <label>Annual Salary:</label> $<input type=text class=dollar @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
+                                </div>
+                            }
                         }
                     </div>
                     <hr/>
@@ -139,7 +141,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                     @foreach (var step in steps) {
                         var href = folderName + @step.step;
                         if (!pastTotal) {
-                            pastTotal = familyData.PlannedSavings <= runningTotal;
+                            pastTotal = familyData!.PlannedSavings <= runningTotal;
 
                             if (pastTotal) {
                                 <tr><td colspan=3>
@@ -163,30 +165,38 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                                     bool titleShown4 = false;
                                     <td>
                                         @if (familyData.PersonCount > 0) {
-                                            if (familyData.People[0].EmployerBenefits.Complete && familyData.People[0].EmployerBenefits.Company != null) {
-                                                if (familyData.People[0].EmployerBenefits.Downloaded) {
-                                                    <span>Found @familyData.People[0].EmployerBenefits.Company benefit details</span><br/>
-                                                } else {
-                                                    <span>Entered @familyData.People[0].EmployerBenefits.Company benefit details</span><br/>
+                                            Person person = familyData!.People[0];
+                                            EmployerBenefits employerBenefits = person!.EmployerBenefits;
+                                            if (employerBenefits is not null) {
+                                                if (employerBenefits.Complete && employerBenefits.Company != null) {
+                                                    if (employerBenefits.Downloaded) {
+                                                        <span>Found @employerBenefits.Company benefit details</span><br/>
+                                                    } else {
+                                                        <span>Entered @employerBenefits.Company benefit details</span><br/>
+                                                    }
+                                                } else if (familyData.People[0].EmployerPlan.AnnualSalary != 0) {
+                                                    titleShown4 = true;
+                                                    <div>
+                                                        <b>@step.title</b>@if(employerBenefits.Company != null) { <span>: @employerBenefits.Company</span> }
+                                                    </div>
                                                 }
-                                            } else if (familyData.People[0].EmployerPlan.AnnualSalary != 0) {
-                                                titleShown4 = true;
-                                                <div>
-                                                    <b>@step.title</b>@if(familyData.People[0].EmployerBenefits.Company != null) { <span>: @familyData.People[0].EmployerBenefits.Company</span> }
-                                                </div>
                                             }
                                         }
                                         @if (familyData.PersonCount > 1) {
-                                            if (familyData.People[1].EmployerBenefits.Complete && familyData.People[1].EmployerBenefits.Company != null) {
-                                                if (familyData.People[1].EmployerBenefits.Downloaded) {
-                                                    <span>Found @familyData.People[1].EmployerBenefits.Company benefit details</span><br/>
-                                                } else {
-                                                    <span>Entered @familyData.People[1].EmployerBenefits.Company benefit details</span><br/>
+                                            Person person = familyData!.People[1];
+                                            EmployerBenefits employerBenefits = person!.EmployerBenefits;
+                                            if (employerBenefits is not null) {
+                                                if (employerBenefits.Complete && employerBenefits.Company != null) {
+                                                    if (employerBenefits.Downloaded) {
+                                                        <span>Found @employerBenefits.Company benefit details</span><br/>
+                                                    } else {
+                                                        <span>Entered @employerBenefits.Company benefit details</span><br/>
+                                                    }
+                                                } else if (person.EmployerPlan.AnnualSalary != 0 && !titleShown4) {
+                                                    <div>
+                                                        <b>@step.title</b>@if(employerBenefits.Company != null) { <span>: @employerBenefits.Company</span> }
+                                                    </div>
                                                 }
-                                            } else if (familyData.People[1].EmployerPlan.AnnualSalary != 0 && !titleShown4) {
-                                                <div>
-                                                    <b>@step.title</b>@if(familyData.People[1].EmployerBenefits.Company != null) { <span>: @familyData.People[1].EmployerBenefits.Company</span> }
-                                                </div>
                                             }
                                         }
                                     </td>
@@ -516,11 +526,11 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                                         private void addContributionLevel(MouseEventArgs e, int personIndex)
                                         {
                                             var contributionLevel = new EmployerContributionLevel();
-                                            familyData.People[personIndex].EmployerBenefits.HSA.EmployerContributionLevels.Add(contributionLevel);
+                                            familyData!.People[personIndex].EmployerBenefits.HSA.EmployerContributionLevels.Add(contributionLevel);
                                         }
                                         private void deleteContributionLevel(MouseEventArgs e, int personIndex, int contributionLevelIndex)
                                         {
-                                            familyData.People[personIndex].EmployerBenefits.HSA.EmployerContributionLevels.RemoveAt(contributionLevelIndex);
+                                            familyData!.People[personIndex].EmployerBenefits.HSA.EmployerContributionLevels.RemoveAt(contributionLevelIndex);
                                         }
                                         private async Task DownloadEmployer1() {
                                             await DownloadEmployer(0);
@@ -529,16 +539,18 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                                             await DownloadEmployer(1);
                                         }
                                         private async Task DownloadEmployer(int index) {
-                                            var options = new JsonSerializerOptions() 
-                                            {
-                                                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
-                                                WriteIndented = true,
-                                                Converters =
-                                                    {
-                                                        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                                                    }
-                                            };
-                                            await DownloadFileFromStream(familyData.People[index].EmployerBenefits, options, familyData.People[index].EmployerBenefits.Company + "-benefits.json");
+                                            if (appData.FamilyData is not null) {
+                                                var options = new JsonSerializerOptions() 
+                                                {
+                                                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+                                                    WriteIndented = true,
+                                                    Converters =
+                                                        {
+                                                            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                                                        }
+                                                };
+                                                await DownloadFileFromStream(appData.FamilyData.People[index].EmployerBenefits, options, appData.FamilyData.People[index].EmployerBenefits.Company + "-benefits.json");
+                                            }
                                         }
                                         private async Task DownloadFileFromStream(object data, JsonSerializerOptions options, string fileName)
                                         {
@@ -615,42 +627,48 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                                 </EditForm><br/>
                                 @for (int i = 0; i < familyData.PersonCount; i++) {
                                     var person = familyData.People[i];
-                                    var personBuffer = i;
-                                    var eligibleId = "eligible-" + i;
-                                    matchRuleIndex = 0;
-                                    <p><b>Person @(i+1):</b> </p>
+                                    if (person is not null) {
+                                        var personBuffer = i;
+                                        var eligibleId = "eligible-" + i;
+                                        matchRuleIndex = 0;
+                                        <p><b>Person @(i+1):</b> </p>
 
-                                    <EditForm Model="person" style=margin-left:25px>
-                                        <label>Employer:</label> <input type=text @bind-Value=person.EmployerBenefits.Company @bind-Value:event=oninput /><br/>
-                                        <label>Annual Salary:</label> $<input type=text class=dollar @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
-                                        <br/>
-                                       <fieldset disabled=@person.EmployerBenefits.Employer401k.Offered!=TriState.True style='margin-left:20px'>
-                                            <label>Matching Levels:</label><br/>
-                                            @foreach (var matchRule in person.EmployerBenefits.Employer401k.MatchRules)
-                                            {
-                                                var matchRuleBuffer = matchRuleIndex;
-                                                matchRuleIndex++;
-                                                <div>
-                                                    <label>Match:</label> <span>@FormatUtilities.formatPercent(person.EmployerBenefits.Employer401k.MatchRules[matchRuleBuffer].MatchPercentage)</span><br/>
-                                                    <label margin-left:30px>for next</label> <span>@FormatUtilities.formatPercent(person.EmployerBenefits.Employer401k.MatchRules[matchRuleBuffer].ForNextPercent)</span><br/>
-                                                </div>
-                                            }
+                                        <EditForm Model="person" style=margin-left:25px>
+                                            <label>Employer:</label> <input type=text @bind-Value=person.EmployerBenefits.Company @bind-Value:event=oninput /><br/>
+                                            <label>Annual Salary:</label> $<input type=text class=dollar @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
                                             <br/>
-                                            <label>Max Match:</label> <span>@FormatUtilities.formatMoney(person.EmployerBenefits.Employer401k.MatchLimit)</span><br/>
-                                            <label>Contribution required to get maximum match:</label> <span>@FormatUtilities.formatMoney(person.EmployerPlan.AmountToSaveForMatch)</span><br/>
-                                            <label>Match Amount:</label> <span>@FormatUtilities.formatMoney(person.EmployerPlan.MatchAmount)</span><br/>
-                                        </fieldset>
-                                    </EditForm><br/>
+                                        <fieldset disabled=@person.EmployerBenefits.Employer401k.Offered!=TriState.True style='margin-left:20px'>
+                                                <label>Matching Levels:</label><br/>
+                                                @foreach (var matchRule in person.EmployerBenefits.Employer401k.MatchRules)
+                                                {
+                                                    var matchRuleBuffer = matchRuleIndex;
+                                                    matchRuleIndex++;
+                                                    <div>
+                                                        <label>Match:</label> <span>@FormatUtilities.formatPercent(person.EmployerBenefits.Employer401k.MatchRules[matchRuleBuffer].MatchPercentage)</span><br/>
+                                                        <label margin-left:30px>for next</label> <span>@FormatUtilities.formatPercent(person.EmployerBenefits.Employer401k.MatchRules[matchRuleBuffer].ForNextPercent)</span><br/>
+                                                    </div>
+                                                }
+                                                <br/>
+                                                <label>Max Match:</label> <span>@FormatUtilities.formatMoney(person.EmployerBenefits.Employer401k.MatchLimit)</span><br/>
+                                                <label>Contribution required to get maximum match:</label> <span>@FormatUtilities.formatMoney(person.EmployerPlan.AmountToSaveForMatch)</span><br/>
+                                                <label>Match Amount:</label> <span>@FormatUtilities.formatMoney(person.EmployerPlan.MatchAmount)</span><br/>
+                                            </fieldset>
+                                        </EditForm><br/>
+                                    }
                                 }
                                 @code{
                                     private void addMatchRule(MouseEventArgs e, int personIndex)
                                     {
-                                        var matchRule = new MatchRule();
-                                        familyData.People[personIndex].EmployerBenefits.Employer401k.MatchRules.Add(matchRule);
+                                        if (appData.FamilyData is not null) {
+                                            var matchRule = new MatchRule();
+                                            appData.FamilyData.People[personIndex].EmployerBenefits.Employer401k.MatchRules.Add(matchRule);
+                                        }
                                     }
                                     private void deleteMatchRule(MouseEventArgs e, int personIndex, int matchIndex)
                                     {
-                                        familyData.People[personIndex].EmployerBenefits.Employer401k.MatchRules.RemoveAt(matchIndex);
+                                        if (appData.FamilyData is not null) {
+                                            appData.FamilyData.People[personIndex].EmployerBenefits.Employer401k.MatchRules.RemoveAt(matchIndex);
+                                        }
                                     }
                                 }
                                 break;
@@ -911,14 +929,18 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
 
                                 @code{
                                     void RemoveDebt(MouseEventArgs e, int debtIndex) {
-                                        familyData.Debts.RemoveAt(debtIndex);
-                                        if (familyData.Debts.Count == 0) {
-                                            familyData.DebtFree = TriState.ChoiceNeeded;
+                                        var familyData = appData.FamilyData;
+                                        if (familyData is not null) {
+                                            familyData.Debts.RemoveAt(debtIndex);
+                                            if (familyData.Debts.Count == 0) {
+                                                familyData.DebtFree = TriState.ChoiceNeeded;
+                                            }
                                         }
                                     }
                                     void addDebt()
                                     {
-                                        if (familyData != null) {
+                                        var familyData = appData.FamilyData;
+                                        if (familyData is not null) {
                                             familyData.Debts.Add(new Debt());
                                             familyData.DebtFree = TriState.False;
                                         }
@@ -1085,7 +1107,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
         base.OnInitialized();
     }
 
-    private FamilyData familyData {
+    private FamilyData? familyData {
         get {
             return appData.FamilyData;
         }
@@ -1118,7 +1140,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
         Navigation.NavigateTo("/profiles");
     }
 
-    async void LocationChanged(object sender, LocationChangedEventArgs e)
+    async void LocationChanged(object? sender, LocationChangedEventArgs e)
     {
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
     }

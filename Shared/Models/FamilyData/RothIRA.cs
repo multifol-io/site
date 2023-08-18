@@ -29,24 +29,27 @@ public class RothIRA {
 
     public int? CalculateAllowedContribution(int? income, TaxFilingStatus taxFilingStatus, Person person)
     {
-        switch (taxFilingStatus) {
-            case TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart: 
-            case TaxFilingStatus.Single:
-                return ApplyRange(rothIraVariables.ContributionPhaseOutRange.Single.Start,
-                                  rothIraVariables.ContributionPhaseOutRange.Single.End,
-                                  person.FamilyData.AdjustedGrossIncome, MaximumContributionByAge);
-            case TaxFilingStatus.MarriedFilingJointly:
-                return ApplyRange(rothIraVariables.ContributionPhaseOutRange.MarriedFilingJointly.Start,
-                                  rothIraVariables.ContributionPhaseOutRange.MarriedFilingJointly.End,
-                                  person.FamilyData.AdjustedGrossIncome, MaximumContributionByAge);
-            case TaxFilingStatus.MarriedFilingSeperately: 
-                return ApplyRange(rothIraVariables.ContributionPhaseOutRange.MarriedFilingSeparately.Start,
-                                  rothIraVariables.ContributionPhaseOutRange.MarriedFilingSeparately.End,
-                                  person.FamilyData.AdjustedGrossIncome, MaximumContributionByAge);
-            case TaxFilingStatus.ChoiceNeeded:
-            default:
-                return null;
+        if (rothIraVariables is not null && rothIraVariables.ContributionPhaseOutRange is not null) {
+            switch (taxFilingStatus) {
+                case TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart: 
+                case TaxFilingStatus.Single:
+                    return ApplyRange(rothIraVariables.ContributionPhaseOutRange.Single!.Start,
+                                    rothIraVariables.ContributionPhaseOutRange.Single.End,
+                                    person.FamilyData.AdjustedGrossIncome, MaximumContributionByAge);
+                case TaxFilingStatus.MarriedFilingJointly:
+                    return ApplyRange(rothIraVariables.ContributionPhaseOutRange.MarriedFilingJointly!.Start,
+                                    rothIraVariables.ContributionPhaseOutRange.MarriedFilingJointly.End,
+                                    person.FamilyData.AdjustedGrossIncome, MaximumContributionByAge);
+                case TaxFilingStatus.MarriedFilingSeperately: 
+                    return ApplyRange(rothIraVariables.ContributionPhaseOutRange.MarriedFilingSeparately!.Start,
+                                    rothIraVariables.ContributionPhaseOutRange.MarriedFilingSeparately.End,
+                                    person.FamilyData.AdjustedGrossIncome, MaximumContributionByAge);
+                case TaxFilingStatus.ChoiceNeeded:
+                default:
+                    return null;
+            }
         }
+        return null;
     }
 
     private int? ApplyRange(int low, int high, int? income, int? contributionAllowed) 

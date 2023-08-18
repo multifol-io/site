@@ -91,209 +91,218 @@
     }
     else
     {
-        bool alternateRow;
-        <EditForm Model=@appData.ImportResult>
-            <br/>
-            <div>Those data file(s) contain info on @(appData.ImportResult.UpdatedAccounts.Count+appData.ImportResult.NewAccounts.Count) accounts</div>
-            <br/>
-            Each account should be labeled with the correct owner and account type.<br/>
-            - First, choose/verify your Tax Filing Status: <select @bind=appData.FamilyData.TaxFilingStatus>
-                <option value="ChoiceNeeded">ChoiceNeeded</option>
-                <option>Single</option>
-                <option value=MarriedFilingJointly>Married filing jointly</option>
-                <option value=MarriedFilingSeperately>Married filing separately</option>
-                <option value=MarriedFilingSeperatelyAndLivingApart>Married filing separately (and living apart)</option>
-                <option value=HeadOfHousehold>Head of Household</option>
-            </select><br/>
-            @for (int i = 0; i < appData.FamilyData.PersonCount; i++) {
-                var person = appData.FamilyData.People[i];
-                int personIndex = i + 1;
-
-
-                @if(person?.FamilyData?.PersonCount>1){
-                    @if (i == 0) {
-                        <div>- Then choose pronouns/unique identifiers for each person:</div>
-                    }
-                    <label style=padding-left:16px>Person @personIndex - Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
+        if (appData?.FamilyData is not null) {
+            bool alternateRow;
+            <EditForm Model=@appData.ImportResult>
+                <br/>
+                <div>Those data file(s) contain info on @(appData.ImportResult.UpdatedAccounts.Count+appData.ImportResult.NewAccounts.Count) accounts</div>
+                <br/>
+                Each account should be labeled with the correct owner and account type.<br/>
+                - First, choose/verify your Tax Filing Status: <select @bind=appData.FamilyData.TaxFilingStatus>
                     <option value="ChoiceNeeded">ChoiceNeeded</option>
-                    <option>person @personIndex</option>
-                    <option>him</option>
-                    <option>her</option>
-                    <option>me</option>
-                    <option>them</option>
-                </select><br/>}
-            }
-            <span>- Then choose which account(s) to import, and fill in related info about them, then choose "Import selected accounts" button::</span><br/>
-            <br/>
-            <button @onclick=finishImport>Import selected accounts</button>
-            <button @onclick=cancelImport>Cancel Import</button>
-            <br/>
-            <br/>
-            
-            @foreach (var error in appData?.ImportResult.Errors)
-            {
-                <div style=font-weight:bold>Error: @error.Exception.Message</div>
-                @if(error.Exception.InnerException!=null){ <div>Failure location: <br/>@error.Exception.InnerException.StackTrace<br/><br/></div>};
-                @if(error.Exception.InnerException!=null){ <div>Failure: <br/>@error.Exception.InnerException<br/><br/></div>};
-            }
+                    <option>Single</option>
+                    <option value=MarriedFilingJointly>Married filing jointly</option>
+                    <option value=MarriedFilingSeperately>Married filing separately</option>
+                    <option value=MarriedFilingSeperatelyAndLivingApart>Married filing separately (and living apart)</option>
+                    <option value=HeadOfHousehold>Head of Household</option>
+                </select><br/>
+                @for (int i = 0; i < appData.FamilyData.PersonCount; i++) {
+                    var person = appData.FamilyData.People[i];
+                    if (person is not null) {
+                        int personIndex = i + 1;
 
-            @if(appData.ImportResult.UpdatedAccounts.Count > 0) {
-                <div>
-                    <InputCheckbox @bind-Value=appData.ImportResult.ImportUpdatedAccounts /> UPDATE these EXISTING accounts  into <a href="/profiles">@appData.CurrentProfileName profile's</a> portfolio:</div>
-                    @foreach (var account in appData.ImportResult.UpdatedAccounts)
+                        @if(person?.FamilyData?.PersonCount>1){
+                            @if (i == 0) {
+                                <div>- Then choose pronouns/unique identifiers for each person:</div>
+                            }
+                            <label style=padding-left:16px>Person @personIndex - Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
+                            <option value="ChoiceNeeded">ChoiceNeeded</option>
+                            <option>person @personIndex</option>
+                            <option>him</option>
+                            <option>her</option>
+                            <option>me</option>
+                            <option>them</option>
+                        </select><br/>}
+                    }
+                }
+                <span>- Then choose which account(s) to import, and fill in related info about them, then choose "Import selected accounts" button::</span><br/>
+                <br/>
+                <button @onclick=finishImport>Import selected accounts</button>
+                <button @onclick=cancelImport>Cancel Import</button>
+                <br/>
+                <br/>
+                
+                @foreach (var error in appData!.ImportResult!.Errors)
+                {
+                    if (error is not null && error.Exception is not null) {
+                        <div style=font-weight:bold>Error: @error.Exception.Message</div>
+                        @if(error.Exception.InnerException is not null){ <div>Failure location: <br/>@error.Exception.InnerException.StackTrace<br/><br/></div>};
+                        @if(error.Exception.InnerException is not null){ <div>Failure: <br/>@error.Exception.InnerException<br/><br/></div>};
+                    }
+                }
+
+                @if(appData.ImportResult.UpdatedAccounts.Count > 0) {
+                    <div>
+                        <InputCheckbox @bind-Value=appData.ImportResult.ImportUpdatedAccounts /> UPDATE these EXISTING accounts  into <a href="/profiles">@appData.CurrentProfileName profile's</a> portfolio:</div>
+                        @foreach (var account in appData.ImportResult.UpdatedAccounts)
+                        {
+                            alternateRow = false;
+                            <div style=margin-left:8px;background-color:black;color:white;margin-left:8px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)</div>
+                            @foreach (var investment in account.Investments)
+                            {
+                                string bgColor = alternateRow ? "white" : "lightgray";
+                                alternateRow = !alternateRow;
+                                <div style=margin-left:16px;background-color:@bgColor>
+                                    @investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)<br/>
+                                    @if(account?.ReplaceAccount?.AccountType == "Taxable" && investment.AssetType != AssetType.Cash_MoneyMarket) {
+                                        <div>@account.AccountType
+                                            &nbsp;<label>Cost Basis: </label>
+                                            <span>$</span>
+                                            <input type=text style=width:100px;text-align:right @bind-Value=investment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
+                                        </div>
+                                    }
+                                    <label style=padding-left:16px>Asset Type:</label>
+                                    @if(investment.AssetType == AssetType.Unknown || investment.AssetType == null) {
+                                        <select @bind=investment.AssetType>
+                                            @foreach (AssetType assetType in (AssetType[]) Enum.GetValues(typeof(AssetType))) {
+                                                <option>@assetType</option>
+                                            }
+                                        </select>
+                                    } else {
+                                        <span>@investment.AssetType</span>
+                                    }
+                                    <br/>
+                                </div>
+                            }
+                            <br/>
+                        }
+                } else {
+                    <span>These imported accounts all appear to be new accounts in this profile:</span><br/>
+                }
+
+                <br/>
+                @if (appData.ImportResult.NewAccounts.Count > 0) {
+                    <div><InputCheckbox @bind-Value=appData.ImportResult.ImportNewAccounts /> ADD these NEW accounts into <a href="/profiles">@appData.CurrentProfileName profile's</a> portfolio:</div>
+                    @foreach (var account in appData.ImportResult.NewAccounts)
                     {
                         alternateRow = false;
-                        <div style=margin-left:8px;background-color:black;color:white;margin-left:8px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)</div>
+                        <div style=margin-left:8px;background-color:black;color:white>
+                            <InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)
+                            <br/>
+                            @if (appData.FamilyData.PersonCount == 2) {
+                                <label>Account Owner(s):</label>
+                                <select style=margin-left:8px@bind=account.Identifier>
+                                    <option>our</option>
+                                    @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
+                                        <option>@appData.FamilyData.People[p].PossessiveID</option>
+                                    }
+                                </select>
+                            }
+                            <label style=margin-left:16px;>Account Type:</label> <select @bind=account.AccountType>
+                                <option>Unknown</option>
+                                <option>401(k)</option>
+                                <option>403(b)</option>
+                                <option>457(b)</option>
+                                <option>457(b) Governmental</option>
+                                <option>529</option>
+                                <option>Annuity (Non-Qualified)</option>
+                                <option>Annuity (Qualified)</option>
+                                <option>Brokerage</option>
+                                <option>HSA</option>
+                                <option>Individual</option>
+                                <option>Inherited IRA</option>
+                                <option>Inherited Roth IRA</option>
+                                <option value="Traditional IRA">IRA</option>
+                                <option>Life Insurance</option>
+                                <option>Refundable Deposit</option>
+                                <option>Rollover IRA</option>
+                                <option>Roth 401(k)</option>
+                                <option>Roth IRA</option>
+                                <option>SEP IRA</option>
+                                <option>SIMPLE IRA</option>
+                                <option>Solo 401(k)</option>
+                                <option>Taxable</option>
+                                <option>Traditional IRA</option>
+                            </select>
+                        </div>
+                        @if (account.TaxType == "Pre-Tax(work)") {
+                            <div style=margin-left:8px;background-color:black;color:white>
+                                <InputCheckbox id=currentEmployer style=margin-left:20px @bind-Value=account.CurrentEmployerRetirementFund /> <label for=currentEmployer>&nbsp;Current Employer</label><br/>
+                            </div>
+                        }
+
                         @foreach (var investment in account.Investments)
                         {
                             string bgColor = alternateRow ? "white" : "lightgray";
                             alternateRow = !alternateRow;
-                            <div style=margin-left:16px;background-color:@bgColor>
-                                @investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)<br/>
-                                @if(account.ReplaceAccount.AccountType == "Taxable" && investment.AssetType != AssetType.Cash_MoneyMarket) {
-                                    <div>@account.AccountType
-                                        &nbsp;<label>Cost Basis: </label>
-                                        <span>$</span>
-                                        <input type=text style=width:100px;text-align:right @bind-Value=investment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
-                                    </div>
-                                }
+                            <div style=margin-left:16px;background-color:@bgColor>@investment.Name (@investment.Ticker) @(investment.SharesPIN) shares =&gt; @FormatUtilities.formatMoney(investment.ValuePIN)<br/>
+                            @if(account.AccountType == "Taxable" && investment.AssetType != AssetType.Cash_MoneyMarket) {
+                                <label>Cost Basis: </label>
+                                <span>$</span><input type=text style=width:100px;text-align:right @bind-Value=investment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
+                            }
+                            @if(investment.AssetType == AssetType.Unknown || investment.AssetType == null) {
                                 <label style=padding-left:16px>Asset Type:</label>
-                                @if(investment.AssetType == AssetType.Unknown || investment.AssetType == null) {
-                                    <select @bind=investment.AssetType>
-                                        @foreach (AssetType assetType in (AssetType[]) Enum.GetValues(typeof(AssetType))) {
-                                            <option>@assetType</option>
-                                        }
-                                    </select>
-                                } else {
-                                    <span>@investment.AssetType</span>
-                                }
-                                <br/>
+                                <select @bind=investment.AssetType>
+                                    @foreach (AssetType assetType in (AssetType[]) Enum.GetValues(typeof(AssetType))) {
+                                        <option>@assetType</option>
+                                    }
+                                </select>
+                            }
                             </div>
                         }
                         <br/>
                     }
-            } else {
-                <span>These imported accounts all appear to be new accounts in this profile:</span><br/>
-            }
-
-            <br/>
-            @if (appData.ImportResult.NewAccounts.Count > 0) {
-                <div><InputCheckbox @bind-Value=appData.ImportResult.ImportNewAccounts /> ADD these NEW accounts into <a href="/profiles">@appData.CurrentProfileName profile's</a> portfolio:</div>
-                @foreach (var account in appData.ImportResult.NewAccounts)
-                {
-                    alternateRow = false;
-                    <div style=margin-left:8px;background-color:black;color:white>
-                        <InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)
-                        <br/>
-                        @if (appData.FamilyData.PersonCount == 2) {
-                            <label>Account Owner(s):</label>
-                            <select style=margin-left:8px@bind=account.Identifier>
-                                <option>our</option>
-                                @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
-                                    <option>@appData.FamilyData.People[p].PossessiveID</option>
-                                }
-                            </select>
-                        }
-                        <label style=margin-left:16px;>Account Type:</label> <select @bind=account.AccountType>
-                            <option>Unknown</option>
-                            <option>401(k)</option>
-                            <option>403(b)</option>
-                            <option>457(b)</option>
-                            <option>457(b) Governmental</option>
-                            <option>529</option>
-                            <option>Annuity (Non-Qualified)</option>
-                            <option>Annuity (Qualified)</option>
-                            <option>Brokerage</option>
-                            <option>HSA</option>
-                            <option>Individual</option>
-                            <option>Inherited IRA</option>
-                            <option>Inherited Roth IRA</option>
-                            <option value="Traditional IRA">IRA</option>
-                            <option>Life Insurance</option>
-                            <option>Refundable Deposit</option>
-                            <option>Rollover IRA</option>
-                            <option>Roth 401(k)</option>
-                            <option>Roth IRA</option>
-                            <option>SEP IRA</option>
-                            <option>SIMPLE IRA</option>
-                            <option>Solo 401(k)</option>
-                            <option>Taxable</option>
-                            <option>Traditional IRA</option>
-                        </select>
-                    </div>
-                    @if (account.TaxType == "Pre-Tax(work)") {
-                        <div style=margin-left:8px;background-color:black;color:white>
-                            <InputCheckbox id=currentEmployer style=margin-left:20px @bind-Value=account.CurrentEmployerRetirementFund /> <label for=currentEmployer>&nbsp;Current Employer</label><br/>
-                        </div>
-                    }
-
-                    @foreach (var investment in account.Investments)
-                    {
-                        string bgColor = alternateRow ? "white" : "lightgray";
-                        alternateRow = !alternateRow;
-                        <div style=margin-left:16px;background-color:@bgColor>@investment.Name (@investment.Ticker) @(investment.SharesPIN) shares =&gt; @FormatUtilities.formatMoney(investment.ValuePIN)<br/>
-                        @if(account.AccountType == "Taxable" && investment.AssetType != AssetType.Cash_MoneyMarket) {
-                            <label>Cost Basis: </label>
-                            <span>$</span><input type=text style=width:100px;text-align:right @bind-Value=investment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
-                        }
-                        @if(investment.AssetType == AssetType.Unknown || investment.AssetType == null) {
-                            <label style=padding-left:16px>Asset Type:</label>
-                            <select @bind=investment.AssetType>
-                                @foreach (AssetType assetType in (AssetType[]) Enum.GetValues(typeof(AssetType))) {
-                                    <option>@assetType</option>
-                                }
-                            </select>
-                        }
-                        </div>
-                    }
-                    <br/>
                 }
-            }
 
-            <button @onclick=finishImport>Import selected accounts</button>
-            <button @onclick=cancelImport>Cancel Import</button>
-            <br/>
-            <br/>
-        </EditForm>
+                <button @onclick=finishImport>Import selected accounts</button>
+                <button @onclick=cancelImport>Cancel Import</button>
+                <br/>
+                <br/>
+            </EditForm>
+        }
     }
 </div>
 
 @code {
-    private async Task importBH() {
+    private void importBH() {
         ImportResult importResult = new();
-        var lines = bhContent.Split('\n');
-        var importedFamilyData = ImportPortfolioReview.ParsePortfolioReview(lines, debug:false, appData, Funds);
-        if (importedFamilyData.Accounts.Count > 0) {
-            importResult.NewAccounts.AddRange(importedFamilyData.Accounts);
-            appData.ImportResult = importResult;
+        if (bhContent is not null) {
+            var lines = bhContent.Split('\n');
+            var importedFamilyData = ImportPortfolioReview.ParsePortfolioReview(lines, debug:false, appData, Funds);
+            if (importedFamilyData.Accounts.Count > 0) {
+                importResult.NewAccounts.AddRange(importedFamilyData.Accounts);
+                appData.ImportResult = importResult;
+            }
         }
     }
 
     private async Task OnDataFilesImport(InputFileChangeEventArgs e)
     {
-        var files = e.GetMultipleFiles();
-        appData.ImportResult = await Importer.ImportDataFiles(files, Funds, appData.FamilyData.Accounts, appData.FamilyData.PIN);
-        foreach (var account in appData.ImportResult.NewAccounts) 
-        {
-            account.Import = true;
-        }
-
-        if (appData.ImportResult.UpdatedAccounts.Count == 0) {
-            appData.ImportResult.ImportNewAccounts = true;
-        }
-
-        if (appData.ImportResult.NewAccounts.Count == 0) {
-            appData.ImportResult.ImportUpdatedAccounts = true;
-        }
-
-        foreach (var updatedAccount in appData.ImportResult.UpdatedAccounts)
-        {
-            if (updatedAccount.Import && updatedAccount.ReplaceAccount != null)
+        if (appData?.FamilyData is not null) {
+            var files = e.GetMultipleFiles();
+            appData.ImportResult = await Importer.ImportDataFiles(files, Funds, appData.FamilyData.Accounts, appData.FamilyData.PIN);
+            foreach (var account in appData.ImportResult.NewAccounts) 
             {
-                foreach (var updatedInvestment in updatedAccount.Investments) {
-                    foreach (var existingInvestment in updatedAccount.ReplaceAccount.Investments) {
-                        if (existingInvestment.Ticker == updatedInvestment.Ticker) {
-                            updatedInvestment.CostBasis = existingInvestment.CostBasis;
+                account.Import = true;
+            }
+
+            if (appData.ImportResult.UpdatedAccounts.Count == 0) {
+                appData.ImportResult.ImportNewAccounts = true;
+            }
+
+            if (appData.ImportResult.NewAccounts.Count == 0) {
+                appData.ImportResult.ImportUpdatedAccounts = true;
+            }
+
+            foreach (var updatedAccount in appData.ImportResult.UpdatedAccounts)
+            {
+                if (updatedAccount.Import && updatedAccount.ReplaceAccount != null)
+                {
+                    foreach (var updatedInvestment in updatedAccount.Investments) {
+                        foreach (var existingInvestment in updatedAccount.ReplaceAccount.Investments) {
+                            if (existingInvestment.Ticker == updatedInvestment.Ticker) {
+                                updatedInvestment.CostBasis = existingInvestment.CostBasis;
+                            }
                         }
                     }
                 }
@@ -302,27 +311,27 @@
     }
     private void finishImport()
     {
-        if (appData.ImportResult == null) { return; }
-
-        foreach (var updatedAccount in appData.ImportResult.UpdatedAccounts)
-        {
-            if (updatedAccount.Import && updatedAccount.ReplaceAccount != null)
+        if (appData?.ImportResult is not null && appData?.FamilyData is not null) {
+            foreach (var updatedAccount in appData.ImportResult.UpdatedAccounts)
             {
-                updatedAccount.ReplaceAccount.Investments.Clear();
-                updatedAccount.ReplaceAccount.Investments.AddRange(updatedAccount.Investments);
+                if (updatedAccount.Import && updatedAccount.ReplaceAccount != null)
+                {
+                    updatedAccount.ReplaceAccount.Investments.Clear();
+                    updatedAccount.ReplaceAccount.Investments.AddRange(updatedAccount.Investments);
+                }
             }
-        }
 
-        foreach (var newAccount in appData.ImportResult.NewAccounts)
-        {
-            if (newAccount.Import)
+            foreach (var newAccount in appData.ImportResult.NewAccounts)
             {
-                appData.FamilyData.Accounts.Add(newAccount);
+                if (newAccount.Import)
+                {
+                    appData.FamilyData.Accounts.Add(newAccount);
+                }
             }
-        }
 
-        appData.ImportResult = null;
-        Navigation.NavigateTo("/portfolio");
+            appData.ImportResult = null;
+            Navigation.NavigateTo("/portfolio");
+        }
     }
 
     private void cancelImport()
@@ -336,17 +345,17 @@
         appData.LastPageUri = Navigation.Uri;
         Navigation.NavigateTo("/profiles");
     }
-    
-    protected override async Task OnInitializedAsync()
-    {
-        csvImport = Navigation.Uri.EndsWith("/import-accounts");
-        pageHeading = csvImport ? "Import Accounts via CSV files" : "Import Accounts from Bogleheads Portfolio Review format";
 
-        base.OnInitialized();
-    }
+        protected override void OnInitialized()
+        {
+            csvImport = Navigation.Uri.EndsWith("/import-accounts");
+            pageHeading = csvImport ? "Import Accounts via CSV files" : "Import Accounts from Bogleheads Portfolio Review format";
+
+            base.OnInitialized();
+        }
 
     private bool showError { get; set; }
-    private string pageHeading;
+    private string? pageHeading;
     private bool csvImport = false;
-    private string bhContent;
+    private string bhContent = "";
 }

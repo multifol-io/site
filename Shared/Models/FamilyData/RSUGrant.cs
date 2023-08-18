@@ -10,7 +10,7 @@ public class RSUGrant {
         get { return _VestEventsCount; }
         set {
             _VestEventsCount = value;
-            VestPercent = 100.0 / (double)_VestEventsCount.Value;
+            VestPercent = _VestEventsCount != null ? 100.0 / (double)_VestEventsCount.Value : 0;
         }
      }
     public int? FirstVestMonth { get; set;}

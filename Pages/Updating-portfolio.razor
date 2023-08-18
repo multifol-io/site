@@ -134,13 +134,13 @@
 
 @code{    
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         Navigation.LocationChanged += LocationChanged;
         base.OnInitialized();
     }
 
-    async void LocationChanged(object sender, LocationChangedEventArgs e)
+    async void LocationChanged(object? sender, LocationChangedEventArgs e)
     {
         if (string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
         {

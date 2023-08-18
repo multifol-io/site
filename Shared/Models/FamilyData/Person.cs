@@ -25,7 +25,7 @@ public class Person {
 
     // back pointer
     [JsonIgnore]
-    public FamilyData? FamilyData { get; set; }
+    public FamilyData FamilyData { get; set; } = null!;
 
 
     public int? Age { get; set; }
@@ -41,7 +41,7 @@ public class Person {
     [JsonIgnore]
     public RothIRA RothIRA { get; set; }
 
-    public EmployerBenefits? EmployerBenefits { get; set; }
+    public EmployerBenefits EmployerBenefits { get; set; }
 
     public string? PossessiveID { 
         get {

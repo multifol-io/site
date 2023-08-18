@@ -36,7 +36,7 @@ public class FamilyData
     [JsonIgnore]
     public IAppData AppData { get; set;}    
 
-    public string Title { get; set; }
+    public string? Title { get; set; }
     public RetirementData RetirementData { get; set; }
     public EmergencyFund EmergencyFund { get; set; } = new();
 
@@ -85,8 +85,8 @@ public class FamilyData
             bool?[] forecastDone = { null, null };
             while (!done) {
                 double adjustBack = 0.0;
-                string significantYear = null;
-                string yearNote = null;
+                string? significantYear = null;
+                string? yearNote = null;
                 for (var i = 0; i < PersonCount; i++) {
                     var ageThisYear = People[i].Age + yearIndex;
                     forecastDone[i] = People[i].Retirement.ForecastEndAge <= ageThisYear;
@@ -435,6 +435,37 @@ public class FamilyData
         }
     }
 
+public string estimatePortfolio() 
+    {
+        if (Value >= 10000000) {
+            return "8-figures";
+        } else if (Value >= 6666666) {
+            return "high 7-figures";
+        } else if (Value >= 3333333) {
+            return "mid 7-figures";
+        } else if (Value >= 1000000) {
+            return "low 7-figures";
+        } else if (Value >= 666666) {
+            return "high 6-figures";
+        } else if (Value >= 333333) {
+            return "mid 6-figures";
+        } else if (Value >= 100000) {
+            return "low 6-figures";
+        } else if (Value >= 66666) {
+            return "high 5-figures";
+        } else if (Value >= 33333) {
+            return "mid 5-figures";
+        } else if (Value >= 10000) {
+            return "low 5-figures";
+        } else if (Value >= 1000) {
+            return "4-figures";
+        } else if (Value == 0) {
+            return "-";
+        } else {
+            return "less than $1,000";
+        }
+    }
+
     private Investment GetGroup(Dictionary<string, Investment> _GroupedInvestments, Investment investment, string? key, AssetType? assetType) {
         Investment? matchingInvestment;
         if (_GroupedInvestments.ContainsKey(key: key))
@@ -569,7 +600,7 @@ public class FamilyData
 
         return jsonOut;
     }
-    public static async Task<FamilyData?> LoadFromJson(IAppData appData, string json, JsonSerializerOptions options) {
+    public static FamilyData? LoadFromJson(IAppData appData, string json, JsonSerializerOptions options) {
         var loadedData = JsonSerializer.Deserialize<FamilyData>(json, options);
         if (loadedData != null) {
             loadedData.AppData = appData;

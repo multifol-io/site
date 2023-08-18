@@ -57,16 +57,16 @@
         display: inline-block;
     }
 </style>
-    @if (steps == null || appData == null || familyData == null)
+    @if (steps is null || appData is null)
     {
         <p>
             @if(appData == null || appData.CurrentProfileName==null){<em>No active <a href=/profiles>profile</a>.</em>} 
             else {<em>Loading...</em>}
         </p>
         <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
-            @if(appData.CurrentProfileName==null){<span>choose a</span>}else {<span>@appData.CurrentProfileName</span>}</a> profile
+            @if(appData!.CurrentProfileName==null){<span>choose a</span>}else {<span>@appData.CurrentProfileName</span>}</a> profile
         </div>
-    } else if (familyData != null && appData.FamilyData.PINProtected && appData.FamilyData.PIN == null) {
+    } else if (appData is not null && appData.FamilyData!.PINProtected && appData.FamilyData.PIN == null) {
         <div style=float:left>
             <h4 style="max-width:450px">
                 @pageHeading
@@ -77,7 +77,7 @@
         <p style=clear:left>Need PIN</p>
         <input style=width:50px;text-align:right type=text @bind-Value=PINEntry @bind-Value:event=oninput />
         <button @onclick=setPIN>Go</button>
-    } else {
+    } else if (appData is not null && appData.FamilyData is not null) {
         var prevStep = steps[steps.Length - 1];
         var nextStep = steps[0];
         string prevPage = folderName + prevStep?.step;
@@ -224,7 +224,7 @@
                                                                 <td colspan=4>
                                                                     @if (appData.FamilyData.PersonCount == 2) {
                                                                         <label style=padding-left:8px>Owner:</label>
-                                                                        <select style=margin-left:4px @ref=accountN @bind=account.Identifier>
+                                                                        <select style=margin-left:4px @bind=account.Identifier>
                                                                             @if(account.TaxType == "Taxable" || account.TaxType == "Other") {
                                                                                 <option>our</option>
                                                                             }
@@ -235,7 +235,7 @@
                                                                     }
 
                                                                     <label style=padding-left:8px>Type:</label>
-                                                                    <select style=margin-left:4px @ref=accountN @bind=account.AccountType>
+                                                                    <select style=margin-left:4px @bind=account.AccountType>
                                                                         <option>choice needed</option>
                                                                         <option>401(k)</option>
                                                                         <option>403(b)</option>
@@ -558,7 +558,7 @@
                                                 </table>
                                                 break;
                                             case "bogleheads":
-                                                @foreach (var account in familyData.Accounts.OrderBy(a=>a.PortfolioReviewOrder).ThenByDescending(a=>a.Value)) {
+                                                @foreach (var account in appData.FamilyData.Accounts.OrderBy(a=>a.PortfolioReviewOrder).ThenByDescending(a=>a.Value)) {
                                                     @((MarkupString)bold((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "")
                                                      + (account.TaxType == "Pre-Tax(work)" ? (account.CurrentEmployerRetirementFund ? "<span>current&nbsp;</span>" : "<span>previous&nbsp;</span>") : "") 
                                                      + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + " (" + FormatUtilities.formatPercent(account.Percentage) + ")" ))
@@ -850,25 +850,29 @@
 
     async void doneEditing()
     {
-        var accounts = appData.FamilyData.Accounts;
-        foreach (var account in accounts) {
-            account.Edit = false;
-        }
-        
-        accountIndexEditing = null;
+        if (appData.FamilyData is not null) {
+            var accounts = appData.FamilyData.Accounts;
+            foreach (var account in accounts) {
+                account.Edit = false;
+            }
+            
+            accountIndexEditing = null;
 
-        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
+            await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
+        }
     }
 
     void editAccount(MouseEventArgs e, int index)
     {
-        var accounts = appData.FamilyData.Accounts;
-        if (accountIndexEditing != null) {
-            accounts[accountIndexEditing.Value].Edit = false;            
-        }
+        if (appData.FamilyData is not null) {
+            var accounts = appData.FamilyData.Accounts;
+            if (accountIndexEditing != null) {
+                accounts[accountIndexEditing.Value].Edit = false;            
+            }
 
-        accountIndexEditing = index;
-        accounts[accountIndexEditing.Value].Edit = true;
+            accountIndexEditing = index;
+            accounts[accountIndexEditing.Value].Edit = true;
+        }
     }
 
     void editAccounts() {
@@ -900,12 +904,14 @@
     public int runningTotal = 0;
 
     public string checkTotal(int? itemTotal) {
-        runningTotal += itemTotal ?? 0;
-        if (!pastTotal) {
-            pastTotal = appData.FamilyData.PlannedSavings <= runningTotal;
+        if (appData.FamilyData is not null) {
+            runningTotal += itemTotal ?? 0;
+            if (!pastTotal) {
+                pastTotal = appData.FamilyData.PlannedSavings <= runningTotal;
 
-            if (pastTotal) {
-                return "<div>-------<br/><div>Planned savings " + (appData.FamilyData.PlannedSavings==runningTotal?"met":"exceeded") + " after " + FormatUtilities.formatMoney(itemTotal+(appData.FamilyData.PlannedSavings-runningTotal)) + " towards previous step</div>-------<br/></div>";
+                if (pastTotal) {
+                    return "<div>-------<br/><div>Planned savings " + (appData.FamilyData.PlannedSavings==runningTotal?"met":"exceeded") + " after " + FormatUtilities.formatMoney(itemTotal+(appData.FamilyData.PlannedSavings-runningTotal)) + " towards previous step</div>-------<br/></div>";
+                }
             }
         }
 
@@ -958,37 +964,6 @@
         else
         {
             return "";
-        }
-    }
-
-    public string estimatePortfolio(FamilyData familyData) 
-    {
-        if (appData.FamilyData.Value >= 10000000) {
-            return "8-figures";
-        } else if (appData.FamilyData.Value >= 6666666) {
-            return "high 7-figures";
-        } else if (appData.FamilyData.Value >= 3333333) {
-            return "mid 7-figures";
-        } else if (appData.FamilyData.Value >= 1000000) {
-            return "low 7-figures";
-        } else if (appData.FamilyData.Value >= 666666) {
-            return "high 6-figures";
-        } else if (appData.FamilyData.Value >= 333333) {
-            return "mid 6-figures";
-        } else if (appData.FamilyData.Value >= 100000) {
-            return "low 6-figures";
-        } else if (appData.FamilyData.Value >= 66666) {
-            return "high 5-figures";
-        } else if (appData.FamilyData.Value >= 33333) {
-            return "mid 5-figures";
-        } else if (appData.FamilyData.Value >= 10000) {
-            return "low 5-figures";
-        } else if (appData.FamilyData.Value >= 1000) {
-            return "4-figures";
-        } else if (appData.FamilyData.Value == 0) {
-            return "-";
-        } else {
-            return "less than $1,000";
         }
     }
 
@@ -1093,18 +1068,6 @@
         return returnVal;
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (focusTicker)
-            {
-                await tickerN.FocusAsync();
-                focusTicker = false;
-            } else if (focusAccount) {
-                await accountN.FocusAsync();
-                focusAccount = false;
-            }
-    }
-
     [Parameter]
     public string? View { get; set; }
 
@@ -1116,17 +1079,6 @@
     private const string pagePath = "/portfolio";
     private const string folderName = pagePath + "/";
     private const string pageHeading = "Portfolio Tracker";
-    private bool focusTicker = false;
-    private bool focusAccount = false;
-
-    private FamilyData familyData {
-        get {
-            return appData.FamilyData;
-        }
-        set {
-            appData.FamilyData = value;
-        }
-    }
     
     protected override async Task OnInitializedAsync()
     {
@@ -1134,9 +1086,6 @@
         Navigation.LocationChanged += LocationChanged;
         base.OnInitialized();
     }
-
-    private ElementReference tickerN;
-    private ElementReference accountN;
 
     private void ShowImport() {
         @* showImport = !showImport;
@@ -1207,26 +1156,27 @@
 
     private void finishImport()
     {
-        if (appData.ImportResult == null) { return; }
+        if (appData is not null && appData.FamilyData is not null && appData.ImportResult is not null) {
 
-        foreach (var updatedAccount in appData.ImportResult.UpdatedAccounts)
-        {
-            if (updatedAccount.Import && updatedAccount.ReplaceAccount != null)
+            foreach (var updatedAccount in appData.ImportResult.UpdatedAccounts)
             {
-                updatedAccount.ReplaceAccount.Investments.Clear();
-                updatedAccount.ReplaceAccount.Investments.AddRange(updatedAccount.Investments);
+                if (updatedAccount.Import && updatedAccount.ReplaceAccount != null)
+                {
+                    updatedAccount.ReplaceAccount.Investments.Clear();
+                    updatedAccount.ReplaceAccount.Investments.AddRange(updatedAccount.Investments);
+                }
             }
-        }
 
-        foreach (var newAccount in appData.ImportResult.NewAccounts)
-        {
-            if (newAccount.Import)
+            foreach (var newAccount in appData.ImportResult.NewAccounts)
             {
-                appData.FamilyData.Accounts.Add(newAccount);
+                if (newAccount.Import)
+                {
+                    appData.FamilyData.Accounts.Add(newAccount);
+                }
             }
-        }
 
-        appData.ImportResult = null;
+            appData.ImportResult = null;
+        }
     }
 
     private void cancelImport()
@@ -1236,35 +1186,43 @@
 
     private void addInvestment(MouseEventArgs e, int accountIndex)
     {
-        var newInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds };
-        appData.FamilyData.Accounts[accountIndex].Investments.Add(newInvestment);
-        focusTicker = true;
+        if (appData.FamilyData is not null) {
+            var newInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds };
+            appData.FamilyData.Accounts[accountIndex].Investments.Add(newInvestment);
+        }
     }
 
     private void addInvestment2(MouseEventArgs e, int accountIndex) {
-        var account = appData.FamilyData.Accounts[accountIndex];
-        account.Investments.Add(new Investment(appData.FamilyData.PIN) { funds = Funds });
+        if (appData.FamilyData is not null) {
+            var account = appData.FamilyData.Accounts[accountIndex];
+            account.Investments.Add(new Investment(appData.FamilyData.PIN) { funds = Funds });
+        }
     }
 
     void deleteInvestment2(MouseEventArgs e, int accountIndex, int investmentIndex)
     {
-        var account = appData.FamilyData.Accounts[accountIndex];
-        var investmentToDelete = account.Investments[investmentIndex];
-        account.Investments.Remove(investmentToDelete);
-        appData.FamilyData.UpdatePercentages();
+        if (appData.FamilyData is not null) {
+            var account = appData.FamilyData.Accounts[accountIndex];
+            var investmentToDelete = account.Investments[investmentIndex];
+            account.Investments.Remove(investmentToDelete);
+            appData.FamilyData.UpdatePercentages();
+        }
     }
 
     void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
     {
-        appData.FamilyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
-        Navigation.NavigateTo("/portfolio/reload");
-        appData.FamilyData.UpdatePercentages();
+        if (appData.FamilyData is not null) {
+            appData.FamilyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
+            Navigation.NavigateTo("/portfolio/reload");
+            appData.FamilyData.UpdatePercentages();
+        }
     }
     void addAvailableFund(MouseEventArgs e, Account account)
     {
-        var newFund = new Investment(appData.FamilyData.PIN) { funds = Funds };
-        account.AvailableFunds.Add(newFund);
-        focusTicker = true;
+        if (appData.FamilyData is not null) {
+            var newFund = new Investment(appData.FamilyData.PIN) { funds = Funds };
+            account.AvailableFunds.Add(newFund);
+        }
     }
 
     void deleteAvailableFund(MouseEventArgs e, Account account, int investmentIndex)
@@ -1274,37 +1232,44 @@
 
     void addAccountInline()
     {
-        var newAccount = new Account(appData.FamilyData.PIN);
-        var newInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds };
-        newAccount.Investments.Add(newInvestment);
-        newAccount.Edit = true;
-        familyData?.Accounts.Add(newAccount);
-        
-        Navigation.NavigateTo("/portfolio/accounts");
+        if (appData.FamilyData is not null) {
+            var newAccount = new Account(appData.FamilyData.PIN);
+            var newInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds };
+            newAccount.Investments.Add(newInvestment);
+            newAccount.Edit = true;
+            appData.FamilyData?.Accounts.Add(newAccount);
+            
+            Navigation.NavigateTo("/portfolio/accounts");
+        }
     }
 
     private async void deleteAccount2(MouseEventArgs e, int accountIndex)
     {
-        var accountToDelete = appData.FamilyData.Accounts[accountIndex];
-        appData.FamilyData.Accounts.Remove(accountToDelete);
-        accountIndexEditing = null;
-        appData.FamilyData.UpdatePercentages();
-        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
+        if (appData.FamilyData is not null) {
+            var accountToDelete = appData.FamilyData.Accounts[accountIndex];
+            appData.FamilyData.Accounts.Remove(accountToDelete);
+            accountIndexEditing = null;
+            appData.FamilyData.UpdatePercentages();
+            await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
+        }
     }
 
     void addAccount()
     {
-        var newAccount = new Account(appData.FamilyData.PIN);
-        var newInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds };
-        newAccount.Investments.Add(newInvestment);
-        familyData?.Accounts.Add(newAccount);
-        focusAccount = true;
+        if (appData.FamilyData is not null) {
+            var newAccount = new Account(appData.FamilyData.PIN);
+            var newInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds };
+            newAccount.Investments.Add(newInvestment);
+            appData.FamilyData?.Accounts.Add(newAccount);
+        }
     }
     void deleteAccount(MouseEventArgs e, int accountIndex)
     {
-        appData.FamilyData.Accounts.RemoveAt(accountIndex);
-        Navigation.NavigateTo("/portfolio/reload");
-        appData.FamilyData.UpdatePercentages();
+        if (appData.FamilyData is not null) {
+            appData.FamilyData.Accounts.RemoveAt(accountIndex);
+            Navigation.NavigateTo("/portfolio/reload");
+            appData.FamilyData.UpdatePercentages();
+        }
     }
 
     private async Task LoadPortfolioForTopic(string topicStr) {
@@ -1340,55 +1305,56 @@
         var marketIsBeforeOpen = DateTime.Now < nextMarketOpen;
         bool marketIsOpen = DateTime.Now >= nextMarketOpen && DateTime.Now <= nextMarketClose;
         var marketIsAfterClose = DateTime.Now > nextMarketClose;
-        foreach (var account in appData.FamilyData.Accounts)
-        {
-            foreach (var investment in account.Investments)
+        if (appData.FamilyData is not null) {
+            foreach (var account in appData.FamilyData.Accounts) {
+                foreach (var investment in account.Investments) {
+                    bool fetchQuote = false;
+                    if (investment.IsStock || investment.IsETF) {
+                        fetchQuote = investment.LastUpdated == null || (marketIsBeforeOpen && investment.LastUpdated < previousMarketClose) || marketIsOpen || (marketIsAfterClose && investment.LastUpdated < nextMarketClose);
+                    } else if (investment.IsFund) {
+                        fetchQuote = investment.LastUpdated == null || investment.LastUpdated?.Date != previousMarketClose.Date;
+                    }
+
+                    if (fetchQuote && investment.Ticker != null) {
+                        if (!quotes.ContainsKey(investment.Ticker)) {
+                            quotes.Add(investment.Ticker, new List<Investment> () { investment });
+                        } else {
+                            var investments = quotes[investment.Ticker];
+                            investments.Add(investment);
+                        }
+                    }
+                }
+            }
+
+            List<string> rsuTickers = new();
+            for(int p=0;p<appData.FamilyData.PersonCount;p++) {
+                var person = appData.FamilyData.People[p];
+                foreach (var rsuGrant in person.RSUGrants) {
+                    if (!string.IsNullOrEmpty(rsuGrant.Ticker)) {
+                        var ticker = rsuGrant.Ticker.ToUpper();
+                        var grantInvestment = new Investment() { Ticker = ticker, GrantToUpdateQuote = rsuGrant };
+                        if (!quotes.ContainsKey(ticker)) {
+                            quotes.Add(ticker, new List<Investment> () { grantInvestment });
+                        } else {
+                            var investments = quotes[ticker];
+                            investments.Add(grantInvestment);
+                        }
+                    }
+                }
+            }
+
+            foreach (var quote in quotes)
             {
-                bool fetchQuote = false;
-                if (investment.IsStock || investment.IsETF) {
-                    fetchQuote = investment.LastUpdated == null || (marketIsBeforeOpen && investment.LastUpdated < previousMarketClose) || marketIsOpen || (marketIsAfterClose && investment.LastUpdated < nextMarketClose);
-                } else if (investment.IsFund) {
-                    fetchQuote = investment.LastUpdated == null || investment.LastUpdated?.Date != previousMarketClose.Date;
-                }
-
-                if (fetchQuote && investment.Ticker != null) {
-                    if (!quotes.ContainsKey(investment.Ticker)) {
-                        quotes.Add(investment.Ticker, new List<Investment> () { investment });
-                    } else {
-                        var investments = quotes[investment.Ticker];
-                        investments.Add(investment);
-                    }
+                try {
+                    await UpdateInvestmentsPrice(quote.Key, quote.Value);
+                } catch (Exception ex) {
+                    Console.WriteLine(ex.GetType().Name + ": " + ex.Message + " " + ex.StackTrace);
                 }
             }
+
+            await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         }
 
-        List<string> rsuTickers = new();
-        for(int p=0;p<appData.FamilyData.PersonCount;p++) {
-            var person = appData.FamilyData.People[p];
-            foreach (var rsuGrant in person.RSUGrants) {
-                if (!string.IsNullOrEmpty(rsuGrant.Ticker)) {
-                    var ticker = rsuGrant.Ticker.ToUpper();
-                    var grantInvestment = new Investment() { Ticker = ticker, GrantToUpdateQuote = rsuGrant };
-                    if (!quotes.ContainsKey(ticker)) {
-                        quotes.Add(ticker, new List<Investment> () { grantInvestment });
-                    } else {
-                        var investments = quotes[ticker];
-                        investments.Add(grantInvestment);
-                    }
-                }
-            }
-        }
-
-        foreach (var quote in quotes)
-        {
-            try {
-                await UpdateInvestmentsPrice(quote.Key, quote.Value);
-            } catch (Exception ex) {
-                Console.WriteLine(ex.GetType().Name + ": " + ex.Message + " " + ex.StackTrace);
-            }
-        }
-
-        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         refreshButtonText = "🔃 Quotes";
     }
 
@@ -1439,8 +1405,10 @@
 
     private int? PINEntry { get; set; }
     private void setPIN() {
-        if (PINEntry != null) {
-            appData.FamilyData.PIN = PINEntry;
+        if (appData.FamilyData is not null) {
+            if (PINEntry != null) {
+                appData.FamilyData.PIN = PINEntry;
+            }
         }
     }
 
@@ -1472,19 +1440,25 @@
 
     private (double? change, double? percentChange) portfolioChange() 
     {
-        double? change = 0.0;
-        double? total = 0.0;
-        foreach (var investment in appData.FamilyData.GroupedInvestments)
-        {
-            total += investment.Value ?? 0.0;
-            if (investment.PercentChange != null)
+        if (appData.FamilyData is not null) {
+            double? change = 0.0;
+            double? total = 0.0;
+            foreach (var investment in appData.FamilyData.GroupedInvestments)
             {
-                change += (investment.Price - investment.PreviousClose) * investment.SharesPIN;
+                total += investment.Value ?? 0.0;
+                if (investment.PercentChange != null)
+                {
+                    change += (investment.Price - investment.PreviousClose) * investment.SharesPIN;
+                }
             }
-        }
 
-        var startOfDayTotal = total - change;
-        return change == 0.0 ? (null, null) : (change, change/startOfDayTotal * 100.0);
+            var startOfDayTotal = total - change;
+            return change == 0.0 ? (null, null) : (change, change/startOfDayTotal * 100.0);
+        }
+        else 
+        {
+            return (null, null);
+        }
     }
 
     private void navWithBackStack()
@@ -1493,7 +1467,7 @@
         Navigation.NavigateTo("/profiles");
     }
 
-    async void LocationChanged(object sender, LocationChangedEventArgs e)
+    async void LocationChanged(object? sender, LocationChangedEventArgs e)
     {
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
     }

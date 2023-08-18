@@ -43,7 +43,7 @@ Retirement - bogle.tools
         display: inline-block;
     }
 </style>
-    @if (steps == null || familyData == null)
+    @if (steps == null || appData.FamilyData == null)
     {
         <p><em>Loading...</em></p>
     }
@@ -54,7 +54,7 @@ Retirement - bogle.tools
             var nextStep = steps[0];
             string prevPage = folderName + prevStep?.step;
             string nextPage = folderName + nextStep?.step;
-            familyData.UpdatePercentages();
+            appData.FamilyData.UpdatePercentages();
             
             <div style=float:left>
                 <h4 style="max-width:450px">
@@ -81,19 +81,19 @@ Retirement - bogle.tools
                                 @switch (step.step) {
                                     case "time-frame":
                                         <br/>
-                                        @if(familyData.PersonCount > 0 && familyData.People[0].Age != null) {
+                                        @if(appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].Age != null) {
                                             <span>
-                                                &nbsp;@getPronoun(familyData.People[0]) @familyData.People[0].Age 
-                                                @if(familyData.People[0].Age >= familyData.People[0].Retirement.RetirementAge) { <span>, retired</span> }
-                                                else { <span>, retiring at @familyData.People[0].Retirement.RetirementAge</span> }
+                                                &nbsp;@getPronoun(appData.FamilyData.People[0]) @appData.FamilyData.People[0].Age 
+                                                @if(appData.FamilyData.People[0].Age >= appData.FamilyData.People[0].Retirement.RetirementAge) { <span>, retired</span> }
+                                                else { <span>, retiring at @appData.FamilyData.People[0].Retirement.RetirementAge</span> }
                                             </span>
                                             <br/>
                                         }
-                                        @if(familyData.PersonCount > 1 && familyData.People[1].Age != null) {
+                                        @if(appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].Age != null) {
                                             <span>
-                                                &nbsp;@getPronoun(familyData.People[1]) @familyData.People[1].Age 
-                                                @if(familyData.People[1].Age >= familyData.People[1].Retirement.RetirementAge) { <span>, retired</span> }
-                                                else { <span>, retiring at @familyData.People[1].Retirement.RetirementAge</span> }
+                                                &nbsp;@getPronoun(appData.FamilyData.People[1]) @appData.FamilyData.People[1].Age 
+                                                @if(appData.FamilyData.People[1].Age >= appData.FamilyData.People[1].Retirement.RetirementAge) { <span>, retired</span> }
+                                                else { <span>, retiring at @appData.FamilyData.People[1].Retirement.RetirementAge</span> }
                                             </span>
                                             <br/>
                                         }
@@ -101,27 +101,27 @@ Retirement - bogle.tools
                                         break;
                                     case "portfolio":
                                         <br/>
-                                        <span>@FormatUtilities.formatMoneyThousands(familyData.Value + (familyData.EmergencyFund.CurrentBalance ?? 0.0)) (includes EF)</span>
+                                        <span>@FormatUtilities.formatMoneyThousands(appData.FamilyData.Value + (appData.FamilyData.EmergencyFund.CurrentBalance ?? 0.0)) (includes EF)</span>
                                         <br/><br/>
                                         break;
                                     case "social-security": 
                                         <br/>
-                                        @if(familyData.PersonCount > 0 && familyData.People[0].Age != null) {
-                                            <span>&nbsp;@getPronoun(familyData.People[0]) @FormatUtilities.formatMoneyThousands(familyData.People[0].Retirement.SSAnnual) 
-                                                @if(familyData.People[0].Age < familyData.People[0].Retirement.RetirementAge) { <span>&nbsp;at @familyData.People[0].Retirement.SSAge </span> }
+                                        @if(appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].Age != null) {
+                                            <span>&nbsp;@getPronoun(appData.FamilyData.People[0]) @FormatUtilities.formatMoneyThousands(appData.FamilyData.People[0].Retirement.SSAnnual) 
+                                                @if(appData.FamilyData.People[0].Age < appData.FamilyData.People[0].Retirement.RetirementAge) { <span>&nbsp;at @appData.FamilyData.People[0].Retirement.SSAge </span> }
                                             (with COLA)</span><br/>
                                         }
-                                        @if(familyData.PersonCount > 1 && familyData.People[1].Age != null) {
-                                            <span>&nbsp;@getPronoun(familyData.People[1]) @FormatUtilities.formatMoneyThousands(familyData.People[1].Retirement.SSAnnual) 
-                                                @if(familyData.People[1].Age < familyData.People[1].Retirement.RetirementAge) { <span>&nbsp;at @familyData.People[1].Retirement.SSAge </span> }
+                                        @if(appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].Age != null) {
+                                            <span>&nbsp;@getPronoun(appData.FamilyData.People[1]) @FormatUtilities.formatMoneyThousands(appData.FamilyData.People[1].Retirement.SSAnnual) 
+                                                @if(appData.FamilyData.People[1].Age < appData.FamilyData.People[1].Retirement.RetirementAge) { <span>&nbsp;at @appData.FamilyData.People[1].Retirement.SSAge </span> }
                                             (with COLA)</span><br/>
                                         }
                                         <br/>
                                         break;
                                     case "pensions-annuities":
                                         <br/> 
-                                        @for (int i = 0; i < familyData.PersonCount; i++) {
-                                            foreach (var pension in familyData.People[i].Retirement.Pensions) {
+                                        @for (int i = 0; i < appData.FamilyData.PersonCount; i++) {
+                                            foreach (var pension in appData.FamilyData.People[i].Retirement.Pensions) {
                                                 <span>&nbsp;@FormatUtilities.formatMoneyThousands(pension.Income)
                                                     @if(!pension.OneTime) {
                                                         <span>&nbsp;start at @pension.BeginningAge</span>
@@ -136,14 +136,14 @@ Retirement - bogle.tools
                                         break;                                        
                                     case "spending": 
                                         <br/>
-                                        @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
-                                            <span style=font-family:monospace>&nbsp;@FormatUtilities.formatMoneyThousands(familyData.RetirementData.AnnualExpenses)</span><br/>
+                                        @if (appData.FamilyData.EmergencyFund.MonthlyExpenses > 0) {
+                                            <span style=font-family:monospace>&nbsp;@FormatUtilities.formatMoneyThousands(appData.FamilyData.RetirementData.AnnualExpenses)</span><br/>
                                         }
                                         <br/>
                                         break;                                        
                                     case "income-expenses":
                                         <br/> 
-                                        foreach (var pension in familyData.RetirementData.IncomeExpenses) {
+                                        foreach (var pension in appData.FamilyData.RetirementData.IncomeExpenses) {
                                             <span>&nbsp;@FormatUtilities.formatMoneyThousands(pension.Income)
                                                 @if(!pension.OneTime) {
                                                     <span>&nbsp;start at @pension.BeginningYear</span>
@@ -156,8 +156,8 @@ Retirement - bogle.tools
                                         break;
                                     case "spending-forecast":
                                         <br/>
-                                        @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
-                                            <span>@((MarkupString)familyData.RetirementIncomeNeeded)</span><br/>
+                                        @if (appData.FamilyData.EmergencyFund.MonthlyExpenses > 0) {
+                                            <span>@((MarkupString)appData.FamilyData.RetirementIncomeNeeded)</span><br/>
                                         }
                                         <br/>
                                         break;
@@ -208,7 +208,7 @@ Retirement - bogle.tools
                             case "time-frame":
                                 <p><b>Prerequisities:</b></p>
                                 <label>Tax Filing Status:</label>
-                                <select @bind=familyData.TaxFilingStatus>
+                                <select @bind=appData.FamilyData.TaxFilingStatus>
                                     <option value="ChoiceNeeded">ChoiceNeeded</option>
                                     <option>Single</option>
                                     <option value=MarriedFilingJointly>Married filing jointly</option>
@@ -219,8 +219,8 @@ Retirement - bogle.tools
                                 
                                 <p><b>Worksheet:</b> </p>
 
-                                @for (int i = 0; i < familyData.PersonCount; i++) {
-                                    var person = familyData.People[i];
+                                @for (int i = 0; i < appData.FamilyData.PersonCount; i++) {
+                                    var person = appData.FamilyData.People[i];
                                     int personIndex = i + 1;
                                     <p><b>Person @personIndex:</b> </p>
                                     <EditForm Model="person" style=margin-left:25px>
@@ -230,15 +230,15 @@ Retirement - bogle.tools
                                 }
                                 break;
                             case "portfolio":
-                                <span>Retirement Assets: @FormatUtilities.formatMoneyThousands(familyData.Value) (edit at <a href="/portfolio/retirement-assets">/portfolio/retirement-assets</a>)
+                                <span>Retirement Assets: @FormatUtilities.formatMoneyThousands(appData.FamilyData.Value) (edit at <a href="/portfolio/retirement-assets">/portfolio/retirement-assets</a>)
                                 </span><br/>
-                                <label>Current Emergency Fund:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/>
+                                <label>Current Emergency Fund:</label> <span>$</span><input class=dollar type=text @bind-Value="appData.FamilyData.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/>
                                 <br/><br/>
                                 break;
                             case "social-security":
                                 <p><b>Prerequisities:</b></p>
                                 <label>Tax Filing Status:</label>
-                                <select @bind=familyData.TaxFilingStatus>
+                                <select @bind=appData.FamilyData.TaxFilingStatus>
                                     <option value="ChoiceNeeded">ChoiceNeeded</option>
                                     <option>Single</option>
                                     <option value=MarriedFilingJointly>Married filing jointly</option>
@@ -249,8 +249,8 @@ Retirement - bogle.tools
                                 
                                 <p><b>Worksheet:</b> </p>
 
-                                @for (int i = 0; i < familyData.PersonCount; i++) {
-                                    var person = familyData.People[i];
+                                @for (int i = 0; i < appData.FamilyData.PersonCount; i++) {
+                                    var person = appData.FamilyData.People[i];
                                     int personIndex = i + 1;
                                     <p><b>Person @personIndex:</b> </p>
                                     <EditForm Model="person" style=margin-left:25px>
@@ -261,10 +261,10 @@ Retirement - bogle.tools
                                 }
                                 break;
                             case "pensions-annuities":
-                                for (int i = 0; i < familyData.PersonCount; i++) {
+                                for (int i = 0; i < appData.FamilyData.PersonCount; i++) {
                                     int personBuffer = i;
-                                    for (int p = 0; p < familyData.People[i].Retirement.Pensions.Count; p++ ) {
-                                        var pension = familyData.People[i].Retirement.Pensions[p];
+                                    for (int p = 0; p < appData.FamilyData.People[i].Retirement.Pensions.Count; p++ ) {
+                                        var pension = appData.FamilyData.People[i].Retirement.Pensions[p];
                                         int pensionBuffer = p;
                                         var oneTimeId = "onetime-" + i + "-" + p;
                                         var hasColaId = "hasCola-" + i + "-" + p;
@@ -282,7 +282,7 @@ Retirement - bogle.tools
                                     <br/>
                                     <button @onclick='@(e=>addPensionAnnuity(personBuffer))'>
                                         ➕ 
-                                        @if (familyData.PersonCount > 1) { <span>&nbsp;(@familyData.People[i].Identifier)</span> }
+                                        @if (appData.FamilyData.PersonCount > 1) { <span>&nbsp;(@appData.FamilyData.People[i].Identifier)</span> }
                                     </button>
                                     <br/>
                                 }
@@ -290,7 +290,7 @@ Retirement - bogle.tools
                                 break;
                             case "income-expenses":
                                     accountIndex = 0;
-                                    foreach (var pension in familyData.RetirementData.IncomeExpenses) {
+                                    foreach (var pension in appData.FamilyData.RetirementData.IncomeExpenses) {
                                         int accBuffer = accountIndex;
                                         accountIndex++;
                                         var accountId = "account"+accBuffer;
@@ -314,14 +314,14 @@ Retirement - bogle.tools
                                     break;
                             case "spending":
                                 <p><b>Worksheet:</b> </p>
-                                <EditForm Model="familyData" style=margin-left:25px>
-                                    <label>Annual Spending:</label> <input type=text @bind-Value="familyData.RetirementData.AnnualExpenses" @bind-Value:event="oninput"/><br/><br/>
+                                <EditForm Model="appData.FamilyData" style=margin-left:25px>
+                                    <label>Annual Spending:</label> <input type=text @bind-Value="appData.FamilyData.RetirementData.AnnualExpenses" @bind-Value:event="oninput"/><br/><br/>
                                 </EditForm><br/>
                                 break;
                             case "spending-forecast":
                                 <br/>
-                                @if (familyData.EmergencyFund.MonthlyExpenses > 0) {
-                                    <span>@((MarkupString)familyData.RetirementIncomeNeeded)</span><br/>
+                                @if (appData.FamilyData.EmergencyFund.MonthlyExpenses > 0) {
+                                    <span>@((MarkupString)appData.FamilyData.RetirementIncomeNeeded)</span><br/>
                                 }
                                 <br/>
                                 break;
@@ -347,13 +347,15 @@ Retirement - bogle.tools
     public bool pastTotal = false;
     public int runningTotal = 0;
 
-    public string checkTotal(int? itemTotal) {
-        runningTotal += itemTotal ?? 0;
-        if (!pastTotal) {
-            pastTotal = familyData.PlannedSavings <= runningTotal;
+    public string? checkTotal(int? itemTotal) {
+        if (appData?.FamilyData is not null) {
+            runningTotal += itemTotal ?? 0;
+            if (!pastTotal) {
+                pastTotal = appData.FamilyData.PlannedSavings <= runningTotal;
 
-            if (pastTotal) {
-                return "<div>-------<br/><div>Planned savings " + (familyData.PlannedSavings==runningTotal?"met":"exceeded") + " after " + FormatUtilities.formatMoney(itemTotal+(familyData.PlannedSavings-runningTotal)) + " towards previous step</div>-------<br/></div>";
+                if (pastTotal) {
+                    return "<div>-------<br/><div>Planned savings " + (appData.FamilyData.PlannedSavings==runningTotal?"met":"exceeded") + " after " + FormatUtilities.formatMoney(itemTotal+(appData.FamilyData.PlannedSavings-runningTotal)) + " towards previous step</div>-------<br/></div>";
+                }
             }
         }
 
@@ -405,26 +407,32 @@ Retirement - bogle.tools
     
     void addPensionAnnuity(int personIndex)
     {
-        var newPension = new Pension() { };
-        familyData?.People[personIndex].Retirement.Pensions.Add(newPension);
-        focusAccount = true;
+        if (appData?.FamilyData is not null) {
+            var newPension = new Pension() { };
+            appData.FamilyData?.People[personIndex].Retirement.Pensions.Add(newPension);
+        }
     }
 
     void addIncomeExpense()
     {
-        var newPension = new Pension() { };
-        familyData?.RetirementData.IncomeExpenses.Add(newPension);
-        focusAccount = true;
+        if (appData?.FamilyData is not null) {
+            var newPension = new Pension() { };
+            appData.FamilyData?.RetirementData.IncomeExpenses.Add(newPension);
+        }
     }
 
     void deletePension(MouseEventArgs e, int personIndex, int accountIndex)
     {
-        familyData.People[personIndex].Retirement.Pensions.RemoveAt(accountIndex);
+        if (appData?.FamilyData is not null) {
+            appData.FamilyData.People[personIndex].Retirement.Pensions.RemoveAt(accountIndex);
+        }
     }
 
     void deleteIncomeExpense(MouseEventArgs e, int accountIndex)
     {
-        familyData.RetirementData.IncomeExpenses.RemoveAt(accountIndex);
+        if (appData?.FamilyData is not null) {
+            appData.FamilyData.RetirementData.IncomeExpenses.RemoveAt(accountIndex);
+        }
     }
 
     public string bold(string text) {
@@ -542,18 +550,6 @@ Retirement - bogle.tools
     private const string pagePath = "/retirement";
     private const string folderName = pagePath + "/";
     private const string pageHeading = "Retirement Plan";
-    private bool focusTicker = false;
-    private bool focusAccount = false;
-    private bool showPortfolioAnalysis = true;
-
-    private FamilyData familyData {
-        get {
-            return appData.FamilyData;
-        }
-        set {
-            appData.FamilyData = value;
-        }
-    }
     
     protected override async Task OnInitializedAsync()
     {
@@ -568,12 +564,10 @@ Retirement - bogle.tools
     }
 
     private bool showImport = false;
-    private bool showError  = false;
 
     private void ShowImport() {
         showImport = !showImport;
         if (!showImport) {
-            showError = false;
         }
     }
 
@@ -581,41 +575,45 @@ Retirement - bogle.tools
 
     private async Task OnDataFilesImport(InputFileChangeEventArgs e)
     {
-        var files = e.GetMultipleFiles();
-        ImportResult = await Importer.ImportDataFiles(files, Funds, familyData.Accounts, familyData.PIN);
-        foreach (var account in ImportResult.ImportedAccounts) 
-        {
-            account.Import = true;
+        if (appData?.FamilyData is not null) {
+            var files = e.GetMultipleFiles();
+            ImportResult = await Importer.ImportDataFiles(files, Funds, appData.FamilyData.Accounts, appData.FamilyData.PIN);
+            foreach (var account in ImportResult.ImportedAccounts) 
+            {
+                account.Import = true;
+            }
+
+            Console.WriteLine($"{ImportResult.DataFilesImported} files imported with {ImportResult.ImportedAccounts.Count} accounts");
+            showImport = false;
+
+            Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
         }
-
-        Console.WriteLine($"{ImportResult.DataFilesImported} files imported with {ImportResult.ImportedAccounts.Count} accounts");
-        showImport = false;
-
-        Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
     }
 
     private void finishImport()
     {
-        if (ImportResult == null) { return; }
+        if (appData?.FamilyData is not null) {
+            if (ImportResult == null) { return; }
 
-        foreach (var updatedAccount in ImportResult.UpdatedAccounts)
-        {
-            if (updatedAccount.Import && updatedAccount.ReplaceAccount != null)
+            foreach (var updatedAccount in ImportResult.UpdatedAccounts)
             {
-                updatedAccount.ReplaceAccount.Investments.Clear();
-                updatedAccount.ReplaceAccount.Investments.AddRange(updatedAccount.Investments);
+                if (updatedAccount.Import && updatedAccount.ReplaceAccount != null)
+                {
+                    updatedAccount.ReplaceAccount.Investments.Clear();
+                    updatedAccount.ReplaceAccount.Investments.AddRange(updatedAccount.Investments);
+                }
             }
-        }
 
-        foreach (var newAccount in ImportResult.NewAccounts)
-        {
-            if (newAccount.Import)
+            foreach (var newAccount in ImportResult.NewAccounts)
             {
-                familyData.Accounts.Add(newAccount);
+                if (newAccount.Import)
+                {
+                    appData.FamilyData.Accounts.Add(newAccount);
+                }
             }
-        }
 
-        ImportResult = null;
+            ImportResult = null;
+        }
     }
 
     private void cancelImport()
@@ -625,50 +623,55 @@ Retirement - bogle.tools
 
     private void addInvestment(MouseEventArgs e, int accountIndex)
     {
-        var newInvestment = new Investment() { funds = Funds };
-        familyData.Accounts[accountIndex].Investments.Add(newInvestment);
-        focusTicker = true;
+        if (appData?.FamilyData is not null) {
+            var newInvestment = new Investment() { funds = Funds };
+            appData.FamilyData.Accounts[accountIndex].Investments.Add(newInvestment);
+        }
     }
 
     void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
     {
-        familyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
-        Navigation.NavigateTo("/portfolio/reload");
-        familyData.UpdatePercentages();
+        if (appData?.FamilyData is not null) {
+            appData.FamilyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
+            Navigation.NavigateTo("/portfolio/reload");
+            appData.FamilyData.UpdatePercentages();
+        }
     }
     void addAvailableFund(MouseEventArgs e, Account account)
     {
         var newFund = new Investment() { funds = Funds };
         account.AvailableFunds.Add(newFund);
-        focusTicker = true;
     }
-    void deleteAvailableFund(MouseEventArgs e, Account account, int investmentIndex)
-    {
+    void deleteAvailableFund(MouseEventArgs e, Account account, int investmentIndex) {
         account.AvailableFunds.RemoveAt(investmentIndex);
     }
-    void addAccount()
-    {
+
+    void addAccount() {
         var newAccount = new Account();
         var newInvestment = new Investment() { funds = Funds };
         newAccount.Investments.Add(newInvestment);
-        familyData?.Accounts.Add(newAccount);
-        focusAccount = true;
-    }
-    void deleteAccount(MouseEventArgs e, int accountIndex)
-    {
-        familyData.Accounts.RemoveAt(accountIndex);
-        Navigation.NavigateTo("/portfolio/reload");
-        familyData.UpdatePercentages();
+        appData.FamilyData?.Accounts.Add(newAccount);
     }
 
-    void editAccount(MouseEventArgs e, int index)
-    {
-        familyData.Accounts[index].Edit = true;
+    void deleteAccount(MouseEventArgs e, int accountIndex) {
+        if (appData?.FamilyData is not null) {
+            appData.FamilyData.Accounts.RemoveAt(accountIndex);
+            Navigation.NavigateTo("/portfolio/reload");
+            appData.FamilyData.UpdatePercentages();
+        }
+    }
+
+    void editAccount(MouseEventArgs e, int index) {
+        if (appData?.FamilyData is not null) {
+            appData.FamilyData.Accounts[index].Edit = true;
+        }
     }
 
     private void OnClearPortfolio() {
-        familyData = new FamilyData(appData);
-        Navigation.NavigateTo("/portfolio");
+        if (appData is not null) {
+            appData.FamilyData = new FamilyData(appData);
+            Navigation.NavigateTo("/portfolio");
+        }
     }
 
     private async Task LoadPortfolioForTopic(string topicStr) {
@@ -708,13 +711,13 @@ Retirement - bogle.tools
     }
 
     private async Task loadPortfolioFromStream(Stream stream, JsonSerializerOptions options) {
-        if (familyData != null) {
-            var irsData = familyData.AppData.IRSData;
-            familyData = await JsonSerializer.DeserializeAsync<FamilyData>(stream, options);
-            if (familyData != null) {
-                familyData.AppData.IRSData = irsData;
-                familyData.Year = 2023;
-                familyData.SetBackPointers();
+        if (appData.FamilyData != null) {
+            var irsData = appData.FamilyData.AppData.IRSData;
+            appData.FamilyData = await JsonSerializer.DeserializeAsync<FamilyData>(stream, options);
+            if (appData.FamilyData != null) {
+                appData.FamilyData.AppData.IRSData = irsData;
+                appData.FamilyData.Year = 2023;
+                appData.FamilyData.SetBackPointers();
             }
             else 
             {
@@ -724,17 +727,19 @@ Retirement - bogle.tools
     }
 
     private async Task DownloadPortfolio() {
-        var options = new JsonSerializerOptions() 
-        {
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
-            IgnoreReadOnlyProperties = true,
-            WriteIndented = true,
-            Converters =
-                {
-                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                }
-        };
-        await DownloadFileFromStream(familyData, options, "portfolio.json");
+        if (appData?.FamilyData is not null) {
+            var options = new JsonSerializerOptions() 
+            {
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+                IgnoreReadOnlyProperties = true,
+                WriteIndented = true,
+                Converters =
+                    {
+                        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                    }
+            };
+            await DownloadFileFromStream(appData.FamilyData, options, "portfolio.json");
+        }
     }
     private async Task DownloadFileFromStream(object data, JsonSerializerOptions options, string fileName)
     {
@@ -762,7 +767,7 @@ Retirement - bogle.tools
         Navigation.NavigateTo("/profiles");
     }
     
-    async void LocationChanged(object sender, LocationChangedEventArgs e)
+    async void LocationChanged(object? sender, LocationChangedEventArgs e)
     {
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
     }

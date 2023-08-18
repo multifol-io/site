@@ -56,11 +56,13 @@ search/@engine
 </p>
 
 @if (engine == "other") {
-    <EditForm Model='SearchModel' style="margin:25px">
-        <label>Provide Details about Search Engine to use:</label><br/>
-        <label>Other Search Domain Name:</label> <input type=text placeholder="search engine name" @bind-Value='@SearchModel.Domain' @bind-Value:event="oninput" /><br/>
-        <label>Url Pattern after domain:</label> <input style="width:500px" type=text @bind-Value='@SearchModel.UrlPattern' @bind-Value:event="oninput" /><br/>
-    </EditForm><br/>
+    if (SearchModel is not null) {
+        <EditForm Model='SearchModel' style="margin:25px">
+            <label>Provide Details about Search Engine to use:</label><br/>
+            <label>Other Search Domain Name:</label> <input type=text placeholder="search engine name" @bind-Value='@SearchModel.Domain' @bind-Value:event="oninput" /><br/>
+            <label>Url Pattern after domain:</label> <input style="width:500px" type=text @bind-Value='@SearchModel.UrlPattern' @bind-Value:event="oninput" /><br/>
+        </EditForm><br/>
+    }
 }
 
 <br/>

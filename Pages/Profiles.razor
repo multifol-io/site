@@ -119,14 +119,13 @@
 <br/>
 @code {
     private string? newProfileNamePlaceholder = "new profile name";
-    private ElementReference renameBox;
     private bool importing = false;
     
-    private async Task cancelRename()
+    private void cancelRename()
     {
         renameProfileName = null;
     }
-    private async Task cancelImport()
+    private void cancelImport()
     {
         importing = false;
     }
@@ -160,23 +159,28 @@
     }
 
     private async Task pinProtect(EventArgs e) {
-        appData.FamilyData.PINProtected = true;
-        appData.FamilyData.PIN = 100;
-        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData); 
+        if (appData?.FamilyData is not null) {
+            appData.FamilyData.PINProtected = true;
+            appData.FamilyData.PIN = 100;
+            if (appData.CurrentProfileName is not null) {
+                await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData); 
+            }
+        }
     }
 
-    private async Task makeProfileActive(EventArgs e, string profileName)
-    {
-        appData.CurrentProfileName = profileName;
-        await LocalStorageAccessor.SetValueAsync("CurrentProfileName", profileName);
-        await ProfileUtilities.Load(appData);
-        if (appData.LastPageUri != null)
-        {
-            Navigation.NavigateTo(appData.LastPageUri);
-        }
-        else
-        {
-            Navigation.NavigateTo("/portfolio");
+    private async Task makeProfileActive(EventArgs e, string profileName) {
+        if (appData is not null) {
+            appData.CurrentProfileName = profileName;
+            await LocalStorageAccessor.SetValueAsync("CurrentProfileName", profileName);
+            await ProfileUtilities.Load(appData);
+            if (appData.LastPageUri != null)
+            {
+                Navigation.NavigateTo(appData.LastPageUri);
+            }
+            else
+            {
+                Navigation.NavigateTo("/portfolio");
+            }
         }
     }
 
@@ -249,8 +253,8 @@
         }
     }
 
-    private List<string> profileNames;
-    private string newProfileName { get; set; }
+    private List<string> profileNames = new();
+    private string? newProfileName { get; set; }
     private string? renameProfileName { get; set; }
     private string? renameButtonText { get; set; }
     private string? newName {get; set;}

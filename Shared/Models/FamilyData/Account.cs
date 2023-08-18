@@ -33,8 +33,8 @@ public class Account
     [JsonIgnore]
     public int Owner { get; set; }
     public string? Identifier { get; set; }
-    private string _AccountType;
-    public string AccountType {
+    private string? _AccountType;
+    public string? AccountType {
         get { return _AccountType; }
         set {
             // migrate old values on 7/22/2023
@@ -169,13 +169,15 @@ public class Account
 
     public void GuessAccountType() 
     {
-        if (Note.Contains("401K") || Note.Contains("401k"))
-        {
-            AccountType = "401(k)";
-        }
-        else if (Note.Contains("HSA") || Note.Contains("Health Savings Account"))
-        {
-            AccountType = "HSA";
+        if (Note is not null) {
+            if (Note.Contains("401K") || Note.Contains("401k"))
+            {
+                AccountType = "401(k)";
+            }
+            else if (Note.Contains("HSA") || Note.Contains("Health Savings Account"))
+            {
+                AccountType = "HSA";
+            }
         }
     }
 

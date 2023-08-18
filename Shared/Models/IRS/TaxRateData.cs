@@ -24,7 +24,7 @@ namespace IRS
     {
         public string? TaxFilingStatus { get; set; }
         public int StandardDeduction { get; set; }
-        public List<TaxBracket>? TaxBrackets { get; set; }
+        public List<TaxBracket> TaxBrackets { get; set; } = null!;
     }
 
 
