@@ -504,6 +504,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
                                         </InputSelect><br/>                                                
                                         <fieldset disabled=@(person.EmployerBenefits.HSA.HighDeductibleHealthPlanAvailable!=TriState.True) style='margin-left:20px'>
                                             <label>Employer Contribution Levels:</label>
+                                            @{contributionIndex = 0;}
                                             @foreach(var employerContributionLevel in person.EmployerBenefits.HSA.EmployerContributionLevels)
                                             {
                                                 var contributionLevelBuffer = contributionIndex;
