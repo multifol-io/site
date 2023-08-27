@@ -9,7 +9,7 @@
 @using System.Text.Json.Serialization
 
 <PageTitle>
-Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
+Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
 </PageTitle>
 
 <style>
@@ -1098,7 +1098,7 @@ Saving@(stepPath==null?": review":": "+stepPath.Replace('-',' ')) - bogle.tools
     private string?[] lastEmployer = { null, null };
     private const string pagePath = "/saving";
     private const string folderName = pagePath + "/";
-    private const string pageHeading = "Saving Plan";
+    private const string pageHeading = "Savings Planner";
     private int matchRuleIndex;
     private int contributionIndex;
     protected override async Task OnInitializedAsync()

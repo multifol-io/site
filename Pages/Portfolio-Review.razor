@@ -76,7 +76,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
 
                 <p style=clear:left>
                     Bogleheads.org forum enables you to <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Ask Portfolio Questions</a> ↗️.
-                    This tool helps collect background info, on top of your <a href=/portfolio>Portfolio Tracker</a> and <a href=/saving>Savings Plan</a>, and helps format your review.
+                    This tool helps collect background info, on top of your <a href=/portfolio>Portfolio Tracker</a> and <a href=/saving>Savings Planner</a>, and helps format your review.
                 </p>
                 <p style=font-size:smaller>When ready to post to the forum, ensure that the inline formatting markup is shown. Rich text formatting like bold and underline help readability of your post!<br/>
                     <InputCheckbox id=showMarkup style=margin-left:20px @bind-Value=ShowMarkup /> <label for=showMarkup>Show inline formatting markup: [b]bold text[/b]</label> <button style=margin-left:20px @onclick=CopyTextToClipboard>Copy content to clipboard</button>
@@ -617,7 +617,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                     break;
                                 case "contributions":
                                     <div>
-                                        Enter/edit your Savings Contribution at: <a href="/saving">Saving Plan</a>, then return here to <a href=/portfolio-review>Portfolio Review</a> to address all the needed information.<br/><br/>
+                                        Enter/edit your Savings Contribution at: <a href="/saving">Savings Planner</a>, then return here to <a href=/portfolio-review>Portfolio Review</a> to address all the needed information.<br/><br/>
 
                                         <span>
                                             @((MarkupString)boldUnderline("Contributions:"))
