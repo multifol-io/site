@@ -43,7 +43,7 @@
                     }
                     else
                     {
-                        <a href=/portfolio @onclick="@(e=>makeProfileActive(e,profileName))" @onclick:preventDefault>@profileName</a><span>&nbsp;</span>
+                        <a href=/portfolio-tracker @onclick="@(e=>makeProfileActive(e,profileName))" @onclick:preventDefault>@profileName</a><span>&nbsp;</span>
                     }
                 </td>
                 <td>
@@ -179,7 +179,7 @@
             }
             else
             {
-                Navigation.NavigateTo("/portfolio");
+                Navigation.NavigateTo("/portfolio-tracker");
             }
         }
     }

@@ -1,3 +1,5 @@
+@page "/portfolio-tracker"
+@page "/portfolio-tracker/{View}"
 @page "/portfolio"
 @page "/portfolio/{View}"
 @inject HttpClient Http
@@ -188,11 +190,11 @@
                                     
                                         <label>&nbsp;by</label>
                                         <span>
-                                            <a style="@allocationsBold" href=/portfolio>allocations</a> |
-                                            <a style="@accountsBold" href=/portfolio/accounts>accounts</a> | 
-                                            <a style="@taxTypesBold" href=/portfolio/tax-types>tax-types</a> | 
-                                            <a style="@custodiansBold" href=/portfolio/custodians>custodians</a> | 
-                                            <a title="Bogleheads.org style" style="@bogleheadsBold" href=/portfolio/bogleheads>accounts(bh)</a>
+                                            <a style="@allocationsBold" href=/portfolio-tracker>allocations</a> |
+                                            <a style="@accountsBold" href=/portfolio-tracker/accounts>accounts</a> | 
+                                            <a style="@taxTypesBold" href=/portfolio-tracker/tax-types>tax-types</a> | 
+                                            <a style="@custodiansBold" href=/portfolio-tracker/custodians>custodians</a> | 
+                                            <a title="Bogleheads.org style" style="@bogleheadsBold" href=/portfolio-tracker/bogleheads>accounts(bh)</a>
                                         </span><br/>
 
                                         @switch (View) {
@@ -789,7 +791,7 @@
                                                     @if(showFootnotes[3]) {<span><sub>4</sub>- description needs to be written</span><br/>}
                                                 break;
                                             default:
-                                                Navigation.NavigateTo("/portfolio");
+                                                Navigation.NavigateTo("/portfolio-tracker");
                                                 break;
                                         }
                                         <br/>
@@ -843,7 +845,7 @@
             </table>
         </div>
         
-        <p>"Consider getting a <a href="portfolio-review">Portfolio Review</a> and use the <a href="/saving">Savings Planner</a>!"</p>
+        <p>"Consider getting a <a href="portfolio-review">Portfolio Review</a> and use the <a href="/savings-planner">Savings Planner</a>!"</p>
     }
 
 @code {
@@ -877,8 +879,8 @@
 
     void editAccounts() {
         showEditAccountHelpers = !showEditAccountHelpers;
-        if (!Navigation.Uri.EndsWith("/portfolio/accounts")) {
-            Navigation.NavigateTo("/portfolio/accounts");
+        if (!Navigation.Uri.EndsWith("/portfolio-tracker/accounts")) {
+            Navigation.NavigateTo("/portfolio-tracker/accounts");
         }
     }
 
@@ -1076,7 +1078,7 @@
     private Step[]? steps;
     public int accountIndex = 0;
     public int investmentIndex = 0;
-    private const string pagePath = "/portfolio";
+    private const string pagePath = "/portfolio-tracker";
     private const string folderName = pagePath + "/";
     private const string pageHeading = "Portfolio Tracker";
     
@@ -1213,7 +1215,7 @@
     {
         if (appData.FamilyData is not null) {
             appData.FamilyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
-            Navigation.NavigateTo("/portfolio/reload");
+            Navigation.NavigateTo("/portfolio-tracker/reload");
             appData.FamilyData.UpdatePercentages();
         }
     }
@@ -1239,7 +1241,7 @@
             newAccount.Edit = true;
             appData.FamilyData?.Accounts.Add(newAccount);
             
-            Navigation.NavigateTo("/portfolio/accounts");
+            Navigation.NavigateTo("/portfolio-tracker/accounts");
         }
     }
 
@@ -1267,7 +1269,7 @@
     {
         if (appData.FamilyData is not null) {
             appData.FamilyData.Accounts.RemoveAt(accountIndex);
-            Navigation.NavigateTo("/portfolio/reload");
+            Navigation.NavigateTo("/portfolio-tracker/reload");
             appData.FamilyData.UpdatePercentages();
         }
     }

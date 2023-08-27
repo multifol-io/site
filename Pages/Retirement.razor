@@ -63,7 +63,7 @@ Retirement - bogle.tools
             </div>
             <div style=clear:left;margin-left:1.5in><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault >(manage profiles)</a></div>
 
-            <p style=clear:left>If you're still working, maximize <a href="/saving">savings with a plan</a>. After you've collected <a href="/portfolio">your Portfolio</a> information, enter the information that will impact your retirement.</p>
+            <p style=clear:left>If you're still working, maximize <a href="/savings-planner">savings with a plan</a>. After you've collected <a href="/portfolio-tracker">your Portfolio</a> information, enter the information that will impact your retirement.</p>
             <div>
                 <p ><b>Press edit (✏️) to complete each step:</b></p>
 
@@ -230,7 +230,7 @@ Retirement - bogle.tools
                                 }
                                 break;
                             case "portfolio":
-                                <span>Retirement Assets: @FormatUtilities.formatMoneyThousands(appData.FamilyData.Value) (edit at <a href="/portfolio/retirement-assets">/portfolio/retirement-assets</a>)
+                                <span>Retirement Assets: @FormatUtilities.formatMoneyThousands(appData.FamilyData.Value) (edit at <a href="/portfolio-tracker/accounts">/portfolio-tracker/accounts</a>)
                                 </span><br/>
                                 <label>Current Emergency Fund:</label> <span>$</span><input class=dollar type=text @bind-Value="appData.FamilyData.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/>
                                 <br/><br/>
@@ -586,7 +586,7 @@ Retirement - bogle.tools
             Console.WriteLine($"{ImportResult.DataFilesImported} files imported with {ImportResult.ImportedAccounts.Count} accounts");
             showImport = false;
 
-            Navigation.NavigateTo("/portfolio/reload"); // WORKAROUND
+            Navigation.NavigateTo("/portfolio-tracker/reload"); // WORKAROUND
         }
     }
 
@@ -633,7 +633,7 @@ Retirement - bogle.tools
     {
         if (appData?.FamilyData is not null) {
             appData.FamilyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
-            Navigation.NavigateTo("/portfolio/reload");
+            Navigation.NavigateTo("/portfolio-tracker/reload");
             appData.FamilyData.UpdatePercentages();
         }
     }
@@ -656,7 +656,7 @@ Retirement - bogle.tools
     void deleteAccount(MouseEventArgs e, int accountIndex) {
         if (appData?.FamilyData is not null) {
             appData.FamilyData.Accounts.RemoveAt(accountIndex);
-            Navigation.NavigateTo("/portfolio/reload");
+            Navigation.NavigateTo("/portfolio-tracker/reload");
             appData.FamilyData.UpdatePercentages();
         }
     }
@@ -670,7 +670,7 @@ Retirement - bogle.tools
     private void OnClearPortfolio() {
         if (appData is not null) {
             appData.FamilyData = new FamilyData(appData);
-            Navigation.NavigateTo("/portfolio");
+            Navigation.NavigateTo("/portfolio-tracker");
         }
     }
 

@@ -58,7 +58,7 @@
         "step": "contributions",
         "title": "Contributions",
         "number": 7,
-        "summary": "While you are earning income, making sure you are making annual investment contributions in the wisest manner. Fill out all sections of [[https://bogle.tools/saving|Annual Saving]], then navigate back to your Portfolio Review to complete it.",
+        "summary": "While you are earning income, making sure you are making annual investment contributions in the wisest manner. Fill out all sections of [[https://bogle.tools/savings-planner|Savings Planner]], then navigate back to your Portfolio Review to complete it.",
         "priority": "",
         "returns": "",
         "description": ""
@@ -67,7 +67,7 @@
         "step": "available-funds",
         "title": "Available Funds",
         "number": 8,
-        "summary": "List all funds available in 401(k)/403(b)/457(b) accounts. This helps advisers understand your best options in pre-tax accounts. If the list doesn't show you any accounts, you need to go create them in [[https://bogle.tools/portfolio/retirement-assets|Portfolio/Retirement Assets]]",
+        "summary": "List all funds available in 401(k)/403(b)/457(b) accounts. This helps advisers understand your best options in pre-tax accounts. If the list doesn't show you any accounts, you need to go create them in [[https://bogle.tools/portfolio-tracker/accounts|Portfolio-Tracker/Accounts]]",
         "priority": "",
         "returns": "",
         "description": ""

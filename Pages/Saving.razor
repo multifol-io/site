@@ -1,4 +1,6 @@
-﻿@page "/saving"
+﻿@page "/savings-planner"
+@page "/savings-planner/{stepPath}"
+@page "/saving"
 @page "/saving/{stepPath}"
 @page "/portfolio-contributions"
 @inject HttpClient Http
@@ -414,7 +416,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
             
             <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
 
-            <p>"Consider using the <a href="/saving">Portfolio Tracker</a> or getting a <a href="/portfolio-review">Portfolio Review</a>!"</p>
+            <p>"Consider using the <a href="/portfolio-tracker">Portfolio Tracker</a> or getting a <a href="/portfolio-review">Portfolio Review</a>!"</p>
         }
         else if (stepPath == "tax-filing-info") {
 
@@ -700,7 +702,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                         @if (person.EmployerBenefits.HSA.HighDeductibleHealthPlanAvailable == TriState.True) {
         
                                                 
-                                                <p>Has High Deductible Health Plan (HDHP) available from employer, according to <a href="/saving/benefit-entry">entered benefits</a>.</p>
+                                                <p>Has High Deductible Health Plan (HDHP) available from employer, according to <a href="/savings-planner/benefit-entry">entered benefits</a>.</p>
 
                                                 <InputCheckbox id=@haveHDHPEmployerid @bind-Value=person.HealthSavingsAccount.HasEmployerHDHP /> <label for=@haveHDHPEmployerid>Has High-Deductible Health Plan from Employer</label><br/><br/>
                                                 <label>Employer Contribution Levels:</label>
@@ -712,7 +714,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                 }
                                                 </select>
                                         } else {
-                                            <span>No High Deductible Health Plan is available at employer, according to <a href="/saving/benefit-entry">entered benefits</a>.</span><br/><br/>
+                                            <span>No High Deductible Health Plan is available at employer, according to <a href="/savings-planner/benefit-entry">entered benefits</a>.</span><br/><br/>
                                         }
                                         </fieldset>
 
@@ -1096,7 +1098,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
     private Step[]? steps;
     private bool pastTotal;
     private string?[] lastEmployer = { null, null };
-    private const string pagePath = "/saving";
+    private const string pagePath = "/savings-planner";
     private const string folderName = pagePath + "/";
     private const string pageHeading = "Savings Planner";
     private int matchRuleIndex;
