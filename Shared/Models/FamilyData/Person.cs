@@ -150,4 +150,15 @@ public class Person {
     }
 
     public List<RSUGrant> RSUGrants { get; set; }
+
+    public double? VestAmount() {
+        double vestingRSUs = 0.0;
+        foreach (var rsuGrant in this.RSUGrants) {
+            var vest = rsuGrant.VestAmount(FamilyData.Year);
+            if (vest.HasValue) {
+                vestingRSUs += vest.Value;
+            }
+        }
+        return vestingRSUs;
+    }
 }

@@ -207,6 +207,8 @@ public class FamilyData
                 if (person.EmployerPlan.AnnualSalary != null)
                 {
                     totalSalaries += person.EmployerPlan.AnnualSalary.Value;
+                    var vestAmount = person.VestAmount();
+                    totalSalaries += vestAmount.HasValue ? (int)(vestAmount.Value) : 0;
                 }
             }
             

@@ -78,7 +78,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
             <div>
                 <p ><b>Prerequisities:</b></p>
                 <EditForm Model="familyData" style=margin-left:25px>
-                    <label>Target Year:</label> <select @bind=familyData.Year><option>2022</option><option>2023</option></select><br/>
+                    <label>Target Year:</label> <select @bind=familyData.Year><option>2023</option><option>2024</option></select><br/>
                     <span>People Details:</span><br/>
                     <div style=margin-left:25px>
 
@@ -94,6 +94,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                         @for (int i = 0; i < familyData.PersonCount; i++) {
                             var person = familyData.People[i];
                             if (person is not null) {
+
                                 <span>Person @(i+1):</span><br/>
                                 <div style=margin-left:25px>
                                     <label>Age:</label> <input style=width:60px type=number min=0 max=125 @bind-Value=person.Age @bind-Value:event=oninput /><br/>
@@ -109,7 +110,8 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                     }
 
                                     <label>Employer:</label> <input style=width:200px type=text @bind-Value=person.EmployerBenefits!.Company @bind-Value:event=oninput /><br/>
-                                    <label>Annual Salary:</label> $<input type=text class=dollar @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
+                                    <label>Annual Salary + Bonus:</label> $<input type=text class=dollar @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
+                                    <label><a href=/rsu-tracker>Vesting RSUs</a>:</label> <span>@FormatUtilities.formatMoney(person.VestAmount(),decimalPlaces:0)</span><br/>
                                 </div>
                             }
                         }
@@ -592,7 +594,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                 break;
                             case 1:
                                 <p ><b>Prerequisities:</b></p>
-                                <label>Target Year:</label> <select @bind=familyData.Year><option>2022</option><option>2023</option></select><br/>
+                                <label>Target Year:</label> <select @bind=familyData.Year><option>2023</option><option>2024</option></select><br/>
                                 <br />
 
                                 <p><b>Worksheet:</b> </p>
@@ -617,7 +619,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                             case 2:
                                 <p><b>Prerequisities:</b> </p>
                                 <EditForm Model="familyData" style=margin-left:25px>
-                                    <label>Target Year:</label> <select @bind=familyData.Year><option>2022</option><option>2023</option></select><br/>
+                                    <label>Target Year:</label> <select @bind=familyData.Year><option>2023</option><option>2024</option></select><br/>
 
                                     <label>Tax Filing Status:</label> <select @bind=familyData.TaxFilingStatus>
                                         <option value="ChoiceNeeded">ChoiceNeeded</option>
@@ -678,7 +680,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                             case 4:
                                 <p><b>Prerequisities:</b> </p>
                                 <EditForm Model="familyData" style=margin-left:25px>
-                                    <label>Target Year:</label> <select @bind=familyData.Year><option>2022</option><option>2023</option></select><br/>
+                                    <label>Target Year:</label> <select @bind=familyData.Year><option>2023</option><option>2024</option></select><br/>
                                     
                                     <label>Tax Filing Status:</label> <select @bind=familyData.TaxFilingStatus>
                                                 <option value="ChoiceNeeded">ChoiceNeeded</option>
@@ -746,7 +748,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                             case 5:
                                 <p><b>Prerequisities:</b> </p>
                                 <EditForm Model="familyData" style=margin-left:25px>
-                                    <label>Target Year:</label> <select @bind=familyData.Year><option>2022</option><option>2023</option></select><br/>
+                                    <label>Target Year:</label> <select @bind=familyData.Year><option>2023</option><option>2024</option></select><br/>
 
                                     <label>Tax Filing Status:</label> <select @bind=familyData.TaxFilingStatus>
                                         <option value="ChoiceNeeded">ChoiceNeeded</option>
@@ -810,7 +812,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                 <p><b>Prerequisities:</b> </p>
 
                                 <EditForm Model="familyData" style=margin-left:25px>
-                                    <label>Target Year:</label> <select @bind=familyData.Year><option>2022</option><option>2023</option></select><br/>
+                                    <label>Target Year:</label> <select @bind=familyData.Year><option>2023</option><option>2024</option></select><br/>
 
                                     <label>Tax Filing Status:</label> <select @bind=familyData.TaxFilingStatus>
                                                 <option value="ChoiceNeeded">ChoiceNeeded</option>
@@ -847,7 +849,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                             case 7:
                                 <p><b>Prerequisities:</b> </p>
                                 <EditForm Model="familyData" style=margin-left:25px>
-                                    <label>Target Year:</label> <select @bind=familyData.Year><option>2022</option><option>2023</option></select><br/>
+                                    <label>Target Year:</label> <select @bind=familyData.Year><option>2023</option><option>2024</option></select><br/>
 
                                     <label>Tax Filing Status:</label> <select @bind=familyData.TaxFilingStatus>
                                         <option value="ChoiceNeeded">ChoiceNeeded</option>

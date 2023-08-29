@@ -334,7 +334,7 @@
         if (appData?.FamilyData is not null) {
             var grant = appData.FamilyData.People[personIndex].RSUGrants[grantIndex];
             if (grant.Edit) {
-                var created = CalculateVestEvents(grant);
+                var created = grant.CalculateVestEvents();
                 if (created) {
                     grant.Edit = false;
                     await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
@@ -548,48 +548,12 @@
                 var person = appData.FamilyData.People[p];
 
                 foreach (var grant in person.RSUGrants) {
-                    CalculateVestEvents(grant);
+                    grant.CalculateVestEvents();
                 }
             }
         }
 
         base.OnInitialized();
-    }
-
-    private bool CalculateVestEvents(RSUGrant grant) {
-        grant.VestEvents.Clear();
-        if (grant.Shares != null && grant.VestPercent.HasValue && grant.VestPercent > 0.0 && grant.VestPeriodMonths.HasValue) {
-            double sharesRemaining = (double)grant.Shares;
-            double remainderShares = 0.0;
-            if (grant.Date != null) {
-                var vestIndex = 0;
-                int vestMonth = 0;
-                while (sharesRemaining > 0.0) {
-                    var vestShares = grant.VestPercent.Value / 100.0 * (double)grant.Shares; 
-                    remainderShares += vestShares - (int)vestShares;
-                    var currentVestShares = (int)vestShares + (int)(remainderShares + .0000001);
-                    remainderShares -= (int)remainderShares;
-                    if (vestIndex == 0) {
-                        vestMonth = grant.FirstVestMonth ?? grant.VestPeriodMonths.Value;
-                    } else {
-                        vestMonth += grant.VestPeriodMonths.Value;
-                    }
-                    var vestEvent = new RSUVestEvent() {
-                        Date = grant.Date.Value.AddMonths(vestMonth),
-                        Shares = currentVestShares,
-                        Price = grant.LastPrice
-                    };
-
-                    grant.VestEvents.Add(vestEvent);
-                    vestIndex++;
-                    sharesRemaining -= currentVestShares;
-                }
-
-                return true;
-            }
-        }
-        
-        return false;
     }
 
     private async Task UpdateInvestmentPrice(Investment investment)
