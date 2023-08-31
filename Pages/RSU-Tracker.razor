@@ -213,8 +213,8 @@
                                                                             <br/>
                                                                             last price: $<input @onmousedown:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.LastPrice placeholder="last price" />
                                                                             <div style=text-align:right>
-                                                                                <button title='delete grant' @onclick='@(e=>deleteGrant(e,pBuf, grantIndex))'>❌ grant</button>
-                                                                                <button title='save grant' >save grant</button>
+                                                                                <button title='delete grant' @onmousedown:stopPropagation="true" @onclick='@(e=>deleteGrant(e,pBuf, grantIndex))'>❌ grant</button>
+                                                                                <button title='save grant' @onmousedown:stopPropagation="true">save grant</button>
                                                                             </div>
                                                                         </td>
                                                                     }
@@ -325,6 +325,7 @@
 
     async void deleteGrant(MouseEventArgs e, int personIndex, int grantIndex) {
         if (appData?.FamilyData is not null) {
+            Console.WriteLine("personIndex:" + personIndex + " -- grantIndex: " + grantIndex);
             appData.FamilyData.People[personIndex].RSUGrants.RemoveAt(grantIndex);
             await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         }
