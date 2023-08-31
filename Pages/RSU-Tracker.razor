@@ -219,7 +219,7 @@
                                                                         </td>
                                                                     }
                                                                 </tr>
-                                                                @foreach (var vestEvent in rsuGrant.VestEvents.Where(ve=>ve.Date > DateOnly.FromDateTime(DateTime.Now))) {
+                                                                @foreach (var vestEvent in rsuGrant.VestEvents.Where(ve=>ve.Date >= DateOnly.FromDateTime(DateTime.Now))) {
                                                                     <tr style=vertical-align:bottom>
                                                                         <td style=padding-left:8px;text-align:right>@vestEvent.Date.ToShortDateString()</td>
                                                                         <td style=padding-left:8px;text-align:center>@vestEvent.Shares</td>
@@ -243,7 +243,7 @@
 
                                                     var vestMonths = (from rsuGrant in person.RSUGrants  // First foreach loop
                                                         from vestEvent in rsuGrant.VestEvents  // Second foreach loop
-                                                        where vestEvent.Date > DateOnly.FromDateTime(DateTime.Now)
+                                                        where vestEvent.Date >= DateOnly.FromDateTime(DateTime.Now)
                                                         group vestEvent by new { vestEvent.Date.Year, vestEvent.Date.Month }
                                                         into grp
                                                         select new { month = grp.Key.Month, year = grp.Key.Year, count = grp.Count(), shares = grp.Sum(ve=>ve.Shares), value = grp.Sum(ve=>ve.Value) });
