@@ -28,7 +28,7 @@ namespace api
             ticker = ticker ?? data?.ticker;
             apikey = apikey ?? data?.apikey;
 
-            string url = $"https://eodhistoricaldata.com/api/real-time/{ticker}?fmt=json&api_token={apikey}";
+            string url = $"https://eodhd.com/api/real-time/{ticker}?fmt=json&api_token={apikey}";
             var httpClient = new HttpClient();
             try {
                 var quoteDataJson = await httpClient.GetStringAsync(url);
