@@ -91,6 +91,18 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                             <option value=MarriedFilingSeperatelyAndLivingApart>Married filing separately (and living apart)</option>
                             <option value=HeadOfHousehold>Head of Household</option>
                         </select><br/>
+                        <p>@switch(familyData.PersonCount) {
+                            default:
+                            case 0:
+                                break;
+                            case 1:
+                                <span>@familyData.People[0].PossessiveID</span>
+                                break;
+                            case 2:
+                                <span>@familyData.People[0].PossessiveID &amp; @familyData.People[1].PossessiveID</span>
+                                break;
+                        } 
+                        Income/Savings Budget</p>
                         @for (int i = 0; i < familyData.PersonCount; i++) {
                             var person = familyData.People[i];
                             if (person is not null) {
@@ -115,26 +127,21 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                 </div>
                             }
                         }
+                        <b>Total Earned Income:</b> @FormatUtilities.formatMoney(familyData.TotalIncome)<br/>
                     </div>
                     <hr/>
-                    <p>@switch(familyData.PersonCount) {
-                        default:
-                        case 0:
-                            break;
-                        case 1:
-                            <span>@familyData.People[0].PossessiveID</span>
-                            break;
-                        case 2:
-                            <span>@familyData.People[0].PossessiveID &amp; @familyData.People[1].PossessiveID</span>
-                            break;
-                        } 
-                        Income/Savings Budget</p>
                     <div style=margin-left:25px>
-                        <label>Estimated Adjusted Gross Income:</label> $<input type=text class=dollar @bind-Value=familyData.AdjustedGrossIncome @bind-Value:event=oninput /><br/>
                         <label>Monthly Expenses:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /><br/>
                         <label>Annual Income Tax Paid:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.IncomeTaxPaid" @bind-Value:event="oninput" /><br/>
+                        <b>Annual Expenses:</b> @FormatUtilities.formatMoney(familyData.EmergencyFund.MonthlyExpenses*12+familyData.IncomeTaxPaid)<br/>
+                        <hr/>
                         <label>Money in Taxable Fund, to help invest more:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.TaxableToInvest" @bind-Value:event="oninput" /><br/>
-                        <label>Planned Savings:</label> <span>@FormatUtilities.formatMoney(familyData.PlannedSavings)</span><br/>
+                        <b>Planned Savings:</b> <span>@FormatUtilities.formatMoney(familyData.PlannedSavings)</span><br/>
+                        <hr/>
+                        <label>Estimated Adjusted Gross Income:</label>
+                        <span>$</span>
+                        <input type=text class=dollar @bind-Value=familyData.AdjustedGrossIncome @bind-Value:event=oninput /> (Wages, salaries, tips + other income = gross income - adjustments to income = AGI)
+                        <br/>
                     </div>
                 </EditForm>
                 <br/>

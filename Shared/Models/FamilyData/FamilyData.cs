@@ -196,10 +196,10 @@ public class FamilyData
     public int? AdjustedGrossIncome { get; set; }
     public int? IncomeTaxPaid { get; set; }
     public int? TaxableToInvest { get; set; }
-    public int? PlannedSavings { 
+
+
+    public int? TotalIncome { 
         get {
-            int? annualExpenses = EmergencyFund.MonthlyExpenses * 12;
-            int investFromTaxable = TaxableToInvest ?? 0;
             int totalSalaries = 0;
             for (int i = 0; i < PersonCount; i++)
             {
@@ -212,9 +212,19 @@ public class FamilyData
                 }
             }
             
-            return totalSalaries - (IncomeTaxPaid ?? 0) - annualExpenses + investFromTaxable;
+            return totalSalaries;
         }
     }
+
+    public int? PlannedSavings {
+        get {
+            int? annualExpenses = EmergencyFund.MonthlyExpenses * 12;
+            int investFromTaxable = TaxableToInvest ?? 0;
+
+            return TotalIncome - (IncomeTaxPaid ?? 0) - annualExpenses + investFromTaxable;
+        }
+    }
+
     public string? FederalMarginalTaxBracket { get; set; }
     private int _Year;
     public int Year { 
