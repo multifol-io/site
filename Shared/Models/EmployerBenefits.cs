@@ -149,11 +149,19 @@ namespace Employer {
                 }
                 else
                 {
+                    Employer401k = new();
+                    HSA = new();
+                    MegaBackdoorRoth = new();
+                    Downloaded = false;
                     Console.WriteLine("employer data was null for " + lEmployer);
                 }
             }
             catch (Exception e)
-            {
+            {       
+                Employer401k = new();
+                HSA = new();
+                MegaBackdoorRoth = new();
+                Downloaded = false;
                 Console.WriteLine("employer data load failed for " + lEmployer + "\n" + e.Message);
             }
         }
