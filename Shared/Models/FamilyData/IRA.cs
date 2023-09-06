@@ -66,7 +66,6 @@ public class IRA {
                 } else {
                     return null;
                 }
-            case TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart:
             case TaxFilingStatus.MarriedFilingSeperately:
                 if (person.Spouse != null) {
                     if (person.Spouse.EmployerPlan.Eligible == TriState.True) {

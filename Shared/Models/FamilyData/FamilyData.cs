@@ -180,6 +180,8 @@ public class FamilyData
         }
     }
 
+    public bool TaxFilingStatusLivingSeperately { get; set; }
+
     public string TaxFilingString {
         get {
             return TaxFilingStatus switch
@@ -187,7 +189,6 @@ public class FamilyData
                 TaxFilingStatus.Single => "Single",
                 TaxFilingStatus.MarriedFilingJointly => "Married filing jointly",
                 TaxFilingStatus.MarriedFilingSeperately => "Married filing separately",
-                TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart => "Married filing separately (and living apart)",
                 _ => "Choice needed",
             };
         }
@@ -584,7 +585,6 @@ public string estimatePortfolio()
                 case TaxFilingStatus.Single:
                 case TaxFilingStatus.HeadOfHousehold:
                 case TaxFilingStatus.MarriedFilingSeperately:
-                case TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart:
                     return 1;
                 case TaxFilingStatus.MarriedFilingJointly:
                     return 2;
@@ -618,6 +618,10 @@ public string estimatePortfolio()
             loadedData.AppData = appData;
             loadedData.Year = 2023;
             loadedData.SetBackPointers();
+            if (loadedData.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart) {
+                loadedData.TaxFilingStatus = TaxFilingStatus.MarriedFilingSeperately;
+                loadedData.TaxFilingStatusLivingSeperately = true;
+            }
             return loadedData;
         }
         else 
@@ -632,6 +636,10 @@ public string estimatePortfolio()
             loadedData.AppData = appData;
             loadedData.Year = 2023;
             loadedData.SetBackPointers();
+            if (loadedData.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart) {
+                loadedData.TaxFilingStatus = TaxFilingStatus.MarriedFilingSeperately;
+                loadedData.TaxFilingStatusLivingSeperately = true;
+            }
             return loadedData;
         }
         else 

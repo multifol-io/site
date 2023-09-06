@@ -88,7 +88,6 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                             <option>Single</option>
                             <option value=MarriedFilingJointly>Married filing jointly</option>
                             <option value=MarriedFilingSeperately>Married filing separately</option>
-                            <option value=MarriedFilingSeperatelyAndLivingApart>Married filing separately (and living apart)</option>
                             <option value=HeadOfHousehold>Head of Household</option>
                         </select><br/>
                         <p>@switch(familyData.PersonCount) {
@@ -633,7 +632,6 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                         <option>Single</option>
                                         <option value=MarriedFilingJointly>Married filing jointly</option>
                                         <option value=MarriedFilingSeperately>Married filing separately</option>
-                                        <option value=MarriedFilingSeperatelyAndLivingApart>Married filing separately (and living apart)</option>
                                         <option value=HeadOfHousehold>Head of Household</option>
                                         </select><br/>
                                 </EditForm><br/>
@@ -694,7 +692,6 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                 <option>Single</option>
                                                 <option value=MarriedFilingJointly>Married filing jointly</option>
                                                 <option value=MarriedFilingSeperately>Married filing separately</option>
-                                                <option value=MarriedFilingSeperatelyAndLivingApart>Married filing separately (and living apart)</option>
                                                 <option value=HeadOfHousehold>Head of Household</option>
                                                 </select><br/>
                                 </EditForm><br/>
@@ -762,9 +759,11 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                         <option>Single</option>
                                         <option value=MarriedFilingJointly>Married filing jointly</option>
                                         <option value=MarriedFilingSeperately>Married filing separately</option>
-                                        <option value=MarriedFilingSeperatelyAndLivingApart>Married filing separately (and living apart)</option>
                                         <option value=HeadOfHousehold>Head of Household</option>
                                         </select><br/>
+                                    @if(familyData.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperately) {
+                                        <InputCheckbox style=margin-left:25px id=livingSep @bind-Value=familyData.TaxFilingStatusLivingSeperately /> <label for=livingSep>Living separately</label><br/>
+                                    }
                                     <label>@familyData.Year Adjusted Gross Income:</label> $<input type=text class=dollar @bind-Value=familyData.AdjustedGrossIncome @bind-Value:event=oninput /><br/>
                                 </EditForm><br/>
 
@@ -826,7 +825,6 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                 <option>Single</option>
                                                 <option value=MarriedFilingJointly>Married filing jointly</option>
                                                 <option value=MarriedFilingSeperately>Married filing separately</option>
-                                                <option value=MarriedFilingSeperatelyAndLivingApart>Married filing separately (and living apart)</option>
                                                 <option value=HeadOfHousehold>Head of Household</option>
                                                 </select><br/>
 
@@ -863,7 +861,6 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                         <option>Single</option>
                                         <option value=MarriedFilingJointly>Married filing jointly</option>
                                         <option value=MarriedFilingSeperately>Married filing separately</option>
-                                        <option value=MarriedFilingSeperatelyAndLivingApart>Married filing separately (and living apart)</option>
                                         <option value=HeadOfHousehold>Head of Household</option>
                                         </select><br/>
                                 </EditForm><br/>

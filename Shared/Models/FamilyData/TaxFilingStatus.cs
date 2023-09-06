@@ -3,6 +3,6 @@ public enum TaxFilingStatus {
     Single,
     HeadOfHousehold,
     MarriedFilingSeperately,
-    MarriedFilingSeperatelyAndLivingApart,
+    MarriedFilingSeperatelyAndLivingApart, // 9/6/2023 - stopped using. transitioning away.
     MarriedFilingJointly,
 }

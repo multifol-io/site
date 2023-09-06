@@ -85,7 +85,6 @@ public class Person {
     public Person? Spouse { 
         get {
             if (FamilyData.TaxFilingStatus == TaxFilingStatus.MarriedFilingJointly 
-            || FamilyData.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart 
             || FamilyData.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperately)
             {
                 switch (this.PersonIndex) {

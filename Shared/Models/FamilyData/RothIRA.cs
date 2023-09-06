@@ -31,7 +31,6 @@ public class RothIRA {
     {
         if (rothIraVariables is not null && rothIraVariables.ContributionPhaseOutRange is not null) {
             switch (taxFilingStatus) {
-                case TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart: 
                 case TaxFilingStatus.Single:
                     return ApplyRange(rothIraVariables.ContributionPhaseOutRange.Single!.Start,
                                     rothIraVariables.ContributionPhaseOutRange.Single.End,
@@ -41,9 +40,15 @@ public class RothIRA {
                                     rothIraVariables.ContributionPhaseOutRange.MarriedFilingJointly.End,
                                     person.FamilyData.AdjustedGrossIncome, MaximumContributionByAge);
                 case TaxFilingStatus.MarriedFilingSeperately: 
-                    return ApplyRange(rothIraVariables.ContributionPhaseOutRange.MarriedFilingSeparately!.Start,
+                    if (this.person.FamilyData.TaxFilingStatusLivingSeperately) {
+                        return ApplyRange(rothIraVariables.ContributionPhaseOutRange.Single!.Start,
+                                    rothIraVariables.ContributionPhaseOutRange.Single.End,
+                                    person.FamilyData.AdjustedGrossIncome, MaximumContributionByAge);
+                    } else {
+                        return ApplyRange(rothIraVariables.ContributionPhaseOutRange.MarriedFilingSeparately!.Start,
                                     rothIraVariables.ContributionPhaseOutRange.MarriedFilingSeparately.End,
                                     person.FamilyData.AdjustedGrossIncome, MaximumContributionByAge);
+                    }
                 case TaxFilingStatus.ChoiceNeeded:
                 default:
                     return null;
