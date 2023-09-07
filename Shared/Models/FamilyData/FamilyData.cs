@@ -169,7 +169,7 @@ public class FamilyData
     public TriState DebtFree { get; set; }
     public List<Debt> Debts { get; set; }
     
-    private TaxFilingStatus _taxFilingStatus = TaxFilingStatus.Single;
+    private TaxFilingStatus _taxFilingStatus = TaxFilingStatus.ChoiceNeeded;
     [Required]
     public TaxFilingStatus TaxFilingStatus { 
         get {

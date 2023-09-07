@@ -90,7 +90,10 @@
             var nextStep = steps[0];
             string prevPage = folderName + prevStep?.step;
             string nextPage = folderName + nextStep?.step;
-            
+            if (appData.FamilyData.TaxFilingStatus == TaxFilingStatus.ChoiceNeeded) {
+                taxFilingStatusEditing = true;
+            }
+
             <div style=float:left>
                 <h4 style="max-width:450px">
                     @pageHeading <h6 style=display:inline>for @appData.CurrentProfileName profile</h6>
@@ -147,148 +150,150 @@
                                     </td>
                                     break;
                                 case "rsu-summary":
-                                    <td>
-                                        <a @onclick=editGrants style=margin:0px;padding:0px;width:20px class="m-2 btn" >✏️</a>
-                                        @if (View == null) {
-                                            View = "by-year";
-                                        }
-                                        @{
-                                            var byYearBold = (View == "by-year") ? ";font-weight:bold" : ""; 
-                                            var byGrantBold = (View == "by-grant") ? ";font-weight:bold" : ""; 
-                                        }
+                                    @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) {
+                                        <td>
+                                            <a @onclick=editGrants style=margin:0px;padding:0px;width:20px class="m-2 btn" >✏️</a>
+                                            @if (View == null) {
+                                                View = "by-year";
+                                            }
+                                            @{
+                                                var byYearBold = (View == "by-year") ? ";font-weight:bold" : ""; 
+                                                var byGrantBold = (View == "by-grant") ? ";font-weight:bold" : ""; 
+                                            }
 
-                                        <label>&nbsp;&nbsp;View RSUs:&nbsp;</label>
-                                        <span>
-                                            <a style='@byYearBold' href=/rsu-tracker>by year</a> | 
-                                            <a style='@byGrantBold' href=/rsu-tracker/by-grant>by grant</a>
-                                        </span>
-                                        <br/>
-                                        <br/>
-                                        @if(showEditAccountHelpers) {
-                                            <i>Editing RSU Grants:</i>
-                                            <br/><span>'➕' button will add a new grant to bottom of grants list.
-                                            <br/>To edit grant details or to delete a grant, click on grant table row in <a href=/rsu-tracker/by-grant>by grant</a> view</span><br/><br/>
-                                        }
+                                            <label>&nbsp;&nbsp;View RSUs:&nbsp;</label>
+                                            <span>
+                                                <a style='@byYearBold' href=/rsu-tracker>by year</a> | 
+                                                <a style='@byGrantBold' href=/rsu-tracker/by-grant>by grant</a>
+                                            </span>
+                                            <br/>
+                                            <br/>
+                                            @if(showEditAccountHelpers) {
+                                                <i>Editing RSU Grants:</i>
+                                                <br/><span>'➕' button will add a new grant to bottom of grants list.
+                                                <br/>To edit grant details or to delete a grant, click on grant table row in <a href=/rsu-tracker/by-grant>by grant</a> view</span><br/><br/>
+                                            }
 
-                                        @switch (View) {
-                                            case "by-grant":
-                                                @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
-                                                    var pBuf = p;
-                                                    var person = appData.FamilyData.People[p];
-                                                    <p><span style=font-size:14pt;font-weight:bold>@person.PossessiveID RSU Grants:</span> <button @onclick='@(e=>addGrant(e,pBuf))' title='add grant'>➕</button>
-                                                        @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
-                                                        {
-                                                            <button @onclick=@refreshPrices title='update prices' style=min-width:80px;>@refreshButtonText</button>
-                                                        } else {
-                                                            <a href="/updating-portfolio">Update prices</a>
-                                                        }
-                                                    </p>
+                                            @switch (View) {
+                                                case "by-grant":
+                                                    @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
+                                                        var pBuf = p;
+                                                        var person = appData.FamilyData.People[p];
+                                                        <p><span style=font-size:14pt;font-weight:bold>@person.PossessiveID RSU Grants:</span> <button @onclick='@(e=>addGrant(e,pBuf))' title='add grant'>➕</button>
+                                                            @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
+                                                            {
+                                                                <button @onclick=@refreshPrices title='update prices' style=min-width:80px;>@refreshButtonText</button>
+                                                            } else {
+                                                                <a href="/updating-portfolio">Update prices</a>
+                                                            }
+                                                        </p>
 
-                                                    @if(person.RSUGrants.Count > 0) {
-                                                        <table class=mainTable>
-                                                            <tr style='vertical-align:bottom;border:black sold 1px'>
-                                                                <th style=padding-left:8px>Vest Date</th>
-                                                                <th style=padding-left:8px;text-align:center>Shares</th>
-                                                                <th style=padding-left:8px;text-align:center>~Price</th>
-                                                                <th style=padding-left:8px;text-align:center>~Value</th>
-                                                            </tr>
-                                                            @{var grantCount = 0;}
-                                                            @foreach (var rsuGrant in person.RSUGrants) {
-                                                                var grantIndex = grantCount++;
-                                                                <tr style=vertical-align:bottom;color:white;background-Color:black @onmousedown='@(e=>toggleEdit(e,pBuf, grantIndex))'>
-                                                                    @if (!rsuGrant.Edit) {
-                                                                        <td style=padding-left:8px;text-align:left colspan=4>@rsuGrant.Shares @rsuGrant.Ticker shares granted on @rsuGrant.Date?.ToShortDateString()</td>
-                                                                    } else {
-                                                                        <td style=padding-left:8px;text-align:left colspan=4>
-                                                                            <input @onmousedown:stopPropagation="true" type=text style=width:80px;text-align:right @bind-value=rsuGrant.Shares placeholder="shares" />
-                                                                            <input @onmousedown:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.Ticker placeholder="ticker" />
-                                                                            shares<br/>
-                                                                            granted on 
-                                                                            <input @onmousedown:stopPropagation="true" type=text @bind-value=rsuGrant.Date placeholder="date" /><br/>
-                                                                            <br/>
-                                                                            vest <input @onmousedown:stopPropagation="true" type=text style=width:40px;text-align:right @bind-value=rsuGrant.VestPercent />% of shares<br/> 
-                                                                            every <input @onmousedown:stopPropagation="true" type=text style=width:40px;text-align:right @bind-value=rsuGrant.VestPeriodMonths  /> months<br/>
-                                                                            with first vest happening at month # <input @onmousedown:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.FirstVestMonth  /><br/>
-                                                                            <br/>
-                                                                            last price: $<input @onmousedown:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.LastPrice placeholder="last price" />
-                                                                            <div style=text-align:right>
-                                                                                <button title='delete grant' @onmousedown:stopPropagation="true" @onclick='@(e=>deleteGrant(e,pBuf, grantIndex))'>❌ grant</button>
-                                                                                <button title='save grant' @onmousedown:stopPropagation="true">save grant</button>
-                                                                            </div>
-                                                                        </td>
-                                                                    }
+                                                        @if(person.RSUGrants.Count > 0) {
+                                                            <table class=mainTable>
+                                                                <tr style='vertical-align:bottom;border:black sold 1px'>
+                                                                    <th style=padding-left:8px>Vest Date</th>
+                                                                    <th style=padding-left:8px;text-align:center>Shares</th>
+                                                                    <th style=padding-left:8px;text-align:center>~Price</th>
+                                                                    <th style=padding-left:8px;text-align:center>~Value</th>
                                                                 </tr>
-                                                                @foreach (var vestEvent in rsuGrant.VestEvents.Where(ve=>ve.Date >= DateOnly.FromDateTime(DateTime.Now))) {
+                                                                @{var grantCount = 0;}
+                                                                @foreach (var rsuGrant in person.RSUGrants) {
+                                                                    var grantIndex = grantCount++;
+                                                                    <tr style=vertical-align:bottom;color:white;background-Color:black @onmousedown='@(e=>toggleEdit(e,pBuf, grantIndex))'>
+                                                                        @if (!rsuGrant.Edit) {
+                                                                            <td style=padding-left:8px;text-align:left colspan=4>@rsuGrant.Shares @rsuGrant.Ticker shares granted on @rsuGrant.Date?.ToShortDateString()</td>
+                                                                        } else {
+                                                                            <td style=padding-left:8px;text-align:left colspan=4>
+                                                                                <input @onmousedown:stopPropagation="true" type=text style=width:80px;text-align:right @bind-value=rsuGrant.Shares placeholder="shares" />
+                                                                                <input @onmousedown:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.Ticker placeholder="ticker" />
+                                                                                shares<br/>
+                                                                                granted on 
+                                                                                <input @onmousedown:stopPropagation="true" type=text @bind-value=rsuGrant.Date placeholder="date" /><br/>
+                                                                                <br/>
+                                                                                vest <input @onmousedown:stopPropagation="true" type=text style=width:40px;text-align:right @bind-value=rsuGrant.VestPercent />% of shares<br/> 
+                                                                                every <input @onmousedown:stopPropagation="true" type=text style=width:40px;text-align:right @bind-value=rsuGrant.VestPeriodMonths  /> months<br/>
+                                                                                with first vest happening at month # <input @onmousedown:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.FirstVestMonth  /><br/>
+                                                                                <br/>
+                                                                                last price: $<input @onmousedown:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.LastPrice placeholder="last price" />
+                                                                                <div style=text-align:right>
+                                                                                    <button title='delete grant' @onmousedown:stopPropagation="true" @onclick='@(e=>deleteGrant(e,pBuf, grantIndex))'>❌ grant</button>
+                                                                                    <button title='save grant' @onmousedown:stopPropagation="true">save grant</button>
+                                                                                </div>
+                                                                            </td>
+                                                                        }
+                                                                    </tr>
+                                                                    @foreach (var vestEvent in rsuGrant.VestEvents.Where(ve=>ve.Date >= DateOnly.FromDateTime(DateTime.Now))) {
+                                                                        <tr style=vertical-align:bottom>
+                                                                            <td style=padding-left:8px;text-align:right>@vestEvent.Date.ToShortDateString()</td>
+                                                                            <td style=padding-left:8px;text-align:center>@vestEvent.Shares</td>
+                                                                            <td style=padding-left:8px;text-align:center>@FormatUtilities.formatMoney(vestEvent.Price)</td>
+                                                                            <td style=padding-left:8px;text-align:right>~@FormatUtilities.formatMoney(vestEvent.Value)</td>
+                                                                        </tr>
+                                                                    }
+                                                                    <tr><td colspan=4 style=font-size:4pt>&nbsp;</td></tr>
+                                                                }
+                                                            </table>
+                                                            <br/>
+                                                        } else {
+                                                            <p>No RSU grants yet. Press ➕ button to track a Restricted Stock Unit grant from an employer.</p><br/>
+                                                        }
+                                                    }
+                                                    break;
+                                                case "by-year":
+                                                    @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
+                                                        var pBuf = p;
+                                                        var person = appData.FamilyData.People[p];
+
+                                                        var vestMonths = (from rsuGrant in person.RSUGrants  // First foreach loop
+                                                            from vestEvent in rsuGrant.VestEvents  // Second foreach loop
+                                                            where vestEvent.Date >= DateOnly.FromDateTime(DateTime.Now)
+                                                            group vestEvent by new { vestEvent.Date.Year, vestEvent.Date.Month }
+                                                            into grp
+                                                            select new { month = grp.Key.Month, year = grp.Key.Year, count = grp.Count(), shares = grp.Sum(ve=>ve.Shares), value = grp.Sum(ve=>ve.Value) });
+                                                            
+                                                        <p><span style=font-size:14pt;font-weight:bold>@person.PossessiveID RSU Grants:</span> <button @onclick='@(e=>addGrant(e,pBuf))' title='add grant'>➕</button>
+                                                            @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
+                                                            {
+                                                                <button @onclick=@refreshPrices title='update prices' style=min-width:80px;>@refreshButtonText</button>
+                                                            } else {
+                                                                <a href="/updating-portfolio">Update prices</a>
+                                                            }
+                                                        </p>
+
+                                                        @if(person.RSUGrants.Count > 0) {
+                                                            <table class=mainTable>
+                                                                <tr style=vertical-align:bottom>
+                                                                    <th style=padding-left:8px>Vest Month</th>
+                                                                    <th style=padding-left:8px;text-align:center>Grants</th>
+                                                                    <th style=padding-left:8px;text-align:center>Shares</th>
+                                                                    <th style=padding-left:8px;text-align:center>~Value</th>
+                                                                </tr>
+                                                                @{int? lastYear = null;}
+                                                                @foreach (var vestMonth in vestMonths) {
+                                                                    if (lastYear != vestMonth.year) {
+                                                                        lastYear = vestMonth.year;
+                                                                        <tr style=vertical-align:bottom;color:white;background-Color:black>
+                                                                            <td style=padding-left:8px;text-align:left colspan=4>@lastYear</td>
+                                                                        </tr>
+                                                                    }
                                                                     <tr style=vertical-align:bottom>
-                                                                        <td style=padding-left:8px;text-align:right>@vestEvent.Date.ToShortDateString()</td>
-                                                                        <td style=padding-left:8px;text-align:center>@vestEvent.Shares</td>
-                                                                        <td style=padding-left:8px;text-align:center>@FormatUtilities.formatMoney(vestEvent.Price)</td>
-                                                                        <td style=padding-left:8px;text-align:right>~@FormatUtilities.formatMoney(vestEvent.Value)</td>
+                                                                        <td style=padding-left:8px;text-align:right>@vestMonth.month-@vestMonth.year</td>
+                                                                        <td style=padding-left:8px;text-align:center>@vestMonth.count</td>
+                                                                        <td style=padding-left:8px;text-align:center>@vestMonth.shares</td>
+                                                                        <td style=padding-left:8px;text-align:right>~@FormatUtilities.formatMoney(vestMonth.value)</td>
                                                                     </tr>
                                                                 }
                                                                 <tr><td colspan=4 style=font-size:4pt>&nbsp;</td></tr>
-                                                            }
-                                                        </table>
-                                                        <br/>
-                                                    } else {
-                                                        <p>No RSU grants yet. Press ➕ button to track a Restricted Stock Unit grant from an employer.</p><br/>
-                                                    }
-                                                }
-                                                break;
-                                            case "by-year":
-                                                @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
-                                                    var pBuf = p;
-                                                    var person = appData.FamilyData.People[p];
-
-                                                    var vestMonths = (from rsuGrant in person.RSUGrants  // First foreach loop
-                                                        from vestEvent in rsuGrant.VestEvents  // Second foreach loop
-                                                        where vestEvent.Date >= DateOnly.FromDateTime(DateTime.Now)
-                                                        group vestEvent by new { vestEvent.Date.Year, vestEvent.Date.Month }
-                                                        into grp
-                                                        select new { month = grp.Key.Month, year = grp.Key.Year, count = grp.Count(), shares = grp.Sum(ve=>ve.Shares), value = grp.Sum(ve=>ve.Value) });
-                                                        
-                                                    <p><span style=font-size:14pt;font-weight:bold>@person.PossessiveID RSU Grants:</span> <button @onclick='@(e=>addGrant(e,pBuf))' title='add grant'>➕</button>
-                                                        @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
-                                                        {
-                                                            <button @onclick=@refreshPrices title='update prices' style=min-width:80px;>@refreshButtonText</button>
+                                                            </table>
+                                                            <br/>
                                                         } else {
-                                                            <a href="/updating-portfolio">Update prices</a>
+                                                            <p>No RSU grants yet. Press ➕ button to track a Restricted Stock Unit grant from an employer.</p><br/>
                                                         }
-                                                    </p>
-
-                                                    @if(person.RSUGrants.Count > 0) {
-                                                        <table class=mainTable>
-                                                            <tr style=vertical-align:bottom>
-                                                                <th style=padding-left:8px>Vest Month</th>
-                                                                <th style=padding-left:8px;text-align:center>Grants</th>
-                                                                <th style=padding-left:8px;text-align:center>Shares</th>
-                                                                <th style=padding-left:8px;text-align:center>~Value</th>
-                                                            </tr>
-                                                            @{int? lastYear = null;}
-                                                            @foreach (var vestMonth in vestMonths) {
-                                                                if (lastYear != vestMonth.year) {
-                                                                    lastYear = vestMonth.year;
-                                                                    <tr style=vertical-align:bottom;color:white;background-Color:black>
-                                                                        <td style=padding-left:8px;text-align:left colspan=4>@lastYear</td>
-                                                                    </tr>
-                                                                }
-                                                                <tr style=vertical-align:bottom>
-                                                                    <td style=padding-left:8px;text-align:right>@vestMonth.month-@vestMonth.year</td>
-                                                                    <td style=padding-left:8px;text-align:center>@vestMonth.count</td>
-                                                                    <td style=padding-left:8px;text-align:center>@vestMonth.shares</td>
-                                                                    <td style=padding-left:8px;text-align:right>~@FormatUtilities.formatMoney(vestMonth.value)</td>
-                                                                </tr>
-                                                            }
-                                                            <tr><td colspan=4 style=font-size:4pt>&nbsp;</td></tr>
-                                                        </table>
-                                                        <br/>
-                                                    } else {
-                                                        <p>No RSU grants yet. Press ➕ button to track a Restricted Stock Unit grant from an employer.</p><br/>
                                                     }
-                                                }
-                                                break;                                    
-                                        }
-                                    </td>
+                                                    break;                                    
+                                            }
+                                        </td>
+                                    }
                                     break;                                
                                 default:
                                     break;
@@ -296,12 +301,17 @@
                         </tr>
                     }          
                 </table>
-                <div>
-                    ~ - Predicting value at future vest events is impossible. Stock value could go up or down. Values shown are based on current value, which can be updated - details: <a href=/updating-portfolio>Updating RSU Latest Prices</a>
-                </div>
+                @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) {
+                    <div>
+                        ~ - Predicting value at future vest events is impossible. Stock value could go up or down. Values shown are based on current value, which can be updated - details: <a href=/updating-portfolio>Updating RSU Latest Prices</a>
+                    </div>
+                }
             </div>
             <br/>
-            <p>"Consider using the <a href="/savings-planner">Savings Planner</a> for the year or using the <a href="/portfolio-tracker">Portfolio Tracker</a>"</p>
+
+            @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) {
+                <p>"Consider using the <a href="/savings-planner">Savings Planner</a> for the year or using the <a href="/portfolio-tracker">Portfolio Tracker</a>"</p>
+            }
         }
     }
 

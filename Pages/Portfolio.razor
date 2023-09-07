@@ -80,6 +80,9 @@
         <input style=width:50px;text-align:right type=text @bind-Value=PINEntry @bind-Value:event=oninput />
         <button @onclick=setPIN>Go</button>
     } else if (appData is not null && appData.FamilyData is not null) {
+        if (appData.FamilyData.TaxFilingStatus == TaxFilingStatus.ChoiceNeeded) {
+            taxFilingStatusEditing = true;
+        }
         var prevStep = steps[steps.Length - 1];
         var nextStep = steps[0];
         string prevPage = folderName + prevStep?.step;
@@ -97,6 +100,7 @@
             <table id=_reviewTable>
                 @foreach (var step in steps) {
                     var href = folderName + @step.step;
+                    var required = (appData.FamilyData.TaxFilingStatus == TaxFilingStatus.ChoiceNeeded) ? "visibility:visible;color:red" : "visibility:hidden";
                     <tr>
                         @switch (step.step) {
                             case "people": 
@@ -119,7 +123,7 @@
                                             <option value=MarriedFilingJointly>Married filing jointly</option>
                                             <option value=MarriedFilingSeperately>Married filing separately</option>
                                             <option value=HeadOfHousehold>Head of Household</option>
-                                        </select><br/><br/>
+                                        </select> <span style=@required>*</span><br/><br/>
                                         
                                         @for (int i = 0; i < appData.FamilyData.PersonCount; i++) {
                                             var person = appData.FamilyData.People[i];
@@ -142,37 +146,42 @@
                                 </td>
                                 break;
                             case "asset-allocation":
-                                <td>
-                                    <a @onclick=toggleAssetAllocationEditing style=margin:0px;padding:0px;width:20px class="m-2 btn" >✏️</a>
-                                    @((MarkupString)bold("Desired Asset allocation:"))
-                                    @if(!assetAllocationEditing) { 
-                                        if (appData.FamilyData.Stocks != null && appData.FamilyData.Bonds != null) {
-                                            <span>&nbsp;@appData.FamilyData.Stocks% stocks / @appData.FamilyData.Bonds% bonds</span><br/>
-                                        }
-                                        @if (appData.FamilyData.International != null) {
+                                @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) {
+                                    <td>
+                                        <a @onclick=toggleAssetAllocationEditing style=margin:0px;padding:0px;width:20px class="m-2 btn" >✏️</a>
+                                        @((MarkupString)bold("Desired Asset allocation:"))
+                                        @if(!assetAllocationEditing) { 
+                                            if (appData.FamilyData.Stocks != null && appData.FamilyData.Bonds != null) {
+                                                <span>&nbsp;@appData.FamilyData.Stocks% stocks / @appData.FamilyData.Bonds% bonds</span><br/>
+                                            }
+                                            @if (appData.FamilyData.International != null) {
+                                                <span>&nbsp;&nbsp;Desired International allocation: </span>
+                                                <span>@appData.FamilyData.International%</span>
+                                            }
+                                        } else {
+                                            <span>
+                                                &nbsp;<input style=width:50px;text-align:right type=text @bind-Value=appData.FamilyData.Stocks @bind-Value:event=oninput />% stocks
+                                                /
+                                                <input style=width:50px;text-align:right type=text @bind-Value=appData.FamilyData.Bonds @bind-Value:event=oninput />% bonds
+                                            </span><br/>
                                             <span>&nbsp;&nbsp;Desired International allocation: </span>
-                                            <span>@appData.FamilyData.International%</span>
+                                            <span><input style=width:50px;text-align:right type=text @bind-Value=appData.FamilyData.International @bind-Value:event=oninput />%</span>
                                         }
-                                    } else {
-                                        <span>
-                                            &nbsp;<input style=width:50px;text-align:right type=text @bind-Value=appData.FamilyData.Stocks @bind-Value:event=oninput />% stocks
-                                            /
-                                            <input style=width:50px;text-align:right type=text @bind-Value=appData.FamilyData.Bonds @bind-Value:event=oninput />% bonds
-                                        </span><br/>
-                                        <span>&nbsp;&nbsp;Desired International allocation: </span>
-                                        <span><input style=width:50px;text-align:right type=text @bind-Value=appData.FamilyData.International @bind-Value:event=oninput />%</span>
-                                    }
-                                    <hr/>
-                                </td>
+                                        <hr/>
+                                    </td>
+                                }
                                 break;
                             case "advice-settings":
-                                @((MarkupString)bold("Advanced Portfolio Settings:"))<span>&nbsp;(experimental)</span><br/>
-                                <InputCheckbox id=stockSizeRules style=margin-left:20px @bind-Value=appData.ApplyStockSizeRules /> <label for=stockSizeRules>&nbsp;Show warning if &gt; 5% concentration of an individual stock</label><br/>
-                                <InputCheckbox id=taxEfficientRules style=margin-left:20px @bind-Value=appData.ApplyTaxEfficientPlacementRules  /> <label for=taxEfficientRules>&nbsp;Show advice for tax efficient placement</label><br/> 
-                                <InputCheckbox id=allowAfterTaxPercentage style=margin-left:20px @bind-Value=appData.AllowAfterTaxPercentage  /> <label for=allowAfterTaxPercentage>&nbsp;Track After-Tax Percentage for Account that might have Pre and Post-Tax contributions</label><br/> 
-                                <br/>
+                                @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) {
+                                    @((MarkupString)bold("Advanced Portfolio Settings:"))<span>&nbsp;(experimental)</span><br/>
+                                    <InputCheckbox id=stockSizeRules style=margin-left:20px @bind-Value=appData.ApplyStockSizeRules /> <label for=stockSizeRules>&nbsp;Show warning if &gt; 5% concentration of an individual stock</label><br/>
+                                    <InputCheckbox id=taxEfficientRules style=margin-left:20px @bind-Value=appData.ApplyTaxEfficientPlacementRules  /> <label for=taxEfficientRules>&nbsp;Show advice for tax efficient placement</label><br/> 
+                                    <InputCheckbox id=allowAfterTaxPercentage style=margin-left:20px @bind-Value=appData.AllowAfterTaxPercentage  /> <label for=allowAfterTaxPercentage>&nbsp;Track After-Tax Percentage for Account that might have Pre and Post-Tax contributions</label><br/> 
+                                    <br/>
+                                }
                                 break;
                             case "retirement-assets":
+                                @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) {
                                 <td>
                                     <a @onclick=editAccounts style=margin:0px;padding:0px;width:20px class="m-2 btn" >✏️</a>
                                     @((MarkupString)bold("Investable Assets"))
@@ -251,7 +260,6 @@
                                                                         <option>Inherited IRA</option>
                                                                         <option>Inherited Roth IRA</option>
                                                                         <option value="Traditional IRA">IRA</option>
-                                                                        <option>Life Insurance</option>
                                                                         <option>Refundable Deposit</option>
                                                                         <option>Rollover IRA</option>
                                                                         <option>Roth 401(k)</option>
@@ -835,6 +843,7 @@
                                     }
                                     <hr/>
                                 </td>
+                                }
                                 break;                                
                             default:
                                 break;
@@ -844,7 +853,9 @@
             </table>
         </div>
         
-        <p>"Consider getting a <a href="portfolio-review">Portfolio Review</a> and use the <a href="/savings-planner">Savings Planner</a>!"</p>
+        @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) {
+            <p>"Consider getting a <a href="portfolio-review">Portfolio Review</a> and use the <a href="/savings-planner">Savings Planner</a>!"</p>
+        }
     }
 
 @code {

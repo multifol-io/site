@@ -424,7 +424,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                             <option value=MarriedFilingJointly>Married filing jointly</option>
                                             <option value=MarriedFilingSeperately>Married filing separately</option>
                                             <option value=HeadOfHousehold>Head of Household</option>
-                                        </select><br/>
+                                        </select> <br/>
                                         <br/>
         
                                         <label>Target Year:</label> <select @bind=appData.FamilyData.Year><option>2022</option><option>2023</option></select><br/>
@@ -483,6 +483,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                     <br/>
                                     break;
                                 case "age":
+                                    var required = (appData.FamilyData.TaxFilingStatus == TaxFilingStatus.ChoiceNeeded) ? "visibility:visible;color:red" : "visibility:hidden";
                                     <p ><b>Prerequisities:</b></p>
                                     <label>Tax Filing Status:</label>
                                     <select @bind=appData.FamilyData.TaxFilingStatus>
@@ -491,7 +492,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                         <option value=MarriedFilingJointly>Married filing jointly</option>
                                         <option value=MarriedFilingSeperately>Married filing separately</option>
                                         <option value=HeadOfHousehold>Head of Household</option>
-                                    </select><br/><br/>
+                                    </select> <span style=@required>*</span><br/><br/>
                                     
                                     <p><b>Worksheet:</b> </p>
                                     @for (int i = 0; i < appData.FamilyData.PersonCount; i++) {
