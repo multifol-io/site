@@ -97,6 +97,12 @@ Allan G. Timmermann   https://bogleheads.org/wiki/Allan%20G.%20Timmermann
 Allan Roth   https://bogleheads.org/wiki/Allan%20Roth
     Forbidden    http://www.etf.com/
 
+Alok Kumar   https://bogleheads.org/wiki/Alok%20Kumar
+    Too Many Requests    http://ssrn.com/abstract=627321
+    Too Many Requests    http://ssrn.com/abstract=633902
+    Too Many Requests    http://ssrn.com/abstract=686022
+    Too Many Requests    http://ssrn.com/abstract=767125
+
 Alternative asset class   https://bogleheads.org/wiki/Alternative%20asset%20class
     Internal Server Error    http://www.investopedia.com/terms/a/alternativeassets.asp
 
@@ -118,6 +124,7 @@ Andrew Ang   https://bogleheads.org/wiki/Andrew%20Ang
 
 Andrew Lo   https://bogleheads.org/wiki/Andrew%20Lo
     No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/2393982/andrew-w-lo
+    Too Many Requests    http://ssrn.com/abstract=283308
 
 Approximating Vanguard target date funds   https://bogleheads.org/wiki/Approximating%20Vanguard%20target%20date%20funds
     Not Found    https://ipro.americancentury.com/ipro/product/mf/summary/954.jsp#ARYIX
@@ -181,6 +188,9 @@ Art   https://bogleheads.org/wiki/Art
     Forbidden    http://eprints.qut.edu.au/archive/00000559/01/worthington_93.pdf
     No connection could be made because the target machine actively refused it. (www.ppge.ufrgs.br:80)    http://www.ppge.ufrgs.br/giacomo/arquivos/econ-cultura/mei-moses-2006.pdf
     Gone    http://ssrn.com/abstract=29438
+    Too Many Requests    http://ssrn.com/abstract=878385
+    Too Many Requests    http://ssrn.com/abstract=978467
+    Too Many Requests    http://ssrn.com/abstract=986299
 
 Assessing risk tolerance   https://bogleheads.org/wiki/Assessing%20risk%20tolerance
     Forbidden    https://investor.vanguard.com/tools-calculators/investor-questionnaire
@@ -232,6 +242,8 @@ Balanced fund   https://bogleheads.org/wiki/Balanced%20fund
     Internal Server Error    http://www.investopedia.com/terms/b/balancedfund.asp#axzz1ahu3RT8f
     Gateway Time-out    http://news.morningstar.com/fund-category-returns/
     Not Found    https://vanguard.com/pdf/icrria.pdf
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vwelx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vwinx
     Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vbinx
     Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtmfx
     Not Found    https://personal.vanguard.com/pdf/icrrbp.pdf
@@ -305,7 +317,7 @@ Bogleheads' Guide to Retirement Planning   https://bogleheads.org/wiki/Boglehead
     Forbidden    http://www.wiley.com/WileyCDA/WileyTitle/productCd-0470455578,descCd-tableOfContents.html
 
 Bogleheads┬«:General disclaimer   https://bogleheads.org/wiki/Bogleheads┬«:General%20disclaimer
-    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (diehards.org:443)    https://diehards.org
+    No connection could be made because the target machine actively refused it. (diehards.org:443)    https://diehards.org
 
 Bogleheads┬« 16 videos   https://bogleheads.org/wiki/Bogleheads┬«%2016%20videos
     Not Found    https://www.morningstar.com/articles/830800/video
@@ -358,3 +370,1991 @@ Bogleheads┬« wiki history   https://bogleheads.org/wiki/Bogleheads┬«%20wik
 
 Bond basics   https://bogleheads.org/wiki/Bond%20basics
     Internal Server Error    http://www.investopedia.com/
+    Gateway Time-out    http://news.morningstar.com/pdfs/FactSheet_StyleBox_Final.pdf
+    Service Unavailable    http://www.sec.gov/answers/nrsro.htm
+        https://www.investinginbonds.com/learnmore.asp?catid=3&id=383
+
+Bond market indexing   https://bogleheads.org/wiki/Bond%20market%20indexing
+    Forbidden    http://www.ftse.com/Indices/FTSE_Global_Bond_Index_Series/Downloads/FTSE_Global_Bond_Index_series_Ground_Rules_v1_5.pdf
+    Forbidden    http://www.ftse.com/Indices/FTSE_UK_Gilts_Indices/Index_Rules.jsp
+    Forbidden    http://www.ftse.com/Indices/index.jsp
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (www.iboxx.com:80)    http://www.iboxx.com/
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes/joi-articles/5714-single-vs-multidealer-fixed-income-indexes.html
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (indices.markit.com:80)    http://indices.markit.com/news/guides.asp
+
+Bond pricing   https://bogleheads.org/wiki/Bond%20pricing
+    Not Found    http://office.microsoft.com/en-us/excel/CH100645371033.aspx
+    Forbidden    http://www.riskglossary.com/
+    Forbidden    http://www.riskglossary.com/link/bond_accrued_interest.htm
+
+Bond yield   https://bogleheads.org/wiki/Bond%20yield
+    Internal Server Error    http://www.investopedia.com/?viewed=1
+    Internal Server Error    http://www.investopedia.com/articles/bonds/08/bond-yield-convention-conversion.asp
+    Internal Server Error    http://www.investopedia.com/terms/b/bey.asp
+    Internal Server Error    http://www.investopedia.com/university/advancedbond/advancedbond3.asp
+    Not Found    http://office.microsoft.com/en-us/excel/CH100645371033.aspx
+
+Bonds: advanced topics   https://bogleheads.org/wiki/Bonds:%20advanced%20topics
+    Internal Server Error    http://www.investopedia.com/?viewed=1
+    Internal Server Error    http://www.investopedia.com/terms/m/macaulayduration.asp
+    Internal Server Error    http://www.investopedia.com/terms/m/modifiedduration.asp
+    Internal Server Error    http://www.investopedia.com/university/advancedbond/advancedbond5.asp
+    Internal Server Error    http://www.investopedia.com/university/advancedbond/advancedbond6.asp
+    Internal Server Error    http://www.investopedia.com/university/advancedbond/advancedbond2.asp
+    Internal Server Error    http://www.investopedia.com/university/advancedbond/default.asp
+    Internal Server Error    http://www.investopedia.com/university/bonds/
+
+Book recommendations and reviews   https://bogleheads.org/wiki/Book%20recommendations%20and%20reviews
+    Service Unavailable    http://www.amazon.com/s/?search-alias=aps&tag=bogleheads.org-20&field-keywords=Bogleheads
+    Forbidden    http://www.etf.com/sections/index-investor-corner/swedroe-make-your-retirement-money-last
+
+Brad M. Barber   https://bogleheads.org/wiki/Brad%20M.%20Barber
+    Bad Request    http://www.bradmbarber.com/
+    Bad Request    http://www.bradmbarber.com
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/152340/brad-barber
+    No such host is known. (jfe.rochester.edu:80)    http://jfe.rochester.edu/winners.htm
+    Not Found    http://gsm.ucdavis.edu/center-investor-welfare-and-corporate-responsibility
+    Forbidden    http://www.cfapubs.org/page/faj/all-graham-dodd-winners
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors    http://citec.repec.org/p/b/pba1389.html
+
+Brigitte C. Madrian   https://bogleheads.org/wiki/Brigitte%20C.%20Madrian
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/535515/brigitte-c-madrian
+    Too Many Requests    http://ssrn.com/abstract=557138
+    Too Many Requests    http://ssrn.com/abstract=653021
+    Too Many Requests    http://ssrn.com/abstract=881243
+    Too Many Requests    http://ssrn.com/abstract=905518
+
+Broker   https://bogleheads.org/wiki/Broker
+    Internal Server Error    http://www.investopedia.com/terms/d/discretionaryaccount.asp#ixzz42YET2srm
+    Internal Server Error    http://www.investopedia.com/terms/m/mayday.asp
+    Internal Server Error    http://www.investopedia.com/terms/m/mutual-fund-wrap.asp
+    Internal Server Error    http://www.investopedia.com/terms/w/wrap-fee.asp#ixzz42gNRMl2f
+    Too Many Requests    http://ssrn.com/abstract=2739170
+    Internal Server Error    http://faculty.chicagobooth.edu/luigi.zingales/papers/research/finance.pdf.
+
+Bruce N. Lehmann   https://bogleheads.org/wiki/Bruce%20N.%20Lehmann
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/9173855/bruce-n-lehmann
+    Not Found    http://gps.ucsd.edu/faculty-directory/bruce-lehmann.html
+
+Buckets of Money   https://bogleheads.org/wiki/Buckets%20of%20Money
+    Gateway Time-out    http://news.morningstar.com/articlenet/article.aspx?id=566257&pgid=rss
+    Gateway Time-out    http://news.morningstar.com/articlenet/article.aspx?id=566768
+    Gateway Time-out    http://news.morningstar.com/articlenet/article.aspx?id=605387
+    Gateway Time-out    http://news.morningstar.com/articlenet/article.aspx?id=635019
+    Gateway Time-out    http://news.morningstar.com/articlenet/article.aspx?id=699522
+    Gateway Time-out    http://news.morningstar.com/articlenet/article.aspx?id=700173
+    Not Found    http://www.morningstar.com/Cover/videoCenter.aspx?id=397220
+    Not Found    http://www.morningstar.com/cover/videocenter.aspx?id=541725
+    Not Found    http://www.morningstar.com/cover/videocenter.aspx?id=600617
+    Not Found    http://www.morningstar.com/cover/videocenter.aspx?id=609586
+
+Budget models of retirement spending   https://bogleheads.org/wiki/Budget%20models%20of%20retirement%20spending
+    The 'ftp' scheme is not supported.    ftp://ftp.bls.gov/pub/special.requests/cpi/cpiai.txt
+    Internal Server Error    http://moneyover55.about.com/od/preretirementplanning/a/estimate_expenses_in_retirement.htm
+    Not Found    http://works.bepress.com/cgi/viewcontent.cgi?article=1007&context=lonniekstevans&sei-redir=1#search=%22spending%20changes%20stock%20market%22
+    Forbidden    http://www.bobsfinancialwebsite.com/pdfs/Conserving_Client_Portfolios_During_Retirement_Part_IV.pdf
+    Forbidden    http://cascadefinancial.com/_docs/IWS_RIP_worksheet.pdf
+    No such host is known. (ezinearticles.com:80)    http://ezinearticles.com/?Inflation---A-Retirees-Worst-Enemy&id=1306235
+
+Burton G. Malkiel   https://bogleheads.org/wiki/Burton%20G.%20Malkiel
+    Forbidden    http://www.alphashares.com/
+    Service Unavailable    http://www.amazon.com/s/?search-alias=aps&tag=bogleheads.org-20&field-keywords=Bogleheads
+    Forbidden    http://www.etf.com/publications/journalofindexes/joi-news/16052-malkiel-named-cio-of-wealthfront.html
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/290098/burton-g-malkiel
+    Not Found    http://www.afajof.org/details/page/2870731/Prizes.html
+
+Business development company   https://bogleheads.org/wiki/Business%20development%20company
+    Forbidden    http://blogs.barrons.com/focusonfunds/2014/02/26/bdcs-fall-after-sp-gives-the-boot-now-watch-russell/
+    Not Found    http://bdcreporter.com/primer-on-bdc-industry/
+    Not Found    http://bdcreporter.com/primer-on-bdc-industry/why-invest-in-bdcs/
+    Not Found    http://www.crsp.com/indexes-pages/methodology
+    Forbidden    http://www.dividendsexplained.com/bdc-list
+    Forbidden    http://www.etf.com/publications/journalofindexes/joi-news/22469-msci-deletes-securities.html
+    Forbidden    http://www.etftrends.com/2014/03/bdc-etfs-weaken-as-russell-joins-sp-in-giving-companies-the-boot/
+    Internal Server Error    http://www.investopedia.com/terms/b/bdc.asp
+
+CAPM - Capital Asset Pricing Model   https://bogleheads.org/wiki/CAPM%20-%20Capital%20Asset%20Pricing%20Model
+    Not Found    http://docs.google.com/Presentation?id=dh58qs9_1dw7w3gcz
+    Internal Server Error    http://www.investopedia.com/terms/c/capm.asp
+    Forbidden    http://www.portfoliosolutions.com/f-11.html
+
+CDs vs bonds   https://bogleheads.org/wiki/CDs%20vs%20bonds
+    Internal Server Error    http://www.investopedia.com/
+    Internal Server Error    http://www.investopedia.com/terms/c/calloption.asp
+    Internal Server Error    http://www.investopedia.com/terms/p/putoption.asp
+
+CRSP equity indexes   https://bogleheads.org/wiki/CRSP%20equity%20indexes
+    Not Found    http://www.crsp.com/about-crsp
+    Not Found    http://www.crsp.com/files/CRSP_Index_Press_Release_October_2012.pdf
+    Not Found    http://www.crsp.com/files/Equity-Indexes-Methodology-Guide_0.pdf
+    Not Found    http://www.crsp.com/indexes-pages/methodology
+    Not Found    http://www.crsp.com/indexes-pages/returns-and-constituents
+    Not Found    http://www.crsp.com/products/investment-products
+
+California 529 plan archive   https://bogleheads.org/wiki/California%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=CA&planID=5PUSA00009
+    Not Found    http://www.scholarshare.com/documents/ca_disclosure.pdf
+
+Canadian pension fund performance   https://bogleheads.org/wiki/Canadian%20pension%20fund%20performance
+    Not Found    http://www.benefitscanada.com/investments/asset-classes/losing-ground-9477
+    Forbidden    http://www.rijpm.com/research_paper/the-performance-of-us-pension-funds-new-insights-into-the-agency-costs-debate
+
+Canadian versions of lazy portfolios   https://bogleheads.org/wiki/Canadian%20versions%20of%20lazy%20portfolios
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch    https://www.etfs.bmo.com/bmo-etfs/glance?fundId=72048
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch    https://www.etfs.bmo.com/bmo-etfs/glance?fundId=75742
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch    https://www.etfs.bmo.com/bmo-etfs/glance?fundId=92494
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch    https://www.etfs.bmo.com/bmo-etfs/glance?fundId=97630
+
+Capital gains distribution   https://bogleheads.org/wiki/Capital%20gains%20distribution
+    Forbidden    http://www.indexuniverse.com/docs/110411IU_ETF_Taxation_v5A_%20j9.pdf
+
+Capitulation   https://bogleheads.org/wiki/Capitulation
+    Internal Server Error    https://www.investopedia.com/articles/analyst/080702.asp
+    Internal Server Error    https://www.investopedia.com/ask/answers/189.asp
+    Internal Server Error    https://www.investopedia.com/terms/c/capitulation.asp
+
+Cash drag   https://bogleheads.org/wiki/Cash%20drag
+    Forbidden    http://www.cfapubs.org/doi/abs/10.2469/faj.v70.n3.9
+    Not Found    http://www.ici.org/research/stats/trends/trends_09_09
+    Forbidden    http://www.icifactbook.org/
+    Forbidden    http://www.icifactbook.org/data/17_fb_data
+
+Cash equivalent   https://bogleheads.org/wiki/Cash%20equivalent
+    Internal Server Error    https://www.investopedia.com/terms/c/cashequivalents.asp
+
+Cash equivalents for EU investors   https://bogleheads.org/wiki/Cash%20equivalents%20for%20EU%20investors
+    Forbidden    https://www.comparethemarket.com/savings-accounts/information/fixed-rate/
+
+Certificate of deposit   https://bogleheads.org/wiki/Certificate%20of%20deposit
+    Not Found    http://www.fdic.gov/consumers/consumer/news/cnspr13/cdsfrombrokers.html
+    Forbidden    https://www.depositaccounts.com/
+    Forbidden    https://www.depositaccounts.com/blog/more-about-extending-fdic-and-ncua.html
+
+Charitable gift annuity   https://bogleheads.org/wiki/Charitable%20gift%20annuity
+    Forbidden    http://www.pgdc.com/host/planned-giving-design-center-llc/overview
+    Forbidden    http://www.pgdc.com/pgdc/article/2000/03/twelve-uncommon-things-you-can-do-gift-annuity
+    Forbidden    http://www.pgdc.com/pgdc/article/2004/06/maximizing-benefits-your-gift-annuity-program
+    Forbidden    http://www.pgdc.com/pgdc/article/2006/03/charitable-gift-annuity-reinsurance-top-ten-frequently-asked-questions
+    Forbidden    http://www.pgdc.com/pgdc/charitable-gift-annuity
+    Forbidden    http://www.pgdc.com/pgdc/charitable-gift-annuity-reinsurance-part-ii-the-top-10-creative-solutions-turbulent-times
+    Forbidden    http://www.pgdc.com/pgdc/resources/tables/charitable-federal-midterm-rate-archive
+
+Charitable lead trust   https://bogleheads.org/wiki/Charitable%20lead%20trust
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (resourcecenter.lpl.com:80)    http://resourcecenter.lpl.com/Tools/Planning/AMO-WH/charitable_lead_trusts.htm
+    Forbidden    http://www.pgdc.com/host/planned-giving-design-center-llc/overview
+    Forbidden    http://www.pgdc.com/pgdc/charitable-lead-trust
+    Not Found    http://sharpenet.com/info/booklet/PDFs/460Z.pdf
+
+Charitable pooled income fund   https://bogleheads.org/wiki/Charitable%20pooled%20income%20fund
+    Forbidden    http://www.pgdc.com/host/planned-giving-design-center-llc/overview
+    Forbidden    http://www.pgdc.com/pgdc/pooled-income-fund
+    Forbidden    http://www.pgdc.com/pgdc/resources/tables/charitable-federal-midterm-rate-archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (resourcecenter.lpl.com:443)    https://resourcecenter.lpl.com/Tools/Planning/AMO-WH/pooled_income_funds.htm
+
+Charitable remainder trust   https://bogleheads.org/wiki/Charitable%20remainder%20trust
+    Not Found    http://www.charitableplanning.com/tools/preview.php?id=469284
+    Forbidden    http://codes.lp.findlaw.com/uscode/26/A/1/J/I/C/664
+    Forbidden    http://www.pgdc.com/host/planned-giving-design-center-llc/overview
+    Forbidden    http://www.pgdc.com/pgdc/charitable-remainder-trusts
+    Forbidden    http://www.pgdc.com/pgdc/resources/tables/charitable-federal-midterm-rate-archive
+    Not Found    http://www.irs.gov/taxstats/charitablestats/article/0,,id=97066,00.html
+    No such host is known. (www.charitytrusts.org:80)    http://www.charitytrusts.org/
+    No such host is known. (www.charitytrusts.org:80)    http://www.charitytrusts.org/taxation-of-charitable-remainder-trusts.php
+
+Charles Schwab   https://bogleheads.org/wiki/Charles%20Schwab
+    Not Found    http://fortune.com/fortune500/charles-schwab/
+    Forbidden    https://www.aboutschwab.com
+    Not Found    https://www.morningstar.com/instant-x-ray
+
+Checklist of important retirement dates   https://bogleheads.org/wiki/Checklist%20of%20important%20retirement%20dates
+    Not Found    http://www.dol.gov/ebsa/faqs/faq-dependentcoverage.html
+    Not Found    http://www.irs.gov/publications/p590/ch01.html#en_US_2010_publink1000230424
+    Not Found    http://www.irs.gov/publications/p590/ch02.html#en_US_2010_publink1000230977
+    Not Found    http://www.irs.gov/publications/p590/index.html
+
+Christopher R. Blake   https://bogleheads.org/wiki/Christopher%20R.%20Blake
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/25947/christopher-r-blake
+    Not Found    http://www.vandermay.com/Obituaries.aspx?from=obtDet&obituaryid=4517
+
+Closed-end funds   https://bogleheads.org/wiki/Closed-end%20funds
+    Service Unavailable    http://www.amazon.com/s/?search-alias=aps&tag=bogleheads.org-20&field-keywords=Bogleheads
+    Not Found    http://www.cefconnect.com/Education/LeverageRiskCEF.aspx
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (www.claymore.com:80)    http://www.claymore.com/indices/fund/clmrcef
+    Not Found    http://www.closed-endfunds.com/FundSelector/LeveragedFunds.fs
+    Not Found    http://www.closed-endfunds.com/_/docs/content/Learn/ResearchArticles/CEF101_0630.pdf?time=20100115093728
+
+Collective Investment Trusts   https://bogleheads.org/wiki/Collective%20Investment%20Trusts
+    Internal Server Error    http://www.investopedia.com/terms/c/collective-investment-fund.asp#ixzz1qFuY0XNe
+    Not Found    http://www.schwabbankfunds.com/cms/P-4439216.2/SIRT_factsheets_4Q11.pdf?cmsid=P-4439216&cv12
+    OK    http://www.telegram.com/article/20100321/NEWS/3210555/1002/RSS01&source=rss
+    Not Found    http://www.nagdca.org/content.cfm/id/contributor22011the_reemergence_of_collective_investment_trust_funds
+
+Collegesure 529 Tuition Indexed Programs   https://bogleheads.org/wiki/Collegesure%20529%20Tuition%20Indexed%20Programs
+    Not Found    http://www.collegesavings.com/csb/
+    redirected to http://www.fdic.gov/resources/deposit-insurance/understanding-deposit-insurance/    from http://www.fdic.gov/deposit/deposits/dis/index.html
+
+Colorado 529 plan archive   https://bogleheads.org/wiki/Colorado%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=CO&planID=5PUSA00034
+    Not Found    https://cdn.unite529.com/f/248/21630/7d/im.uprinv.com/rc/sr2/co/statementinsert092016.pdf
+    Forbidden    https://a248.e.akamai.net/f/248/21630/7d/uii.s.upromise.com/rc/co/images/pdf/plandisclosure.pdf
+
+Commercial paper   https://bogleheads.org/wiki/Commercial%20paper
+    The requested name is valid, but no data of the requested type was found. (topics.bloomberg.com:80)    http://topics.bloomberg.com/commercial-paper/
+    Internal Server Error    http://www.investopedia.com/articles/bonds/08/commercial-paper.asp#axzz1sPzm55jg
+    Internal Server Error    http://www.investopedia.com/terms/c/commercialpaper.asp#axzz1sPzm55jg
+    Forbidden    http://www.riskglossary.com/link/commercial_paper.htm
+    Not Found    http://www.standardandpoors.com/indices/sp-commercial-paper-index/en/us/?indexId=spfi--cp--usd----t-------
+
+Commodities   https://bogleheads.org/wiki/Commodities
+    Forbidden    http://www.crbtrader.com/crbindex/
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/commodity/?go=literature
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (www.iinews.com:80)    http://www.iinews.com/site/pdfs/JAI_Summer_2000_Greer.pdf
+    Not Found    http://www.investorsolutions.com/news/299/112/Commodities-As-An-Asset-Class/
+    Not Found    http://www.investorsolutions.com/news/309/112/Not-All-Commodity-Indexes-Are-Created-Equal-Part-One-of-a-Two-Part-Series/
+    Not Found    http://www.ipathetn.com/US/16/en/details.app?instrumentId=1193
+
+Common Sense Investing   https://bogleheads.org/wiki/Common%20Sense%20Investing
+    Service Unavailable    http://www.amazon.com/s/?search-alias=aps&tag=bogleheads.org-20&field-keywords=Bogleheads
+
+Compare Vanguard international funds   https://bogleheads.org/wiki/Compare%20Vanguard%20international%20funds
+    redirected to http://www.msci.com/r/www-mscibarra-com/products/indexes/international_equity_indexes/acwi-imi/MSCI_ACWI_IMI_Factsheet.pdf    from http://www.mscibarra.com/products/indices/international_equity_indices/acwi-imi/MSCI_ACWI_IMI_Factsheet.pdf
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-062015
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-Z-implementation-122015
+
+Comparing CDs   https://bogleheads.org/wiki/Comparing%20CDs
+    Forbidden    http://www.depositaccounts.com/
+    Forbidden    http://www.depositaccounts.com/tools/break-cd-calculator.aspx
+    Internal Server Error    http://www.investopedia.com/terms/a/apy.asp
+    redirected to http://www.fdic.gov/resources/deposit-insurance/understanding-deposit-insurance/    from http://www.fdic.gov/deposit/deposits/certificate/index.html
+
+Comparing investments   https://bogleheads.org/wiki/Comparing%20investments
+    Internal Server Error    http://www.investopedia.com/articles/03/082703.asp
+
+Comparison of accumulating ETFs and distributing ETFs   https://bogleheads.org/wiki/Comparison%20of%20accumulating%20ETFs%20and%20distributing%20ETFs
+    Internal Server Error    https://www.investopedia.com/terms/r/ric.asp
+
+Connecticut 529 plan archive   https://bogleheads.org/wiki/Connecticut%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=CT&planID=5PUSA00001
+
+Consumer price index   https://bogleheads.org/wiki/Consumer%20price%20index
+    Bad Request    http://visualizingeconomics.com/blog/2016/6/2/us-inflation-log-1790-2015
+    Forbidden    http://www.bls.gov/CPI/
+    Forbidden    http://www.bls.gov/cpi/data.htm
+
+Convertible bonds   https://bogleheads.org/wiki/Convertible%20bonds
+    Service Unavailable    http://www.amazon.com/s/?search-alias=aps&tag=bogleheads.org-20&field-keywords=Bogleheads
+    Not Found    http://www.calamos.com/en/FundInvestor/EducationPlanning/PublishedBookExcerpts/CvtSec-Example.aspx
+    Not Found    http://www.calamos.com/~/media/documents/product-literature/factsheet/calamos-us-convertible-institutional-strategy-fact-sheet.ashx
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (publications.credit-suisse.com:80)    http://publications.credit-suisse.com/index.cfm/publikationen-shop/white-papers/convertible-bonds/
+    Not Found    http://www.invesco.com/pdf/CLCSEC-BRO-1.pdf
+    Internal Server Error    http://www.investopedia.com/articles/01/052301.asp
+
+Convertible security   https://bogleheads.org/wiki/Convertible%20security
+    Internal Server Error    http://www.investopedia.com/terms/c/convertible-security.asp
+    Internal Server Error    http://www.investopedia.com/terms/c/convertiblepreferredstock.asp
+
+Corporate bonds   https://bogleheads.org/wiki/Corporate%20bonds
+    Service Unavailable    http://www.amazon.com/s/?search-alias=aps&tag=bogleheads.org-20&field-keywords=Bogleheads
+    Forbidden    http://www.indexuniverse.com/sections/interviews/14500-bogle-buy-corporate-bonds-with-rates-low.html
+        http://www.investinginbonds.com/learnmore.asp?catid=10
+    Internal Server Error    http://www.investopedia.com/articles/03/110503.asp#axzz2CDNySFaS
+    Not Found    http://www.finra.org/Industry/Compliance/MarketTransparency/TRACE/FAQ/P125244
+
+Cost basis methods   https://bogleheads.org/wiki/Cost%20basis%20methods
+    Not Found    http://www.fairmark.com/mutual/index.htm
+    Not Found    http://www.irs.gov/taxpros/article/0,,id=237099,00.html
+
+Cost matters hypothesis   https://bogleheads.org/wiki/Cost%20matters%20hypothesis
+    Forbidden    http://www.vanguard.com/bogle_site/sp20060101.htm
+
+Credit cards   https://bogleheads.org/wiki/Credit%20cards
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (www201.americanexpress.com:80)    http://www201.americanexpress.com/getthecard/learn-about/BlueCash-Preferred
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (www201.americanexpress.com:80)    http://www201.americanexpress.com/getthecard/side-by-side/bluecashever-bluecashpref/12006
+    Bad Gateway    http://www.barclaycardarrival.com/arrival-plus/?campaignId=1729&od=bcarrival&cellNumber=24
+    No such host is known. (financialedge.investopedia.com:80)    http://financialedge.investopedia.com/financial-edge/0111/7-Tips-For-Closing-A-Credit-Card.aspx
+    No such host is known. (financialedge.investopedia.com:80)    http://financialedge.investopedia.com/financial-edge/0311/6-New-Credit-Card-Regulations-That-Benefit-You.aspx
+
+Credit insurance   https://bogleheads.org/wiki/Credit%20insurance
+    Not Found    http://www.in.gov/dfi/2658.htm
+
+Credit score   https://bogleheads.org/wiki/Credit%20score
+    Not Found    http://insurancescores.fico.com/Pages/InScore.html
+    Not Found    http://insurancescores.fico.com/Pages/default.aspx
+
+Cross trade   https://bogleheads.org/wiki/Cross%20trade
+    Internal Server Error    http://www.investopedia.com/terms/c/crosstrade.asp
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (finpage.blog:443)    https://finpage.blog/tag/vanguard-cross-trading/
+
+Currency risk for non-US investors   https://bogleheads.org/wiki/Currency%20risk%20for%20non-US%20investors
+    Internal Server Error    https://www.investopedia.com/terms/c/currency-etf.asp
+
+Current events   https://bogleheads.org/wiki/Current%20events
+    Forbidden    http://www.indexuniverse.com/hot-topics/8110-vanguard-launches-russell-based-etfs-.html
+    Forbidden    http://www.indexuniverse.com/publications/etf-watch/8092-etf-watch-september-12-september-18.html
+    Forbidden    http://www.indexuniverse.com/publications/etf-watch/8123-etf-watch-september-19--september-25.html
+    Forbidden    http://www.indexuniverse.com/publications/etf-watch/8176-etf-watch-september-26--october-2.html
+    Forbidden    http://www.indexuniverse.com/publications/etf-watch/8203-etf-watch-october-2-october-9.html
+    Forbidden    http://www.indexuniverse.com/sections/etf-watch/8229-etf-watch-october-10-october-16.html
+
+Daniel Kahneman   https://bogleheads.org/wiki/Daniel%20Kahneman
+    Internal Server Error    http://www.investopedia.com/terms/p/prospecttheory.asp
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/2346978/daniel-kahneman
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors    http://citec.repec.org/p/k/pka60.html
+
+Debt   https://bogleheads.org/wiki/Debt
+    No such host is known. (www.investorwords.com:80)    http://www.investorwords.com/1313/debt.html
+
+Debt security   https://bogleheads.org/wiki/Debt%20security
+    Internal Server Error    http://www.investopedia.com/terms/d/debtsecurity.asp#axzz1sPzm55jg
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    http://www.imf.org/external/np/sta/wgsd/pdf/051309.pdf
+
+Defined benefit pension plan   https://bogleheads.org/wiki/Defined%20benefit%20pension%20plan
+    Not Found    https://www.irs.gov/retirement-plans/choosing-a-retirement-plan-defined-benefit-plan
+
+Delaware 529 plan archive   https://bogleheads.org/wiki/Delaware%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=DE&planID=5PUSA0000B
+
+Dental insurance   https://bogleheads.org/wiki/Dental%20insurance
+    No such host is known. (www.be-insurance-savvy.com:80)    http://www.be-insurance-savvy.com/insurance-glossary.html
+
+Deposit insurance   https://bogleheads.org/wiki/Deposit%20insurance
+    Not Found    http://www.cbo.gov/doc.cfm?index=12050
+
+Derivative   https://bogleheads.org/wiki/Derivative
+    Internal Server Error    http://www.investopedia.com/terms/d/derivative.asp
+
+Developed market bonds   https://bogleheads.org/wiki/Developed%20market%20bonds
+    Not Found    http://www.vanguard.com/pdf/icrwne.pdf?linkLocation=insights_overview
+    Not Found    http://mitpress.mit.edu/books/chapters/0262195534chapm1.pdf
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (www.investinginbondseurope.org:80)    http://www.investinginbondseurope.org/Default.aspx
+    The requested name is valid, but no data of the requested type was found. (index.barcap.com:443)    https://ecommerce.barcap.com/indices/index.dxml
+
+Developed market index returns   https://bogleheads.org/wiki/Developed%20market%20index%20returns
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/meth_info/Dow_Jones_Global_Total_Stock_Market_Indexes_Methodology.pdf
+    Forbidden    http://www.ftse.com/
+    Forbidden    http://www.ftse.com/Indices/FTSE_Global_Equity_Index_Series/Downloads/FTSE_Global_Equity_Index_Series_Index_Rules.pdf
+    Forbidden    http://www.ftse.com/analytics/factsheets/Home/Search#
+
+Dimensional Fund Advisors   https://bogleheads.org/wiki/Dimensional%20Fund%20Advisors
+    Not Found    http://www.dfaus.com/pdf/Life-cycle_Finance_and_the_Dimensional_Managed_DC_Solution.pdf
+    Not Found    http://www.dfaus.com/philosophy/markets-work.html
+    Not Found    http://www.dfaus.com/process/trading.html
+    Not Found    http://www.dfaus.com/service/dimensional-managed-dc.html
+    Gateway Time-out    http://quicktake.morningstar.com/FundFamily/Snapshot.asp?Country=USA&Symbol=20081
+    Gateway Time-out    http://quicktake.morningstar.com/FundFamily/Snapshot.asp?Country=USA&Symbol=0C00001YUF
+
+Disability insurance   https://bogleheads.org/wiki/Disability%20insurance
+    Not Found    http://ambest.com/resource/glossary.html
+    redirected to http://consumers.ambest.com/ConsumerInfo.aspx?site=4&Page=11    from http://www3.ambest.com/consumers/ConsumerInfo.aspx?site=4&Page=11
+
+District of Columbia 529 plan archive   https://bogleheads.org/wiki/District%20of%20Columbia%20529%20plan%20archive
+    Not Found    http://www.dccollegesavings.com/DCIndex.html
+    Not Found    http://www.dccollegesavings.com/dcinvestmentoptions_DC529AgeBasedFunds.html
+    Not Found    http://www.dccollegesavings.com/pdf/dc_disclosure.pdf
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=DC&planID=5PUSA0001I
+
+Diversification   https://bogleheads.org/wiki/Diversification
+    Internal Server Error    http://www.investopedia.com/terms/d/diversification.asp
+    Forbidden    https://www.jstor.org/stable/2975974?seq=1#page_scan_tab_contents
+
+Dividend   https://bogleheads.org/wiki/Dividend
+    Internal Server Error    http://www.investopedia.com/terms/d/dividend.asp
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    http://www.sec.gov/answers/dividen.htm
+
+Dividend discount model   https://bogleheads.org/wiki/Dividend%20discount%20model
+    Internal Server Error    http://www.investopedia.com/articles/fundamental/04/041404.asp
+
+Dividend weighted indices   https://bogleheads.org/wiki/Dividend%20weighted%20indices
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/selectdividend/
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/selectdividend/?go=literature
+    Not Found    http://www.etfguide.com/advance_search_view.php?ID=145&slug=iShares%20DJ%20Select%20Dividend%20Index%20Fund&catview=
+    Not Found    http://www.etfguide.com/advance_search_view.php?ID=146&slug=iShares%20Dow%20Jones%20EPAC%20Select%20Dividend%20Index%20Fund&catview=
+    Not Found    http://www.etfguide.com/advance_search_view.php?ID=17&slug=Vanguard%20Dividend%20Appreciation%20ETF&catview=
+    Not Found    http://www.etfguide.com/advance_search_view.php?ID=18&slug=Vanguard%20High%20Dividend%20Yield%20ETF&catview=
+    Not Found    http://www.etfguide.com/advance_search_view.php?ID=278&slug=PowerShares%20Dividend%20Achievers%20Portfolio%20Fund&catview=
+    Not Found    http://www.etfguide.com/advance_search_view.php?ID=302&slug=PowerShares%20International%20Dividend%20Achievers%20Fund&catview=
+    Not Found    http://www.etfguide.com/advance_search_view.php?ID=332&slug=Guggenheim%20S&P%20Global%20Dividend%20Opportunities%20ETF&catview=
+
+Dollar cost averaging   https://bogleheads.org/wiki/Dollar%20cost%20averaging
+    Not Found    http://www.dimensional.com/famafrench/2009/06/dollar-cost-averaging.html
+
+Domestic/international   https://bogleheads.org/wiki/Domestic/international
+    Not Found    http://crr.bc.edu/images/stories/Working_Papers/wp_2007-5.pdf
+
+Domicile   https://bogleheads.org/wiki/Domicile
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.canada.ca/en/department-finance/programs/tax-policy/tax-treaties.html#status
+
+Donor advised fund   https://bogleheads.org/wiki/Donor%20advised%20fund
+    Forbidden    http://www.schwabcharitable.org/public/charitable/home
+
+Dreyfus   https://bogleheads.org/wiki/Dreyfus
+    redirected to http://www.sec.gov/litigation/admin/33-7857    from http://www.sec.gov/litigation/admin/33-7857.htm
+    No such host is known. (public.dreyfus.com:443)    https://public.dreyfus.com/
+    No such host is known. (public.dreyfus.com:443)    https://public.dreyfus.com/products-performance/index.html
+
+Duration - math definitions   https://bogleheads.org/wiki/Duration%20-%20math%20definitions
+    Not Found    http://www.mathworks.com/help/finance/common-problems-in-finance.html#f10-6914
+
+Dutch pension fund performance   https://bogleheads.org/wiki/Dutch%20pension%20fund%20performance
+    Not Found    http://www.cembenchmarking.com/research/investmentresearch.aspx
+    Not Found    http://www.pensioenfederatie.nl/Document/Publicaties/English%20publications/Nederlandse_pensioensysteem_Engelstalige_versie.pdf
+
+EDGAR   https://bogleheads.org/wiki/EDGAR
+    The 'ftp' scheme is not supported.    ftp://ftp.sec.gov/edgar/docs/
+    Service Unavailable    http://www.sec.gov/cgi-bin/edgar_indices
+    Service Unavailable    http://www.sec.gov/edgar/searchedgar/ftpusers.htm
+    Service Unavailable    http://www.sec.gov/info/edgar/forms/edgform.pdf
+
+EE savings bonds   https://bogleheads.org/wiki/EE%20savings%20bonds
+    No such host is known. (www.savings-bond-advisor.com:80)    http://www.savings-bond-advisor.com/
+    An error occurred while sending the request.    http://www.savingsbonds.gov/indiv/products/prod_eebonds_glance.htm
+
+ETF and mutual fund total assets   https://bogleheads.org/wiki/ETF%20and%20mutual%20fund%20total%20assets
+    Not Found    https://www.ici.org/research/stats/factbook
+    Forbidden    https://www.icifactbook.org/deployedfiles/FactBook/Site%20Properties/xls/2019/chapter2.zip
+
+ETFs for Bogleheads   https://bogleheads.org/wiki/ETFs%20for%20Bogleheads
+    Forbidden    http://www.crsp.org/indexes-pages/key-concept-4-crsp-approach-combining-size-benchmarks
+    Forbidden    https://www.etf.com
+    Not Found    https://www.morningstar.com/instant-x-ray
+
+ETFs vs mutual funds   https://bogleheads.org/wiki/ETFs%20vs%20mutual%20funds
+    Not Found    http://www.morningstar.com/cover/videocenter.aspx?id=641673
+    Not Found    http://www.rickferri.com/blog/investments/solving-the-bond-etf-discount-problem/
+    Not Found    http://www.vanguard.com/pdf/ISGETF.pdf
+    Not Found    http://www.vanguard.com/pdf/s803.pdf
+    Forbidden    https://investor.vanguard.com/etf/faqs#conventionalMF
+    Not Found    https://personal.vanguard.com/pdf/ISGCETF.pdf
+    Forbidden    https://personal.vanguard.com/us/insights/article/eft-primer-04302012
+
+Early retirement   https://bogleheads.org/wiki/Early%20retirement
+    Service Unavailable    http://www.amazon.com/s/?search-alias=aps&tag=bogleheads.org-20&field-keywords=Bogleheads
+
+Earthquake insurance   https://bogleheads.org/wiki/Earthquake%20insurance
+    No such host is known. (www.home-owner-insurance-quote.org:80)    http://www.home-owner-insurance-quote.org/frequently_used_home_insurance_terms.html
+
+Edgar Lawrence Smith   https://bogleheads.org/wiki/Edgar%20Lawrence%20Smith
+    Forbidden    http://www.cfapubs.org/doi/abs/10.2469/faj.v12.n2.63?journalCode=faj
+
+Edward Tower   https://bogleheads.org/wiki/Edward%20Tower
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/2858736/edward-tower
+    Not Found    http://econ.duke.edu/people?Uil=edward.tower&subpage=profile
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors    http://citec.repec.org/p/t/pto131.html
+
+Edwin J. Elton   https://bogleheads.org/wiki/Edwin%20J.%20Elton
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/149897/edwin-j-elton
+
+Effect of expenses on a portfolio   https://bogleheads.org/wiki/Effect%20of%20expenses%20on%20a%20portfolio
+    No such host is known. (public.sheet.zoho.com:80)    http://public.sheet.zoho.com/public/dsboglehead/savings-over-time
+    Not Found    http://www.libreoffice.org/features/calc/
+
+Elroy Dimson   https://bogleheads.org/wiki/Elroy%20Dimson
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/1196084/elroy-dimson
+    Not Found    http://www.q-group.org/prize-winners/
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors    http://citec.repec.org/p/d/pdi298.html
+
+Emergency fund   https://bogleheads.org/wiki/Emergency%20fund
+    Internal Server Error    http://www.investopedia.com/terms/l/liquidity.asp
+
+Emerging market bonds   https://bogleheads.org/wiki/Emerging%20market%20bonds
+    Not Found    http://personal.fidelity.com/products/funds/content/pdf/2011_market_update_q2.pdf.
+    Internal Server Error    http://www.investopedia.com/terms/i/illiquid.asp
+    Forbidden    http://www.moodys.com/sites/products/DefaultResearch/2007100000482445.pdf
+    Forbidden    http://www.moodys.com/sites/products/DefaultResearch/2007400000573849.pdf
+    Gateway Time-out    http://news.morningstar.com/fund-category-returns/emerging-markets-bond/$FOCA$EB.aspx
+    Not Found    http://www.vanguard.com/pdf/icrwne.pdf?linkLocation=insights_overview
+
+Emerging market stocks   https://bogleheads.org/wiki/Emerging%20market%20stocks
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (210.34.0.45:80)    http://210.34.45/cn/fm/Global%20%Stock20%Markets20%in20%the20%Twentieth20%CEntury.pdf
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (210.34.5.45:80)    http://210.34.5.45/cn/fm/Global%20Stock%20Markets%20in%20the%20Twentieth%20Century.pdf
+    Internal Server Error    http://www.investopedia.com/articles/03/073003.asp#axzz2CtOcknpt
+    Internal Server Error    http://www.investopedia.com/terms/e/emergingmarketeconomy.asp#axzz2CtOcknpt
+
+Emerging markets index returns   https://bogleheads.org/wiki/Emerging%20markets%20index%20returns
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/fact_info/Dow_Jones_Emerging_Markets_Total_Stock_Market_Indexes_Fact_Sheet.pdf
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/meth_info/Dow_Jones_Global_Total_Stock_Market_Indexes_Methodology.pdf
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/totalstockmarket/?go=literature
+    Forbidden    http://www.ftse.com/Indices/FTSE_Global_Equity_Index_Series/Downloads/FTSE_Global_Equity_Index_Series_Index_Rules.pdf
+
+Employer matching contributions   https://bogleheads.org/wiki/Employer%20matching%20contributions
+    Not Found    http://www.irs.gov/Retirement-Plans/Operating-a-SIMPLE-IRA-Plan
+    Not Found    http://www.irs.gov/Retirement-Plans/SIMPLE-IRA-Plan-FAQs-Contributions
+
+Employer retirement plans overview   https://bogleheads.org/wiki/Employer%20retirement%20plans%20overview
+    Forbidden    http://www.457bwise.com/faqs/index.html
+    Not Found    http://advisor.morningstar.com/articles/articlelist.asp?colId=536
+    Not Found    http://www.dol.gov/dol/topic/retirement/index.htm
+    Not Found    http://www.dol.gov/ebsa/publications/choosing.html
+    Not Found    http://www.irs.gov/Retirement-Plans/Choosing-a-Retirement-Plan:-Defined-Benefit-Plan
+
+Equal weighted indices   https://bogleheads.org/wiki/Equal%20weighted%20indices
+    Not Found    http://guggenheiminvestments.com/Products/etf/Strategies
+    Forbidden    http://www.indexuniverse.com/sections/news/7052-claymore-filing-equal-weighting-the-wilshire-5000.html
+    Internal Server Error    http://www.investopedia.com/articles/exchangetradedfunds/08/market-equal-weight.asp
+    Internal Server Error    http://www.investopedia.com/articles/exchangetradedfunds/08/index-debate.asp
+    redirected to http://www.msci.com/r/www-mscibarra-com/products/indexes/thematic_and_strategy/equal_weighted/    from http://www.mscibarra.com/products/indices/thematic_and_strategy/equal_weighted/
+    redirected to http://www.msci.com/r/www-mscibarra-com/products/indexes/thematic_and_strategy/equal_weighted/methodology.html    from http://www.mscibarra.com/products/indices/thematic_and_strategy/equal_weighted/methodology.html
+    Forbidden    http://www.russell.com/indexes/data/equal_weight/russell_equal_weight_indexes.asp
+    Forbidden    http://us.spindices.com/index-family/us-equity/alternative-weighting
+
+Eric Zitzewitz   https://bogleheads.org/wiki/Eric%20Zitzewitz
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/10682289/eric-zitzewitz
+    Forbidden    http://dartmouth.edu/faculty-directory/eric-w-zitzewitz
+    Not Found    http://www.q-group.org/prize-winners/
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors    http://citec.repec.org/p/z/pzi23.html
+
+Estate and inheritance tax   https://bogleheads.org/wiki/Estate%20and%20inheritance%20tax
+    Internal Server Error    http://wills.about.com/od/understandingestatetaxes/a/grossestateitem.htm
+    No such host is known. (www.bermudalegalsolutions.com:80)    http://www.bermudalegalsolutions.com/bermuda-estate-stamp-duty/
+    Forbidden    http://www.dornc.com/taxes/estate/general.html
+    Internal Server Error    http://www.investopedia.com/terms/g/grossestate.asp#ixzz23MnA38kE
+    No such host is known. (individuals.marylandtaxes.com:80)    http://individuals.marylandtaxes.com/estatetax/default.asp
+
+Estate planning   https://bogleheads.org/wiki/Estate%20planning
+    Not Found    https://www.liskow.com/PublicationFiles/Hester%20article.pdf
+
+Eugene F. Fama   https://bogleheads.org/wiki/Eugene%20F.%20Fama
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/993000/eugene-fama
+    No such host is known. (faculty.chicagogsb.edu:80)    http://faculty.chicagogsb.edu/eugene.fama/research/index.htm
+    No such host is known. (jfe.rochester.edu:80)    http://jfe.rochester.edu/winners.htm
+
+Eurobond   https://bogleheads.org/wiki/Eurobond
+    Internal Server Error    http://www.investopedia.com/terms/e/eurobond.asp
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (www.investinginbondseurope.org:80)    http://www.investinginbondseurope.org/pages/learnaboutbonds.aspx?id=6368
+
+Exchange-traded fund   https://bogleheads.org/wiki/Exchange-traded%20fund
+    Forbidden    http://www.etf.com/
+    Not Found    http://etfguide.com/etfcommodity.htm
+    Not Found    http://etfguide.com/etfproductstructure.htm
+    Not Found    http://www.etfguide.com:80/exchangetradedfunds.htm
+    Forbidden    http://www.indexuniverse.com/docs/110411IU_ETF_Taxation_v5A_%20j9.pdf
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    http://www.nasdaq.com/investing/etfs/
+
+Expected Family Contribution   https://bogleheads.org/wiki/Expected%20Family%20Contribution
+    No such host is known. (www.fafsa.ed.gov:80)    http://www.fafsa.ed.gov/
+    No such host is known. (www.studentaid.ed.gov:80)    http://www.studentaid.ed.gov/
+    No such host is known. (studentaid.ed.gov:443)    https://studentaid.ed.gov/sa/resources#efc
+
+Expense ratios   https://bogleheads.org/wiki/Expense%20ratios
+    Forbidden    https://www.etf.com/sections/blog/23937-etfs-made-easy-expense-ratios.html?nopaging=1
+
+Extended market index fund   https://bogleheads.org/wiki/Extended%20market%20index%20fund
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/totalstockmarket/
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (portfolios.morningstar.com:80)    http://portfolios.morningstar.com/fund/summary?t=VEXMX&region=usa&culture=en_US
+    Forbidden    https://us.spindices.com/documents/methodologies/methodology-sp-us-indices.pdf
+    Forbidden    https://us.spindices.com/indices/equity/sp-completion-index-ci
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vexmx
+    Forbidden    https://investor.vanguard.com/mutual-funds/profile/overview/vexax
+
+FTSE All World ex US Index   https://bogleheads.org/wiki/FTSE%20All%20World%20ex%20US%20Index
+    Forbidden    http://www.ftse.com/Indices/FTSE_All_World_Index_Series/Downloads/FTSE_GEIS_Brochure_Final_Version.pdf
+    Forbidden    http://www.ftse.com/Indices/FTSE_Index_Standards/Free_Float.jsp
+    Forbidden    http://www.ftse.com/products/indices/geis-series
+    Forbidden    http://www.ftse.com/products/indices/index-support-guides
+    Forbidden    http://www.ftse.com/vanguard
+    Forbidden    http://www.ftse.com/vanguard/Content/docs/FTSE_Global_Equity_Index_Series_Index_Rules.pdf?567
+    Forbidden    http://www.ftse.com/vanguard/Home/ftse-other-indexes
+
+FTSE Developed All Cap ex US Index   https://bogleheads.org/wiki/FTSE%20Developed%20All%20Cap%20ex%20US%20Index
+    Forbidden    http://www.ftse.com/Vanguard/home/Indices?Region=AMERICAS
+    Forbidden    http://www.ftse.com/products/downloads/FTSE_South_Korea_Whitepaper_Jan2013.pdf
+    Forbidden    http://www.ftse.com/products/indices/country-classification
+    Forbidden    http://www.ftse.com/products/indices/geis-series
+    Forbidden    http://www.ftse.com/products/indices/index-support-guides
+    Forbidden    http://www.ftse.com/vanguard
+    Forbidden    http://www.ftse.com/vanguard/Content/docs/FTSE_Global_Equity_Index_Series_Index_Rules.pdf?567
+
+FTSE Developed Asia Pacific All Cap Index   https://bogleheads.org/wiki/FTSE%20Developed%20Asia%20Pacific%20All%20Cap%20Index
+    Forbidden    http://www.ftse.com/Vanguard/home/Indices?Region=AMERICAS
+    Forbidden    http://www.ftse.com/products/indices/geis-series
+    Forbidden    http://www.ftse.com/products/indices/index-support-guides
+    Forbidden    http://www.ftse.com/vanguard
+    Forbidden    http://www.ftse.com/vanguard/Content/docs/FTSE_Global_Equity_Index_Series_Index_Rules.pdf?567
+    Forbidden    http://www.ftse.com/vanguard/Content/docs/FTSE_South_Korea_Whitepaper_Jan2013.pdf?4
+    Forbidden    http://www.ftse.com/vanguard/Home/ftse-developed-asia-index
+
+FTSE Developed Europe All Cap Index   https://bogleheads.org/wiki/FTSE%20Developed%20Europe%20All%20Cap%20Index
+    Forbidden    http://www.ftse.com/Vanguard/home/Indices?Region=AMERICAS
+    Forbidden    http://www.ftse.com/products/indices/geis-series
+    Forbidden    http://www.ftse.com/products/indices/index-support-guides
+    Forbidden    http://www.ftse.com/vanguard
+    Forbidden    http://www.ftse.com/vanguard/Content/docs/FTSE_Global_Equity_Index_Series_Index_Rules.pdf?567
+
+FTSE Emerging Index   https://bogleheads.org/wiki/FTSE%20Emerging%20Index
+    Forbidden    http://www.ftse.com/Vanguard/home/Indices?Region=AMERICAS
+    Forbidden    http://www.ftse.com/products/downloads/FTSE_South_Korea_Whitepaper_Jan2013.pdf
+    Forbidden    http://www.ftse.com/products/indices/country-classification
+    Forbidden    http://www.ftse.com/products/indices/geis-series
+    Forbidden    http://www.ftse.com/products/indices/index-support-guides
+    Forbidden    http://www.ftse.com/vanguard
+    Forbidden    http://www.ftse.com/vanguard/Content/docs/FTSE_Global_Equity_Index_Series_Index_Rules.pdf?567
+    Not Found    http://www.reuters.com/article/2012/06/18/idUS155881+18-Jun-2012+RNS20120618
+
+FTSE Global All Cap Index   https://bogleheads.org/wiki/FTSE%20Global%20All%20Cap%20Index
+    Forbidden    http://www.ftse.com/Indices/FTSE_All_World_Index_Series/Downloads/FTSE_GEIS_Brochure_Final_Version.pdf
+    Forbidden    http://www.ftse.com/Indices/FTSE_Global_Equity_Index_Series/Downloads/GEISLMS.pdf
+    Forbidden    http://www.ftse.com/Indices/FTSE_Index_Standards/Free_Float.jsp
+    Forbidden    http://www.ftse.com/products/indices/index-support-guides
+    Forbidden    http://www.ftse.com/vanguard
+    Forbidden    http://www.ftse.com/vanguard/Content/docs/FTSE_Global_Equity_Index_Series_Index_Rules.pdf?567
+
+FTSE Global All Cap ex US Index   https://bogleheads.org/wiki/FTSE%20Global%20All%20Cap%20ex%20US%20Index
+    Forbidden    http://www.ftse.com/Indices/FTSE_All_World_Index_Series/Downloads/FTSE_GEIS_Brochure_Final_Version.pdf
+    Forbidden    http://www.ftse.com/Indices/FTSE_Index_Standards/Free_Float.jsp
+    Forbidden    http://www.ftse.com/Indices/FTSE_Real-Time_Vendor_Codes/index.jsp
+    Forbidden    http://www.ftse.com/products/indices/index-support-guides
+    Forbidden    http://www.ftse.com/vanguard
+    Forbidden    http://www.ftse.com/vanguard/Content/docs/FTSE_Global_Equity_Index_Series_Index_Rules.pdf?567
+    Forbidden    http://www.ftse.com/vanguard/Home/ftse-global-all-cap-index
+
+FTSE Global Small Cap ex US Index   https://bogleheads.org/wiki/FTSE%20Global%20Small%20Cap%20ex%20US%20Index
+    Forbidden    http://www.ftse.com/Indices/FTSE_All_World_Index_Series/Downloads/FTSE_GEIS_Brochure_Final_Version.pdf
+    Forbidden    http://www.ftse.com/Indices/FTSE_Index_Standards/Free_Float.jsp
+    Forbidden    http://www.ftse.com/products/indices/index-support-guides
+    Forbidden    http://www.ftse.com/vanguard
+    Forbidden    http://www.ftse.com/vanguard/Content/docs/FTSE_Global_Equity_Index_Series_Index_Rules.pdf?567
+    Forbidden    http://www.ftse.com/vanguard/Home/ftse-other-indexes
+
+FTSE Group   https://bogleheads.org/wiki/FTSE%20Group
+    Forbidden    http://www.londonstockexchange-ir.com/lse/finperformance/reports/results/ir07/ir07.pdf
+
+FTSE UK indexes   https://bogleheads.org/wiki/FTSE%20UK%20indexes
+    Forbidden    http://www.ftse.com/Indices/FTSE_UK_Gilts_Indices/Index_Rules.jsp
+    Forbidden    http://www.ftse.com/Indices/FTSE_UK_Gilts_Indices/index.jsp
+    Forbidden    http://www.ftse.com/Indices/UK_Indices/Downloads/ASX.pdf
+    Forbidden    http://www.ftse.com/Indices/UK_Indices/index.jsp
+    Forbidden    http://www.ftse.com/objects/csv_to_table.jsp?infoCode=100a&theseFilters=&csvAll=&theseColumns=Mw==&theseTitles=&tableTitle=FTSE%20100%20Index%20Constituents&dl=&p_encoded=1
+    Forbidden    http://www.ftse.com/objects/csv_to_table.jsp?infoCode=250a&theseFilters=&csvAll=&theseColumns=Mw==&theseTitles=&tableTitle=FTSE%20250%20Index%20Constituents&dl=&p_encoded=1
+    Forbidden    http://www.ftse.com/objects/csv_to_table.jsp?infoCode=350a&theseFilters=&csvAll=&theseColumns=Mw==&theseTitles=&tableTitle=FTSE%20350%20Index%20Constituents&dl=&p_encoded=1
+    Forbidden    http://www.ftse.com/objects/csv_to_table.jsp?infoCode=alla&theseFilters=&csvAll=&theseColumns=Mw==&theseTitles=&tableTitle=FTSE%20All-Share%20Index%20Constituents&dl=&p_encoded=1
+    Forbidden    http://www.ftse.com/objects/csv_to_table.jsp?infoCode=asm&theseFilters=&csvAll=&theseColumns=Mw==&theseTitles=&tableTitle=FTSE%20All-Small%20Index%20Constituents&dl=&p_encoded=1
+    Forbidden    http://www.ftse.com/objects/csv_to_table.jsp?infoCode=fla&theseFilters=&csvAll=&theseColumns=Mw==&theseTitles=&tableTitle=FTSE%20Fledgling%20Index%20Constituents&dl=&p_encoded=1
+
+Fair value pricing   https://bogleheads.org/wiki/Fair%20value%20pricing
+    Not Found    http://webcache.googleusercontent.com/search?q=cache:CrWCamudbgAJ:econ.duke.edu/Papers/PDF/Time_Zone_Arbitrage.pdf+&cd=2&hl=en&ct=clnk&gl=us
+    redirected to http://ir.virtu.com/press-releases/default.aspx    from http://www.itg.com/news_events/papers/implementing_fvp.pdf
+    Not Found    http://www.msci.com/fairvalue/IDCo/
+    Forbidden    http://www.thestreet.com/story/1413555/1/sec-to-mutual-funds-take-down-arbitrage-welcome-signs.html
+    Not Found    http://www.ici.org/policy/regulation/valuation
+
+Fama-French three-factor model analysis   https://bogleheads.org/wiki/Fama-French%20three-factor%20model%20analysis
+    No such host is known. (www.closetindexer.com:80)    http://www.closetindexer.com/files/Personal/ff/ff_regression.R
+    Forbidden    http://www.sciencedirect.com/science/article/pii/0304405X93900235
+
+Fama and French five-factor model   https://bogleheads.org/wiki/Fama%20and%20French%20five-factor%20model
+    Not Found    http://www.dfaus.com/philosophy/research.html
+
+Fama and French three-factor model   https://bogleheads.org/wiki/Fama%20and%20French%20three-factor%20model
+    Not Found    http://www.dfaus.com/process/multifactor.html
+    Not Found    http://www.equiuspartners.com/download.php?download_file=includes/resources/library/20100903164839multifactor_investing.pdf
+    Forbidden    http://www.portfoliosolutions.com/
+
+Family strategic planning   https://bogleheads.org/wiki/Family%20strategic%20planning
+    No such host is known. (www.businessdictionary.com:80)    http://www.businessdictionary.com/definition/strategic-planning.html
+    Not Found    http://3dwealth.podomatic.com/entry/index/2007-10-01T17_24_00-07_00
+    No such host is known. (www.wealthmanagementsolutionsllc.com:80)    http://www.wealthmanagementsolutionsllc.com/images/FTDO-10202010.pdf
+
+Fannie Mae   https://bogleheads.org/wiki/Fannie%20Mae
+    Not Found    http://www.fanniemae.com/markets/debt/index.jhtml?p=Debt%20Securities
+    Not Found    http://www.fanniemae.com/portal/about-us/governance/fmboard-committees.html?
+    No such host is known. (www.wikinvest.com:80)    http://www.wikinvest.com/stock/Fannie_Mae_(FNMA)
+    The requested name is valid, but no data of the requested type was found. (index.barcap.com:443)    https://ecommerce.barcap.com/indices/index.dxml
+
+Federal tax credits for individuals   https://bogleheads.org/wiki/Federal%20tax%20credits%20for%20individuals
+    Internal Server Error    http://www.investopedia.com/terms/n/nonrefundabletaxcredit.asp
+    Internal Server Error    http://www.investopedia.com/terms/r/refundablecredit.asp
+    Not Found    http://www.irs.gov/Credits-&-Deductions/Individuals/American-Opportunity-Tax-Credit-Glance
+    Not Found    http://www.irs.gov/Credits-&-Deductions/Individuals/Credit-for-Tax-on-Undistributed-Capital-Gain-at-a-Glance
+
+Fidelity   https://bogleheads.org/wiki/Fidelity
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/totalstockmarket/?go=literature
+    Not Found    https://www.fidelity.com/about-fidelity/individual-investing/fidelity-rewrites-the-rules-of-investing-to-deliver-unparalleled-value-and-simplicity-to-investors
+
+Fidelity: one stop shop   https://bogleheads.org/wiki/Fidelity:%20one%20stop%20shop
+    Not Found    http://personal.fidelity.com/accounts/services/depwith/2frameindex.shtml
+
+Fidelity Pooled Income Fund   https://bogleheads.org/wiki/Fidelity%20Pooled%20Income%20Fund
+    No such host is known. (www.charitablegift.org:80)    http://www.charitablegift.org/docs/Annual-Report.pdf
+    No such host is known. (www.charitablegift.org:80)    http://www.charitablegift.org/docs/Pooled-Income-Fund-Declaration-of-Trust.pdf
+
+Fiduciary transfers   https://bogleheads.org/wiki/Fiduciary%20transfers
+    Forbidden    http://www.ifid.ca/annuities_exchanging.htm
+    No such host is known. (m.403bwise.com:80)    http://m.403bwise.com/features/403bmarket.html
+    No such host is known. (m.403bwise.com:80)    http://m.403bwise.com/wisemoves/newtransferrules.html
+    Not Found    http://www.advisorsexcel.com/downloads/2011FactBook.pdf
+    Internal Server Error    http://www.investopedia.com/terms/s/sec1035ex.asp
+    Not Found    http://www.vanguard.com/pdf/403bpdf2_112007.pdf
+
+Financial planner   https://bogleheads.org/wiki/Financial%20planner
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.investor.gov/introduction-investing/investing-basics/glossary/financial-planners
+    Forbidden    https://www.aicpa.org/becomeacpa/gettingstarted/frequentlyaskedquestions.html
+    Forbidden    https://www.aicpa.org/membership/join/credentials.html?tab-1=3
+
+Financial planning   https://bogleheads.org/wiki/Financial%20planning
+    Not Found    http://www.360financialliteracy.org/Topics/Investor-Education/Investing-Basics/Investment-Planning-The-Basics
+
+Financial websites and blogs   https://bogleheads.org/wiki/Financial%20websites%20and%20blogs
+    The remote certificate is invalid because of errors in the certificate chain: NotTimeValid    http://www.403bwise.com/
+    Forbidden    http://www.457bwise.com/
+    Forbidden    http://online.barrons.com/public/main/
+
+Finnish pension fund performance   https://bogleheads.org/wiki/Finnish%20pension%20fund%20performance
+    Not Found    http://www.cembenchmarking.com/research/investmentresearch.aspx
+
+Flexible spending arrangement   https://bogleheads.org/wiki/Flexible%20spending%20arrangement
+    redirected to http://www.gpo.gov/who-we-are/our-agency/mission-vision-and-goals    from http://www.gpo.gov/about/
+
+Floating rate bonds   https://bogleheads.org/wiki/Floating%20rate%20bonds
+        http://www.investinginbonds.com/learnmore.asp?catid=9&subcatid=52&id=275
+    Internal Server Error    http://www.investopedia.com/terms/f/floater.asp#axzz1ZZ8IuVoP
+    No such host is known. (www.investorwords.com:80)    http://www.investorwords.com/6677/spread_duration.html
+    Gateway Time-out    http://news.morningstar.com/fund-category-returns/bank-loan/$FOCA$BL.aspx
+    Not Found    http://www.standardandpoors.com/indices/sp-lsta-leverage-loan-100-index/en/us/?indexId=spfi--ll--usd----t-------
+    Not Found    http://www.treasurydirect.gov/instit/statreg/auctreg/faqfloatingnoterate.htm
+
+Flood insurance   https://bogleheads.org/wiki/Flood%20insurance
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    http://www.northerntrust.com/pws/jsp/display2.jsp?XML=pages/nt/0403/46992245_1364.xml
+    Not Found    http://www.floodsmart.gov/floodsmart/
+
+Florida 529 plan archive   https://bogleheads.org/wiki/Florida%20529%20plan%20archive
+    Not Found    http://www.florida529plans.com/pdf/disclosure%20statement.pdf
+    Not Found    http://www.florida529plans.com/savings/options.html
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=FL&planID=5PUSA0001N
+    Not Found    http://www.myfloridaprepaid.com/documents/pdf/investment/investment-disclosure-statement.pdf,
+
+Frank J. Fabozzi   https://bogleheads.org/wiki/Frank%20J.%20Fabozzi
+    Not Found    http://www.frankfabozzi.com/index.html
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/56725/frank-j-fabozzi
+
+Freddie Mac   https://bogleheads.org/wiki/Freddie%20Mac
+    Not Found    http://www.freddiemac.com/corporate/company_profile/
+    No such host is known. (www.wikinvest.com:80)    http://www.wikinvest.com/stock/Freddie_Mac_(FMCC)
+    The requested name is valid, but no data of the requested type was found. (index.barcap.com:443)    https://ecommerce.barcap.com/indices/index.dxml
+
+Free-float methodology   https://bogleheads.org/wiki/Free-float%20methodology
+    Internal Server Error    http://www.investopedia.com/terms/f/freefloatmethodology.asp#ixzz2EOh2ropC
+
+Frontier market stocks   https://bogleheads.org/wiki/Frontier%20market%20stocks
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/analytics_and_research/Global_Equity_Handbook.pdf
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/symbolsandcalendars/?go=watchlist
+    Forbidden    http://www.ftse.com/Indices/Country_Classification/index.jsp
+    Forbidden    http://www.ftse.com/Indices/FTSE_Frontier_Indices/index.jsp
+    Forbidden    http://www.ftse.com/Indices/index.jsp
+
+Fund of funds   https://bogleheads.org/wiki/Fund%20of%20funds
+    Forbidden    https://investor.vanguard.com/etf/profile/VTC
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vdeqx
+    Forbidden    https://personal.vanguard.com/us/funds/vanguard/ManagedPayoutList
+
+Fundamental indices   https://bogleheads.org/wiki/Fundamental%20indices
+    Forbidden    http://www.ftse.com/Indices/FTSE_RAFI_Index_Series/2008Downloads/FTSE_RAFI_Indexes_Methodology_overview.pdf
+    Forbidden    http://www.ftse.com/Indices/FTSE_RAFI_Index_Series/factsheets.jsp
+    Forbidden    http://www.ftse.com/Indices/FTSE_RAFI_Index_Series/index.jsp
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (www.iinews.com:80)    http://www.iinews.com/site/pdfs/JPM_Spring_2010_Rallc.pdf
+    Forbidden    http://www.indexuniverse.com/hot-topics/9388-powershares-makes-big-rafi-related-moves-.html
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes/joi-articles/2995.html
+
+Futures   https://bogleheads.org/wiki/Futures
+    Internal Server Error    http://www.investopedia.com/?viewed=1
+    Internal Server Error    http://www.investopedia.com/terms/f/futurescontract.asp
+    Internal Server Error    http://www.investopedia.com/university/futures/default.asp
+
+GNMA   https://bogleheads.org/wiki/GNMA
+    Internal Server Error    http://www.investopedia.com/terms/g/ginniemae.asp
+    Forbidden    http://www.ginniemae.gov/
+
+G Fund   https://bogleheads.org/wiki/G%20Fund
+    Not Found    http://www.frtib.gov/pdf/FOIA/Investment-Option-Review-FINAL_10-2006.pdf
+    Forbidden    http://www.tsp.gov
+    Forbidden    https://www.tsp.gov/PDF/formspubs/high11c.pdf
+    Forbidden    https://www.tsp.gov/investmentfunds/monthly/monthlyReturns.shtml
+
+Generation-skipping transfer tax   https://bogleheads.org/wiki/Generation-skipping%20transfer%20tax
+    Internal Server Error    http://www.investopedia.com/articles/tax/09/generation-skipping-transfer-tax-gst.asp
+    Not Found    http://www.maslon.com/CM/resourcecenter/resourcecenter668.asp
+
+George Comer   https://bogleheads.org/wiki/George%20Comer
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/10769518/george-comer
+
+George J. Jiang   https://bogleheads.org/wiki/George%20J.%20Jiang
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/1725414/george-j-jiang
+
+George Upham Sauter   https://bogleheads.org/wiki/George%20Upham%20Sauter
+    Forbidden    http://www.etf.com/publications/journalofindexes/joi-articles/1411-index-rex.html?nopaging=1
+    Forbidden    http://www.etf.com/publications/journalofindexes/joi-news/1630.html?nopaging=1
+    Forbidden    http://www.etf.com/sections/features/15487-retiring-vanguard-cio-gus-sauter-looks-back-.html?nopaging=1
+    Not Found    http://www.cfainstitute.org/community/careers/Documents/Sauter_Interview.pdf
+
+Georgia 529 plan archive   https://bogleheads.org/wiki/Georgia%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=GA&planID=5PUSA0001U
+    Not Found    http://www.path2college529.com/ourplan/invest_options.html
+    Not Found    http://www.path2college529.com/pdf/ga_discl.pdf
+
+Gift tax   https://bogleheads.org/wiki/Gift%20tax
+    Internal Server Error    https://www.thebalance.com/gift-tax-exclusion-annual-exclusion-vs-lifetime-exemption-3505656
+
+Glide paths   https://bogleheads.org/wiki/Glide%20paths
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/meth_info/Dow_Jones_Target_Date_Indexes_Methodology.pdf
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/portfolio/index.cfm?event=showPortfolioUSTargetDate
+    Forbidden    http://www.fa-mag.com/component/content/article/1827.html?magazineID=1&issue=89&Itemid=73
+    Not Found    http://personal.fidelity.com/products/funds/content/DesignYourPortfolio/freedomfunds.shtml.
+    Not Found    http://www.misaves.com/ourplan/invest_options.html#aggressive
+    Not Found    http://www.misaves.com/ourplan/invest_options.html#conservative
+    Not Found    http://www.misaves.com/ourplan/invest_options.html#moderate
+
+Global (excluding US) pension fund performance   https://bogleheads.org/wiki/Global%20(excluding%20US)%20pension%20fund%20performance
+    Gone    http://ssrn.com/abstract=1100685
+    Gone    http://ssrn.com/abstract=1394457
+    Too Many Requests    http://ssrn.com/abstract=1562466
+    Too Many Requests    http://ssrn.com/abstract=1574566
+
+Global bond index returns   https://bogleheads.org/wiki/Global%20bond%20index%20returns
+    Forbidden    http://www.ftse.com/products/indices/Global-Bonds
+    Not Found    http://corporate1.morningstar.com/us/products/indexes/
+    Forbidden    http://us.spindices.com/indices/fixed-income/sp-global-developed-sovereign-inflation-linked-bond-index
+    Forbidden    http://us.spindices.com/indices/fixed-income/sp-global-developed-sovereign-bond-index
+    Forbidden    http://us.spindices.com/indices/fixed-income/sp-global-developed-sovereign-bond-index-usd
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (finpage.blog:443)    https://finpage.blog/tag/global-investment/
+    The requested name is valid, but no data of the requested type was found. (index.barcap.com:443)    https://index.barcap.com/Benchmark_Indices/Aggregate/Bond_Indices
+    The requested name is valid, but no data of the requested type was found. (index.barcap.com:443)    https://index.barcap.com/Benchmark_Indices/Inflation-Linked
+
+Global ex US market index returns   https://bogleheads.org/wiki/Global%20ex%20US%20market%20index%20returns
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/DJW_PERIODIC_TABLE.pdf
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/fact_info/Dow_Jones_Global_ex-US_Indexes_Fact_Sheet.pdf
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/meth_info/Dow_Jones_Global_Total_Stock_Market_Indexes_Methodology.pdf
+    Forbidden    http://www.ftse.com/Indices/FTSE_Global_Equity_Index_Series/Downloads/FTSE_Global_Equity_Index_Series_Index_Rules.pdf
+    Not Found    http://spreadsheets.google.com/pub?key=0Ao_KSkmSuU2rdGpUTWJpWVc0T1RmUllqTm1yU0U2N1E&output=PDF
+
+Global fund   https://bogleheads.org/wiki/Global%20fund
+    Internal Server Error    http://www.investopedia.com/terms/g/globalfund.asp
+    The requested name is valid, but no data of the requested type was found. (index.barcap.com:443)    https://index.barcap.com/Benchmark_Indices/Aggregate/Bond_Indices
+
+Global market index returns   https://bogleheads.org/wiki/Global%20market%20index%20returns
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/DJW_PERIODIC_TABLE.pdf
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/fact_info/Dow_Jones_Global_Indexes_Fact_Sheet.pdf
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/meth_info/Dow_Jones_Global_Total_Stock_Market_Indexes_Methodology.pdf
+    Forbidden    http://www.ftse.com/Indices/FTSE_Global_Equity_Index_Series/Downloads/FTSE_Global_Equity_Index_Series_Index_Rules.pdf
+    redirected to http://www.msci.com/indexes    from http://www.msci.com/products/indexes/country_and_regional/all_country/
+    Forbidden    http://www.russell.com/indexes/americas/indexes/index-series/russell-global-indexes-overview.page
+
+Gold   https://bogleheads.org/wiki/Gold
+    Not Found    http://www.mint.ca/store/mint/about-the-mint/our-products-1200028
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes/joi-articles/8239-rediscovering-gold-as-an-asset-class.html
+    Too Many Requests    http://papers.ssrn.com/sol3/papers.cfm?abstract_id=452482
+
+Government agency bonds   https://bogleheads.org/wiki/Government%20agency%20bonds
+    Not Found    http://www.fanniemae.com/markets/debt/index.jhtml?p=Debt+Securities
+        http://www.investinginbonds.com/learnmore.asp?catid=11
+        http://www.investinginbonds.com/learnmore.asp?catid=5&subcatid=21
+        http://www.investinginbonds.com/learnmore.asp?catid=9&subcatid=94
+    Internal Server Error    http://www.investopedia.com/articles/bonds/07/agency_bonds.asp
+    Internal Server Error    http://www.investopedia.com/terms/a/agency_debenture.asp
+    Internal Server Error    http://www.investopedia.com/terms/l/libor.asp
+
+Greek pension fund performance   https://bogleheads.org/wiki/Greek%20pension%20fund%20performance
+    Gone    http://ssrn.com/abstract=1394457
+
+Gur Huberman   https://bogleheads.org/wiki/Gur%20Huberman
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/1043644/gur-huberman
+    No such host is known. (www4.gsb.columbia.edu:80)    http://www4.gsb.columbia.edu/cbs-directory/detail/494745/Gur+Huberman
+    Not Found    http://www.afajof.org/details/page/2870731/Prizes.html
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors    http://citec.repec.org/p/h/phu98.html
+
+Harry M. Kat   https://bogleheads.org/wiki/Harry%20M.%20Kat
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/12863775/harry-m-kat
+    Too Many Requests    http://ssrn.com/abstract=476862
+    Too Many Requests    http://ssrn.com/abstract=855424
+
+Harry M. Markowitz   https://bogleheads.org/wiki/Harry%20M.%20Markowitz
+    Internal Server Error    http://www.investopedia.com/terms/e/efficientfrontier.asp
+    Internal Server Error    http://www.investopedia.com/terms/m/modernportfoliotheory.asp
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/64982/harry-m-markowitz
+    Not Found    http://rady.ucsd.edu/faculty/directory/markowitz/
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors    http://citec.repec.org/p/m/pma73.html
+    Not Found    https://www.informs.org/Recognize-Excellence/INFORMS-Prizes-Awards/John-von-Neumann-Theory-Prize
+    Forbidden    https://www.jstor.org/stable/2975974?seq=1#page_scan_tab_contents
+
+Hawaii 529 plan archive   https://bogleheads.org/wiki/Hawaii%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=HI&planID=5PUSA0001J
+    No such host is known. (hi529.s.upromise.com:443)    https://hi529.s.upromise.com/
+    No such host is known. (hi529.s.upromise.com:443)    https://hi529.s.upromise.com/content/investments.html
+    Forbidden    https://a248.e.akamai.net/f/248/21630/7d/uii.s.upromise.com/rc/sr2/hawaii/programDescription.pdf
+
+Health savings account   https://bogleheads.org/wiki/Health%20savings%20account
+    Not Found    http://www.connectyourcare.com/suntrustpf/tools/limits.pdf
+    Forbidden    http://www.health--savings--accounts.com/newsletter-past-issues.htm
+    Forbidden    http://www.health--savings--accounts.com/pdf/HSA-Special-Report.pdf
+    Forbidden    http://www.healthequity.com/alliant/members/
+    Not Found    http://www.hsabank.com/hsabank/Accountholders/Rates_Fees.aspx
+    Forbidden    http://www.hsaforamerica.com/company-info.htm
+    Forbidden    http://www.hsaforamerica.com/state-income-tax.htm
+
+Hedge fund   https://bogleheads.org/wiki/Hedge%20fund
+    Not Found    http://www.cbsnews.com/8301-505123_162-57344189/the-way-to-predict-hedge-fund-returns/?tag=mncol;lst;1
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (www.finalternatives.com:80)    http://www.finalternatives.com/files/The%20A,B,Cs%20of%20Hedge%20Funds%20--%20Sept.%202006.pdf
+    Internal Server Error    http://www.investopedia.com/terms/h/hedgefund.asp
+    Internal Server Error    http://www.investopedia.com/terms/s/shortselling.asp#axzz1h1IJLGX5
+    Too Many Requests    http://papers.ssrn.com/sol3/papers.cfm?abstract_id=773384
+
+Henri Servaes   https://bogleheads.org/wiki/Henri%20Servaes
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/450582/henri-servaes
+    Too Many Requests    http://ssrn.com/abstract=240596
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors    http://citec.repec.org/p/s/pse218.html
+
+High deductible health plan   https://bogleheads.org/wiki/High%20deductible%20health%20plan
+    Forbidden    http://www.health--savings--accounts.com/pdf/HSA-Special-Report.pdf
+    No such host is known. (www.hsainsider.com:80)    http://www.hsainsider.com/pdf/roadrules/HSA_Road_Rules_Consumer_9th_Edition_2009.pdf
+
+High yield bonds   https://bogleheads.org/wiki/High%20yield%20bonds
+    Not Found    http://www.bondcapital.ca/media/pdf/Bond_Capital_Mezzanine_Finance.pdf
+    Not Found    http://www.morningstar.com/cover/videoCenter.aspx?id=599816&SR=EVZ128
+    Too Many Requests    http://papers.ssrn.com/sol3/papers.cfm?abstract_id=996023
+    Not Found    http://www.math.ku.dk/~michael/thiele2/corpbond_jdriessen.pdf
+    The requested name is valid, but no data of the requested type was found. (index.barcap.com:443)    https://ecommerce.barcap.com/indices/index.dxml
+
+Highly compensated employee   https://bogleheads.org/wiki/Highly%20compensated%20employee
+    No such host is known. (www.investorwords.com:80)    http://www.investorwords.com/5603/highly_compensated_employee.html
+    Not Found    http://www.irs.gov/newsroom/article/0,,id=187833,00.html
+
+Historical and expected returns   https://bogleheads.org/wiki/Historical%20and%20expected%20returns
+    Not Found    http://www.iijournals.com/doi/abs/10.3905/jpm.2015.42.1.119
+    Internal Server Error    http://www.investopedia.com/terms/d/ddm.asp
+    Not Found    http://www.rickferri.com/blog/investments/portfolio-solutions%C2%AE-30-year-market-forecast-for-2015/
+
+Homeowner's insurance   https://bogleheads.org/wiki/Homeowner's%20insurance
+    Internal Server Error    http://www.investopedia.com/articles/pf/07/homeowners_insurance.asp#axzz1f0bDacle
+    Internal Server Error    http://www.investopedia.com/articles/pf/08/homeowner-insurance.asp#axzz1f0bDacle
+    Internal Server Error    http://www.investopedia.com/articles/pf/08/homeowner-insurance.asp#ixzz1f0eX7A2s
+    Not Found    http://www.scc.virginia.gov/boi/pubs/hoguide.pdf
+    Forbidden    http://www.iinc.org/articles/33/1/Twelve-Ways-To-Lower-Your-Homeowners-Insurance-Costs/Page1.html
+
+Hong Kong pension fund performance   https://bogleheads.org/wiki/Hong%20Kong%20pension%20fund%20performance
+    Forbidden    http://www.ftse.com/Indices/FTSE_MPF_Index_Series/index.jsp
+
+Household budgeting   https://bogleheads.org/wiki/Household%20budgeting
+        http://www.howtodothings.com/finance-and-money/a2256-how-to-setup-a-family-or-household-budget.html
+    Forbidden    https://www.bls.gov/news.release/cesan.nr0.htm
+    Not Found    https://www.consumer.ftc.gov/articles/pdf-1020-make-budget-worksheet.pdf
+
+How much do you lose by missing the best days of the stock market?   https://bogleheads.org/wiki/How%20much%20do%20you%20lose%20by%20missing%20the%20best%20days%20of%20the%20stock%20market?
+    Bad Request    http://www.towneley.com/wp-content/uploads/2016/01/Research.-TCM-Mkt-Timing-Study-2004.pdf
+    Not Found    https://am.jpmorgan.com/us/en/asset-management/adv/insights/market-insights/market-updates/on-the-minds-of-investors/is-market-timing-worth-it-during-periods-of-intense-volatility/
+    Forbidden    https://www.sciencedirect.com/science/article/abs/pii/S0304405X18301521
+
+How much do you lose to annual fees after many years?   https://bogleheads.org/wiki/How%20much%20do%20you%20lose%20to%20annual%20fees%20after%20many%20years?
+    Forbidden    https://investor.vanguard.com/investing/how-to-invest/impact-of-costs
+
+How to build a lazy portfolio   https://bogleheads.org/wiki/How%20to%20build%20a%20lazy%20portfolio
+    Not Found    https://ipro.americancentury.com/ipro/product/mf/holdings/954.jsp#ARYIX
+
+How to campaign for a better 401(k) plan   https://bogleheads.org/wiki/How%20to%20campaign%20for%20a%20better%20401(k)%20plan
+    Not Found    http://latebloomerwealth.com/wp-content/uploads/2015/03/Final_Feb18_2015.pdf
+    Not Found    http://finance.yahoo.com/expert/article/moneyhappy/106826
+    Not Found    http://www.dol.gov/ebsa/newsroom/fsparticipantfeerule.html
+    Not Found    http://www.dol.gov/ebsa/publications/401k_employee.html
+    Not Found    http://www.dol.gov/ebsa/publications/wyskapr.html
+    Not Found    http://www.irs.gov/retirement/article/0,,id=119625,00.html
+
+Human capital   https://bogleheads.org/wiki/Human%20capital
+    Forbidden    http://www.ifid.ca/pdf_newsletters/NL_AE2003NOV.pdf
+    No such host is known. (www.qwema.ca:80)    http://www.qwema.ca/calc/humancapital.aspx
+
+IRA   https://bogleheads.org/wiki/IRA
+    Not Found    http://www.irs.gov/formspubs/content/0,,id=177976,00.html
+
+IRA rollovers and transfers   https://bogleheads.org/wiki/IRA%20rollovers%20and%20transfers
+    Internal Server Error    http://www.investopedia.com/articles/retirement/03/051403.asp
+    Internal Server Error    http://www.investopedia.com/articles/retirement/06/rollovermistakes.asp
+    Not Found    http://www.irs.gov/Retirement-Plans/Retirement-Plans-FAQs-regarding-IRAs-Rollovers-and-Roth-Conversions
+
+I Bonds vs TIPS   https://bogleheads.org/wiki/I%20Bonds%20vs%20TIPS
+    Forbidden    https://personal.vanguard.com/us/accounttypes/general/ATSBrokerageAcctFeesContent.jsp
+
+I Fund   https://bogleheads.org/wiki/I%20Fund
+    Forbidden    http://www.fedweek.com/fedweek/tsp-change-fund-index-leave-others/
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vgtsx
+    No such host is known. (personal.vanguard.comnull:443)    https://personal.vanguard.com/us/LiteratureRequest?FW_Activity=ViewOnlineActivity&litID=2210061661&FW_Event=start&cbdForceDomain=false
+    Not Found    https://www.frtib.gov/MeetingMinutes/2017/2017Nov.pdf
+    Not Found    https://www.frtib.gov/MeetingMinutes/2018/2018Dec.pdf
+    Not Found    https://www.frtib.gov/MeetingMinutes/2020/2020May13.pdf
+
+I savings bonds   https://bogleheads.org/wiki/I%20savings%20bonds
+    No such host is known. (www.savings-bond-advisor.com:80)    http://www.savings-bond-advisor.com
+
+Idaho 529 plan archive   https://bogleheads.org/wiki/Idaho%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=ID&planID=5PUSA0000C
+    No such host is known. (idsaves.s.upromise.com:443)    https://idsaves.s.upromise.com/
+    No such host is known. (idsaves.s.upromise.com:443)    https://idsaves.s.upromise.com/content/investments_agebasedoptions.html
+    No such host is known. (idsaves.s.upromise.com:443)    https://idsaves.s.upromise.com/content/resources_formsandlit.html
+
+Illinois 529 plan archive   https://bogleheads.org/wiki/Illinois%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=IL&planID=5PUSA0001R
+
+Immediate fixed annuity   https://bogleheads.org/wiki/Immediate%20fixed%20annuity
+    No such host is known. (www.advisorone.com:80)    http://www.advisorone.com/2009/09/01/annuity-analytics-how-much-to-allocate-to-annuitie
+    Not Found    http://www.advisorsexcel.com/downloads/2011FactBook.pdf
+    Forbidden    http://www.bobsfinancialwebsite.com/pdfs/040802.pdf
+
+Immediate variable annuity   https://bogleheads.org/wiki/Immediate%20variable%20annuity
+    Forbidden    http://www.ifid.ca/pdf_workingpapers/WP2003JUN.pdf
+    Forbidden    http://www.ifid.ca/pdf_workingpapers/WP2004Aug25.pdf
+    Forbidden    http://www.bobsfinancialwebsite.com/
+    Forbidden    http://www.bobsfinancialwebsite.com/pdfs/040902.pdf
+    Forbidden    http://www.bobsfinancialwebsite.com/pdfs/120101.pdf
+    Forbidden    http://www.bobsfinancialwebsite.com/pdfs/A_More_Perfect_Mix.pdf
+    Forbidden    http://www.bobsfinancialwebsite.com/pdfs/ptia.pdf
+
+Importance of saving rate   https://bogleheads.org/wiki/Importance%20of%20saving%20rate
+    Internal Server Error    https://www.investopedia.com/terms/s/savings-rate.asp
+
+Incubator funds   https://bogleheads.org/wiki/Incubator%20funds
+    Internal Server Error    http://www.investopedia.com/terms/i/incubatedfund.asp#axzz1Z1XE95dq
+    Internal Server Error    http://www.investopedia.com/terms/i/incubation.asp#axzz1Z2o5rvD0
+    Not Found    http://www.afajof.org/afa/forthcoming/5379.pdf
+    Forbidden    http://www.vanderbiltlawreview.org/articles/2009/10/Palmiter-Taha-Star-Creation-62-Vand.-L.-Rev.-1485-2009.pdf
+
+Index fund   https://bogleheads.org/wiki/Index%20fund
+    Not Found    https://spreadsheets.google.com/pub?key=pYSRNXThZbE4dZLcTFcvqRA
+    Internal Server Error    https://www.investopedia.com/terms/u/universeofsecurities.asp
+
+Index funds and ETFs outside of the US   https://bogleheads.org/wiki/Index%20funds%20and%20ETFs%20outside%20of%20the%20US
+    Forbidden    https://www.ftadviser.com/regulation/2017/06/19/priips-and-mifid-ii-the-similarities-and-differences/
+
+Index to important posts on Morningstar   https://bogleheads.org/wiki/Index%20to%20important%20posts%20on%20Morningstar
+    Unauthorized    http://socialize.morningstar.com/NewSocialize/forums/1/100331/ShowThread.aspx
+    Unauthorized    http://socialize.morningstar.com/NewSocialize/forums/1/101796/ShowThread.aspx
+    Unauthorized    http://socialize.morningstar.com/NewSocialize/forums/1/102095/ShowThread.aspx
+    Unauthorized    http://socialize.morningstar.com/NewSocialize/forums/1/102883/ShowThread.aspx
+    Unauthorized    http://socialize.morningstar.com/NewSocialize/forums/1/102965/ShowThread.aspx
+    Unauthorized    http://socialize.morningstar.com/NewSocialize/forums/1/103161/ShowThread.aspx
+    Unauthorized    http://socialize.morningstar.com/NewSocialize/forums/1/104016/ShowThread.aspx
+    Unauthorized    http://socialize.morningstar.com/NewSocialize/forums/1/105151/ShowThread.aspx
+    Unauthorized    http://socialize.morningstar.com/NewSocialize/forums/1/106683/ShowThread.aspx
+    Unauthorized    http://socialize.morningstar.com/NewSocialize/forums/1/106821/ShowThread.aspx
+
+Indexing   https://bogleheads.org/wiki/Indexing
+    Too Many Requests    http://papers.ssrn.com/sol3/papers.cfm?abstract_id=1144943
+    Not Found    http://www.vanguard.com/pdf/icrcs.pdf
+    Not Found    http://www.vanguard.com/pdf/indexmyths.pdf
+
+Indexing: theory and history   https://bogleheads.org/wiki/Indexing:%20theory%20and%20history
+    No such host is known. (www.djaverages.com:80)    http://www.djaverages.com/?go=industrial-editorial
+    Not Found    http://www.etfguide.com/exchangetradedfunds.htm
+    No such host is known. (www.lehman.com:80)    http://www.lehman.com/fi/indices/pdf/US_Aggregate_Index.pdf
+    redirected to http://www.msci.com/documents/10199/4753a237-7f5a-4ef6-9f2b-9f46245402e6    from http://www.msci.com/resources/factsheets/index_fact_sheet/msci-eafe.pdf
+    Too Many Requests    http://ssrn.com/abstract=15108
+    Too Many Requests    http://ssrn.com/abstract=991509
+    Forbidden    http://www.vanguard.com/bogle_site/sp2004AIMRefficientMrkts.html
+
+Indiana 529 plan archive   https://bogleheads.org/wiki/Indiana%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=IN&planID=5PUSA0000D
+    No such host is known. (collegechoicedirect.s.upromise.com:443)    https://collegechoicedirect.s.upromise.com/site
+    Forbidden    https://a248.e.akamai.net/f/248/21630/7d/im.uprinv.com/rc/sr2/indiana/enrollkit.pdf
+
+Individual bonds vs a bond fund   https://bogleheads.org/wiki/Individual%20bonds%20vs%20a%20bond%20fund
+    Not Found    http://www.vanguard.com/pdf/flgmb.pdf?22100219
+    Not Found    http://www.vanguard.com/pdf/s354.pdf
+
+Inflation: definition   https://bogleheads.org/wiki/Inflation:%20definition
+    Forbidden    https://www.bls.gov
+    Forbidden    https://www.bls.gov/bls/inflation.htm
+    Not Found    https://www.clevelandfed.org/~/media/content/newsroom%20and%20events/publications/economic%20commentary/1997/ec%2019971015%20on%20the%20origin%20and%20evolution%20of%20the%20word%20inflation%20pdf.pdf
+
+Inflation and retirement spending   https://bogleheads.org/wiki/Inflation%20and%20retirement%20spending
+    redirected to http://cfiresim.com/    from http://www.cfiresim.com/input.php
+    Gateway Time-out    http://news.morningstar.com/articlenet/SubmissionsArticle.aspx?submissionid=201113.xml
+    Gateway Time-out    http://news.morningstar.com/articlenet/article.aspx?id=567105
+    Gateway Time-out    http://news.morningstar.com/articlenet/article.aspx?id=682944
+
+Information ratio   https://bogleheads.org/wiki/Information%20ratio
+    Internal Server Error    https://www.investopedia.com/terms/i/informationratio.asp
+
+Inheriting a Roth IRA   https://bogleheads.org/wiki/Inheriting%20a%20Roth%20IRA
+    Not Found    http://www.fairmark.com/rothira/inherit.htm
+    Internal Server Error    http://www.investopedia.com/articles/retirement/04/070704.asp
+    Not Found    http://www.irs.gov/publications/p590/ch01.html#en_US_publink10006460
+
+Inheriting an IRA   https://bogleheads.org/wiki/Inheriting%20an%20IRA
+    Not Found    http://easysite.commonwealth.com/EasySites/EasySite_T9193Y/_uploads/How%20and%20Why%20to%20Disclaim%20an%20IRA.pdf
+    Not Found    http://turbotax.intuit.com/tax-tools/maximize_tax_deductions/article
+    Not Found    http://advisor.morningstar.com/articles/articlelist.asp?colId=98
+
+Insurance   https://bogleheads.org/wiki/Insurance
+    redirected to http://consumers.ambest.com/consumersearch.aspx?bl=36    from https://www3.ambest.com/consumers/consumersearch.aspx?bl=36
+    Internal Server Error    https://www.investopedia.com/terms/d/directors-and-officers-liability-insurance.asp
+
+Insurance float   https://bogleheads.org/wiki/Insurance%20float
+    Not Found    http://www.fool.com/server/printarticle.aspx?file=/personal-finance/insurance/2006/12/05/insurance-industry-basics-float.aspx
+
+Intelligent Asset Allocator   https://bogleheads.org/wiki/Intelligent%20Asset%20Allocator
+    Service Unavailable    http://www.amazon.com/s/?search-alias=aps&tag=bogleheads.org-20&field-keywords=Bogleheads
+
+Interactive Brokers   https://bogleheads.org/wiki/Interactive%20Brokers
+    Forbidden    https://investors.interactivebrokers.com/download/2014_IBG_AR.pdf
+    Forbidden    https://investors.interactivebrokers.com/download/investors/investorpresentation-june-2015.pdf
+    Forbidden    https://investors.interactivebrokers.com/download/investors/1Q21_IBKR_Presentation.pdf
+    Forbidden    https://www.interactivebrokers.com/download/due-diligence-info.pdf
+
+International REIT index returns   https://bogleheads.org/wiki/International%20REIT%20index%20returns
+    Not Found    http://www.callan.com/research/download/?file=periodic/free/189.pdf
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/meth_info/Dow_Jones_Select_Real_Estate_Indexes_Methodology.pdf
+    Forbidden    http://www.ftse.com/Indices/FTSE_EPRA_NAREIT_Global_Real_Estate_Index_Series/Downloads/EPRA_NAREIT_Global_Factsheet.pdf
+    Forbidden    http://www.ftse.com/Indices/FTSE_EPRA_NAREIT_Global_Real_Estate_Index_Series/Downloads/EPRA_NAREIT_Index_Rules.pdf
+    Not Found    http://spreadsheets.google.com/pub?key=0Ao_KSkmSuU2rdFhqQ1lRRnBCRkxXVjVOOVp2MEh2d0E&output=PDF
+    Forbidden    http://www.indexuniverse.com/sections/news/2814.html
+
+International REITs   https://bogleheads.org/wiki/International%20REITs
+    Not Found    http://www.asx.com.au/products/asx-australian-real-estate-investment-trusts.htm
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/meth_info/Dow_Jones_Select_Real_Estate_Indexes_Methodology.pdf
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/realestate/
+    Not Found    http://www.epra.com/regulation-and-reporting/taxation/reit-survey/
+    Forbidden    http://www.ftse.com/Indices/FTSE_EPRA_NAREIT_Global_Real_Estate_Index_Series/index.jsp
+    Forbidden    http://www.ftse.com/Indices/FTSE_EPRA_NAREIT_Global_Real_Estate_Index_Series/Downloads/FTSE_EPRA_NAREIT_Global_Real_Estate_Index_Ground_Rules.pdf
+
+International small cap   https://bogleheads.org/wiki/International%20small%20cap
+    Forbidden    http://www.ingfunds.com/investor/content/resources/education/default.aspx?i=5794
+    Forbidden    http://www.russell.com/indexes/data/Global_Equity/russell_global_indexes_historical_performance.asp
+    Gone    http://ssrn.com/abstract=686142
+    Gone    http://ssrn.com/abstract=688650
+
+International small cap index returns   https://bogleheads.org/wiki/International%20small%20cap%20index%20returns
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/meth_info/Dow_Jones_Global_Total_Stock_Market_Indexes_Methodology.pdf
+    Forbidden    http://www.ftse.com/Analytics/FactSheets/Home/DownloadSingleIssue?issueName=SCDXNA
+    Forbidden    http://www.ftse.com/Indices/FTSE_Global_Equity_Index_Series/Downloads/FTSE_Global_Equity_Index_Series_Index_Rules.pdf
+
+Introduction to retirement spending models   https://bogleheads.org/wiki/Introduction%20to%20retirement%20spending%20models
+    Forbidden    http://www.ifid.ca/pdf_workingpapers/Spending_Retirement_Vulcan_14MAR2010.pdf
+    Not Found    http://works.bepress.com/cgi/viewcontent.cgi?article=1007&context=lonniekstevans&sei-redir=1#search=%22spending%20changes%20stock%20market%22
+    Forbidden    http://www.bobsfinancialwebsite.com/pdfs/Conserving_Client_Portfolios_During_Retirement_Part_IV.pdf
+    Forbidden    http://www.bobsfinancialwebsite.com/pdfs/Reality_Retirement_Planning.pdf
+    No such host is known. (www.contingenciesonline.com:80)    http://www.contingenciesonline.com/contingenciesonline/20131112?pg=5#pg5
+    No such host is known. (ezinearticles.com:80)    http://ezinearticles.com/?Inflation---A-Retirees-Worst-Enemy&id=1306235
+    Not Found    http://www.metlife.com/assets/ib/retirement/strategy/retirement-expense-worksheet.pdf
+    Not Found    http://advisor.morningstar.com/articles/fcarticle.asp?docId=4178
+
+Inverse and leveraged indices   https://bogleheads.org/wiki/Inverse%20and%20leveraged%20indices
+    Gateway Time-out    http://news.morningstar.com/articlenet/article.aspx?id=271892
+    Forbidden    http://us.spindices.com/documents/methodologies/methodology-sp-us-indices.pdf
+    Forbidden    http://us.spindices.com/indices/strategy/sp-500-2x-inverse-daily-index
+    Forbidden    http://us.spindices.com/indices/strategy/sp-500-2x-leverage-daily-index
+    Forbidden    http://us.spindices.com/indices/strategy/sp-500-inverse
+    Not Found    https://advisors.vanguard.com/iwe/pdf/RPD12.pdf
+
+Investing FAQ for the Bogleheads┬« forum   https://bogleheads.org/wiki/Investing%20FAQ%20for%20the%20Bogleheads┬«%20forum
+    Forbidden    https://personal.vanguard.com/us/funds/vanguard/bytype#4
+
+Investing from Australia   https://bogleheads.org/wiki/Investing%20from%20Australia
+    Not Found    https://www.investors.asn.au/education/shares/listed-investment-companies-lics/
+    Not Found    https://www.asx.com.au/asx/research/company.do#!/VAS
+    Forbidden    https://www.canstar.com.au/
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (www.etfwatch.com.au:443)    https://www.etfwatch.com.au/
+    Forbidden    https://www.interactivebrokers.com.au/en/index.php?f=commission&p=stocks1
+
+Investing from Belgium   https://bogleheads.org/wiki/Investing%20from%20Belgium
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch    http://www.beschermingsfonds.be/en/mod_systeme.html
+    Not Found    http://www.mijngeldenik.be/nl/spaarboekje/soorten-spaarrekeningen
+
+Investing from Brazil   https://bogleheads.org/wiki/Investing%20from%20Brazil
+    No such host is known. (www.tesouro.fazenda.gov.br:80)    http://www.tesouro.fazenda.gov.br/
+
+Investing from Germany   https://bogleheads.org/wiki/Investing%20from%20Germany
+    Not Found    http://deutsche-boerse.com/dbg/dispatch/s/AF116773DB7CCE3A2B4BEA3FCB342040/en/kir/dbg_nav/home
+    Not Found    http://deutsche-boerse.com/dbg/dispatch/s/AF116773DB7CCE3A2B4BEA3FCB342040/en/kir/dbg_nav/about_us/20_FWB_Frankfurt_Stock_Exchange
+
+Investing from India   https://bogleheads.org/wiki/Investing%20from%20India
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.nseindia.com/
+    Too Many Requests    https://www.thegalacticadvisors.com/post/crypto-tax-budget-2022
+    Too Many Requests    https://www.thegalacticadvisors.com/post/income-tax-implications-on-rsus-or-espps
+    Forbidden    https://www.valueresearchonline.com/funds/12498/motilal-oswal-nasdaq-100-exchange-traded-fund
+
+Investing from Italy   https://bogleheads.org/wiki/Investing%20from%20Italy
+    Not Found    http://etfgi.com/news/detail/newsid/29
+    Forbidden    http://www.ftse.com/Analytics/FactSheets/Home/DownloadSingleIssue?issueName=ITLMS
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch    http://www.dt.tesoro.it/en/debito_pubblico/titoli_di_stato/quali_sono_i_titoli_di_stato
+
+Investing from Japan   https://bogleheads.org/wiki/Investing%20from%20Japan
+    Forbidden    http://www.morganmckinley.co.jp/en/article/nisa-or-not-nisa
+    No such host is known. (www.tse.or.jp:80)    http://www.tse.or.jp/english/rules/etfs/list/index.html
+    No such host is known. (www.tse.or.jp:80)    http://www.tse.or.jp/rules/etf/list/index.html
+
+Investing from Japan for US citizens and US permanent residents   https://bogleheads.org/wiki/Investing%20from%20Japan%20for%20US%20citizens%20and%20US%20permanent%20residents
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    http://www.mof.go.jp/jgbs/individual/kojinmuke/index.html
+    No such host is known. (www.tse.or.jp:80)    http://www.tse.or.jp/english/rules/etfs/list/index.html
+    No such host is known. (www.tse.or.jp:80)    http://www.tse.or.jp/rules/etf/list/index.html
+    Forbidden    https://www.interactivebrokers.com/en/index.php?f=13416
+
+Investing from Singapore   https://bogleheads.org/wiki/Investing%20from%20Singapore
+    Not Found    https://www.iras.gov.sg/irashome/Individuals/Locals/Learning-the-basics/Individuals-Required-to-Pay-Income-Tax/Taxes-on-Investments-in-Singapore/
+
+Investing from Spain   https://bogleheads.org/wiki/Investing%20from%20Spain
+    Forbidden    https://www.interactivebrokers.com/
+
+Investing from outside of the US   https://bogleheads.org/wiki/Investing%20from%20outside%20of%20the%20US
+    Forbidden    https://www.advisorperspectives.com/articles/2014/03/04/does-international-diversification-improve-safe-withdrawal-rates
+    Forbidden    https://retirementresearcher.com/4-rule-work-around-world/
+
+Investing from the Netherlands   https://bogleheads.org/wiki/Investing%20from%20the%20Netherlands
+    Not Found    http://www.beursaex.nl/aandelen/
+    Not Found    http://www.pensioenfederatie.nl/Document/Publicaties/English%20publications/Nederlandse_pensioensysteem_Engelstalige_versie.pdf
+    Not Found    http://www.pensioenfederatie.nl/over_ons/Pages/default.aspx
+
+Investing from the UK   https://bogleheads.org/wiki/Investing%20from%20the%20UK
+    redirected to http://www.assetmanagement.hsbc.com/    from https://www.assetmanagement.hsbc.com/uk
+
+Investing from the UK for US citizens and US permanent residents   https://bogleheads.org/wiki/Investing%20from%20the%20UK%20for%20US%20citizens%20and%20US%20permanent%20residents
+    Forbidden    https://www.moneysavingexpert.com/
+    Blocked    https://www.reddit.com/r/USExpatTaxes/
+    Forbidden    https://international.schwab.com/
+
+Investing with a medium-term timeline   https://bogleheads.org/wiki/Investing%20with%20a%20medium-term%20timeline
+    Forbidden    http://www.finra.org/investors/set-time-frame-your-financial-goals
+
+Investment risk management   https://bogleheads.org/wiki/Investment%20risk%20management
+    Internal Server Error    http://www.investopedia.com/university/risk/default.asp
+    Not Found    http://www.plansponsor.com/uploadfiles/Russell.pdf
+
+Iowa 529 plan archive   https://bogleheads.org/wiki/Iowa%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=IA&planID=5PUSA0000E
+    No such host is known. (collegesavingsiowa.s.upromise.com:443)    https://collegesavingsiowa.s.upromise.com/
+    No such host is known. (collegesavingsiowa.s.upromise.com:443)    https://collegesavingsiowa.s.upromise.com/content/agebasedoptions.html
+    Forbidden    https://a248.e.akamai.net/f/248/21630/7d/im.uprinv.com/rc/sr2/ia/enrollkit.pdf
+
+Jack L. Treynor   https://bogleheads.org/wiki/Jack%20L.%20Treynor
+    Not Found    http://www.chicagotribune.com/news/sns-wp-blm-treynor-obit-140d9380-18f2-11e6-971a-dadf9ab18869-20160513-story.html
+    Internal Server Error    http://www.investopedia.com/terms/t/treynorratio.asp
+    Forbidden    http://www.cfapubs.org/toc/jtc/2016/2016/1
+
+James M. Poterba   https://bogleheads.org/wiki/James%20M.%20Poterba
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/33404/james-m-poterba
+    Too Many Requests    http://ssrn.com/abstract=227266
+    Too Many Requests    http://ssrn.com/abstract=227278
+    Too Many Requests    http://ssrn.com/abstract=227519
+    Too Many Requests    http://ssrn.com/abstract=334288
+    Too Many Requests    http://ssrn.com/abstract=366444
+    Too Many Requests    http://ssrn.com/abstract=471553
+
+Jeffrey A. Busse   https://bogleheads.org/wiki/Jeffrey%20A.%20Busse
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/62153/jeffrey-a-busse
+
+Jennifer Huang   https://bogleheads.org/wiki/Jennifer%20Huang
+    Not Found    http://english.ckgsb.edu.cn/faculty_content/jennifer-huang
+
+John A. Haslem   https://bogleheads.org/wiki/John%20A.%20Haslem
+    Not Found    http://webcache.googleusercontent.com/search?q=cache:7Yzu1FEQMAgJ:www.rhsmith.umd.edu/directory/john-haslem+&cd=1&hl=en&ct=clnk&gl=us
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/4476905/john-a-haslem
+    Too Many Requests    http://ssrn.com/abstract=1128983
+    Too Many Requests    http://ssrn.com/abstract=2053801
+    Too Many Requests    http://ssrn.com/abstract=2076454
+    Too Many Requests    http://ssrn.com/abstract=2087625
+    Too Many Requests    http://ssrn.com/abstract=2090084
+    Too Many Requests    http://ssrn.com/abstract=2141458
+    Not Found    http://www.rhsmith.umd.edu/finance/faculty/haslem.aspx
+
+John Ameriks   https://bogleheads.org/wiki/John%20Ameriks
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/51484913/john-ameriks
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors    http://citec.repec.org/p/a/pam72.html
+
+John B.Shoven   https://bogleheads.org/wiki/John%20B.Shoven
+    Forbidden    http://www.cadence.com/cadence/investor_relations/Pages/board_member_profile.aspx
+    Not Found    http://www.exponent.com/Exponent-Appoints-Dr-John-B-Shoven-to-Board-of-Directors-08-22-2007/
+    Unauthorized    http://ir.financialengines.com/phoenix.zhtml?c=233599&p=irol-govboard
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/352165/john-b-shoven
+
+John Bogle   https://bogleheads.org/wiki/John%20Bogle
+    Forbidden    https://www.etf.com/publications/journalofindexes/joi-articles/11136-the-economic-role-of-the-investment-company.html?nopaging=1
+    Internal Server Error    https://www.investopedia.com/university/greatest/johnbogle.asp
+
+John Bogle biographical information   https://bogleheads.org/wiki/John%20Bogle%20biographical%20information
+    Forbidden    http://www.vanguard.com/bogle_site/bogle_bioext.html
+
+John Hancock Funds   https://bogleheads.org/wiki/John%20Hancock%20Funds
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (www.jhfunds.com:80)    http://www.jhfunds.com/
+
+John J. Brennan   https://bogleheads.org/wiki/John%20J.%20Brennan
+    Not Found    http://ir.americanexpress.com/file/Index?KeyFile=37662389
+    Not Found    http://www.finra.org/about/former-chairmen-board-governors
+    Not Found    https://www.ge.com/about-us/leadership/profiles/john-j-brennan
+
+John Y. Campbell   https://bogleheads.org/wiki/John%20Y.%20Campbell
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/23314998/john-l-campbell
+    No such host is known. (jfe.rochester.edu:80)    http://jfe.rochester.edu/winners.htm
+    Not Found    http://www.afajof.org/details/page/2870731/Prizes.html
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors    http://citec.repec.org/p/c/pca54.html
+
+Joshua D. Coval   https://bogleheads.org/wiki/Joshua%20D.%20Coval
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/821263/joshua-d-coval
+    Not Found    http://www.afajof.org/details/page/2870731/Prizes.html
+
+Julie R. Agnew   https://bogleheads.org/wiki/Julie%20R.%20Agnew
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/2940377/julie-r-agnew?query=Julie%20R.%20Agnew
+    Not Found    http://mason.wm.edu/faculty/directory/agnew_j.php
+
+K. Geert Rouwenhorst   https://bogleheads.org/wiki/K.%20Geert%20Rouwenhorst
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/10669008/k-geert-rouwenhorst
+    Not Found    http://www.q-group.org/prize-winners/
+
+Kansas 529 plan archive   https://bogleheads.org/wiki/Kansas%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=KS&planID=5PUSA0000F
+    Not Found    https://www.learningquest.com/content/tracks.html
+    Not Found    https://www.learningquestsavings.com/learningquest/index.jsp
+    Forbidden    https://a248.e.akamai.net/f/248/21630/7d/im.uprinv.com/rc/sr2/lqd/handbook_ws.pdf
+
+Kenneth R. French   https://bogleheads.org/wiki/Kenneth%20R.%20French
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/357865/kenneth-french
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors    http://citec.repec.org/p/f/pfr33.html
+
+Kent Daniel   https://bogleheads.org/wiki/Kent%20Daniel
+    Not Found    http://www.swissfinanceinstitute.ch/faculty_research/outstanding_paper_award.htm
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/376001/kent-d-daniel
+    Not Found    http://www.afajof.org/details/page/2870731/Prizes.html
+
+Kentucky 529 plan archive   https://bogleheads.org/wiki/Kentucky%20529%20plan%20archive
+    Not Found    http://www.kysaves.com/pdf/ky_discl.pdf
+    Not Found    http://www.kysaves.com/portfolios/index.shtml#managed
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=KY&planID=5PUSA0000G
+
+Keogh plan   https://bogleheads.org/wiki/Keogh%20plan
+    Internal Server Error    http://investopedia.com/terms/k/keoghplan.asp?&viewed=1&viewed=1
+    Internal Server Error    http://www.investopedia.com/terms/k/keoghplan.asp?&viewed=1&viewed=1
+    Not Found    http://www.investorglossary.com/keogh-plan.htm
+    Not Found    http://www.newyorklife.com/nyl/v/index.jsp?vgnextoid=97302f5a919d2210a2b3019d221024301cacRCRD
+
+Laddering bonds or CDs   https://bogleheads.org/wiki/Laddering%20bonds%20or%20CDs
+    Internal Server Error    http://investopedia.com/articles/02/120202.asp
+    Forbidden    http://www.moodys.com/cust/content/content.ashx?source=StaticContent/Free+pages/Credit+Policy+Research/documents/current/2001700000407258.pdf
+
+Larry Swedroe   https://bogleheads.org/wiki/Larry%20Swedroe
+    Service Unavailable    http://www.amazon.com/s/?search-alias=aps&tag=bogleheads.org-20&field-keywords=Bogleheads
+    Forbidden    http://www.bamadvisorservices.com
+    Forbidden    http://www.etf.com/contributors/larry-swedroe
+    Forbidden    http://www.investmentadvisornow.com
+    Forbidden    https://www.advisorperspectives.com/search?q=&author=larry+swedroe
+
+Laura Dogu   https://bogleheads.org/wiki/Laura%20Dogu
+    OK    http://blogs.forbes.com/people/lauradogu/
+
+Leverage   https://bogleheads.org/wiki/Leverage
+    Internal Server Error    http://www.investopedia.com/articles/optioninvestor/07/sources-leverage.asp
+    Not Found    http://www.finra.org/Investors/ProtectYourself/InvestorAlerts/MutualFunds/P119778
+
+Leveraged and inverse ETFs   https://bogleheads.org/wiki/Leveraged%20and%20inverse%20ETFs
+    Not Found    http://www.direxionfunds.com/signs
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes/joi-articles/6414-understanding-returns-of-leveraged-and-inverse-funds.html?showall=&fullart=1&start=7
+    Not Found    http://www.proshares.com/about/index.html
+    Not Found    http://www.proshares.com/considerations_geared_investing.html
+    Not Found    http://www.proshares.com/media/documents/geared_fund_performance.pdf
+
+Liability insurance   https://bogleheads.org/wiki/Liability%20insurance
+    No such host is known. (www.investorwords.com:80)    http://www.investorwords.com/2793/liability_insurance.html
+
+Life-cycle finance   https://bogleheads.org/wiki/Life-cycle%20finance
+    Update to use https.     http://www.aaii.com/journal/article/the-role-of-inflation-indexed-annuities?acc=o
+    Forbidden    http://www.arabictrader.com/arabictrader_storage_server/application/2009/08/15/pdf/v202/B4E8E626-EFEE-42B4-FE04-862C02B7AC83.pdf
+    Not Found    http://www.paulahogan.com/images/FE/chain259siteType8/site219/client/2007-05_JFPLIfeCycleInvest.pdf
+    Not Found    http://www.paulahogan.com/images/FE/chain259siteType8/site219/client/2008-05%20AAII%20Human%20Capital.pdf
+    Not Found    http://www.paulahogan.com/images/FE/chain259siteType8/site219/client/2008-03%20The%20Emerging%20New%20Model%20for%20Wealth.pdf
+    Not Found    http://www.paulahogan.com/images/FE/chain259siteType8/site219/client/2005-June_AAIIJournal_FocusonRisk.pdf
+
+Life insurance   https://bogleheads.org/wiki/Life%20insurance
+    Forbidden    http://www.glenndaily.com/documents/howmuch.pdf
+    Internal Server Error    https://www.nationwide.com/personal/insurance/claims/life/lost-policy
+
+Linear smoothing   https://bogleheads.org/wiki/Linear%20smoothing
+    Not Found    http://sfmagazine.com/wp-content/uploads/sfarchive/2003/08/Provocative-Pension-Accounting.pdf
+
+List of John C. Bogle academic papers and articles   https://bogleheads.org/wiki/List%20of%20John%20C.%20Bogle%20academic%20papers%20and%20articles
+    Forbidden    https://www.tandfonline.com/doi/abs/10.2469/faj.v72.n1.5?journalCode=ufaj20
+
+List of Taiwan exchange traded funds   https://bogleheads.org/wiki/List%20of%20Taiwan%20exchange%20traded%20funds
+    Not Found    http://edu.sse.com.cn/sseportal/en/c05/p1034/c1505_p1034.shtml
+    Not Found    http://www.szse.cn/main/en/marketdata/Indiceslist/
+
+List of US ETF providers   https://bogleheads.org/wiki/List%20of%20US%20ETF%20providers
+    Not Found    http://www.etfguide.com/index.htm
+    Forbidden    http://www.indexuniverse.com/sections/etf-league-tables.html
+    Not Found    http://www.ipathetn.com/US/16/en/home.app
+    No such host is known. (www.pacificglobaletfs.com:80)    http://www.pacificglobaletfs.com/
+
+List of US ETFs   https://bogleheads.org/wiki/List%20of%20US%20ETFs
+    Not Found    https://www.elementsetn.com/RICI-Agriculture-ETN.aspx
+    Not Found    https://www.elementsetn.com/RICI-Energy-ETN.aspx
+    Not Found    https://www.elementsetn.com/RICI-Metals-ETN.aspx
+    The requested name is valid, but no data of the requested type was found. (www.etfsecurities.com:443)    https://www.etfsecurities.com/msl/etfs_physical_Palladium_us.asp
+    The requested name is valid, but no data of the requested type was found. (www.etfsecurities.com:443)    https://www.etfsecurities.com/msl/etfs_physical_Platinum_us.asp
+    The requested name is valid, but no data of the requested type was found. (www.etfsecurities.com:443)    https://www.etfsecurities.com/msl/etfs_physical_silver_us.asp
+        https://globalxfunds.com/ALUM
+        https://globalxfunds.com/AND
+
+List of US state probate courts   https://bogleheads.org/wiki/List%20of%20US%20state%20probate%20courts
+    Forbidden    http://vba.affiniscape.com/associations/11069/files/adminguide.pdf
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    http://www.ehow.com/how_6017090_probate-mississippi.html
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    http://www.ehow.com/how_8100323_probate-california.html
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    http://www.ehow.com/list_6794721_estate-probate-laws-idaho.html
+    Forbidden    http://estate.findlaw.com/probate/probate-court-laws/estate-planning-law-state-probate.html
+    Gone    http://law.freeadvice.com/resources/statelaws_probate_oregon.htm
+    Not Found    http://www.jefflorenzo.com/id71.html
+
+List of US state security regulators   https://bogleheads.org/wiki/List%20of%20US%20state%20security%20regulators
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    http://www.cyberdriveillinois.com/departments/securities/
+    Not Found    http://www.ndsecurities.com/department-info/default.asp
+    No such host is known. (www.sosnc.com:80)    http://www.sosnc.com/
+    Forbidden    http://www.securities.arkansas.gov/http://www.dfa.arkansas.gov/offices/incomeTax/Pages/default.aspx
+    The requested name is valid, but no data of the requested type was found. (www.corp.ca.gov:80)    http://www.corp.ca.gov/
+    Not Found    http://attorneygeneral.delaware.gov/consumers/investmented/
+        http://sos.georgia.gov/securities/https://etax.dor.ga.gov/
+
+List of estate planning terms   https://bogleheads.org/wiki/List%20of%20estate%20planning%20terms
+    Internal Server Error    http://www.investopedia.com/terms/b/beneficiary.asp
+    Internal Server Error    http://www.investopedia.com/terms/c/charitableleadtrust.asp
+    Internal Server Error    http://www.investopedia.com/terms/c/charitableremaindertrust.asp
+    Internal Server Error    http://www.investopedia.com/terms/c/creditsheltertrust.asp
+    Internal Server Error    http://www.investopedia.com/terms/c/crummeypower.asp
+    Internal Server Error    http://www.investopedia.com/terms/e/escheat.asp
+    Internal Server Error    http://www.investopedia.com/terms/e/estateplanning.asp
+    Internal Server Error    http://www.investopedia.com/terms/e/estatetax.asp
+    Internal Server Error    http://www.investopedia.com/terms/e/executor.asp
+    Internal Server Error    http://www.investopedia.com/terms/f/familylimitedpartnership.asp
+
+List of state departments of revenue   https://bogleheads.org/wiki/List%20of%20state%20departments%20of%20revenue
+    Forbidden    http://retirementliving.com/RLstate1.html
+    Forbidden    http://retirementliving.com/RLstate2.html
+    Forbidden    http://retirementliving.com/RLstate3.html
+    Forbidden    http://retirementliving.com/RLtaxes.html
+
+List of state insurance commissioners websites   https://bogleheads.org/wiki/List%20of%20state%20insurance%20commissioners%20websites
+    Service Unavailable    http://www.ncdoi.com/Consumer/
+    Service Unavailable    http://www.ncdoi.com/Consumer/Consumer_Auto.aspx
+    Service Unavailable    http://www.ncdoi.com/Consumer/Consumer_Health.aspx
+
+Live It Up Without Outliving Your Money   https://bogleheads.org/wiki/Live%20It%20Up%20Without%20Outliving%20Your%20Money
+    Service Unavailable    http://www.amazon.com/s/?search-alias=aps&tag=bogleheads.org-20&field-keywords=Bogleheads
+    Forbidden    http://www.fundadvice.com
+    Forbidden    http://www.merriman.com/learn/sound-investing
+
+Long-term care insurance   https://bogleheads.org/wiki/Long-term%20care%20insurance
+    Gateway Time-out    http://news.morningstar.com/articlenet/article.aspx?id=564139&t1
+    Not Found    http://www.newyorklife.com/newyorklife.com/General/FileLink/Static%20Files/NYL2/pdf/LTC_Shopper_Guide.pdf
+    Service Unavailable    http://www.prudential.com/view/page/public/14001?seg=2&name=ltc
+    Not Found    http://crr.bc.edu/images/stories/Briefs/ib_7-13.pdf
+
+Long/short investment strategies   https://bogleheads.org/wiki/Long/short%20investment%20strategies
+    Internal Server Error    http://www.investopedia.com/articles/mutualfunds/09/market-neutral-funds.asp
+    Internal Server Error    http://www.investopedia.com/terms/1/130-30_strategy.asp
+    Internal Server Error    http://www.investopedia.com/terms/m/marketneutral.asp
+    Too Many Requests    http://papers.ssrn.com/sol3/papers.cfm?abstract_id=1074622
+    Too Many Requests    http://papers.ssrn.com/sol3/papers.cfm?abstract_id=1132940
+    Too Many Requests    http://papers.ssrn.com/sol3/papers.cfm?abstract_id=517282
+    Too Many Requests    http://papers.ssrn.com/sol3/papers.cfm?abstract_id=557096
+
+Louisiana 529 plan archive   https://bogleheads.org/wiki/Louisiana%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=LA&planID=5PUSA0000H
+    Not Found    http://www.startsaving.la.gov/savings/pdf/START_Disclosure_Booklet.pdf
+
+Low volatility index returns   https://bogleheads.org/wiki/Low%20volatility%20index%20returns
+    Forbidden    http://www.etftrends.com/2012/11/vanguard-mulls-low-volatility-etfs-as-category-thrives/
+    Not Found    http://www.iijournals.com/doi/abs/10.3905/JPM.2008.35.1.40
+
+Lucian Ayre Bebchuk   https://bogleheads.org/wiki/Lucian%20Ayre%20Bebchuk
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/12766576/lucian-arye-bebchuk
+    Gone    http://ssrn.com/abstract=131546
+    Not Found    http://rodneywhitecenter.wharton.upenn.edu/past-marshall-blume-prizes/
+
+Lump sum vs pension   https://bogleheads.org/wiki/Lump%20sum%20vs%20pension
+    Forbidden    http://arxiv.org/abs/1307.2824
+
+MSCI EAFE index   https://bogleheads.org/wiki/MSCI%20EAFE%20index
+    redirected to http://www.msci.com/our-story    from http://www.msci.com/about/history.html
+    redirected to http://www.msci.com/products/indexes/licensing/msci_eafe/    from http://www.msci.com/products/indices/licensing/msci_eafe/
+    Not Found    http://www.rickferri.com/blog/investments/basics-of-asset-allocation-part-2-of-2/
+
+Main Page   https://bogleheads.org/wiki/Main%20Page
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/brochure_info/Dow_Jones_Industrial_Average_Historical_Components.pdf
+    Not Found    https://www.treasurydirect.gov/indiv/research/history/histtime/histtime_bills.htm
+
+Maine 529 plan archive   https://bogleheads.org/wiki/Maine%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=ME&planID=5PUSA0000I
+    No such host is known. (www.enroll529.com:443)    https://www.enroll529.com/PDF/NEXTGEN_CD_AcctApplication.pdf
+
+Managing a windfall   https://bogleheads.org/wiki/Managing%20a%20windfall
+    Internal Server Error    https://www.investopedia.com/terms/a/a-b-trust.asp
+    redirected to http://stephenlnelson.com/articles/windfall-financial-planning/    from https://www.stephenlnelson.com/WindfallFinancialPlanning.htm
+    Internal Server Error    https://www.thebalance.com/what-should-i-do-with-a-sudden-windfall-2385942
+    Forbidden    https://personal.vanguard.com/us/insights/article/yil-managing-windfalls-042014?&Link=home_banner1&LinkLocation=HomepageOverviewContent
+
+Margin   https://bogleheads.org/wiki/Margin
+    Internal Server Error    http://www.investopedia.com/?viewed=1
+    Internal Server Error    http://www.investopedia.com/terms/m/margin.asp
+    Internal Server Error    http://www.investopedia.com/university/margin/
+
+Mark Grinblatt   https://bogleheads.org/wiki/Mark%20Grinblatt
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/875290/mark-grinblatt
+    Too Many Requests    http://ssrn.com/abstract=6460
+    Too Many Requests    http://ssrn.com/abstract=902575
+    Too Many Requests    http://ssrn.com/abstract=995759
+
+Market-linked CD   https://bogleheads.org/wiki/Market-linked%20CD
+    Not Found    http://www.euromoney.com/Print.aspx?ArticleID=1398719
+    Not Found    http://www.fisn.com/resources/pdf/Barclays%20Bank%20Q-GSP%20Large%20Cap%20Equity%20Index%20MLD%20Ann%20Int%20Pt-to-Pt%2003-29-12.pdf
+    Not Found    http://www.fisn.com/resources/pdf/JPMorgan%20Chase%20Bank%20Commodity%20Basket%20MLD%20Ann%20Inc%207Yrs%2004-03-12.pdf
+    Not Found    http://www.fisn.com/resources/pdf/Union%20Bank%20S&P%20500%20MLD%20Sum%20of%20Qts_%204Yrs%2003-30-12.pdf
+    Not Found    http://www.gobankingrates.com/cd-rates/pros-and-cons-of-market-linked-cds/
+    Not Found    http://financialservicesinc.ubs.com/wealth/Market-LinkedCertificatesofDeposit.html
+    Not Found    http://www2.stetson.edu/fsr/abstracts/vol_6_num4_p271.pdf
+
+Market capitalization   https://bogleheads.org/wiki/Market%20capitalization
+    Internal Server Error    http://www.investopedia.com/articles/basics/03/031703.asp
+
+Market timing   https://bogleheads.org/wiki/Market%20timing
+    Internal Server Error    https://www.investopedia.com/
+    Internal Server Error    https://www.investopedia.com/terms/m/markettiming.asp
+
+Martin J. Gruber   https://bogleheads.org/wiki/Martin%20J.%20Gruber
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/31442/martin-j-gruber
+    Too Many Requests    http://ssrn.com/abstract=567122
+    Too Many Requests    http://ssrn.com/abstract=822965
+
+Maryland 529 plan archive   https://bogleheads.org/wiki/Maryland%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=MD&planID=5PUSA0000J
+    Not Found    http://www.collegesavingsmd.org/college-investment-plan-investment-options.aspx
+    Not Found    http://www.collegesavingsmd.org/uploadedFiles/About_Us/2011-2012%20Enrollment%20Kit.pdf
+
+Massachusetts 529 plan archive   https://bogleheads.org/wiki/Massachusetts%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=MA&planID=5PUSA0000K
+
+Massimo Massa   https://bogleheads.org/wiki/Massimo%20Massa
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/674059/massimo-massa
+    Gone    http://ssrn.com/abstract=201035
+    Too Many Requests    http://ssrn.com/abstract=759365
+    Too Many Requests    http://ssrn.com/abstract=775804
+    Too Many Requests    http://ssrn.com/abstract=891581
+
+Master limited partnership   https://bogleheads.org/wiki/Master%20limited%20partnership
+    Not Found    https://advisors.vanguard.com/VGApp/iip/site/advisor/researchcommentary/article/IWE_InvResPrimerLtdPartnerships
+
+Matching strategy   https://bogleheads.org/wiki/Matching%20strategy
+    Too Many Requests    http://papers.ssrn.com/sol3/papers.cfm?abstract_id=923561
+
+Mean reversion   https://bogleheads.org/wiki/Mean%20reversion
+    Forbidden    http://www.vanguard.com/bogle_site/sp20020626.html
+    Forbidden    https://www.jstor.org/stable/222521
+    Forbidden    https://www.jstor.org/stable/40473424
+
+Medical spending in retirement   https://bogleheads.org/wiki/Medical%20spending%20in%20retirement
+    Not Found    http://coast2coastrx.com/index.php/more-benefits/discount-dental-plan
+    Gateway Time-out    http://news.morningstar.com/articlenet/article.aspx?id=564139
+    Gateway Time-out    http://news.morningstar.com/articlenet/article.aspx?id=567105
+    Not Found    http://www.newyorklife.com/newyorklife.com/General/FileLink/Static%20Files/NYL2/pdf/LTC_Shopper_Guide.pdf
+    Not Found    http://media.nmfn.com/tnetwork/lifespan/#0
+    Service Unavailable    http://www.prudential.com/view/page/public/14001?seg=2&name=ltc
+    Forbidden    http://www.bls.gov/opub/ted/2012/ted_20120302.htm
+
+Mega-backdoor Roth   https://bogleheads.org/wiki/Mega-backdoor%20Roth
+    Internal Server Error    http://www.investopedia.com/ask/answers/169.asp
+    Internal Server Error    http://www.investopedia.com/terms/t/triggeringevent.asp
+
+Meir Statman   https://bogleheads.org/wiki/Meir%20Statman
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/346498/meir-statman
+    Forbidden    http://depts.washington.edu/jfqa/SharpeBallot2000/ballot.htm
+    Forbidden    http://www.cfapubs.org/page/faj/all-graham-dodd-winners
+
+Mel Lindauer   https://bogleheads.org/wiki/Mel%20Lindauer
+    OK    http://blogs.forbes.com/people/mellindauer/
+
+Merrill Edge   https://bogleheads.org/wiki/Merrill%20Edge
+    Bad Gateway    https://www.americancentury.com/content/americancentury/direct/en/investment-products/mutual-funds/mutual-fund-details/summary/inflation-adjusted-bond.html
+    No such host is known. (public.dreyfus.com:443)    https://public.dreyfus.com/product/0073/overview
+    No such host is known. (public.dreyfus.com:443)    https://public.dreyfus.com/product/0113/overview
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.northerntrust.com/wealth-management/united-states/services/investing/mutual-funds/funds-performance/equity-index/NGREX
+    An error occurred while sending the request.    https://www3.troweprice.com/fb2/fbkweb/objective.do?ticker=PREIX
+
+Michael C. Jensen   https://bogleheads.org/wiki/Michael%20C.%20Jensen
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/23353390/michael-c-jensen
+    No such host is known. (jfe.rochester.edu:80)    http://jfe.rochester.edu/jfeprize.htm
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors    http://citec.repec.org/p/j/pje57.html
+
+Michael J. Schill   https://bogleheads.org/wiki/Michael%20J.%20Schill
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/2693498/michael-j-schill
+    Not Found    http://www.darden.virginia.edu/web/Faculty-Research/Directory/Full-time/Michael-J-Schill/
+
+Michael LeBoeuf   https://bogleheads.org/wiki/Michael%20LeBoeuf
+    Not Found    http://books.google.com/books?id=wJZsPwAACAAJ&dq=Michael+LeBoeuf&lr=&ei=zIj9SsC7JIWyNrzMlNgO
+
+Michigan 529 plan archive   https://bogleheads.org/wiki/Michigan%20529%20plan%20archive
+    Not Found    http://www.misaves.com/ourplan/invest_options.html
+    Not Found    http://www.misaves.com/pdf/mi_discl.pdf
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=MI&planID=5PUSA0000L
+
+Mid caps   https://bogleheads.org/wiki/Mid%20caps
+    Not Found    http://www.crsp.com/documentation/pdfs/equity-indexes/Equity-Indexes-Methodology-Guide.pdf
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/totalstockmarket/
+    Forbidden    http://www.ftse.com/products/indices/russell-us
+    Not Found    http://spreadsheets.google.com/pub?key=pYSRNXThZbE7QGlqR2iU8BQ
+    Not Found    http://guggenheiminvestments.com/products/etf/product-list#Pure%20Style
+    Forbidden    http://www.indexuniverse.com/data.html
+
+Mike Piper   https://bogleheads.org/wiki/Mike%20Piper
+    Service Unavailable    http://www.amazon.com/s/?search-alias=aps&tag=bogleheads.org-20&field-keywords=Bogleheads
+
+Military finances   https://bogleheads.org/wiki/Military%20finances
+    Service Unavailable    http://www.amazon.com/s/?search-alias=aps&tag=bogleheads.org-20&field-keywords=Bogleheads
+    No such host is known. (ezinearticles.com:80)    http://ezinearticles.com/?What-Are-The-Real-Costs-Of-Selling-A-Home?&id=139629
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch    http://www.housingviews.com/wp-content/uploads/2011/09/CSHomePrice_Release_Sept2011.pdf
+    redirected to http://www.military.com/benefits/tricare/defense-enrollment-eligibility-reporting-system-deers.html    from http://www.military.com/benefits/content/tricare/defense-enrollment-eligibility-reporting-system-deers.html
+    Forbidden    http://www.militarymoney.com/DebtHelp/deceptivepractices/tabid/75/itemId/1721/Default.aspx
+    Not Found    http://www.pfd.alaska.gov/military/index.aspx
+
+Minnesota 529 plan archive   https://bogleheads.org/wiki/Minnesota%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=MN&planID=5PUSA0001Q
+    Not Found    http://mnsaves.org/documents/mn_disclosure.pdf
+    Not Found    http://www.mnsaves.org/portfolios/index.shtml#managed
+
+Mississippi 529 plan archive   https://bogleheads.org/wiki/Mississippi%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (www.collegesavingsms.com:80)    http://www.collegesavingsms.com/ourplan/invest_options.html#managed
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/plan-list.action?state=MS
+    No such host is known. (http:80)    http://http://www.ms529.com/documents/ms_disclosure.pdf
+
+Missouri 529 plan archive   https://bogleheads.org/wiki/Missouri%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=MO&planID=5PUSA0000M
+    No such host is known. (missourimost.s.upromise.com:443)    https://missourimost.s.upromise.com/
+    No such host is known. (missourimost.s.upromise.com:443)    https://missourimost.s.upromise.com/content/inv_agebasedoptions.html
+    No such host is known. (missourimost.s.upromise.com:443)    https://missourimost.s.upromise.com/content/planbene_grants.html
+    Forbidden    https://a248.e.akamai.net/f/248/21630/7d/im.uprinv.com/rc/sr2/mo/enrollkit.pdf
+
+Models of spending as retirement progresses   https://bogleheads.org/wiki/Models%20of%20spending%20as%20retirement%20progresses
+    Forbidden    http://www.ifid.ca/pdf_workingpapers/Spending_Retirement_Vulcan_14MAR2010.pdf
+    Not Found    http://works.bepress.com/cgi/viewcontent.cgi?article=1007&context=lonniekstevans&sei-redir=1#search=%22spending%20changes%20stock%20market%22
+    Forbidden    http://www.bobsfinancialwebsite.com/pdfs/Conserving_Client_Portfolios_During_Retirement_Part_IV.pdf
+    Forbidden    http://www.bobsfinancialwebsite.com/pdfs/Reality_Retirement_Planning.pdf
+    No such host is known. (www.contingenciesonline.com:80)    http://www.contingenciesonline.com/contingenciesonline/20131112?pg=5#pg5
+    Internal Server Error    http://www.investopedia.com/terms/s/substitution-effect.asp
+    Not Found    http://crr.bc.edu/images/stories/Working_Papers/WP_2005-14.pdf
+
+Modified Adjusted Gross Income   https://bogleheads.org/wiki/Modified%20Adjusted%20Gross%20Income
+    Internal Server Error    https://www.investopedia.com/terms/m/magi.asp
+    Forbidden    https://crsreports.congress.gov/product/pdf/R/R43861
+    Forbidden    https://crsreports.congress.gov/product/pdf/R/R43861/11
+
+Momentum index returns   https://bogleheads.org/wiki/Momentum%20index%20returns
+    Not Found    http://www.cbsnews.com/8301-505123_162-57413875/how-the-four-stock-premiums-work/
+    Forbidden    http://www.ftse.com/Analytics/FactSheets/Home/DownloadSingleIssue?issueName=D62128USD
+    Forbidden    http://www.ftse.com/Analytics/FactSheets/Home/DownloadSingleIssue?openfile=open&issueName=US1006USD
+    Forbidden    http://www.ftse.com/Analytics/FactSheets/Home/DownloadSingleIssue?openfile=open&issueName=US2019USD
+    Forbidden    http://www.ftse.com/Analytics/FactSheets/Home/DownloadSingleIssue?issueName=FUSFMF
+    Forbidden    http://www.ftse.com/products/downloads/Russell-factor-long-only-indexes.pdf?455
+
+Momentum investing   https://bogleheads.org/wiki/Momentum%20investing
+    Internal Server Error    http://www.investopedia.com/terms/m/momentum_investing.asp
+
+Money markets   https://bogleheads.org/wiki/Money%20markets
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000783401&type=N-MFP&dateb=&count=100&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000821404&type=N-MFP&dateb=&count=100&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000788599&type=&dateb=&count=100&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000862341&type=N-MFP&dateb=&count=100&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000788606&type=N-MFP&dateb=&count=80&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000225997&type=N-MFP&dateb=&count=100&scd=filingsb
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000891190&type=N-MFP&dateb=&count=100&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=S000004462&type=N-MFP&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000106830&type=N-MFP&dateb=&count=100&scd=filingsv
+
+Montana 529 plan archive   https://bogleheads.org/wiki/Montana%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=MT&planID=5PUSA006AC
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors    https://www.montanasaves.com/content/investments_options.html
+    Forbidden    https://a248.e.akamai.net/f/248/21630/7d/im.uprinv.com/rc/sr2/mtd/programdescription.pdf
+
+Mortgage-backed security   https://bogleheads.org/wiki/Mortgage-backed%20security
+    Service Unavailable    http://www.amazon.com/s/?search-alias=aps&tag=bogleheads.org-20&field-keywords=Bogleheads
+        http://www.investinginbonds.com/learnmore.asp?catid=3&id=383
+    Internal Server Error    http://www.investopedia.com/terms/c/cmo.asp
+    Internal Server Error    http://www.investopedia.com/terms/c/contractionrisk.asp
+    Internal Server Error    http://www.investopedia.com/terms/e/extensionrisk.asp
+    Internal Server Error    http://www.investopedia.com/terms/g/ginniemae.asp
+    Internal Server Error    http://www.investopedia.com/terms/m/mbs.asp
+    Internal Server Error    http://www.investopedia.com/terms/p/passthroughsecurity.asp
+
+Moshe Milevsky   https://bogleheads.org/wiki/Moshe%20Milevsky
+    Forbidden    http://www.ifid.ca/research.htm
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (research.schulich.yorku.ca:80)    http://research.schulich.yorku.ca/client/schulich/FacultyProfile.nsf/webpagekey/moshe+milevsky?OpenDocument
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/2592777/moshe-arye-milevsky
+    Forbidden    http://www.cfapubs.org/page/faj/all-graham-dodd-winners
+    Forbidden    http://www.financialpro.org/foundation/awards/blackawards.htm
+
+Municipal bonds   https://bogleheads.org/wiki/Municipal%20bonds
+    Not Found    http://www.fairmark.com/mutual/stcl.htm
+        http://www.investinginbonds.com/learnmore.asp?catid=8
+    Internal Server Error    http://www.investopedia.com/terms/i/illiquid.asp
+    Internal Server Error    http://www.investopedia.com/terms/r/revenuebond.asp
+    Internal Server Error    http://www.investopedia.com/terms/s/specialassessmentbond.asp
+    No such host is known. (www.investorwords.com:80)    http://www.investorwords.com/2165/General_Obligation_Bond.html
+
+Mutual fund   https://bogleheads.org/wiki/Mutual%20fund
+    Not Found    https://spreadsheets.google.com/pub?key=pYSRNXThZbE4dZLcTFcvqRA
+    Internal Server Error    https://www.investopedia.com/mutual-funds-4427787
+    Internal Server Error    https://www.investopedia.com/terms/a/alternativeminimumtax.asp
+    Gone    https://ssrn.com/abstract=2251726
+    Not Found    https://www.law.uc.edu/CCL/InvCoRls/rule2a-7.html
+
+Mutual fund history   https://bogleheads.org/wiki/Mutual%20fund%20history
+    Not Found    http://www.apra.gov.au/Super/Pages/default.aspx
+    Internal Server Error    http://www.investopedia.com/articles/mutualfund/05/MFhistory.asp
+
+Mutual fund share split   https://bogleheads.org/wiki/Mutual%20fund%20share%20split
+    Not Found    http://guggenheiminvestments.com/products/mutual-funds/share-splits
+    Internal Server Error    http://www.investopedia.com/terms/r/reversesplit.asp
+    Forbidden    http://www.thestreet.com/story/668251/1/do-mutual-funds-ever-split-their-shares.html
+    Not Found    http://finance.yahoo.com/news/profunds-announces-mutual-fund-share-200000808.html
+    Bad Gateway    https://www.americancentury.com/content/americancentury/direct/en/investment-planning/tax-center/reverse-share-split.html
+
+Mutual fund stewardship grades   https://bogleheads.org/wiki/Mutual%20fund%20stewardship%20grades
+    410 Gone    http://cart.morningstar.ca/quicktakes/stewardship/img/stewardship-methodology.pdf
+    Not Found    http://www.cafemutual.com/News/India-rated-B-in-Morningstar-global-investors-experience-survey~366~New~Industry~21
+    Internal Server Error    http://www.investopedia.com/articles/04/111904.asp#axzz24UYb0TiC
+
+Mutual fund structure   https://bogleheads.org/wiki/Mutual%20fund%20structure
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    http://www.sec.gov/about/laws/ica40.pdf
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    http://www.sec.gov/answers/mutfund.htm
+    Forbidden    http://www.icifactbook.org/
+
+Mutual fund turnover ratio   https://bogleheads.org/wiki/Mutual%20fund%20turnover%20ratio
+    Internal Server Error    https://www.investopedia.com/terms/p/portfolioturnover.asp#ixzz56v3ZYBKx
+    Forbidden    https://www.sec.gov/Archives/edgar/data/736054/000093247117006098/star_final.htm
+    Forbidden    https://www.sec.gov/Archives/edgar/data/736054/000093247117006112/0000932471-17-006112.txt
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (www.cfapubs.org:443)    https://www.cfapubs.org/doi/abs/10.2469/faj.v70.n1.1
+
+Mutual funds: additional costs   https://bogleheads.org/wiki/Mutual%20funds:%20additional%20costs
+    No such host is known. (pdf.forbes.com:80)    http://pdf.forbes.com/media/pdfs/2005/0105funds.pdf
+    No such host is known. (www.moneymanagerservices.com:80)    http://www.moneymanagerservices.com/Laws/sea_section_28e.cfm
+    Too Many Requests    http://ssrn.com/abstract=53500
+    Too Many Requests    http://ssrn.com/abstract=951367
+
+Mutual funds and fees   https://bogleheads.org/wiki/Mutual%20funds%20and%20fees
+    Too Many Requests    http://ssrn.com/abstract=1105775
+    Too Many Requests    http://ssrn.com/abstract=1114822
+    Too Many Requests    http://ssrn.com/abstract=1153715
+    Too Many Requests    http://ssrn.com/abstract=1242642
+    Too Many Requests    http://ssrn.com/abstract=616981
+    Too Many Requests    http://ssrn.com/abstract=880463
+    Too Many Requests    http://ssrn.com/abstract=901023
+    Too Many Requests    http://papers.ssrn.com/sol3/papers.cfm?abstract_id=1030366
+
+Mutual funds for Bogleheads   https://bogleheads.org/wiki/Mutual%20funds%20for%20Bogleheads
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/totalstockmarket/?go=literature
+    Not Found    https://www.fidelity.com/about-fidelity/individual-investing/fidelity-rewrites-the-rules-of-investing-to-deliver-unparalleled-value-and-simplicity-to-investors
+
+Nathan Most   https://bogleheads.org/wiki/Nathan%20Most
+    Forbidden    http://www.etf.com/publications/journalofindexes/joi-articles/1075.html
+    Forbidden    http://www.etf.com/publications/journalofindexes/joi-articles/1810.html?nopaging=1
+    Forbidden    http://www.etf.com/sections/features/281.html?nopaging=1Nate
+    Not Found    http://www.institutionalinvestor.com/Article/3226522/Search/Happy-20th-Birthday-ETFs-A-Look-Back-at-Nate-Most-and-His-Novel-Idea.html#.Vl8mUuKLU5s
+    Forbidden    http://www.sfgate.com/business/networth/article/Nathan-Most-Creator-of-Exchange-Traded-Funds-2713311.php
+    No such host is known. (money-markets-blog.amazon.com:443)    https://money-markets-blog.amazon.com/post/Tx1J1WCZ8ZAV10O/A-Brief-History-of-the-ETF
+
+Nebraska 529 plan archive   https://bogleheads.org/wiki/Nebraska%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=NE&planID=5PUSA006AD
+
+Nellie Liang   https://bogleheads.org/wiki/Nellie%20Liang
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/272794/nellie-liang
+    Not Found    http://bus.miami.edu/faculty-and-research/faculty-directory/finance/kumar/index.html
+    redirected to http://www.federalreserve.gov/econres/nellie-liang.htm    from http://www.federalreserve.gov/econresdata/nellie-liang.htm
+
+Net asset value   https://bogleheads.org/wiki/Net%20asset%20value
+    Internal Server Error    http://www.investopedia.com/terms/n/nav.asp
+
+Net unrealized appreciation   https://bogleheads.org/wiki/Net%20unrealized%20appreciation
+    Internal Server Error    http://www.investopedia.com/articles/retirement/05/062305.asp
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    http://www.morganstanleyfa.com/public/projectfiles/4691edbc-099c-4c4f-aae5-c9bbd2d5eda6.pdf
+
+Net worth   https://bogleheads.org/wiki/Net%20worth
+    Not Found    http://www.dallasfed.org/microsites/cd/wealth/online/ch1.html
+    Forbidden    https://www.findlaw.com/bankruptcy/debt-relief/sample-personal-financial-statement.html
+    Internal Server Error    https://www.investopedia.com/terms/n/networth.asp
+
+Nevada 529 plan archive   https://bogleheads.org/wiki/Nevada%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=NV&planID=5PUSA0002K
+    Forbidden    https://personal.vanguard.com/us/content/Funds/Funds529AgeBasedJSP.jsp
+    Forbidden    https://personal.vanguard.com/us/whatweoffer/college/vanguard529?Link=more&LinkLocation=college_overview
+
+New Hampshire 529 plan archive   https://bogleheads.org/wiki/New%20Hampshire%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=NH&planID=5PUSA0000T
+
+New Jersey 529 plan archive   https://bogleheads.org/wiki/New%20Jersey%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=NJ&planID=5PUSA0000U
+
+New Mexico 529 plan archive   https://bogleheads.org/wiki/New%20Mexico%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=NM&planID=5PUSA0000W
+    Not Found    https://www.theeducationplan.com/OFI529/AP/portfolio.do?style=investmentOptionsSummary#ageBasedl
+    Not Found    https://www.theeducationplan.com/OFI529/AP/portfolio.do?style=investmentOptionsSummary#customChoice
+    Not Found    https://www.theeducationplan.com/litcenter/529/nmdirectsold/literature?site=den-prod-529-1&plan=NMDirectSold
+
+New York 529 plan archive   https://bogleheads.org/wiki/New%20York%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=NY&planID=5PUSA0002Z
+    Not Found    https://cdn.unite529.com/f/248/21630/7d/im.uprinv.com/rc/sr2/ny/DisclosureBooklet.pdf
+    No such host is known. (uii.nysaves.s.upromise.com:443)    https://uii.nysaves.s.upromise.com/content/agebased.html
+    Forbidden    https://a248.e.akamai.net/f/248/21630/7d/im.uprinv.com/rc/sr2/ny/enrollKit.pdf
+
+News and blogs   https://bogleheads.org/wiki/News%20and%20blogs
+    Forbidden    http://www.etf.com/
+    Forbidden    http://www.etf.com/contributors/larry-swedroe
+
+Nicholas C. Barberis   https://bogleheads.org/wiki/Nicholas%20C.%20Barberis
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/1008174/nicholas-c-barberis
+    Not Found    http://www.q-group.org/prize-winners/
+
+Nicolas P. B. Bollen   https://bogleheads.org/wiki/Nicolas%20P.%20B.%20Bollen
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/1535400/nicolas-p-b-bollen
+    Too Many Requests    http://ssrn.com/abstract=899382
+    Too Many Requests    http://ssrn.com/abstract=937972
+    Too Many Requests    http://ssrn.com/abstract=937990
+
+Nominal bond   https://bogleheads.org/wiki/Nominal%20bond
+    Internal Server Error    http://www.investopedia.com/terms/n/nominal.asp
+
+Non-US investor's guide to navigating US tax traps   https://bogleheads.org/wiki/Non-US%20investor's%20guide%20to%20navigating%20US%20tax%20traps
+    The remote certificate is invalid because of errors in the certificate chain: NotTimeValid    https://www.dilloneustace.com/uploads/files/Taxation-of-Collective-Investment-Funds-and-Availability-of-Treaty-Benefits.pdf
+    Forbidden    https://www.kplaw.com/wp-content/uploads/2019-United-States-Estate-and-Gift-Tax-An-Overview-for-Foreigners-Investing-in-the-US-1.pdf
+    Not Found    https://www.mustachianpost.com/de/files/0177/flaws_in_the_current_US_Swiss_estate_tax_treaty_and_the_need_for_a_modern_treaty.pdf
+    Too Many Requests    https://papers.ssrn.com/sol3/papers.cfm?abstract_id=263133
+    Too Many Requests    https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3447485
+
+Non-US robo-advisors   https://bogleheads.org/wiki/Non-US%20robo-advisors
+    Not Found    https://kristal.ai/sgp/
+    Bad Gateway    https://www.clover.com.au/
+
+Non-deductible traditional IRA   https://bogleheads.org/wiki/Non-deductible%20traditional%20IRA
+    Forbidden    https://personal.vanguard.com/us/whatweoffer/ira/whichira?Link=facet
+
+Nonresident alien's ETF domicile decision table   https://bogleheads.org/wiki/Nonresident%20alien's%20ETF%20domicile%20decision%20table
+    Not Found    https://www.dfdl.com/resources/legal-and-tax-updates/tax-alert-the-income-tax-treaty-between-vietnam/
+    Not Found    https://www.mustachianpost.com/de/files/0177/flaws_in_the_current_US_Swiss_estate_tax_treaty_and_the_need_for_a_modern_treaty.pdf
+
+Nonresident alien investors and Ireland domiciled ETFs   https://bogleheads.org/wiki/Nonresident%20alien%20investors%20and%20Ireland%20domiciled%20ETFs
+    Forbidden    https://www.etf.com/etf-education-center/21034-understanding-etf-liquidity.html
+    Forbidden    https://www.ftserussell.com/analytics/factsheets/home/historicindexvalues?groupname=ftse%20global%20equity%20index%20series
+
+Nonresident alien taxation   https://bogleheads.org/wiki/Nonresident%20alien%20taxation
+    Forbidden    https://www.kplaw.com/wp-content/uploads/2019-United-States-Estate-and-Gift-Tax-An-Overview-for-Foreigners-Investing-in-the-US-1.pdf
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.northerntrust.com/documents/line-of-sight/fatca-faq.pdf
+
+North Carolina 529 plan archive   https://bogleheads.org/wiki/North%20Carolina%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=NC&planID=5PUSA0000Z
+
+North Dakota 529 plan archive   https://bogleheads.org/wiki/North%20Dakota%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=ND&planID=5PUSA00011
+    No such host is known. (collegesave4u.s.upromise.com:443)    https://collegesave4u.s.upromise.com/
+    No such host is known. (collegesave4u.s.upromise.com:443)    https://collegesave4u.s.upromise.com/content/benefits_ndresidents.html
+    No such host is known. (collegesave4u.s.upromise.com:443)    https://collegesave4u.s.upromise.com/content/formslit.html
+    No such host is known. (collegesave4u.s.upromise.com:443)    https://collegesave4u.s.upromise.com/content/investments.html
+
+Northern Funds   https://bogleheads.org/wiki/Northern%20Funds
+    Gateway Time-out    http://quicktake.morningstar.com/FundFamily/Snapshot.asp?Country=USA&Symbol=0C00001J8I
+    Not Found    http://www.northernfunds.com/pws/jsp/display2.jsp?XML=http://web-xp2c-pws/xml/performance_funds.xml&TYPE=performance&fundtype=all
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    http://www.northerntrust.com/pws/jsp/display2.jsp?TYPE=interior&XML=pages/nt/1204/1334686866260_807.xml
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    http://www.northerntrust.com/pws/jsp/display2.jsp?XML=pages/nt/0404/50191373_1576.xml&TYPE=interior
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    http://www.northerntrust.com/pws/jsp/display2.jsp?XML=pages/nt/0407/58054293_3700.xml&TYPE=interior
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    http://www.northerntrust.com/pws/jsp/display2.jsp?XML=pages/nt/0402/45790422_3688.xml&TYPE=interior
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.flexshares.com/exchange-traded-funds
+
+Norwegian Government Pension Fund Global performance   https://bogleheads.org/wiki/Norwegian%20Government%20Pension%20Fund%20Global%20performance
+    Not Found    http://www.nbim.no/press-and-publications/feature-articles/2012/use-of-benchmarks-in-the-fund-management/
+
+Ohio 529 plan archive   https://bogleheads.org/wiki/Ohio%20529%20plan%20archive
+    Not Found    http://www.collegeadvantage.com/ohio-529-plans/collegeadvantage-direct/age-based-options
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=OH&planID=5PUSA00012
+
+Oklahoma 529 plan archive   https://bogleheads.org/wiki/Oklahoma%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=OK&planID=5PUSA00014
+
+Option   https://bogleheads.org/wiki/Option
+    Internal Server Error    http://www.investopedia.com/university/options/option.asp
+
+Order   https://bogleheads.org/wiki/Order
+    Internal Server Error    http://www.investopedia.com/terms/o/order.asp
+    Internal Server Error    http://www.investopedia.com/terms/s/stop-lossorder.asp
+    Internal Server Error    http://www.investopedia.com/terms/t/trade.asp
+    Gateway Time-out    http://news.morningstar.com/articlenet/article.aspx?id=337005
+
+Ordinary dividend   https://bogleheads.org/wiki/Ordinary%20dividend
+    Not Found    https://fairmark.com/investment-taxation/mutual-fund-tax-guide/ordinary-dividends/
+
+Oregon 529 plan archive   https://bogleheads.org/wiki/Oregon%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=OR&planID=5PUSA00015
+    Bad Request    https://www.oregoncollegesavings.com/
+    Bad Request    https://www.oregoncollegesavings.com/documents/or_disclosure.pdf
+
+Outline of tax law changes   https://bogleheads.org/wiki/Outline%20of%20tax%20law%20changes
+    Forbidden    https://www.congress.gov/bill/115th-congress/house-bill/1/text/enr?r=1
+
+Owning vs renting   https://bogleheads.org/wiki/Owning%20vs%20renting
+    Not Found    http://www.advantageinvesting.com/Articles/Home%20Values%20(8-2008).pdf
+    Internal Server Error    http://www.investopedia.com/articles/05/011205.asp?viewed=1
+    Internal Server Error    http://www.investopedia.com/articles/05/011305.asp?viewed=1
+    Forbidden    http://www.zillow.com
+    Forbidden    http://www.bls.gov/cpi/cpifact6.htm
+
+P/B   https://bogleheads.org/wiki/P/B
+    Internal Server Error    http://www.investopedia.com/terms/p/price-to-bookratio.asp
+
+P/E   https://bogleheads.org/wiki/P/E
+    Forbidden    http://www.etf.com/
+    Forbidden    http://www.etf.com/sections/blog/23121-why-etf-priceearnings-ratios-lie.html?nopaging=1
+    Internal Server Error    http://www.investopedia.com/terms/p/price-earningsratio.asp
+
+Passive foreign investment company   https://bogleheads.org/wiki/Passive%20foreign%20investment%20company
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.nasdaq.com/investing/glossary/m/mark-to-market-accounting
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.nasdaq.com/investing/glossary/u/unrealized-capital-gain-loss
+
+Passively managing individual stocks   https://bogleheads.org/wiki/Passively%20managing%20individual%20stocks
+    Internal Server Error    http://www.crcpress.com/product/isbn/9781584885580
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes/joi-articles/12927-index-variation-and-overall-portfolio-performance.html
+    redirected to http://www.msci.com/products/indexes/performance.html?undefined    from http://www.msci.com/products/indices/performance.html?undefined
+    redirected to http://ppca-inc.com/articles/DiversByNumbers.pdf    from http://www.ppca-inc.com/articles/DiversByNumbers.pdf
+
+Paul J. Irvine   https://bogleheads.org/wiki/Paul%20J.%20Irvine
+    Too Many Requests    http://ssrn.com/abstract=342720
+    Too Many Requests    http://ssrn.com/abstract=361022
+    Too Many Requests    http://ssrn.com/abstract=642341
+    Too Many Requests    http://ssrn.com/abstract=890868
+    Not Found    http://neeley.tcu.edu/About_Neeley/Faculty_and_Staff/Irvine,_Paul.aspx
+
+Paying down loans versus investing   https://bogleheads.org/wiki/Paying%20down%20loans%20versus%20investing
+    Internal Server Error    http://www.investopedia.com/terms/e/effectiveinterest.asp
+
+Payroll - cafeteria plan deductions   https://bogleheads.org/wiki/Payroll%20-%20cafeteria%20plan%20deductions
+    Internal Server Error    https://www.investopedia.com/terms/a/agi.asp
+
+Payroll deductions   https://bogleheads.org/wiki/Payroll%20deductions
+    Forbidden    https://www.adp.com/resources/articles-and-insights/articles/g/gross-pay-vs-net-pay.aspx
+
+Peer-to-peer lending   https://bogleheads.org/wiki/Peer-to-peer%20lending
+    Forbidden    http://investorjunkie.com/4/lending-club-review/
+    redirected to https://thecollegeinvestor.com/10812/is-peer-to-peer-lending-over/    from http://thecollegeinvestor.com/10812/is-peer-to-peer-lending-over/
+
+Pennsylvania 529 plan archive   https://bogleheads.org/wiki/Pennsylvania%20529%20plan%20archive
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (529.morningstar.com:80)    http://529.morningstar.com/overview.action?state=PA&planID=5PUSA00039
+    Not Found    http://www.pa529.com/lib/pdf/IP-Disclosure-Statement.pdf
+    Not Found    http://www.pa529.com/save-ip-investments.html
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (www.portal.state.pa.us:80)    http://www.portal.state.pa.us/portal/server.pt/gateway/PTARGS_0_2_636191_0_0_18/pit_bulletin_2006-04.pdf
+
+Pennsylvania Prepaid 529 Plan archive   https://bogleheads.org/wiki/Pennsylvania%20Prepaid%20529%20Plan%20archive
+    Not Found    http://www.pa529.com/pdf/GSP-2011-2012-RateCard.pdf
+    Not Found    http://www.pa529.com/pdf/GSP-Disclosure-Statement.pdf
+    Not Found    http://www.pa529.com/save-gsp-faq.html
+    Not Found    http://www.pa529.com/save-gsp.html
+    A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (www.portal.state.pa.us:80)    http://www.portal.state.pa.us/portal/server.pt/gat
+    No such host is known. (pa529gsp.s.upromise.com:443)    https://pa529gsp.s.upromise.com/gsptpl/auth/loginFormAction.do?tplcb=/gsptpl/acctmaint/acctList.do
+    The requested name is valid, but no data of the requested type was found. (fafsa.ed.gov:443)    https://fafsa.ed.gov/FAFSA/app/schoolSearch?locale=en_EN
+
+Pensions in Ireland   https://bogleheads.org/wiki/Pensions%20in%20Ireland
+    Not Found    http://www.publicpolicy.ie/wp-content/uploads/How-the-Irish-Pension-System-deals-with-current-retirees.pdf
+    Not Found    https://www.oneview.mercer.ie/content/mercersubdomain/global/en/oneview/plan-your-pension/retirement-long-term-planning/occupational-pension-schemes.html
+
+Pentagon Federal Credit Union   https://bogleheads.org/wiki/Pentagon%20Federal%20Credit%20Union
+    No such host is known. (netmember3.penfed.org:443)    https://netmember3.penfed.org/NetMember/Forms/OpenAccounts/Eligibility.aspx?MEMBERSHIP
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.penfed.org/55-Adjustable-Rate-Mortgage/
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.penfed.org/Traditional-IRA-Certificates/
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.penfed.org/about-penfed
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.penfed.org/credit-cards/platinum-rewards-visa
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.penfed.org/deposit-anywhere/
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.penfed.org/money-market-certificate/
+    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.penfed.org/mortgage-center
+

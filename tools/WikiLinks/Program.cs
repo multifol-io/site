@@ -80,7 +80,7 @@ async Task ProcessAllPages(WikiSite wikiSite) {
 
     foreach (var page in pages) {
         await ProcessPage(page);
-        await ProcessPage(page, talkNamespace:true); 
+        //await ProcessPage(page, talkNamespace:true); 
     }
 }
 
@@ -108,16 +108,28 @@ async Task<bool> ProcessLink(string? pageTitle, string? linkUrl, bool headerShow
             if (response.Headers.Location != null) {
                 Console.WriteLine("    redirected to " + response.Headers.Location + "    from " + linkUrl);
             } else {
-                if (response.ReasonPhrase == "Bad Request" || response.ReasonPhrase == "Internal Server Error") {
-                    var newUrl = linkUrl?.Replace("http://", "https://");
-                    (HttpResponseMessage? response2, Exception? e2) = await FetchUrl(newUrl);
-                    if (response2 != null && response2.IsSuccessStatusCode) {
-                        Console.WriteLine("    Update to use https. " + "    " + linkUrl);
-                    } else {
+                switch (response.ReasonPhrase) {
+                    case "Bad Request":
+                        var newUrl = linkUrl?.Replace("http://", "https://");
+                        (HttpResponseMessage? response2, Exception? e2) = await FetchUrl(newUrl);
+                        if (response2 != null && response2.IsSuccessStatusCode) {
+                            Console.WriteLine("    Update to use https. " + "    " + linkUrl);
+                        } else {
+                            Console.WriteLine("    " + response.ReasonPhrase + "    " + linkUrl);
+                        }
+                        break;
+                    case "Too Many Requests":
+                        if (!linkUrl.StartsWith("http://ssrn.com/abstract")) {
+                            Console.WriteLine("    " + response.ReasonPhrase + "    " + linkUrl);
+                        }
+                        break;
+                    // These reasons should be ignored, not a problem that requires a URL change.
+                    case "Unauthorized": 
+                    case "Internal Server Error":
+                        break;
+                    default:
                         Console.WriteLine("    " + response.ReasonPhrase + "    " + linkUrl);
-                    }
-                } else {
-                    Console.WriteLine("    " + response.ReasonPhrase + "    " + linkUrl);
+                        break;
                 }
             }
         }
