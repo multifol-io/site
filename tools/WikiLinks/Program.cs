@@ -7,7 +7,7 @@ using WikiClientLibrary.Sites;
 
 string wikiUrl = "https://bogleheads.org/w/api.php";
 int amountOfItems = 2000; // todo: don't hardcode this
-HttpClient httpClient = new();
+HttpClient httpClient = new() { Timeout = TimeSpan.FromSeconds(15) };
 bool showSuccesses = false; //if set to true, will list all pages (even if they have no external links), and all external links, even if they are OK.
 
 var client = new WikiClient();
@@ -80,7 +80,7 @@ async Task ProcessAllPages(WikiSite wikiSite) {
 
     foreach (var page in pages) {
         await ProcessPage(page);
-        //await ProcessPage(page, talkNamespace:true); 
+        await ProcessPage(page, talkNamespace:true); 
     }
 }
 
@@ -119,7 +119,7 @@ async Task<bool> ProcessLink(string? pageTitle, string? linkUrl, bool headerShow
                         }
                         break;
                     case "Too Many Requests":
-                        if (!linkUrl.StartsWith("http://ssrn.com/abstract")) {
+                        if (!(linkUrl.StartsWith("http://ssrn.com/abstract") || linkUrl.StartsWith("http://papers.ssrn.com"))) {
                             Console.WriteLine("    " + response.ReasonPhrase + "    " + linkUrl);
                         }
                         break;

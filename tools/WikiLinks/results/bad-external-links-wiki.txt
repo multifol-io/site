@@ -2350,11 +2350,1719 @@ Pensions in Ireland   https://bogleheads.org/wiki/Pensions%20in%20Ireland
 
 Pentagon Federal Credit Union   https://bogleheads.org/wiki/Pentagon%20Federal%20Credit%20Union
     No such host is known. (netmember3.penfed.org:443)    https://netmember3.penfed.org/NetMember/Forms/OpenAccounts/Eligibility.aspx?MEMBERSHIP
-    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.penfed.org/55-Adjustable-Rate-Mortgage/
-    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.penfed.org/Traditional-IRA-Certificates/
-    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.penfed.org/about-penfed
-    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.penfed.org/credit-cards/platinum-rewards-visa
-    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.penfed.org/deposit-anywhere/
-    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.penfed.org/money-market-certificate/
-    The request was canceled due to the configured HttpClient.Timeout of 100 seconds elapsing.    https://www.penfed.org/mortgage-center
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://www.penfed.org/55-Adjustable-Rate-Mortgage/
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://www.penfed.org/Traditional-IRA-Certificates/
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://www.penfed.org/about-penfed
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://www.penfed.org/credit-cards/platinum-rewards-visa
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://www.penfed.org/deposit-anywhere/
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://www.penfed.org/money-market-certificate/
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://www.penfed.org/mortgage-center
+
+Percentages of REITs present in Vanguard index funds   https://bogleheads.org/wiki/Percentages%20of%20REITs%20present%20in%20Vanguard%20index%20funds
+    Forbidden    http://www.sec.gov/Archives/edgar/data/734383/000093247109002116/0000932471-09-002116-index.htm
+    Forbidden    http://www.sec.gov/Archives/edgar/data/734383/000093247109002116/specializedfundsfinal.htm
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://www.sec.gov/edgar/searchedgar/mutualsearch.htm
+    Not Found    https://institutional.vanguard.com/iam/pdf/ICRPBD.pdf?cbdForceDomain=true
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtsmx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vmgax
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vmctx
+
+Philippe Jorion   https://bogleheads.org/wiki/Philippe%20Jorion
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/10668724/philippe-jorion
+    Not Found    http://www.afajof.org/details/page/2870731/Prizes.html
+    Forbidden    http://www.cfapubs.org/doi/abs/10.2469/faj.v59.n5.2565
+    Forbidden    http://www.cfapubs.org/doi/abs/10.2469/faj.v68.n2.1
+    Forbidden    http://www.cfapubs.org/page/faj/all-graham-dodd-winners
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors    http://citec.repec.org/p/j/pjo72.html
+
+Pierluigi Balduzzi   https://bogleheads.org/wiki/Pierluigi%20Balduzzi
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/64506/pierluigi-balduzzi
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors    http://citec.repec.org/p/b/pba469.html
+
+Portal:Main Page/Featured blog   https://bogleheads.org/wiki/Portal:Main%20Page/Featured%20blog
+    Forbidden    https://bogleheads.podbean.com/
+    Forbidden    https://bogleheads.podbean.com/feed.xml
+
+Portal:Main Page Development   https://bogleheads.org/wiki/Portal:Main%20Page%20Development
+    No such host is known. (rss.vanguard.com:80)    http://rss.vanguard.com/rss/recentstories.xml
+    Forbidden    https://bogleheads.podbean.com/
+
+Portal:Main Page Development/News and blogs   https://bogleheads.org/wiki/Portal:Main%20Page%20Development/News%20and%20blogs
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://www.coffeehouseinvestor.com
+    Forbidden    http://www.etf.com/
+    Forbidden    http://www.etf.com/contributors/larry-swedroe
+
+Portfolio   https://bogleheads.org/wiki/Portfolio
+
+Posting images in the Bogleheads forum   https://bogleheads.org/wiki/Posting%20images%20in%20the%20Bogleheads%20forum
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch    http://www.tinypic.com
+
+Precious metals equity   https://bogleheads.org/wiki/Precious%20metals%20equity
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/fact_info/Dow_Jones_Precious_Metals_Index_Fact_Sheet.pdf
+        http://www.globalxfunds.com/GLDX
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes/joi-articles/8239-rediscovering-gold-as-an-asset-class.html
+
+Preferred stock   https://bogleheads.org/wiki/Preferred%20stock
+
+Preparing for retirement   https://bogleheads.org/wiki/Preparing%20for%20retirement
+    Not Found    http://www.dol.gov/dol/aboutdol/
+
+Prioritizing investments   https://bogleheads.org/wiki/Prioritizing%20investments
+    Not Found    https://www.whitecoatinvestor.com/hrf_faq/what-order-should-i-fund-my-accounts-in/
+
+Private equity   https://bogleheads.org/wiki/Private%20equity
+    Too Many Requests    http://papers.ssrn.com/sol3/papers.cfm?abstract_id=999910
+    No such host is known. (www.chicagogsb.edu:80)    http://www.chicagogsb.edu/news/2004-11-12kaplan/pereturns-1.pdf
+    Not Found    http://fic.wharton.upenn.edu/fic/papers/05/0542.pdf
+    Not Found    https://advisors.vanguard.com/iwe/pdf/icr_alternative_investments.pdf
+
+Private mortgage insurance   https://bogleheads.org/wiki/Private%20mortgage%20insurance
+    No such host is known. (www.mortgage-smart.info:80)    http://www.mortgage-smart.info/required-reading/article.php?id=8
+
+Probate   https://bogleheads.org/wiki/Probate
+    Not Found    http://www.efmoody.com/estate/probate.html
+    Forbidden    http://estate.findlaw.com/probate/probate-overview/avoiding-probate.html
+    Forbidden    http://estate.findlaw.com/probate/probate-overview/probate-overview-overview.html
+
+Progressive tax   https://bogleheads.org/wiki/Progressive%20tax
+    Not Found    https://www.irs.com/articles/2018-federal-tax-rates-personal-exemptions-and-standard-deductions
+
+Prospectus   https://bogleheads.org/wiki/Prospectus
+    Forbidden    https://personal.vanguard.com/us/funds
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://www.sec.gov/fast-answers/answersmfprospectustipshtm.html
+
+Purchase fee   https://bogleheads.org/wiki/Purchase%20fee
+    Forbidden    https://investor.vanguard.com/mutual-funds/fees
+
+Qualified charitable distributions   https://bogleheads.org/wiki/Qualified%20charitable%20distributions
+    Forbidden    https://www.congress.gov/bill/114th-congress/house-bill/2029
+
+Qualified dividend   https://bogleheads.org/wiki/Qualified%20dividend
+    Not Found    https://fairmark.com/investment-taxation/mutual-fund-tax-guide/ordinary-dividends/
+
+Qualified retirement plan   https://bogleheads.org/wiki/Qualified%20retirement%20plan
+    Not Found    http://www.investorglossary.com/qualified-retirement-plan.htm
+
+Randolph B. Cohen   https://bogleheads.org/wiki/Randolph%20B.%20Cohen
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/2823650/randolph-b-cohen
+
+Real estate investment trust   https://bogleheads.org/wiki/Real%20estate%20investment%20trust
+    Forbidden    http://www.greenstreetadvisors.com/
+    Not Found    http://guggenheiminvestments.com/products/etf/wrei
+
+Record retention   https://bogleheads.org/wiki/Record%20retention
+    Not Found    https://www.usa.gov/About.shtml
+
+Redemption fee   https://bogleheads.org/wiki/Redemption%20fee
+    Forbidden    https://investor.vanguard.com/mutual-funds/fees
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-05232012
+
+Reinvesting dividends in a taxable account   https://bogleheads.org/wiki/Reinvesting%20dividends%20in%20a%20taxable%20account
+    Forbidden    http://c.ymcdn.com/sites/www.planningforafuture.com/resource/resmgr/docs/spending_from_a_portfolio.pdf
+
+Renter's insurance   https://bogleheads.org/wiki/Renter's%20insurance
+    No such host is known. (www.investorwords.com:80)    http://www.investorwords.com/5763/renters_insurance.html
+
+Replacement rate models of retirement spending   https://bogleheads.org/wiki/Replacement%20rate%20models%20of%20retirement%20spending
+    No such host is known. (www.bls:80)    http://www.bls/gov/cex
+    Forbidden    http://www.pitecreative.com/staging/latesavers/partone.html
+    Not Found    http://crr.bc.edu/images/stories/Working_Papers/WP_2005-14.pdf
+    The requested name is valid, but no data of the requested type was found. (rmictr.gsu.edu:80)    http://rmictr.gsu.edu/Papers/RR08-1.pdf
+    No such host is known. (www.mrrc.isr.umich.edu:80)    http://www.mrrc.isr.umich.edu/publications/papers/pdf/wp214.pdf
+    Not Found    http://www.census.gov/hhes/www/wealth/Final%20Draft_Paper_Revised4_5_2011.pdf
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://spwfe.fpanet.org:10005/public/Unclassified%20Records/FPA%20Journal%20March%202008%20-%20Economics'%20Approach%20to%20Financial%20Planning.pdf
+
+Required Minimum Distribution   https://bogleheads.org/wiki/Required%20Minimum%20Distribution
+    Not Found    http://www.newyorklife.com/newyorklife.com/General/FileLink/Static%20Files/file/other/RetireDistrib_mainstay.html
+    Forbidden    http://www.vanguard.com/us/insights/retirement/estimate-your-rmd-tool
+    Not Found    http://www.irs.gov/publications/p590/ch01.html#en_US_2013_publink1000230753
+
+Retirement Income Redesigned   https://bogleheads.org/wiki/Retirement%20Income%20Redesigned
+    Service Unavailable    http://www.amazon.com/s/?search-alias=aps&tag=bogleheads.org-20&field-keywords=Bogleheads
+
+Retirement calculators and spending   https://bogleheads.org/wiki/Retirement%20calculators%20and%20spending
+    redirected to http://cfiresim.com/    from http://www.cfiresim.com/input.php
+    Not Found    http://www.cfiresim.com/tutorial.html
+    Forbidden    http://basic.esplanner.com/
+    Forbidden    http://www.esplanner.com/
+    Forbidden    http://financialmentor.com/calculator/best-retirement-calculator
+
+Retirement policy statement   https://bogleheads.org/wiki/Retirement%20policy%20statement
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://news.morningstar.com/pdfs/retirement-policy_apr2016.pdf
+
+Retirement risk   https://bogleheads.org/wiki/Retirement%20risk
+    Not Found    http://faculty.chicagobooth.edu/erik.hurst/research/retirement_consumption_survey_wharton.pdf
+    No such host is known. (glennschool.osu.edu:80)    http://glennschool.osu.edu/faculty/seligman/2009%2010%20Lachance%20&%20Seligman%20--%20Involuntary%20Retirement.pdf
+    Not Found    http://www.soa.org/about/overview/default.aspx
+    Not Found    http://www.soa.org/files/pdf/research-2009-retire-risk-survey.pdf
+    Not Found    http://www.soa.org/files/pdf/research-key-finding-process-planning.pdf
+    Not Found    http://www.soa.org/files/pdf/research-key-findings.pdf
+    Bad Request    http://www.soa.org/research/research-projects/pension/research-post-retirement-needs-and-risks.aspx
+    Bad Request    http://www.soa.org/research/research-projects/pension/retire-planning-software-post-retire-risk.aspx
+
+Retirement spending   https://bogleheads.org/wiki/Retirement%20spending
+    Not Found    https://personal.vanguard.com/pdf/icrcsa.pdf
+
+Return of capital distribution   https://bogleheads.org/wiki/Return%20of%20capital%20distribution
+    Not Found    http://fairmark.com/mutual/nontax.htm
+    Forbidden    https://personal.vanguard.com/us/funds/vanguard/ManagedPayoutList
+
+Reverse mortgages   https://bogleheads.org/wiki/Reverse%20mortgages
+
+Rhode Island 529 plan archive   https://bogleheads.org/wiki/Rhode%20Island%20529%20plan%20archive
+    Not Found    http://www.alliancebernstein.com/ri/home.aspx
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://529.morningstar.com/overview.action?state=RI&planID=5PUSA00016
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://www.riheaa.org/cbf/match_grant.php
+    Not Found    https://www.alliancebernstein.com/abcom/Product_Center/3_Vehicle/MF/CBF/Ind_Fund/CBF_Vanguard_Total_Stock_Market_Index.htm?shareclass=RI
+    Not Found    https://www.alliancebernstein.com/abcom/Product_Center/3_Vehicle/MF/CBF/Ind_Fund/CBF_Vanguard_Total_Bond_Market_Index.htm?shareclass=RI
+
+Richard B. Evans   https://bogleheads.org/wiki/Richard%20B.%20Evans
+    Forbidden    http://www.cfapubs.org/page/faj/all-graham-dodd-winners
+
+Richard H. Thaler   https://bogleheads.org/wiki/Richard%20H.%20Thaler
+    Too Many Requests    http://www.fullerthaler.com/Default.aspx
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/1155414/richard-thaler
+    Not Found    http://faculty.chicagobooth.edu/Richard.Thaler/index.html
+    Not Found    http://www.chicagobooth.edu/about/newsroom/press-releases/2012/2012-05-17
+
+Rick Ferri   https://bogleheads.org/wiki/Rick%20Ferri
+    Service Unavailable    http://www.amazon.com/s/?search-alias=aps&tag=bogleheads.org-20&field-keywords=Bogleheads
+    Forbidden    https://bogleheads.podbean.com/
+    Forbidden    https://bogleheads.podbean.com/feed.xml
+
+Risk and return   https://bogleheads.org/wiki/Risk%20and%20return
+    Forbidden    http://www.portfoliosolutions.com/f-13.html
+    Too Many Requests    http://papers.ssrn.com/sol3/papers.cfm?abstract_id=5771
+
+Risk and return: an introduction   https://bogleheads.org/wiki/Risk%20and%20return:%20an%20introduction
+    No such host is known. (personal.vanguard.comnull:443)    https://personal.vanguard.com/us/LiteratureRequest?FW_Activity=ViewOnlineActivity&vendorID=S537&FW_Event=start&search_mode=true&cbdForceDomain=false
+    Forbidden    https://personal.vanguard.com/us/insights/investingtruths/investing-truth-about-risk
+
+Risk and return: application   https://bogleheads.org/wiki/Risk%20and%20return:%20application
+    Not Found    http://www.jkfinancialinc.com/events/2010_Hypo_Asset_Return_Risks.pdf
+    Too Many Requests    http://papers.ssrn.com/sol3/papers.cfm?abstract_id=163970
+    Too Many Requests    http://papers.ssrn.com/sol3/papers.cfm?abstract_id=182108
+    Forbidden    https://personal.vanguard.com/us/insights/investingtruths/investing-truth-about-risk
+
+Risk tolerance   https://bogleheads.org/wiki/Risk%20tolerance
+    Service Unavailable    https://annual.cfainstitute.org/2015/04/27/beyond-the-questionnaire-new-tools-for-risk-profiling/
+
+Robert F. Stambaugh   https://bogleheads.org/wiki/Robert%20F.%20Stambaugh
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/901272/robert-f-stambaugh
+    Not Found    http://www.chicagobooth.edu/about/newsroom/press-releases/2007/2007-07-05
+    No such host is known. (jfe.rochester.edu:80)    http://jfe.rochester.edu/winners.htm
+    Not Found    http://rodneywhitecenter.wharton.upenn.edu/past-marshall-blume-prizes/
+    Not Found    http://www.afajof.org/details/page/2870731/Prizes.html
+
+Robert Shiller   https://bogleheads.org/wiki/Robert%20Shiller
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/348783/robert-shiller
+
+Roger Edelen   https://bogleheads.org/wiki/Roger%20Edelen
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/56141/roger-m-edelen
+    Not Found    http://gsm.ucdavis.edu/faculty/roger-m-edelen
+    Forbidden    http://www.cfapubs.org/page/faj/all-graham-dodd-winners
+
+Roger G. Ibbotson   https://bogleheads.org/wiki/Roger%20G.%20Ibbotson
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/160507/roger-g-ibbotson
+    Forbidden    http://www.cfapubs.org/page/faj/all-graham-dodd-winners
+
+Rolling ladders versus bond funds   https://bogleheads.org/wiki/Rolling%20ladders%20versus%20bond%20funds
+    Not Found    http://www.vanguard.com/pdf/flgmb.pdf?22100219
+
+Rollover IRA   https://bogleheads.org/wiki/Rollover%20IRA
+    Not Found    http://www.irs.gov/retirement/participant/article/0,,id=211527,00.html
+
+Roth IRA   https://bogleheads.org/wiki/Roth%20IRA
+    Not Found    http://www.fairmark.com/rothira/index.htm
+    Not Found    http://www.fairmark.com/rothira/index.htm#conversions
+    Not Found    http://www.irs.gov/publications/p590/ch02.html
+    Not Found    http://www.irs.gov/publications/p590/ch02.html#en_US_publink1000230961
+
+Russ Wermers   https://bogleheads.org/wiki/Russ%20Wermers
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/1833381/russ-wermers
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://alex2.umd.edu/wermers/faj.v67.n6.5.pdf
+    Not Found    http://www.smith.umd.edu/faculty/rwermers/
+    Forbidden    http://www.cfapubs.org/page/faj/all-graham-dodd-winners
+
+SEC yield   https://bogleheads.org/wiki/SEC%20yield
+    Forbidden    https://investor.vanguard.com/etf/profile/VTC
+    Forbidden    https://investor.vanguard.com/mutual-funds/list
+    Not Found    https://personal.vanguard.com/us/glossary/t/GlossaryThirtyDaySECYieldContent.jsp
+    Service Unavailable    https://www.sec.gov/files/formn-1a.pdf
+
+SEP   https://bogleheads.org/wiki/SEP
+    Not Found    http://www.dol.gov/ebsa/pdf/sep.pdf
+    Not Found    http://www.irs.gov/publications/p590/ch01.html#en_US_publink10006430
+    Not Found    http://www.irs.gov/publications/p590/ch01.html#en_US_publink10006460
+    Not Found    http://www.irs.gov/retirement/article/0,,id=111396,00.html
+    Not Found    http://www.irs.gov/retirement/article/0,,id=111419,00.html#1
+
+SIMPLE IRA   https://bogleheads.org/wiki/SIMPLE%20IRA
+    Not Found    http://www.dol.gov/ebsa/pdf/simple.pdf
+    Not Found    http://www.irs.gov/Retirement-Plans/Operating-a-SIMPLE-IRA-Plan
+    Not Found    http://www.irs.gov/retirement/article/0,,id=111402,00.html
+    Not Found    http://www.irs.gov/retirement/sponsor/article/0,,id=139831,00.html
+
+SIPC protection for mutual funds   https://bogleheads.org/wiki/SIPC%20protection%20for%20mutual%20funds
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://www.sipc.org/
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://www.sipc.org/for-investors/investor-faqs/#excess-sipc-insurance
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://www.sipc.org/for-investors/investor-faqs/#money-market-mutual-funds
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://www.sipc.org/for-investors/what-sipc-protects
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://www.sipc.org/list-of-members
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://www.sipc.org/news-and-media/brochures
+
+SPDR municipal bond fund tracking error   https://bogleheads.org/wiki/SPDR%20municipal%20bond%20fund%20tracking%20error
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001064642&type=N-CSRS&dateb=&count=40&scd=filings
+    Forbidden    https://www.spdrs.com/product/fund.seam?ticker=SHM
+    Forbidden    https://www.spdrs.com/product/fund.seam?ticker=tfi
+    Forbidden    https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001064642&type=485&dateb=&count=40&scd=filings
+
+Safe withdrawal rates   https://bogleheads.org/wiki/Safe%20withdrawal%20rates
+    Not Found    http://assetbuilder.com/blogs/scott_burns/archive/2007/08/29/will-the-real-safe-withdrawal-rate-please-stand-up.aspx
+    Not Found    http://assetbuilder.com/blogs/scott_burns/archive/2007/10/10/why-we-re-all-confused-about-safe-withdrawal-rates.aspx
+    Forbidden    http://www.bobsfinancialwebsite.com/CompleteWithdrawLinks.html
+    Forbidden    http://www.bobsfinancialwebsite.com/VariableWithdrawals.html
+
+Salary Reduction Simplified Employee Pension Plan   https://bogleheads.org/wiki/Salary%20Reduction%20Simplified%20Employee%20Pension%20Plan
+    Not Found    http://www.irs.gov/Retirement-Plans/Operating-a-SARSEP
+
+Sanjiv Das   https://bogleheads.org/wiki/Sanjiv%20Das
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/569479/sanjiv-ranjan-das
+
+Saver's credit   https://bogleheads.org/wiki/Saver's%20credit
+
+Scott J. Weisbenner   https://bogleheads.org/wiki/Scott%20J.%20Weisbenner
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/838004/scott-j-weisbenner
+
+Scottrade   https://bogleheads.org/wiki/Scottrade
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://www.businesswire.com/news/home/20170918006375/en/TD-Ameritrade-Closes-Acquisition-of-Scottrade-Financial-Services-Inc.
+
+Securities lending   https://bogleheads.org/wiki/Securities%20lending
+    Not Found    http://www.securitieslendingtimes.com/securitieslendingnews/article.php?article_id=218025
+
+Self directed brokerage account   https://bogleheads.org/wiki/Self%20directed%20brokerage%20account
+    Not Found    http://advisor.morningstar.com/articles/doc.asp?docId=4299
+
+Setting up a 401(k) plan   https://bogleheads.org/wiki/Setting%20up%20a%20401(k)%20plan
+    No such host is known. (www.401kplanschool.com:80)    http://www.401kplanschool.com/documents/401k_pyramid.pdf
+    No such host is known. (www.403bplanschool.com:80)    http://www.403bplanschool.com/documents/403b_pyramid.pdf
+    Not Found    http://www.prudentllc.com/download/Scott04-05-07.pdf
+    Not Found    http://www.prudentllc.com/download/Scott05-03-07.pdf
+    Not Found    http://www.prudentllc.com/download/Scott06-05-08.pdf
+    Not Found    http://www.prudentllc.com/download/Scott06-07-07.pdf
+    Not Found    http://www.prudentllc.com/download/Scott07-05-07.pdf
+    Not Found    http://www.prudentllc.com/download/Scott08-02-07.pdf
+
+Sharia investing for US investors   https://bogleheads.org/wiki/Sharia%20investing%20for%20US%20investors
+
+Sharia investing for non-US investors   https://bogleheads.org/wiki/Sharia%20investing%20for%20non-US%20investors
+
+Sheridan D. Titman   https://bogleheads.org/wiki/Sheridan%20D.%20Titman
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://www.businesswire.com/news/home/20130328005321/en/Sheridan-Titman-Ph.D.-Renowned-Academic-Quantitative-Investing
+    Not Found    http://gersteinfisher.com/who-we-are/academic-partners/
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/53639256/sheridan-d-titman
+
+Shlomo Benartzi   https://bogleheads.org/wiki/Shlomo%20Benartzi
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/350622/shlomo-benartzi
+    Not Found    http://www.anderson.ucla.edu/faculty/accounting/faculty/benartzi
+    Forbidden    http://www.rand.org/labor/centers/befi.html
+
+Short selling stock   https://bogleheads.org/wiki/Short%20selling%20stock
+    No such host is known. (techbus.safaribooksonline.com:80)    http://techbus.safaribooksonline.com/book/finance-accounting/9780470078143
+    Not Found    http://www.securitieslendingtimes.com/glossary/glossaryc.php
+
+Simba's backtesting spreadsheet   https://bogleheads.org/wiki/Simba's%20backtesting%20spreadsheet
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://finpage.blog/2018/02/15/telling-tales-2017-update
+    Forbidden    https://personal.vanguard.com/bogle_site/sp20020626.html
+
+Skewness   https://bogleheads.org/wiki/Skewness
+    Not Found    http://www.gummy-stuff.org/kurtosis.htm
+
+Slice and dice   https://bogleheads.org/wiki/Slice%20and%20dice
+    Not Found    http://www.crsp.com/crsp/about/history.html
+    Not Found    http://www.crsp.com/products/capbased.html
+    Not Found    http://www.crsp.com/products/indices.htm
+    Not Found    http://www.indexfunds.com/articles/20000403_slice_com_veh_JT.htm
+    Forbidden    http://www.vanguard.com/bogle_site/sp20020626.html
+
+Slice and dice international   https://bogleheads.org/wiki/Slice%20and%20dice%20international
+    Not Found    http://assetallocationreader.googlegroups.com/web/Returns+from+Dimson,+Marsh,+and+Stanton.pdf?gda=gTBWsWAAAADNQP3L-UnZo8oJ0gNu-CjI5ZEpAuXzpvV8_2fZ6OwfU2G1qiJ7UbTIup-M2XPURDRgske_248vBexveNgdXYFSOH5sU7POMOn3dr19ERqkdbYkLorwgGsGxP-btYkqtMw
+    Forbidden    http://www.globalindices.standardandpoors.com/sandp/CompositeWeight?index=wgbmi&type=b&currency=us
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vgtsx
+    Forbidden    https://personal.vanguard.com/us/insights/taxcenter/qdi/yearend-qualified-dividend-income-2011
+
+Small caps   https://bogleheads.org/wiki/Small%20caps
+    Forbidden    http://www.ftse.com/products/downloads/Russell-US-indexes.pdf?992
+    Forbidden    http://www.indexuniverse.com/data.html
+
+Smartest Investment Book You'll Ever Read   https://bogleheads.org/wiki/Smartest%20Investment%20Book%20You'll%20Ever%20Read
+    Forbidden    http://www.smartestinvestmentbook.com/
+
+Social Security   https://bogleheads.org/wiki/Social%20Security
+    The requested name is valid, but no data of the requested type was found. (legacyadvisors.com:80)    http://legacyadvisors.com/wp-content/uploads/2014/03/Rethinking%20Soc%20Sec%20in%20401k%20World_Mahaney%20Carlson%20Paper.pdf
+    Forbidden    http://maximizemysocialsecurity.com/
+
+Social Security as an investment   https://bogleheads.org/wiki/Social%20Security%20as%20an%20investment
+
+Social Security payment deductions   https://bogleheads.org/wiki/Social%20Security%20payment%20deductions
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://uscode.house.gov/view.xhtml?path=/prelim@title26&edition=prelim
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://uscode.house.gov/view.xhtml?path=/prelim@title26/subtitleC&edition=prelim
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://uscode.house.gov/view.xhtml?path=/prelim@title42&edition=prelim
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://uscode.house.gov/view.xhtml?path=/prelim@title42/chapter7&edition=prelim
+
+Social Security tax impact calculator   https://bogleheads.org/wiki/Social%20Security%20tax%20impact%20calculator
+    Not Found    http://www.irs.com/articles/2015-federal-tax-rates-personal-exemptions-and-standard-deductions
+
+Social responsibility indices   https://bogleheads.org/wiki/Social%20responsibility%20indices
+    No such host is known. (calvertgroup.com:80)    http://calvertgroup.com/sri-index-faq.html
+    No such host is known. (www.calvertgroup.com:80)    http://www.calvertgroup.com/sri-index-faq.html
+    No such host is known. (djindexes.com:80)    http://djindexes.com/sustainability/
+    Forbidden    http://www.ftse.com/Analytics/FactSheets/Home/DownloadSingleIssue?issueName=F4GUSAP1&IsManual=False
+    Forbidden    http://www.ftse.com/Indices/FTSE4Good_Index_Series/Downloads/indexrules.pdf
+    Forbidden    http://www.ftse.com/Indices/FTSE4Good_Index_Series/index.jsp
+    redirected to http://www.msci.com/products/indexes/thematic/esg/    from http://www.msci.com/products/indices/thematic/esg/
+    redirected to http://www.msci.com/documents/10199/904492e6-527e-4d64-9904-c710bf1533c6    from http://www.msci.com/resources/factsheets/index_fact_sheet/msci-kld-400-social-index.pdf
+    redirected to http://www.msci.com/documents/10199/5b30f74d-8bdd-4efd-9824-c77c05eb64d8    from http://www.msci.com/resources/factsheets/index_fact_sheet/msci-usa-esg-select-index.pdf
+
+Solo 401(k) plan   https://bogleheads.org/wiki/Solo%20401(k)%20plan
+    No such host is known. (solo401k.bcmadvisors.com:80)    http://solo401k.bcmadvisors.com/contribution_limits/
+    No such host is known. (solo401k.bcmadvisors.com:80)    http://solo401k.bcmadvisors.com/eligibility.html
+    Forbidden    http://www.irafinancialgroup.com/solo401kassetprotection.php
+
+South Carolina 529 plan archive   https://bogleheads.org/wiki/South%20Carolina%20529%20plan%20archive
+    An error occurred while sending the request.    http://www.futurescholar.com/InvestmentChoices/InvestmentChoices_Age.htm
+    An error occurred while sending the request.    http://www.futurescholar.com/UserRelationship/UserRelationshipPage.htm
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://529.morningstar.com/overview.action?state=SC&planID=5PUSA00030
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://performance.columbiamanagement.com/content/columbia/pdf/FS_DIRECT_PROGRAM_DESCRIPTION_APRIL.PDF
+
+South Dakota 529 plan archive   https://bogleheads.org/wiki/South%20Dakota%20529%20plan%20archive
+    Not Found    http://www.collegeaccess529.com/Allianz%20Documents/CAPDS_SD-D_070110.pdf
+    Not Found    http://www.collegeaccess529.com/Pages/AgeBased.aspx
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://529.morningstar.com/overview.action?state=SD&planID=5PUSA0001K
+
+Specific identification of shares   https://bogleheads.org/wiki/Specific%20identification%20of%20shares
+    The requested name is valid, but no data of the requested type was found. (quicken.intuit.com:80)    http://quicken.intuit.com/
+    Not Found    http://office.microsoft.com/en-us/excel/default.aspx
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://www.microsoft.com/Money/default.mspx
+    No such host is known. (ecfr.gpoaccess.gov:80)    http://ecfr.gpoaccess.gov/cgi/t/text/text-idx?c=ecfr&sid=3b8a69f4f86fede3f84869ba02e9404e&rgn=div8&view=text&node=26:11.0.1.1.1.0.3.9&idno=26
+    Not Found    http://www.irs.gov/taxpros/article/0,,id=237099,00.html
+
+Stable value fund   https://bogleheads.org/wiki/Stable%20value%20fund
+
+Standard deviation   https://bogleheads.org/wiki/Standard%20deviation
+
+State income taxes   https://bogleheads.org/wiki/State%20income%20taxes
+    Forbidden    http://retirementliving.com/RLtaxes.html
+    Not Found    http://www.vanguard.com/pdf/usgo_2010.pdf?cbdForceDomain=true
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://ador.alabama.gov/incometax/ITindex2.html
+
+Statement of additional information   https://bogleheads.org/wiki/Statement%20of%20additional%20information
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://www.sec.gov/answers/mfinfo.htm
+    No such host is known. (personal.vanguard.comnull:443)    https://personal.vanguard.com/us/LiteratureRequest?FW_Activity=ViewOnlineActivity&litID=2210039236&FW_Event=start&cbdForceDomain=false
+    No such host is known. (personal.vanguard.comnull:443)    https://personal.vanguard.com/us/LiteratureRequest?FW_Activity=ViewOnlineActivity&litID=2210065466
+
+Step-up in basis   https://bogleheads.org/wiki/Step-up%20in%20basis
+    Not Found    http://www.irs.gov/Help-&-Resources/Tools-&-FAQs/FAQs-for-Individuals/Frequently-Asked-Tax-Questions-&-Answers/Interest,-Dividends,-Other-Types-of-Income/Gifts-&-Inheritances/Gifts-&-Inheritances
+
+Stephen J. Brown   https://bogleheads.org/wiki/Stephen%20J.%20Brown
+    Forbidden    http://www.cfapubs.org/doi/abs/10.2469/faj.v65.n1.8
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors    http://citec.repec.org/p/b/pbr268.html
+
+Stephen P. Zeldes   https://bogleheads.org/wiki/Stephen%20P.%20Zeldes
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/354097/stephen-p-zeldes
+    No such host is known. (www4.gsb.columbia.edu:80)    http://www4.gsb.columbia.edu/cbs-directory/detail/494841/Stephen+Zeldes
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch, RemoteCertificateChainErrors    http://citec.repec.org/p/z/pze2.html
+
+Steve Schullo   https://bogleheads.org/wiki/Steve%20Schullo
+    Forbidden    https://personal.vanguard.com/us/insights/article/late-bloomers-investing-062013
+
+Steven N. Kaplan   https://bogleheads.org/wiki/Steven%20N.%20Kaplan
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/36765343/steven-n-kaplan
+
+Stock asset allocation for non-US investors   https://bogleheads.org/wiki/Stock%20asset%20allocation%20for%20non-US%20investors
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://finpage.blog/portfolios/
+    Forbidden    https://research.ftserussell.com/products/downloads/geis-cut-sheet.pdf
+
+Stock basics   https://bogleheads.org/wiki/Stock%20basics
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://news.morningstar.com/pdfs/FactSheet_StyleBox_Final.pdf
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://www.sec.gov/answers/mktmaker.htm
+    redirected to http://www.ssrn.com/abstract=1769064    from https://doi.org/10.2139%2Fssrn.1769064
+
+Stock market indexing   https://bogleheads.org/wiki/Stock%20market%20indexing
+    Not Found    http://www.altruistfa.com/Intllargecapfunds.htmInternational
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/
+
+Stock prices are still far too low   https://bogleheads.org/wiki/Stock%20prices%20are%20still%20far%20too%20low
+    Forbidden    http://www.aei.org/about/
+    Forbidden    http://www.aei.org/issue/economics/financial-services/stock-prices-are-still-far-too-low/
+    Forbidden    http://www.aei.org/scholar/james-k-glassman/
+    Forbidden    http://www.aei.org/scholar/kevin-a-hassett/
+
+Street name   https://bogleheads.org/wiki/Street%20name
+
+Stretch IRA   https://bogleheads.org/wiki/Stretch%20IRA
+
+Structured products   https://bogleheads.org/wiki/Structured%20products
+
+Substantially equal periodic payments   https://bogleheads.org/wiki/Substantially%20equal%20periodic%20payments
+    Not Found    http://www.brentmark.com/rr200262.htm
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://finance.toolkit.com/financial_calculators/display.aspx?cal=Retire72Alt
+    Not Found    http://www.vanguard.com/pdf/s164.pdf?2210025466
+    Not Found    http://www.irs.gov/app/picklist/list/federalRates.html
+
+Surveys of retirement spending   https://bogleheads.org/wiki/Surveys%20of%20retirement%20spending
+    Forbidden    http://www.esplanner.com/
+    Not Found    http://faculty.chicagobooth.edu/erik.hurst/research/retirement_consumption_survey_wharton.pdf
+    Not Found    http://www.dartmouth.edu/~jskinner/documents/SkinnerWhatAccounts.pdf
+    No such host is known. (glennschool.osu.edu:80)    http://glennschool.osu.edu/faculty/seligman/2009%2010%20Lachance%20&%20Seligman%20--%20Involuntary%20Retirement.pdf
+
+Survivorship bias   https://bogleheads.org/wiki/Survivorship%20bias
+    Not Found    http://www.crsp.com/documentation/pdfs/MFDB_Guide.pdf
+    Not Found    http://www.crsp.com/products/mutual_funds.htm
+
+Swing pricing   https://bogleheads.org/wiki/Swing%20pricing
+    Not Found    https://www.sec.gov/rules/final/2016/33-10234.pdf.
+    Not Found    https://www.vanguardinvestor.co.uk/articles/latest-thoughts/how-it-works/why-vanguard-is-moving-to-swing-pricing
+
+Synthetic ETF   https://bogleheads.org/wiki/Synthetic%20ETF
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://europe.etf.com/europe/features-a-news/7859-regulators-consider-ban-on-retail-purchases-of-synthetic-etfs.html?showall=&fullart=1&start=2
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://europe.etf.com/index.php
+    Forbidden    http://www.etf.com/sections/blog/9106-a-game-changer.html?iu=1
+    Forbidden    http://www.indexuniverse.com/
+
+Systematic investing   https://bogleheads.org/wiki/Systematic%20investing
+    Not Found    http://www.law.cornell.edu/wex/investor_protection_guide_systematic_investment_plan_sip
+    Not Found    http://www.finra.org/Investors/ProtectYourself/InvestorAlerts/MutualFunds/p012785
+
+Systematic withdrawal   https://bogleheads.org/wiki/Systematic%20withdrawal
+
+T. Rowe Price   https://bogleheads.org/wiki/T.%20Rowe%20Price
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quicktake.morningstar.com/FundNet/SecFiling.aspx?Symbol=PBDIX&Country=USA
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://corporate.troweprice.com/ccw/home.do
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://corporate.troweprice.com/ccw/home/ourCompany/aboutUs/history.do
+    An error occurred while sending the request.    http://individual.troweprice.com/public/Retail/Mutual-Funds/hProspectuses&Reports/Prospectuses-&-Reports
+    An error occurred while sending the request.    http://individual.troweprice.com/public/Retail/Products-&-Services/College-Savings-Plans
+    Not Found    http://individual.troweprice.com/public/Retail/Products-&-Services/Savings-Bank
+
+TIAA   https://bogleheads.org/wiki/TIAA
+    Invalid URI: The hostname could not be parsed.    http://%20http://www.dol.gov/ebsa/pdf/1210-AB33-625.pdf
+    redirected to http://www.tiaa.org/public/performance/institutional    from http://www.tiaa-cref.org/public/performance/institutional/index.html
+    redirected to http://www.tiaa.org/public/performance/mutual_funds    from http://www.tiaa-cref.org/public/performance/mutual_funds/index.html
+    redirected to http://www.tiaa.org/public/performance/retirement    from http://www.tiaa-cref.org/public/performance/retirement/index.html#CREFVariableAnnuityAccounts
+    redirected to http://www.tiaa.org/public/performance/retirement    from http://www.tiaa-cref.org/public/performance/retirement/index.html#TIAA-CREFFunds-RetirementClass
+    redirected to http://www.tiaa.org/public/performance/retirement/profiles/4001    from http://www.tiaa-cref.org/public/performance/retirement/profiles/4001.html
+    redirected to http://www.tiaa.org/public/performance/retirement/profiles/4025    from http://www.tiaa-cref.org/public/performance/retirement/profiles/4025.html
+
+TOPIX indices   https://bogleheads.org/wiki/TOPIX%20indices
+    No such host is known. (quote.tse.or.jp:80)    http://quote.tse.or.jp/tse/qsearch.exe?F=listing/Ereitlist
+    No such host is known. (www.tse.or.jp:80)    http://www.tse.or.jp/english/market/topix/calculation.html
+    No such host is known. (www.tse.or.jp:80)    http://www.tse.or.jp/english/market/topix/data/b7gje60000003vna-att/topixroie1212.pdf
+    No such host is known. (www.tse.or.jp:80)    http://www.tse.or.jp/english/market/topix/index.html
+
+TSP Lifecycle funds   https://bogleheads.org/wiki/TSP%20Lifecycle%20funds
+    Forbidden    http://www.fedweek.com/fedweek/tsp-change-fund-index-leave-others/
+    Not Found    https://www.frtib.gov/pdf/minutes/MM-2016Nov-Att6.pdf
+    Forbidden    https://www.tsp.gov
+    Forbidden    https://www.tsp.gov/index.html
+    Forbidden    https://www.tsp.gov/investmentfunds/lfundsheet/fundPerformance_L.shtml
+
+TSP Modernization Act of 2017   https://bogleheads.org/wiki/TSP%20Modernization%20Act%20of%202017
+    Forbidden    http://www.tsp.gov/
+    Forbidden    https://www.tsp.gov/PDF/formspubs/tspfs10.pdf
+    Forbidden    https://www.tsp.gov/bulletins/19-6/
+    Forbidden    https://www.tsp.gov/whatsnew/Content/index.html#withdrawalbill
+
+TSP estate planning   https://bogleheads.org/wiki/TSP%20estate%20planning
+    Forbidden    http://www.tsp.gov
+    Forbidden    https://www.tsp.gov/PDF/formspubs/tspbk31.pdf
+    Forbidden    https://www.tsp.gov/PDF/formspubs/tspbk33.pdf
+    Forbidden    https://www.tsp.gov/planparticipation/beneficiaries/beneficiaries.shtml
+    Forbidden    https://www.tsp.gov/planparticipation/beneficiaryparticipants/yourAccount.shtml
+
+TSP transfers and rollovers   https://bogleheads.org/wiki/TSP%20transfers%20and%20rollovers
+    Not Found    https://www.irs.gov/retirement-plans/retirement-plans-faqs-regarding-iras-rollovers-and-roth-conversions
+
+TSP withdrawals   https://bogleheads.org/wiki/TSP%20withdrawals
+    Forbidden    http://www.tsp.gov
+    Forbidden    https://www.tsp.gov/PlanParticipation/LoansAndWithdrawals/withdrawals/specialConsiderations.html#rmd
+
+Tactical asset allocation   https://bogleheads.org/wiki/Tactical%20asset%20allocation
+    Bad Request    https://www.referenceforbusiness.com/encyclopedia/Str-The/Tactical-Asset-Allocation.html
+    Not Found    https://personal.vanguard.com/pdf/flgtaa.pdf
+    Forbidden    https://www.sec.gov/Archives/edgar/data/889519/000093247114005090/valleyforge485bmerged.htm
+
+Taiwan Bogleheads 2015 conference   https://bogleheads.org/wiki/Taiwan%20Bogleheads%202015%20conference
+    Not Found    http://www.books.com.tw/products/0010486326
+
+Taiwan bond indexes   https://bogleheads.org/wiki/Taiwan%20bond%20indexes
+    The remote certificate is invalid according to the validation procedure: RemoteCertificateNameMismatch    http://nweb.otc.org.tw/otc58/e-news2.htm
+
+Taiwan stock indexes   https://bogleheads.org/wiki/Taiwan%20stock%20indexes
+    Forbidden    http://www.ftse.com/Indices/FTSE_TWSE_Taiwan_Index_Series/index.jsp
+    redirected to http://www.msci.com/products/indexes/licensing/msci_taiwan/    from http://www.msci.com/products/indices/licensing/msci_taiwan/
+
+Target date funds   https://bogleheads.org/wiki/Target%20date%20funds
+    Not Found    http://assetbuilder.com/blogs/scott_burns/archive/2007/10/31/why-the-target-funds-are-good-marketing-but-lousy-investing.aspx
+    Forbidden    http://www.fa-mag.com/component/content/article/1827.html?magazineID=1&issue=89&Itemid=73
+    redirected to http://corporate.morningstar.com/us/documents/ResearchPapers/2013TargetDate.pdf    from http://corporate.morningstar.com/us/documents/ResearchPapers/2013TargetDate.pdf
+    Forbidden    http://www.ontargetindex.com/docs/Missing-Target-Israelsen-Nagengast-200709.pdf
+
+Tax-adjusted asset allocation   https://bogleheads.org/wiki/Tax-adjusted%20asset%20allocation
+    Forbidden    http://www.ifid.ca/Conference_Material/Reichenstein_paper.pdf
+
+Tax-efficient fund placement   https://bogleheads.org/wiki/Tax-efficient%20fund%20placement
+    Forbidden    http://www.ifid.ca/Conference_Material/Reichenstein_paper.pdf
+    Not Found    http://www.vanguard.com/pdf/s556.pdf
+    No such host is known. (wpweb2.tepper.cmu.edu:80)    http://wpweb2.tepper.cmu.edu/spatt/location.pdf
+
+Tax-managed fund comparison   https://bogleheads.org/wiki/Tax-managed%20fund%20comparison
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtmsx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtclx
+
+Tax loss harvesting   https://bogleheads.org/wiki/Tax%20loss%20harvesting
+    Not Found    http://www.fairmark.com/rothira/post.htm
+
+Taxable equivalent yield   https://bogleheads.org/wiki/Taxable%20equivalent%20yield
+
+Taxable equivalent yield (math)   https://bogleheads.org/wiki/Taxable%20equivalent%20yield%20(math)
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://money.usnews.com/money/personal-finance/taxes/articles/state-and-local-taxes-what-is-the-salt-deduction
+
+Taxation as a US person living abroad   https://bogleheads.org/wiki/Taxation%20as%20a%20US%20person%20living%20abroad
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://www.canada.ca/en/department-finance/programs/tax-policy/tax-treaties/country/united-states-america-convention-consolidated-1980-1983-1984-1995-1997-2007.html
+    Forbidden    https://www.interactivebrokers.com/
+
+Taxation of Social Security benefits   https://bogleheads.org/wiki/Taxation%20of%20Social%20Security%20benefits
+    Forbidden    https://www.retirementliving.com/taxes-alabama-iowa#COLORADO
+    Forbidden    https://www.retirementliving.com/taxes-alabama-iowa#CONNECTICUT
+    Forbidden    https://www.retirementliving.com/taxes-alabama-iowa#IOWA
+    Forbidden    https://www.retirementliving.com/taxes-kansas-new-mexico#KANSAS
+
+Telltale chart   https://bogleheads.org/wiki/Telltale%20chart
+
+Terrance Odean   https://bogleheads.org/wiki/Terrance%20Odean
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/12530452/terrance-odean
+    Forbidden    http://www.cfapubs.org/page/faj/all-graham-dodd-winners
+    Not Found    http://www.q-group.org/prize-winners/
+
+Texas 529 plan archive   https://bogleheads.org/wiki/Texas%20529%20plan%20archive
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://529.morningstar.com/overview.action?state=TX&planID=5PUSA0001L
+    Not Found    https://www.texascollegesavings.com/OFI529/Links.jsp?link=plndesc
+    Not Found    https://www.texascollegesavings.com/OFI529/PN/generated/en_us/PrimaryNavigation_10-18-07-124326.xml
+    Not Found    https://www.texascollegesavings.com/digitalAssets/Texas-College-Allocation-Worksheet-17fc867e484d0210VgnVCM100000e82311ac____.pdf
+
+The 2008 money market crisis   https://bogleheads.org/wiki/The%202008%20money%20market%20crisis
+
+The Bogleheads┬«   https://bogleheads.org/wiki/The%20Bogleheads┬«
+    Not Found    http://www.boston.com/business/personalfinance/articles/2006/10/25/planning_ahead_can_help_keep_holiday_spending_out_of_the_red/
+    Forbidden    http://www.indexuniverse.com/sections/features/3599.html
+
+The New Savage Number   https://bogleheads.org/wiki/The%20New%20Savage%20Number
+    Forbidden    http://www.thestreet.com/
+
+The Vanguard Group   https://bogleheads.org/wiki/The%20Vanguard%20Group
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes/joi-news/8247-vanguard-in-massive-etf-rollout.html
+    Not Found    http://www.lipperweb.com/Research/Scoring.aspx
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quicktake.morningstar.com/DataDefs/FundFamily.html
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quicktake.morningstar.com/fundfamily/vanguard/0C00001YUF/snapshot.aspx
+
+Three-fund portfolio   https://bogleheads.org/wiki/Three-fund%20portfolio
+    Not Found    https://assetbuilder.com/knowledge-center/articles/scott-burns/exactly_how_to_be_a_couch_potato_portfolio_manager
+    Forbidden    https://www.schwabfunds.com/public/csim/home/products/mutual_funds/summary.html?symbol=SWtsx
+
+Thrift Savings Plan   https://bogleheads.org/wiki/Thrift%20Savings%20Plan
+    Forbidden    http://www.fedweek.com/fedweek/tsp-change-fund-index-leave-others/
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://news.morningstar.com/articlenet/article.aspx?id=694560
+    Forbidden    http://www.tsp.gov/
+
+Ticker symbol lookup   https://bogleheads.org/wiki/Ticker%20symbol%20lookup
+    Not Found    https://chrome.google.com/webstore/detail/oaioococfgnikdjhcjkoiealnikffcgg?hl=en-US
+
+Timing of transactions to reduce taxes   https://bogleheads.org/wiki/Timing%20of%20transactions%20to%20reduce%20taxes
+    Not Found    http://www.fairmark.com/mutual/index.htm
+    Not Found    http://www.irs.gov/uac/Publication-550,-Investment-Income-and-Expenses
+
+Title insurance   https://bogleheads.org/wiki/Title%20insurance
+    Not Found    http://www.homeclosing101.org/whyneed.cfm
+
+Tong Yao   https://bogleheads.org/wiki/Tong%20Yao
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/3178238/tong-yao
+
+Tong Yu   https://bogleheads.org/wiki/Tong%20Yu
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/53379263/tong-yu
+    Not Found    http://business.uc.edu/departments/finance/faculty/tong-yu.html
+
+Tools and calculators   https://bogleheads.org/wiki/Tools%20and%20calculators
+    Not Found    http://www.investored.ca/IefCalculators/Calculators/MutualFundFeeImpact/default.aspx
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://www.archimedes.com/vanguard/csp.phtml
+    Not Found    http://www.bankrate.com/bosre/calculators/retirement/mutual_fund_fees_calculator.asp
+
+Tracking error   https://bogleheads.org/wiki/Tracking%20error
+
+Traditional IRA   https://bogleheads.org/wiki/Traditional%20IRA
+    Not Found    http://www.irs.gov/formspubs/content/0,,id=177976,00.html
+    Not Found    http://www.irs.gov/publications/p590/ch02.html
+
+Traditional versus Roth   https://bogleheads.org/wiki/Traditional%20versus%20Roth
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://badmoneyadvice.com
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://badmoneyadvice.com/2009/02/iras-roth-and-other-kind.html
+    Not Found    http://www.irs.gov/uac/Get-Credit-for-Your-Retirement-Savings-Contributions
+
+Transferring funds   https://bogleheads.org/wiki/Transferring%20funds
+    Not Found    http://www.diamondmindinc.com/wp-content/uploads/2014/10/ACH-Processing-and-Reconciliation-Guide.pdf
+    Not Found    http://www.ippay.com/downloads/ACH_101.pdf
+
+Treasury Inflation Protected Security   https://bogleheads.org/wiki/Treasury%20Inflation%20Protected%20Security
+    An error occurred while sending the request.    http://www.allianzinvestors.com/commentary/edu_education03022005.jsp
+    Not Found    http://findarticles.com/p/articles/mi_m3937/is_1999_Jan-Feb/ai_54336575
+    Not Found    http://www.bus.emory.edu/jshanken/published/ShankenKothari_FAJ2004.pdf
+    Forbidden    https://ccfr.org.cn/cicf2006/cicf2006paper/20060201044210.pdf
+    The requested name is valid, but no data of the requested type was found. (index.barcap.com:443)    https://ecommerce.barcap.com/indices/index.dxml?pageId=9
+    redirected to https://www.eatonvance.com/404.php?WSR=funds.eatonvance.com%2F404.php    from https://funds.eatonvance.com/Short-Term-Real-Return-Fund-EIRRX.php
+
+Treasury bill   https://bogleheads.org/wiki/Treasury%20bill
+    Not Found    http://www.minneapolisfed.org/community_education/teacher/calc/hist1913.cfm
+
+Treasury bond   https://bogleheads.org/wiki/Treasury%20bond
+    Not Found    http://www.treasurydirect.gov/deptcirculars.htm#RetirementPlan
+    Not Found    http://www.treasurydirect.gov/indiv/research/articles/res_invest_articles_portfolio_0604.htm
+    Not Found    https://www.minneapolisfed.org/community/teaching-aids/cpi-calculator-information/consumer-price-index-and-inflation-rates-1913
+
+Trinity study update   https://bogleheads.org/wiki/Trinity%20study%20update
+    Forbidden    http://www.bobsfinancialwebsite.com/pdfs/1996_Bengen_15388_1.pdf
+
+UK abbreviations and acronyms   https://bogleheads.org/wiki/UK%20abbreviations%20and%20acronyms
+
+UK asset class returns   https://bogleheads.org/wiki/UK%20asset%20class%20returns
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://210.34.5.45/cn/fm/Global%20Stock%20Markets%20in%20the%20Twentieth%20Century.pdf
+    Forbidden    http://www.economonitor.com/blog/2009/02/credit-suisse-global-investment-returns-yearbook/
+    No such host is known. (blog.stonestreetadvisors.com:80)    http://blog.stonestreetadvisors.com/wp-content/uploads/2011/07/credit_suisse_global_investment_yearbook_2011.pdf
+
+UK personal pensions   https://bogleheads.org/wiki/UK%20personal%20pensions
+    redirected to http://www.aegon.co.uk/    from https://www.aegon.co.uk/index.html
+
+US completion index returns   https://bogleheads.org/wiki/US%20completion%20index%20returns
+    No such host is known. (press.djindexes.com:80)    http://press.djindexes.com/index.php/dow-jones-indexes-introduces-total-stock-market-index-family/
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/rulebooks/Dow_Jones_US_Total_Stock_Market_Indexes_Rulebook.pdf
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/totalstockmarket/
+    Forbidden    http://www.portfoliosolutions.com/f-18.html
+    Forbidden    http://www.russell.com/Indexes/data/calculator/index_calculator.asp
+    The requested name is valid, but no data of the requested type was found. (web.wilshire.com:80)    http://web.wilshire.com/Indexes/Broad/Wilshire4500/
+    The requested name is valid, but no data of the requested type was found. (web.wilshire.com:80)    http://web.wilshire.com/Indexes/W4500_Methodology_2010_001.pdf
+
+US domiciled ETFs that are UK HMRC reporting funds   https://bogleheads.org/wiki/US%20domiciled%20ETFs%20that%20are%20UK%20HMRC%20reporting%20funds
+    Forbidden    https://etf.com/AGG
+    Forbidden    https://etf.com/AVDE
+    Forbidden    https://etf.com/AVEM
+    Forbidden    https://etf.com/AVSD
+    Forbidden    https://etf.com/AVSE
+    Forbidden    https://etf.com/AVSU
+    Forbidden    https://etf.com/AVUS
+
+US equity REIT index returns   https://bogleheads.org/wiki/US%20equity%20REIT%20index%20returns
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/meth_info/Dow_Jones_US_Select_Real_Estate_Indexes_Methodology.pdf
+    Forbidden    http://www.ftse.com/Indices/FTSE_NAREIT_US_Real_Estate_Index_Series/Index_Rules.jsp
+    The requested name is valid, but no data of the requested type was found. (web.wilshire.com:80)    http://web.wilshire.com/Indexes/RealEstate/
+    Not Found    http://www.wilshire.com/Indexes/calculator/
+
+US index returns - 2010   https://bogleheads.org/wiki/US%20index%20returns%20-%202010
+    Not Found    http://www.crsp.com/indexes-pages/returns-and-constituents
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/rulebooks/Dow_Jones_US_Total_Stock_Market_Indexes_Rulebook.pdf
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes/joi-articles/2622.html
+    redirected to http://www.msci.com/r/www-mscibarra-com/products/indexes/domestic_equity_indexes/    from http://www.mscibarra.com/products/indices/domestic_equity_indices/
+    Forbidden    http://www.portfoliosolutions.com/f-18.html
+
+US index returns - 2011   https://bogleheads.org/wiki/US%20index%20returns%20-%202011
+    Not Found    http://www.crsp.com/indexes-pages/returns-and-constituents
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/rulebooks/Dow_Jones_US_Total_Stock_Market_Indexes_Rulebook.pdf
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes/joi-articles/2622.html
+    redirected to http://www.msci.com/r/www-mscibarra-com/products/indexes/domestic_equity_indexes/    from http://www.mscibarra.com/products/indices/domestic_equity_indices/
+    Forbidden    http://www.portfoliosolutions.com/f-18.html
+
+US index returns - 2012   https://bogleheads.org/wiki/US%20index%20returns%20-%202012
+    Not Found    http://www.crsp.com/files/Equity-Indexes-Methodology-Guide_0.pdf
+    Not Found    http://www.crsp.com/indexes-pages/returns-and-constituents
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/rulebooks/Dow_Jones_US_Total_Stock_Market_Indexes_Rulebook.pdf
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes/joi-articles/2622.html
+    redirected to http://www.msci.com/r/www-mscibarra-com/products/indexes/domestic_equity_indexes/    from http://www.mscibarra.com/products/indices/domestic_equity_indices/
+
+US index returns - 2013   https://bogleheads.org/wiki/US%20index%20returns%20-%202013
+    Not Found    http://www.crsp.com/documentation/pdfs/equity-indexes/Equity-Indexes-Methodology-Guide.pdf
+    Not Found    http://www.crsp.com/indexes-pages/returns-and-constituents
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/rulebooks/Dow_Jones_US_Total_Stock_Market_Indexes_Rulebook.pdf
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes.html
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes/joi-articles/2622.html
+    redirected to http://www.msci.com/r/www-mscibarra-com/products/indexes/domestic_equity_indexes/    from http://www.mscibarra.com/products/indices/domestic_equity_indices/
+
+US index returns - 2014   https://bogleheads.org/wiki/US%20index%20returns%20-%202014
+    Not Found    http://www.crsp.com/documentation/pdfs/equity-indexes/Equity-Indexes-Methodology-Guide.pdf
+    Not Found    http://www.crsp.com/indexes-pages/returns-and-constituents
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/rulebooks/Dow_Jones_US_Total_Stock_Market_Indexes_Rulebook.pdf
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes.html
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes/joi-articles/2622.html
+    redirected to http://www.msci.com/r/www-mscibarra-com/products/indexes/domestic_equity_indexes/    from http://www.mscibarra.com/products/indices/domestic_equity_indices/
+
+US index returns - 2015   https://bogleheads.org/wiki/US%20index%20returns%20-%202015
+    Not Found    http://www.crsp.com/documentation/pdfs/equity-indexes/Equity-Indexes-Methodology-Guide.pdf
+    Not Found    http://www.crsp.com/indexes-pages/returns-and-constituents
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/rulebooks/Dow_Jones_US_Total_Stock_Market_Indexes_Rulebook.pdf
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes.html
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes/joi-articles/2622.html
+    Forbidden    http://www.portfoliosolutions.com/f-18.html
+
+US index returns - 2016   https://bogleheads.org/wiki/US%20index%20returns%20-%202016
+    Not Found    http://www.crsp.com/documentation/pdfs/equity-indexes/Equity-Indexes-Methodology-Guide.pdf
+    Not Found    http://www.crsp.com/indexes-pages/returns-and-constituents
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/rulebooks/Dow_Jones_US_Total_Stock_Market_Indexes_Rulebook.pdf
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes.html
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes/joi-articles/2622.html
+    Forbidden    http://www.portfoliosolutions.com/f-18.html
+
+US large cap index returns   https://bogleheads.org/wiki/US%20large%20cap%20index%20returns
+    Not Found    http://www.crsp.com/documentation/pdfs/equity-indexes/Equity-Indexes-Methodology-Guide.pdf
+    Not Found    http://www.crsp.com/indexes-pages/returns-and-constituents
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/rulebooks/Dow_Jones_US_Total_Stock_Market_Indexes_Rulebook.pdf
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/totalstockmarket/
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes/joi-articles/2622.html
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes/joi-articles/12927-index-variation-and-overall-portfolio-performance.html
+
+US mega cap index returns   https://bogleheads.org/wiki/US%20mega%20cap%20index%20returns
+    Not Found    http://www.crsp.com/documentation/pdfs/equity-indexes/Equity-Indexes-Methodology-Guide.pdf
+    Not Found    http://www.crsp.com/indexes-pages/returns-and-constituents
+    Forbidden    http://www.portfoliosolutions.com/f-18.html
+    No such host is known. (indexcalculator.russell.com:80)    http://indexcalculator.russell.com/
+    Forbidden    http://www.russell.com/Indexes/data/historical_performance.asp
+    Forbidden    http://www.russell.com/indexes/membership/methodology/russell_us_indexes_methodology.asp
+
+US micro cap index returns   https://bogleheads.org/wiki/US%20micro%20cap%20index%20returns
+    Not Found    http://www.crsp.com/documentation/pdfs/equity-indexes/Equity-Indexes-Methodology-Guide.pdf
+    Not Found    http://www.crsp.com/indexes-pages/returns-and-constituents
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/rulebooks/Dow_Jones_US_Total_Stock_Market_Indexes_Rulebook.pdf
+    Forbidden    http://www.portfoliosolutions.com/f-18.html
+    Forbidden    http://www.russell.com/Indexes/data/historical_performance.asp
+    Forbidden    http://www.russell.com/indexes/americas/tools-resources/index-performance-calculator.page
+
+US mid cap index returns   https://bogleheads.org/wiki/US%20mid%20cap%20index%20returns
+    Not Found    http://www.crsp.com/documentation/pdfs/equity-indexes/Equity-Indexes-Methodology-Guide.pdf
+    Not Found    http://www.crsp.com/indexes/constituent-lists.html
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/rulebooks/Dow_Jones_US_Total_Stock_Market_Indexes_Rulebook.pdf
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/totalstockmarket/
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes/joi-articles/2622.html
+    Forbidden    http://www.indexuniverse.com/publications/journalofindexes/joi-articles/12927-index-variation-and-overall-portfolio-performance.html
+
+US mutual fund performance studies   https://bogleheads.org/wiki/US%20mutual%20fund%20performance%20studies
+    Not Found    http://webcache.googleusercontent.com/search?q=cache:DNSXRb4zksIJ:www.performance-metrics.eu/papers/measure/Henriksson_Merton_1981_Short_Description.pdf+&cd=1&hl=en&ct=clnk&gl=us&client=firefox-a
+    Not Found    http://webcache.googleusercontent.com/search?q=cache:gp2qgdAJIgYJ:www.performance-metrics.eu/papers/measure/Treynor_Mazuy_1966_Short_Description.pdf+&cd=4&hl=en&ct=clnk&gl=us&client=firefox-a
+    Forbidden    http://www.sciencedirect.com/science/article/pii/S0304405X02000648
+
+US pension fund performance   https://bogleheads.org/wiki/US%20pension%20fund%20performance
+    Not Found    http://www.cembenchmarking.com/aboutus/aboutus.aspx
+    Not Found    http://www.cembenchmarking.com/research/investmentresearch.aspx
+    Not Found    http://www.cembenchmarking.com/services/servicesoverview.aspx
+    Forbidden    http://www.rijpm.com/research_paper/the-performance-of-us-pension-funds-new-insights-into-the-agency-costs-debate
+
+US small cap index returns   https://bogleheads.org/wiki/US%20small%20cap%20index%20returns
+    Not Found    http://www.ameriprise.com/global/docs/American_Express_Trust_Small_Cap_Value_II.pdf
+    Not Found    http://www.ameriprise.com/global/docs/RVST_Emerging_Growth_II.pdf
+    Not Found    http://www.crsp.com/about-crsp
+    Not Found    http://www.crsp.com/indexes-pages/methodology
+    Not Found    http://www.crsp.com/indexes-pages/returns-and-constituents
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/rulebooks/Dow_Jones_US_Total_Stock_Market_Indexes_Rulebook.pdf
+
+US small cap value   https://bogleheads.org/wiki/US%20small%20cap%20value
+    An error occurred while sending the request.    http://quote.morningstar.com/ETF/f.aspx?t=EES
+    An error occurred while sending the request.    http://quote.morningstar.com/etf/f.aspx?t=PWY&region=USA
+    redirected to /us/en/country-splash.html?src=%2Fus%2Ffinancial-products%2Fetfs%2Fproduct-detail    from https://www.invesco.com/portal/site/us/investors/etfs/product-detail?productId=PXSV
+
+US total market index returns   https://bogleheads.org/wiki/US%20total%20market%20index%20returns
+    Not Found    http://www.crsp.com/documentation/pdfs/equity-indexes/Equity-Indexes-Methodology-Guide.pdf
+    Not Found    http://www.crsp.com/indexes-pages/returns-and-constituents
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/mdsidx/downloads/rulebooks/Dow_Jones_US_Total_Stock_Market_Indexes_Rulebook.pdf
+    No such host is known. (www.djindexes.com:80)    http://www.djindexes.com/totalstockmarket/
+
+Uniform Gift to Minors Act   https://bogleheads.org/wiki/Uniform%20Gift%20to%20Minors%20Act
+    Not Found    http://www.fairmark.com/custacct/index.htm
+
+Unit investment trusts   https://bogleheads.org/wiki/Unit%20investment%20trusts
+    Gone    http://www.ftportfolios.com/Common/ContentFileLoader.aspx?ContentGUID=ad011150-6235-4543-9f63-874b33c60d02
+    No such host is known. (www.guggenheimfunds.com:80)    http://www.guggenheimfunds.com/uit/
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://news.morningstar.com/classroom2/course.asp?docid=4517&page=4&CN=sample
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://www.sec.gov/answers/uit.htm
+
+United States Treasury security   https://bogleheads.org/wiki/United%20States%20Treasury%20security
+    Not Found    http://www.rickferri.com/blog/investments/total-bond-index-funds-are-not-the-total-bond-market/
+    Not Found    http://www.treasurydirect.gov/deptcirculars.htm#RetirementPlan
+    Not Found    http://www.treasurydirect.gov/indiv/research/articles/res_invest_articles_portfolio_0604.htm
+
+Using a spreadsheet to maintain a portfolio   https://bogleheads.org/wiki/Using%20a%20spreadsheet%20to%20maintain%20a%20portfolio
+    Not Found    http://remarque.org/~grabiner/fundwithfees.xls
+
+Using mutual funds and ETFs for short-term savings (1 year)   https://bogleheads.org/wiki/Using%20mutual%20funds%20and%20ETFs%20for%20short-term%20savings%20(1%20year)
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=BIL&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FOUSA06B85%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:BIL%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2202/01/2008%22,%22endDay%22:%2201/31/2009%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=BTFXX&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FOUSA06BCG%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:BTFXX%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2209/01/2006%22,%22endDay%22:%2208/31/2007%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=FLOT&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22F00000MDER%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:FLOT%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2201/01/2018%22,%22endDay%22:%2212/31/2018%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=FTSM&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22F00000T5I7%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:FTSM%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2201/01/2018%22,%22endDay%22:%2212/31/2018%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=FULIX&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FOUSA00L2Z%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:FULIX%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2212/01/2007%22,%22endDay%22:%2211/30/2008%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=GSY&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FOUSA06P6R%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:GSY%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2204/01/2008%22,%22endDay%22:%2203/31/2009%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=MINT&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22F000003Y0J%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:MINT%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2201/01/2018%22,%22endDay%22:%2212/31/2018%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=NEAR&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22F00000O00R%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:NEAR%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2201/01/2018%22,%22endDay%22:%2212/31/2018%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=SHV&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FOUSA069WT%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:SHV%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2204/01/2008%22,%22endDay%22:%2203/31/2009%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=SHY&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FEUSA00038%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:SHY%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2207/01/2005%22,%22endDay%22:%2206/30/2006%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+
+Using mutual funds and ETFs for short-term savings (5 years)   https://bogleheads.org/wiki/Using%20mutual%20funds%20and%20ETFs%20for%20short-term%20savings%20(5%20years)
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=BIL&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FOUSA06B85%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:BIL%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2207/01/2007%22,%22endDay%22:%2206/30/2012%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=BTFXX&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FOUSA06BCG%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:BTFXX%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2204/01/2004%22,%22endDay%22:%2203/31/2009%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=FULIX&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FOUSA00L2Z%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:FULIX%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2201/01/2004%22,%22endDay%22:%2212/31/2008%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=SHV&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FOUSA069WT%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:SHV%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2205/01/2014%22,%22endDay%22:%2204/30/2019%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=SHY&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FEUSA00038%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:SHY%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2211/01/2013%22,%22endDay%22:%2210/31/2018%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=SWPXX&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FVUSA000LV%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:SWPXX%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2207/01/1994%22,%22endDay%22:%2206/30/1999%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=SWRXX&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FMUSA001BF%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:SWRXX%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2207/01/1995%22,%22endDay%22:%2206/30/2000%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=SWVXX&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FMUSA000EZ%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:SWVXX%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2212/01/2004%22,%22endDay%22:%2211/30/2009%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=TSCXX&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FMUSA000YJ%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:TSCXX%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2201/01/2015%22,%22endDay%22:%2212/31/2019%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=VASGX&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FOUSA00D9E%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:VASGX%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2203/01/2004%22,%22endDay%22:%2202/28/2009%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+
+Using mutual funds and ETFs for short-term savings (6 months)   https://bogleheads.org/wiki/Using%20mutual%20funds%20and%20ETFs%20for%20short-term%20savings%20(6%20months)
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=BIL&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FOUSA06B85%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:BIL%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2210/01/2008%22,%22endDay%22:%2203/31/2009%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=BTFXX&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FOUSA06BCG%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:BTFXX%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2207/01/1989%22,%22endDay%22:%2212/31/1989%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=FLOT&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22F00000MDER%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:FLOT%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2208/01/2011%22,%22endDay%22:%2201/31/2012%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=FTSM&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22F00000T5I7%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:FTSM%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2207/01/2018%22,%22endDay%22:%2212/31/2018%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=FULIX&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FOUSA00L2Z%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:FULIX%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2207/01/2008%22,%22endDay%22:%2212/31/2008%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=GSY&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FOUSA06P6R%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:GSY%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2209/01/2008%22,%22endDay%22:%2202/28/2009%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=MINT&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22F000003Y0J%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:MINT%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2206/01/2011%22,%22endDay%22:%2211/30/2011%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=NEAR&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22F00000O00R%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:NEAR%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2207/01/2018%22,%22endDay%22:%2212/31/2018%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=SHV&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FOUSA069WT%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:SHV%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2212/01/2008%22,%22endDay%22:%2205/31/2009%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://quotes.morningstar.com/chart/fund/chart?t=SHY&dataParams=%7B%22zoomKey%22:11,%22version%22:%22US%22,%22showNav%22:true,%22defaultShowName%22:%22name%22,%22mainSettingId%22:%22main%22,%22navSettingId%22:%22nav%22,%22benchmarkSettingId%22:%22benchmark%22,%22sliderBgSettingId%22:%22sliderBg%22,%22volumeSettingId%22:%22volume%22,%22defaultBenchmark%22:false,%22id%22:%22FEUSA00038%7CFMUSA0004J%22,%22type%22:%22FO%7CFM%22,%22region%22:%22USA%22,%22name%22:%22XNAS:SHY%7CXNAS:VMMXX%22,%22qsType%22:%22USA:VMLTX%22,%22baseCurrency%22:%22USD%22,%22defaultBenchmarks%22:%5B%22%22,%22%22%5D,%22chartType%22:%22growth%22,%22startDay%22:%2209/01/2017%22,%22endDay%22:%2202/28/2018%22,%22chartWidth%22:955,%22SMA%22:%5B%5D%7D
+
+Using open source software for portfolio analysis   https://bogleheads.org/wiki/Using%20open%20source%20software%20for%20portfolio%20analysis
+    No such host is known. (www.calculatiginvestor.com:80)    http://www.calculatiginvestor.com/2011/06/21/efficient-frontier-3/
+
+Utah 529 plan archive   https://bogleheads.org/wiki/Utah%20529%20plan%20archive
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://529.morningstar.com/overview.action?state=UT&planID=5PUSA00019
+    No such host is known. (www.uesp.org:80)    http://www.uesp.org/
+    No such host is known. (www.uesp.org:80)    http://www.uesp.org/Investment-Info/Age-Based-Investment-Options.aspx
+    No such host is known. (www.uesp.org:80)    http://www.uesp.org/Investment-Info/Investment-Options/20-Equity-80-Fixed-Income.aspx
+    No such host is known. (www.uesp.org:80)    http://www.uesp.org/Investment-Info/Investment-Options/70-Equity-30-Fixed-Income.aspx
+
+Value averaging   https://bogleheads.org/wiki/Value%20averaging
+    Not Found    http://www.sigmainvesting.com/advanced-investing-topics/value-averaging
+    Forbidden    http://www.wiley.com/WileyCDA/WileyTitle/productCd-0470049774,descCd-DOWNLOAD.html
+
+Value tilting - stock   https://bogleheads.org/wiki/Value%20tilting%20-%20stock
+    Not Found    http://www.dfaus.com/2009/05/the-dimensions-of-stock-returns-2007.html
+    Not Found    http://www.dfaus.com/2009/05/the-informational-efficiency-of-stock-prices-a-review.html
+    Not Found    http://www.dfaus.com/2009/05/the-new-indexing.html
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://homepage.mac.com/j.norstad/finance/total.html
+
+Vanguard 2011 brokerage commission expense   https://bogleheads.org/wiki/Vanguard%202011%20brokerage%20commission%20expense
+    Forbidden    http://www.sec.gov/Archives/edgar/data/752177/000093247112000644/chesterfunds485bfinal.htm
+
+Vanguard 2012 brokerage commission expense   https://bogleheads.org/wiki/Vanguard%202012%20brokerage%20commission%20expense
+    Forbidden    http://www.sec.gov/Archives/edgar/data/752177/000093247112000644/chesterfunds485bfinal.htm
+
+Vanguard 2013 brokerage commission expense   https://bogleheads.org/wiki/Vanguard%202013%20brokerage%20commission%20expense
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000752177&type=485&dateb=&count=100&scd=filings
+
+Vanguard 500 Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20500%20Index%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=NSAR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-30D&dateb=&count=40&scd=filings
+
+Vanguard Annuity Access   https://bogleheads.org/wiki/Vanguard%20Annuity%20Access
+    Not Found    http://hueler.com/about_hueler.htm
+    Forbidden    http://www.incomesolutions.com/
+    Forbidden    https://personal.vanguard.com/us/insights/article/new-way-fixed-annuities-10132010
+    Forbidden    https://personal.vanguard.com/us/whatweoffer/annuities/fixed
+    Forbidden    https://personal.vanguard.com/us/whatweoffer/annuities/income?Link=facet
+    Not Found    https://personal.vanguard.com/vlip/Pdf/s433.pdf
+    Not Found    https://personal.vanguard.com/vlip/Pdf/z144.pdf
+
+Vanguard Asset Allocation Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Asset%20Allocation%20Fund%20tax%20distributions
+    Not Found    http://www.vanguard.com/pdf/usgo_2012.pdf?cbdForceDomain=false
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000836906&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000836906&type=N-30D&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000836906&type=NSAR&dateb=&count=40&scd=filings
+    No such host is known. (data:443)    http://www.taxfoundation.org/taxdata/show/228.html
+    Forbidden    https://personal.vanguard.com/us/insights/taxcenter/prioryear-tax-data
+
+Vanguard Balanced Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Balanced%20Index%20Fund%20tax%20distributions
+    Not Found    http://www.vanguard.com/pdf/usgo_2012.pdf?cbdForceDomain=false
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000889519&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000889519&type=N-30D&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000889519&type=NSAR&dateb=&count=40&scd=filings
+
+Vanguard Brokerage Services   https://bogleheads.org/wiki/Vanguard%20Brokerage%20Services
+    Forbidden    https://personal.vanguard.com/us/whatweoffer/stocksbondscds/optionsinvesting
+    Forbidden    https://personal.vanguard.com/us/whatweoffer/stocksbondscds/margininvesting
+    Forbidden    https://personal.vanguard.com/us/whatweoffer/stocksbondscds/feescommissions
+
+Vanguard Charitable Endowment Program   https://bogleheads.org/wiki/Vanguard%20Charitable%20Endowment%20Program
+    redirected to http://www.vanguardcharitable.org//investments    from https://www.vanguardcharitable.org/investments/all-investment-options
+
+Vanguard Coverdell Education Savings Account   https://bogleheads.org/wiki/Vanguard%20Coverdell%20Education%20Savings%20Account
+    Forbidden    https://personal.vanguard.com/us/accounttypes/college/ATSEdSavOverviewContent.jsp
+    Forbidden    https://personal.vanguard.com/us/accounttypes/services/ATSFlgshpSvcsOVContent.jsp
+    Forbidden    https://personal.vanguard.com/us/accounttypes/services/ATSVoySvcsSelectOVContent.jsp
+    Forbidden    https://personal.vanguard.com/us/accounttypes/services/ATSVoySvcsOVContent.jsp
+    Forbidden    https://personal.vanguard.com/us/whatweoffer/college/vanguardesa
+
+Vanguard Developed Markets Index Fund (VDMIX) tax distributions   https://bogleheads.org/wiki/Vanguard%20Developed%20Markets%20Index%20Fund%20(VDMIX)%20tax%20distributions
+    Gone    http://spreadsheets.google.com/ccc?key=0Ao_KSkmSuU2rdE81TXN1cFd1ZlJpOUlJdFJsVGJpOVE
+    Gone    http://spreadsheets.google.com/ccc?key=0Ao_KSkmSuU2rdEdsZEQzdDdORWh5RW1EQ0FMYUZyN2c
+    Gone    http://spreadsheets.google.com/ccc?key=0Ao_KSkmSuU2rdGlJNFl1bFU4c0hBbFhsN3J0Mkc5TFE
+    Gone    http://spreadsheets.google.com/ccc?key=0Ao_KSkmSuU2rdHpTY2tUb2xBbHFMbkxWbWhpZVpmNUE
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=S000002925&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000736054&type=N-30D&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000736054&type=NSAR&dateb=&count=40&scd=filings
+
+Vanguard Developed Markets Index Fund (VDVIX) expenses   https://bogleheads.org/wiki/Vanguard%20Developed%20Markets%20Index%20Fund%20(VDVIX)%20expenses
+    Forbidden    http://www.ftse.com/Products/indices/Home/indexfiltergeis?indexName=GEISAC&currency=USD&rtn=CAP&segment=global-developed--emerging
+    redirected to http://www.msci.com/indexes    from http://www.msci.com/products/indexes/country_and_regional/dm/eafe.html
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtmgx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vdvix
+
+Vanguard Developed Markets Index Fund (VDVIX) tax distributions   https://bogleheads.org/wiki/Vanguard%20Developed%20Markets%20Index%20Fund%20(VDVIX)%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000923202&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000923202&type=N-30D&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000923202&type=NSAR&dateb=&count=40&scd=filings
+
+Vanguard Diversified Equity Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Diversified%20Equity%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000313850&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000313850&type=N-CSR&dateb=&count=40&scd=filingsComplete
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000313850&type=NSAR&dateb=&count=40&scd=filings
+
+Vanguard Dividend Appreciation Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Dividend%20Appreciation%20Index%20Fund%20expenses
+    Forbidden    https://investor.vanguard.com/mutual-funds/profile/overview/vdadx
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+
+Vanguard ETF/fund ratios   https://bogleheads.org/wiki/Vanguard%20ETF/fund%20ratios
+    Forbidden    http://www.etf-ia.com/
+    Forbidden    https://personal.vanguard.com/us/content/Funds/FundsVIPERWhatAreVIPERSharesJSP.jsp
+    Forbidden    https://personal.vanguard.com/us/funds/etf
+
+Vanguard Emerging Markets Stock Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Emerging%20Markets%20Stock%20Index%20Fund%20expenses
+    Forbidden    http://www.ftse.com/Products/indices/Home/indexfiltergeis?indexName=GEISAC&currency=USD&rtn=CAP&segment=global-developed--emerging
+    redirected to http://www.msci.com/indexes    from http://www.msci.com/products/indexes/country_and_regional/em/
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vemax
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/veiex
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-12072011?SYND=RSS&Channel=AN
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-02292012
+
+Vanguard Emerging Markets Stock Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Emerging%20Markets%20Stock%20Index%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000857489&type=n-csr&dateb=&count=40&scd=filings
+
+Vanguard European Stock Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20European%20Stock%20Index%20Fund%20expenses
+    Forbidden    http://www.ftse.com/Products/indices/Home/indexfiltergeis?indexName=GEISAC&currency=USD&rtn=CAP&segment=global-developed--emerging
+    redirected to http://www.msci.com/indexes    from http://www.msci.com/products/indexes/
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/veusx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/veurx
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+
+Vanguard European Stock Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20European%20Stock%20Index%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000857489&type=n-csr&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000857489&type=n-30d&dateb=&count=40&scd=filings
+
+Vanguard Explorer Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Explorer%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000034066&type=N-CSR
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000034066&type=N-30D
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000034066&type=NSAR
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vexpx
+    Forbidden    https://investor.vanguard.com/mutual-funds/profile/distributions/vexpx
+
+Vanguard Extended Market Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Extended%20Market%20Index%20Fund%20expenses
+    Forbidden    http://us.spindices.com/indices/equity/sp-completion-index-ci
+    Not Found    http://www.wilshire.com/indexinfo/Wilshire-4500-Completion-Index.html
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vexmx
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+
+Vanguard Extended Market Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Extended%20Market%20Index%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=NSAR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-30D&dateb=&count=40&scd=filings
+
+Vanguard FAQ   https://bogleheads.org/wiki/Vanguard%20FAQ
+    Forbidden    https://investor.vanguard.com/client-benefits
+    Forbidden    https://investor.vanguard.com/client-benefits/flagship
+    Forbidden    https://investor.vanguard.com/wealth-management
+
+Vanguard FTSE All-World ex-US Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20FTSE%20All-World%20ex-US%20Index%20Fund%20expenses
+    Forbidden    http://www.ftse.com/Products/indices/Home/indexfiltergeis?indexName=GEISAC&currency=USD&rtn=CAP&segment=global-developed--emerging
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vfwix
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+
+Vanguard FTSE All-World ex-US Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20FTSE%20All-World%20ex-US%20Index%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000857489&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000857489&type=N-30D&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000857489&type=NSAR&dateb=&count=40&scd=filings
+
+Vanguard FTSE All-World ex-US Small-Cap Index Fund   https://bogleheads.org/wiki/Vanguard%20FTSE%20All-World%20ex-US%20Small-Cap%20Index%20Fund
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://finpage.blog/2017/07/30/international-small-caps-and-vanguard-funds/
+    Not Found    https://advisors.vanguard.com/VGApp/iip/site/advisor/researchcommentary/article/IWE_NewsCostReductions
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vfsvx
+    Forbidden    https://personal.vanguard.com/us/VanguardViewsArticlePublic?ArticleJSP=/freshness/News_and_Views/news_ALL_announcement_12112008_ALL.jsp&src=NMC&returnLink=/freshness/News_and_Views/news_ALL_announcement_12112008_ALL.jsp
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-07252014
+
+Vanguard FTSE All-World ex-US Small-Cap Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20FTSE%20All-World%20ex-US%20Small-Cap%20Index%20Fund%20expenses
+    Forbidden    http://www.ftse.com/analytics/factsheets/Home/Search#
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vfsax
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vfsvx
+
+Vanguard FTSE All-World ex-US Small-Cap Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20FTSE%20All-World%20ex-US%20Small-Cap%20Index%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000857489&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000857489&type=N-30D&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000857489&type=NSAR&dateb=&count=40&scd=filings
+
+Vanguard FTSE Social Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20FTSE%20Social%20Index%20Fund%20expenses
+    Not Found    http://www.calvert.com/sri-index.html
+    Forbidden    http://www.ftse.com/Analytics/FactSheets/Home/FactSheet/Regions/RESPINV/1/AMER/1#
+    Forbidden    https://investor.vanguard.com/mutual-funds/profile/overview/vftax
+
+Vanguard Financial Planning Services   https://bogleheads.org/wiki/Vanguard%20Financial%20Planning%20Services
+    Forbidden    https://investor.vanguard.com/what-we-offer/personal-services/flagship-and-flagship-select-services
+    Forbidden    https://investor.vanguard.com/what-we-offer/personal-services/voyager-and-voyager-select-services
+    Forbidden    https://personal.vanguard.com/us/accounttypes/advice/ATSAdviceCompFinPlanContent.jsp
+
+Vanguard Global ex-U.S. Real Estate Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Global%20ex-U.S.%20Real%20Estate%20Index%20Fund%20expenses
+    Forbidden    http://us.spindices.com/indices/equity/sp-global-ex-us-property-us-dollar
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vgrlx
+
+Vanguard Global ex-U.S. Real Estate Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Global%20ex-U.S.%20Real%20Estate%20Index%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=S000030007&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=S000030007&type=NSAR&dateb=&count=40&scd=filings
+
+Vanguard Growth Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Growth%20Index%20Fund%20expenses
+    Not Found    http://www.crsp.com/products/investment-products/crsp-us-large-cap-growth-index
+    Forbidden    http://us.spindices.com/indices/equity/sp-500-growth
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vigax
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vigrx
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+
+Vanguard Growth Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Growth%20Index%20Fund%20tax%20distributions
+    Not Found    http://spreadsheets.google.com/ccc?key==0Ao_KSkmSuU2rdG9kRFJjRnR0M3ZUTE9PUVZFZGZ3Tnc
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=000003640&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=NSAR&dateb=&count=40&scd=filings
+
+Vanguard High Dividend Yield Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20High%20Dividend%20Yield%20Index%20Fund%20expenses
+    Forbidden    http://www.ftse.com/analytics/factsheets/Home/Search#
+    Forbidden    https://investor.vanguard.com/mutual-funds/profile/overview/vhyax
+
+Vanguard Inflation Protected Securities Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Inflation%20Protected%20Securities%20Fund%20tax%20distributions
+    Not Found    http://www.vanguard.com/pdf/usgo_2012.pdf?cbdForceDomain=false
+    Forbidden    http://www.sec.gov/Archives/edgar/data/106444/000093247107000712/fixedincomefinal.htm
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000794105&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000106444&type=N-CSR&dateb=&count=40&scd=filings
+
+Vanguard Intermediate Term Bond Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Intermediate%20Term%20Bond%20Index%20Fund%20expenses
+    No such host is known. (www.lehman.com:80)    http://www.lehman.com/fi/indices/
+    No such host is known. (www.lehman.com:80)    http://www.lehman.com/fi/indices/factsheets.htm
+    The requested name is valid, but no data of the requested type was found. (index.barcap.com:443)    https://index.barcap.com/Home/Guides_and_Factsheets
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vbilx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vbiix
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+
+Vanguard Intermediate Term Bond Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Intermediate%20Term%20Bond%20Index%20Fund%20tax%20distributions
+    Not Found    http://www.vanguard.com/pdf/usgo_2012.pdf?cbdForceDomain=false
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000794105&type=N-CSR&dateb=&count=40&scd=filings
+
+Vanguard Intermediate Term Tax Exempt Bond Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Intermediate%20Term%20Tax%20Exempt%20Bond%20Fund%20tax%20distributions
+    Not Found    http://www.fairmark.com/mutual/stcl.htm
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000225997&type=NSAR&dateb=&count=100&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?type=N-30D&dateb=&count=100&scd=filings&action=getcompany&CIK=0000225997
+
+Vanguard International Explorer Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20International%20Explorer%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001004655&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001004655&type=NSAR&dateb=&count=100&scd=filings
+
+Vanguard International Growth Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20International%20Growth%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000052848&type=n-csr&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000052848&type=N-30D&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000052848&type=NSAR&dateb=&count=40&scd=filings
+
+Vanguard International Value Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20International%20Value%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000313850&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000313850&type=N-30D&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000313850&type=NSAR&dateb=&count=100&scd=filings
+
+Vanguard Large Cap Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Large%20Cap%20Index%20Fund%20expenses
+    Not Found    http://www.crsp.com/products/investment-products/crsp-us-large-cap-index
+    redirected to http://www.msci.com/indexes    from http://www.msci.com/products/indexes/country_and_regional/domestic_equity_indexes/us/
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vlcax
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vgtsx
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+
+Vanguard Large Cap Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Large%20Cap%20Index%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=NSAR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-30D&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?type=N-30D&dateb=&count=100&scd=filings&action=getcompany&CIK=0000036405
+
+Vanguard LifeStrategy Funds tax distributions   https://bogleheads.org/wiki/Vanguard%20LifeStrategy%20Funds%20tax%20distributions
+    Not Found    http://www.vanguard.com/pdf/usgo_2012.pdf?cbdForceDomain=false
+    Forbidden    http://www.sec.gov/Archives/edgar/data/736054/000093247111004354/starfundsfinal.htm
+
+Vanguard LifeStrategy funds   https://bogleheads.org/wiki/Vanguard%20LifeStrategy%20funds
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vasix
+
+Vanguard Lifetime Income Program - SPIA   https://bogleheads.org/wiki/Vanguard%20Lifetime%20Income%20Program%20-%20SPIA
+    Not Found    https://personal.vanguard.com/us/funds/annuities/lifetimeincome?Type=f
+    Not Found    https://personal.vanguard.com/us/funds/annuities/lifetimeincome?Type=p
+
+Vanguard Limited Term Tax Exempt Bond Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Limited%20Term%20Tax%20Exempt%20Bond%20Fund%20tax%20distributions
+    Not Found    http://www.fairmark.com/mutual/stcl.htm
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000225997&type=NSAR&dateb=&count=100&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?type=N-30D&dateb=&count=100&scd=filings&action=getcompany&CIK=0000225997
+
+Vanguard Long Term Bond Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Long%20Term%20Bond%20Index%20Fund%20expenses
+    No such host is known. (www.lehman.com:80)    http://www.lehman.com/fi/indices/
+    No such host is known. (www.lehman.com:80)    http://www.lehman.com/fi/indices/factsheets.htm
+    The requested name is valid, but no data of the requested type was found. (index.barcap.com:443)    https://index.barcap.com/Home/Guides_and_Factsheets
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vbltx
+
+Vanguard Long Term Bond Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Long%20Term%20Bond%20Index%20Fund%20tax%20distributions
+    Not Found    http://www.vanguard.com/pdf/usgo_2012.pdf?cbdForceDomain=false
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000794105&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000794105&type=N-30D&dateb=&count=40&scd=filings
+
+Vanguard Mid Cap Growth Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Mid%20Cap%20Growth%20Index%20Fund%20expenses
+    Not Found    http://www.crsp.com/products/investment-products/crsp-us-mid-cap-growth-index
+    redirected to http://www.msci.com/indexes    from http://www.msci.com/products/indexes/country_and_regional/domestic_equity_indexes/us/
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vmgmx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vmgix
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+
+Vanguard Mid Cap Growth Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Mid%20Cap%20Growth%20Index%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-30D&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=NSAR&dateb=&count=40&scd=filings
+
+Vanguard Mid Cap Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Mid%20Cap%20Index%20Fund%20expenses
+    Not Found    http://www.crsp.com/products/investment-products/crsp-us-mid-cap-index
+    redirected to http://www.msci.com/indexes    from http://www.msci.com/products/indexes/country_and_regional/domestic_equity_indexes/us/
+    Forbidden    http://us.spindices.com/indices/equity/sp-400
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vimax
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vimsx
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+
+Vanguard Mid Cap Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Mid%20Cap%20Index%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-30D&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=NSAR&dateb=&count=40&scd=filings
+
+Vanguard Mid Cap Value Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Mid%20Cap%20Value%20Index%20Fund%20expenses
+    Not Found    http://www.crsp.com/products/investment-products/crsp-us-mid-cap-value-index
+    redirected to http://www.msci.com/indexes    from http://www.msci.com/products/indexes/country_and_regional/domestic_equity_indexes/us/
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vmvax
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vmvix
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+
+Vanguard Mid Cap Value Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Mid%20Cap%20Value%20Index%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-30D&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=NSAR&dateb=&count=40&scd=filings
+
+Vanguard Pacific Stock Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Pacific%20Stock%20Index%20Fund%20expenses
+    Forbidden    http://www.ftse.com/Products/indices/Home/indexfiltergeis?indexName=GEISAC&currency=USD&rtn=CAP&segment=global-developed--emerging
+    redirected to http://www.msci.com/indexes    from http://www.msci.com/products/indexes/
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vpadx
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+
+Vanguard Pacific Stock Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Pacific%20Stock%20Index%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000857489&type=n-csr&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000857489&type=n-30d&dateb=&count=40&scd=filings
+
+Vanguard Portfolio Watch   https://bogleheads.org/wiki/Vanguard%20Portfolio%20Watch
+    Not Found    http://www.fivecentnickel.com/2008/04/11/a-peek-inside-vanguards-portfolio-watch/
+    Forbidden    https://personal.vanguard.com/us/whatweoffer/stocksbondscds/tools
+
+Vanguard REIT Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20REIT%20Index%20Fund%20expenses
+    redirected to http://www.msci.com/indexes    from http://www.msci.com/products/indexes/country_and_regional/domestic_equity_indexes/reit/
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vgsix
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+
+Vanguard REIT Index tax distributions   https://bogleheads.org/wiki/Vanguard%20REIT%20Index%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000734383&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000734383&type=NSAR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000734383&type=N-30D&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?type=N-30D&dateb=&count=100&scd=filings&action=getcompany&CIK=0000734383
+
+Vanguard SEC listings   https://bogleheads.org/wiki/Vanguard%20SEC%20listings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001532203&type=N-Q&dateb=&count=100&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001409957&type=N-CSR&dateb=&count=100&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000801124&owner=exclude&count=100
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000823488&owner=exclude&count=100&hidefilings=0
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000888451&type=N-CSR&dateb=&count=100&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000888451&type=N-30D&dateb=&count=100&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000888451&type=NSAR&dateb=&count=100&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000888451&type=N-Q&dateb=&count=100&scd=filings
+
+Vanguard STAR Fund   https://bogleheads.org/wiki/Vanguard%20STAR%20Fund
+    Forbidden    http://www.sec.gov/Archives/edgar/data/736054/000093247110003821/0000932471-10-003821.txt
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vwnfx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vfiix
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vfstx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vwesx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtrix
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vwigx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vwndx
+
+Vanguard STAR Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20STAR%20Fund%20tax%20distributions
+    Not Found    http://www.vanguard.com/pdf/usgo_2012.pdf?cbdForceDomain=false
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000736054&type=N-30D&dateb=&count=100&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000736054&type=NSAR&dateb=&count=100&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000736054&type=N-CSR&dateb=&count=40&scd=filings
+
+Vanguard Short Term Bond Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Short%20Term%20Bond%20Index%20Fund%20expenses
+    No such host is known. (www.lehman.com:80)    http://www.lehman.com/fi/indices/
+    No such host is known. (www.lehman.com:80)    http://www.lehman.com/fi/indices/factsheets.htm
+    The requested name is valid, but no data of the requested type was found. (index.barcap.com:443)    https://index.barcap.com/Home/Guides_and_Factsheets
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vbirx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vbisx
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+
+Vanguard Short Term Bond Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Short%20Term%20Bond%20Index%20Fund%20tax%20distributions
+    Not Found    http://www.vanguard.com/pdf/usgo_2012.pdf?cbdForceDomain=false
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000794105&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000794105&type=N-30D&dateb=&count=40&scd=filings
+
+Vanguard Short Term Inflation Protected Securities Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Short%20Term%20Inflation%20Protected%20Securities%20Index%20Fund%20tax%20distributions
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    https://finpage.blog/2016/12/04/a-three-fund-portfolio-tailored-for-stable-retirement-spending/
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtapx
+    Forbidden    https://investor.vanguard.com/mutual-funds/profile/distributions/vtapx
+    Forbidden    https://personal.vanguard.com/us/insights/taxcenter/prioryear-tax-data
+    Forbidden    https://personal.vanguard.com/us/insights/taxcenter/tax-information-vanguardfunds
+    Forbidden    https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000836906&type=N-CEN&dateb=&count=100&scd=filings
+    Forbidden    https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000836906&type=NSAR&dateb=&count=100&scd=filings
+
+Vanguard Small Cap Growth Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Small%20Cap%20Growth%20Index%20Fund%20expenses
+    Not Found    http://www.crsp.com/products/investment-products/crsp-us-small-cap-growth-index
+    redirected to http://www.msci.com/indexes    from http://www.msci.com/products/indexes/country_and_regional/domestic_equity_indexes/us/
+    Forbidden    http://us.spindices.com/indices/equity/sp-smallcap-600-growth
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vsgax
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/visgx
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+
+Vanguard Small Cap Growth Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Small%20Cap%20Growth%20Index%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-30D&dateb=&count=40&scd=filings
+
+Vanguard Small Cap Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Small%20Cap%20Index%20Fund%20expenses
+    Not Found    http://www.crsp.com/products/investment-products/crsp-us-small-cap-index
+    redirected to http://www.msci.com/indexes    from http://www.msci.com/products/indexes/country_and_regional/domestic_equity_indexes/us/
+    Forbidden    https://www.russell.com/indexes/americas/indexes/fact-sheet.page?ic=US2000
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/naesx
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+
+Vanguard Small Cap Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Small%20Cap%20Index%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-30D&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=NSAR&dateb=&count=40&scd=filings
+
+Vanguard Small Cap Value Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Small%20Cap%20Value%20Index%20Fund%20expenses
+    Not Found    http://www.crsp.com/products/investment-products/crsp-us-small-cap-value-index
+    redirected to http://www.msci.com/indexes    from http://www.msci.com/products/indexes/country_and_regional/domestic_equity_indexes/us/
+    Forbidden    http://us.spindices.com/indices/equity/sp-smallcap-600-value
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/visvx
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+
+Vanguard Small Cap Value Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Small%20Cap%20Value%20Index%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-30D&dateb=&count=40&scd=filings
+
+Vanguard Target Retirement Funds (2005-2025) tax distributions   https://bogleheads.org/wiki/Vanguard%20Target%20Retirement%20Funds%20(2005-2025)%20tax%20distributions
+    Not Found    http://www.top1000funds.com/attachments/364_targetdatefunds.pdf
+    Not Found    http://www.vanguard.com/jumppage/targetretirement/TRFCOMM.pdf
+    Not Found    http://www.vanguard.com/pdf/usgo_2012.pdf?cbdForceDomain=false
+
+Vanguard Target Retirement Funds (2030-2050) tax distributions   https://bogleheads.org/wiki/Vanguard%20Target%20Retirement%20Funds%20(2030-2050)%20tax%20distributions
+    Not Found    http://www.top1000funds.com/attachments/364_targetdatefunds.pdf
+    Not Found    http://www.vanguard.com/jumppage/targetretirement/TRFCOMM.pdf
+    Not Found    http://www.vanguard.com/pdf/usgo_2012.pdf?cbdForceDomain=false
+
+Vanguard Tax-Managed Balanced Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Tax-Managed%20Balanced%20Fund%20tax%20distributions
+    Not Found    http://www.vanguard.com/pdf/inbst_2010.pdf?cbdForceDomain=false
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000923202&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000923202&type=N-30D&dateb=&count=40&scd=filings
+    No such host is known. (data:443)    http://www.taxfoundation.org/taxdata/show/228.html
+
+Vanguard Tax-Managed Capital Appreciation Fund expenses   https://bogleheads.org/wiki/Vanguard%20Tax-Managed%20Capital%20Appreciation%20Fund%20expenses
+    Forbidden    https://www.russell.com/indexes/americas/indexes/fact-sheet.page?ic=US1000
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtclx
+
+Vanguard Tax-Managed Capital Appreciation Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Tax-Managed%20Capital%20Appreciation%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000923202&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000923202&type=N-30D&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000923202&type=NSAR&dateb=&count=40&scd=filings
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtclx
+
+Vanguard Tax-Managed Small Cap Fund expenses   https://bogleheads.org/wiki/Vanguard%20Tax-Managed%20Small%20Cap%20Fund%20expenses
+    Forbidden    http://us.spindices.com/indices/equity/sp-600
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtmsx
+
+Vanguard Tax-Managed Small Cap Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Tax-Managed%20Small%20Cap%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000923202&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000923202&type=N-30D&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000923202&type=NSAR&dateb=&count=40&scd=filings
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtmsx
+
+Vanguard Total Bond Market II Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Total%20Bond%20Market%20II%20Index%20Fund%20expenses
+    The requested name is valid, but no data of the requested type was found. (index.barcap.com:443)    https://index.barcap.com/Home/Guides_and_Factsheets
+
+Vanguard Total Bond Market Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Total%20Bond%20Market%20Index%20Fund%20tax%20distributions
+    Not Found    http://www.vanguard.com/pdf/usgo_2012.pdf?cbdForceDomain=false
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000794105&type=N-CSR&dateb=&count=40&scd=filings
+
+Vanguard Total International Bond Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Total%20International%20Bond%20Index%20Fund%20expenses
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtabx
+
+Vanguard Total International Bond Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Total%20International%20Bond%20Index%20Fund%20tax%20distributions
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtabx
+    Forbidden    https://investor.vanguard.com/mutual-funds/profile/distributions/vtabx
+    Forbidden    https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001532203&type=N-CEN&dateb=&count=100&scd=filings
+    Forbidden    https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001532203&type=NSAR&dateb=&count=100&scd=filings
+    Forbidden    https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001532203&type=N-CSR&dateb=&count=100&scd=filings
+
+Vanguard Total International Stock Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Total%20International%20Stock%20Index%20Fund%20expenses
+    Forbidden    http://www.ftse.com/products/indices/geis-series
+    redirected to http://www.msci.com/indexes    from http://www.msci.com/products/indexes/
+    redirected to http://www.msci.com/indexes    from http://www.msci.com/products/indexes/country_and_regional/all_country/
+    redirected to http://www.msci.com/indexes    from http://www.msci.com/products/indexes/country_and_regional/dm/
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+
+Vanguard Total International Stock Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Total%20International%20Stock%20Index%20Fund%20tax%20distributions
+    redirected to http://www.msci.com/r/www-mscibarra-com/products/indexes/global_equity_indexes/acwi-imi/MSCI_ACWI_IMI_Factsheet.pdf    from http://www.mscibarra.com/products/indices/global_equity_indices/acwi-imi/MSCI_ACWI_IMI_Factsheet.pdf
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=S000002932&type=N-CSR&dateb=&count=40&scd=filings
+
+Vanguard Total Stock Market Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Total%20Stock%20Market%20Index%20Fund%20expenses
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtsax
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtsmx
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+
+Vanguard Total Stock Market Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Total%20Stock%20Market%20Index%20Fund%20tax%20distributions
+    Not Found    http://spreadsheets.google.com/ccc?key=1bDMT8hJDC-czwdPoxNqplEVzakQkwC2jsdOhUDKA2eI/
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=000003640&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=NSAR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=00000364052&type=N-CSR&dateb=&count=40&scd=filings
+
+Vanguard Total World Stock Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Total%20World%20Stock%20Index%20Fund%20expenses
+    Forbidden    http://www.ftse.com/Products/indices/Home/indexfiltergeis?indexName=GEISAC&currency=USD&rtn=CAP&segment=global-developed--emerging
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtwsx
+
+Vanguard Total World Stock Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Total%20World%20Stock%20Index%20Fund%20tax%20distributions
+    Not Found    http://spreadsheets.google.com/ccc?key=%7B%7B%7Bkey%7D%7D%7D
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000857489&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000857489&type=N-30D&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000857489&type=NSAR&dateb=&count=40&scd=filings
+
+Vanguard US government bond fund tracking error   https://bogleheads.org/wiki/Vanguard%20US%20government%20bond%20fund%20tracking%20error
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vfirx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vfitx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vfiux
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vipsx
+
+Vanguard US sector ETFs   https://bogleheads.org/wiki/Vanguard%20US%20sector%20ETFs
+    Forbidden    https://www.etf.com/
+    Forbidden    https://www.etf.com/VAW
+    Forbidden    https://www.etf.com/VCR
+    Forbidden    https://www.etf.com/VDC
+    Forbidden    https://www.etf.com/VDE
+    Forbidden    https://www.etf.com/VFH
+    Forbidden    https://www.etf.com/VGT
+    Forbidden    https://www.etf.com/VHT
+    Forbidden    https://www.etf.com/VIS
+    Forbidden    https://www.etf.com/VNQ
+
+Vanguard US stock ETFs   https://bogleheads.org/wiki/Vanguard%20US%20stock%20ETFs
+    Forbidden    https://www.etf.com/
+    Forbidden    https://www.etf.com/MGC
+    Forbidden    https://www.etf.com/MGK
+    Forbidden    https://www.etf.com/MGV
+    Forbidden    https://www.etf.com/VB
+    Forbidden    https://www.etf.com/VBK
+    Forbidden    https://www.etf.com/VBR
+    Forbidden    https://www.etf.com/VIG
+    Forbidden    https://www.etf.com/VO
+    Forbidden    https://www.etf.com/VOE
+
+Vanguard Value Index Fund expenses   https://bogleheads.org/wiki/Vanguard%20Value%20Index%20Fund%20expenses
+    Not Found    http://www.crsp.com/products/investment-products/crsp-us-large-cap-value-index
+    redirected to http://www.msci.com/indexes    from http://www.msci.com/products/indexes/country_and_regional/domestic_equity_indexes/us/
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vviax
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vivax
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcement-10062010
+
+Vanguard Value Index Fund tax distributions   https://bogleheads.org/wiki/Vanguard%20Value%20Index%20Fund%20tax%20distributions
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-30D&dateb=&count=40&scd=filings
+
+Vanguard Variable Annuity   https://bogleheads.org/wiki/Vanguard%20Variable%20Annuity
+    Not Found    http://www.transamerica.com/company_profile/about_transamerica/financial_overview.asp
+    Not Found    http://www.vanguard.com/pdf/z070.pdf
+    Forbidden    http://www.sec.gov/Archives/edgar/data/866252/000119312508092350/d485bpos.htm
+    Not Found    https://www.transamerica.com/individual/what-we-do/about-us/
+    No such host is known. (personal.vanguard.comnull:443)    https://personal.vanguard.com/us/LiteratureRequest?FW_Activity=ViewOnlineActivity&litID=2210022525&FW_Event=start&view_mode=web&usage_cat2=&viewLitID=2210022525
+    No such host is known. (personal.vanguard.comnull:443)    https://personal.vanguard.com/us/LiteratureRequest?FW_Activity=ViewOnlineActivity&litID=2210061192&FW_Event=start&view_mode=web&usage_cat2=&viewLitID=2210061192
+    Forbidden    https://personal.vanguard.com/us/funds/annuities
+    Forbidden    https://personal.vanguard.com/us/whatweoffer/annuities/guaranteed-lifetime-withdrawal-benefit
+
+Vanguard Variable SPIA: using Vanguard Inflation Indexed Securities Fund for inflation protection   https://bogleheads.org/wiki/Vanguard%20Variable%20SPIA:%20using%20Vanguard%20Inflation%20Indexed%20Securities%20Fund%20for%20inflation%20protection
+    No such host is known. (www.aigretirementgold.com:80)    http://www.aigretirementgold.com/vlip/VLIPController?page=Overview
+    No such host is known. (www.aigretirementgold.com:80)    http://www.aigretirementgold.com/vlip/VLIPController?page=RequestaQuote
+    Not Found    http://spreadsheets.google.com/pub?key=0Ao_KSkmSuU2rdHlvbVNsbmgxSU5tWnM2MHpBTHAtLXc&output=PDF
+
+Vanguard active fund investor returns   https://bogleheads.org/wiki/Vanguard%20active%20fund%20investor%20returns
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://news.morningstar.com/articlenet/article.aspx?id=178504
+    Not Found    https://www.morningstar.com/funds/xnas/VCVLX/performance
+    Not Found    https://www.morningstar.com/funds/xnas/VCVSX/performance
+
+Vanguard bond ETFs   https://bogleheads.org/wiki/Vanguard%20bond%20ETFs
+    Forbidden    https://www.etf.com/
+    Forbidden    https://www.etf.com/BIV
+    Forbidden    https://www.etf.com/BLV
+    Forbidden    https://www.etf.com/BND
+    Forbidden    https://www.etf.com/BSV
+    Forbidden    https://www.etf.com/EDV
+    Forbidden    https://www.etf.com/VCIT
+    Forbidden    https://www.etf.com/VCLT
+    Forbidden    https://www.etf.com/VCSH
+    Forbidden    https://www.etf.com/VGIT
+
+Vanguard bond index fund tracking error   https://bogleheads.org/wiki/Vanguard%20bond%20index%20fund%20tracking%20error
+    Forbidden    http://www.sec.gov/Archives/edgar/data/794105/0000893220-95-000272.txt
+    Forbidden    http://www.sec.gov/Archives/edgar/data/794105/000093247102000763/bonds2002ascii.txt
+    Forbidden    http://www.sec.gov/Archives/edgar/data/794105/000093247105000711/bondindexbfiling.txt
+    Forbidden    http://www.sec.gov/Archives/edgar/data/794105/000093247109001662/tbm485a.htm
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000794105&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000794105&type=N-30D&dateb=&count=40&scd=filings
+
+Vanguard four fund portfolio   https://bogleheads.org/wiki/Vanguard%20four%20fund%20portfolio
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtinx
+
+Vanguard fund information   https://bogleheads.org/wiki/Vanguard%20fund%20information
+    Forbidden    https://investor.vanguard.com/investment-products/etfs/profile/bsv
+
+Vanguard funds: distribution methodology   https://bogleheads.org/wiki/Vanguard%20funds:%20distribution%20methodology
+    Forbidden    http://www.sec.gov/Archives/edgar/data/857489/000093247110003745/0000932471-10-003745-index.htm
+    Forbidden    http://www.sec.gov/Archives/edgar/data/857489/000093247110003745/answer103110.fil
+    Forbidden    http://www.sec.gov/Archives/edgar/data/857489/000093247111000016/intlequityindexfunds_final.htm
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000857489&owner=exclude&count=40
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vfsvx
+    Forbidden    https://personal.vanguard.com/us/insights/article/estimated-yearend-distributions-12082010
+
+Vanguard funds: life strategy funds vs target retirement funds   https://bogleheads.org/wiki/Vanguard%20funds:%20life%20strategy%20funds%20vs%20target%20retirement%20funds
+    Forbidden    https://investor.vanguard.com/mutual-funds/profile/VTINX
+    Not Found    https://personal.vanguard.com/us/content/Funds/FundsVanguardFundsLifeStrategyTargetCompare.jsp
+    Forbidden    https://personal.vanguard.com/us/insights/article/fund-announcementB-09302011
+
+Vanguard index fund investor returns   https://bogleheads.org/wiki/Vanguard%20index%20fund%20investor%20returns
+    Forbidden    http://www.etf.com/sections/index-investor-corner/23275-ferri-avoid-being-an-out-of-style-investor.html?fullart=1&start=4
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://news.morningstar.com/articlenet/article.aspx?id=178504
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://news.morningstar.com/articlenet/article.aspx?id=303206
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://news.morningstar.com/articlenet/article.aspx?id=637022
+    Forbidden    http://www.icifactbook.org/fb_ch2.html#investor
+
+Vanguard international funds FAQ   https://bogleheads.org/wiki/Vanguard%20international%20funds%20FAQ
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vgtsx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/veusx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vfsvx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtrix
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vwigx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vfwix
+
+Vanguard international stock ETFs   https://bogleheads.org/wiki/Vanguard%20international%20stock%20ETFs
+    Forbidden    https://www.etf.com/
+    Forbidden    https://www.etf.com/VEA
+    Forbidden    https://www.etf.com/VEU
+    Forbidden    https://www.etf.com/VGK
+    Forbidden    https://www.etf.com/VPL
+    Forbidden    https://www.etf.com/VSS
+    Forbidden    https://www.etf.com/VWO
+    Forbidden    https://www.etf.com/VXUS
+
+Vanguard investment grade bond fund tracking error   https://bogleheads.org/wiki/Vanguard%20investment%20grade%20bond%20fund%20tracking%20error
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000106444&type=N-CSR&dateb=&count=100&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?type=N-30D&dateb=&count=100&scd=filings&action=getcompany&CIK=0000106444
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vfstx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vfsux
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vficx
+
+Vanguard large cap index fund tracking error   https://bogleheads.org/wiki/Vanguard%20large%20cap%20index%20fund%20tracking%20error
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-30D&dateb=&count=40&scd=filings
+    Not Found    https://advisors.vanguard.com/VGApp/iip/site/advisor/investments/article?File=IWEMFStockPassiveEquity
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtsmx
+
+Vanguard mid cap index fund tracking error   https://bogleheads.org/wiki/Vanguard%20mid%20cap%20index%20fund%20tracking%20error
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-30D&dateb=&count=40&scd=filings
+    Not Found    https://advisors.vanguard.com/VGApp/iip/site/advisor/investments/article?File=IWEMFStockPassiveEquity
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vexmx
+
+Vanguard money market fund asset pricing policy   https://bogleheads.org/wiki/Vanguard%20money%20market%20fund%20asset%20pricing%20policy
+    Not Found    http://www.law.uc.edu/CCL/InvCoRls/rule2a-7.html
+
+Vanguard municipal bond fund tracking error   https://bogleheads.org/wiki/Vanguard%20municipal%20bond%20fund%20tracking%20error
+    Forbidden    http://www.indexuniverse.com/sections/features/6685-rick-ferri-managing-the-biggest-risk-of-all.html
+    Not Found    http://www.standardandpoors.com/indices/sp-national-amt-free-municipal-bond-index/en/us/?indexId=spfi--mun-usd----t-------
+    Forbidden    http://www.sec.gov/Archives/edgar/data/225997/000093247109000002/muni_final.htm
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000225997&type=N-CSR&dateb=&count=100&scd=filings
+
+Vanguard news   https://bogleheads.org/wiki/Vanguard%20news
+    No such host is known. (rss.vanguard.com:80)    http://rss.vanguard.com/rss/recentstories.xml
+
+Vanguard safety   https://bogleheads.org/wiki/Vanguard%20safety
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://investor.shareholder.com/jpmorganchase/faq.cfm
+    Not Found    https://personal.vanguard.com/pdf/s317.pdf
+
+Vanguard small cap funds FAQ   https://bogleheads.org/wiki/Vanguard%20small%20cap%20funds%20FAQ
+    Not Found    http://www.dfaus.com/2009/05/the-dimensions-of-stock-returns-2007.html
+    Not Found    http://www.dfaus.com/2009/05/the-new-indexing.html
+    Forbidden    http://www.portfoliosolutions.com/f-13.html
+    Forbidden    https://investor.vanguard.com/investment-products/etfs/profile/vtwo
+
+Vanguard small cap index funds tracking error   https://bogleheads.org/wiki/Vanguard%20small%20cap%20index%20funds%20tracking%20error
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000036405&type=N-30D&dateb=&count=40&scd=filings
+    Not Found    https://advisors.vanguard.com/VGApp/iip/site/advisor/investments/article?File=IWEMFStockPassiveEquity
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/naesx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vsmax
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/visgx
+
+Vanguard statistical data spreadsheets   https://bogleheads.org/wiki/Vanguard%20statistical%20data%20spreadsheets
+    Not Found    http://spreadsheets.google.com/pub?key=pYSRNXThZbE5u86Fho6BMLQ
+
+Vanguard target retirement funds   https://bogleheads.org/wiki/Vanguard%20target%20retirement%20funds
+    Forbidden    http://www.sec.gov/Archives/edgar/data/752177/000093247103000686/targetretirementprospedgar.txt
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?type=N-CSR&dateb=&count=40&scd=filings&action=getcompany&CIK=S000002570
+
+Vanguard tax-managed fund tracking error   https://bogleheads.org/wiki/Vanguard%20tax-managed%20fund%20tracking%20error
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000923202&type=N-CSR&dateb=&count=40&scd=filings
+    Forbidden    http://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000923202&type=N-30D&dateb=&count=40&scd=filings
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtmfx
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vtmsx
+
+Vanguard transaction principles (SAI disclosure)   https://bogleheads.org/wiki/Vanguard%20transaction%20principles%20(SAI%20disclosure)
+    Forbidden    https://www.jstor.org/action/doBasicSearch?Query=%22Vanguard+transaction+principles%22+SAI+disclosure&acc=on&wc=on
+
+Variable annuity   https://bogleheads.org/wiki/Variable%20annuity
+    Forbidden    http://www.ifid.ca/Conference_Material/Reichenstein_paper.pdf
+    Forbidden    http://www.ifid.ca/annuities_exchanging.htm
+    Forbidden    http://www.ifid.ca/pdf_workingpapers/WP2003DEC19.pdf
+    Forbidden    http://www.ifid.ca/pdf_workingpapers/WP2004Aug25.pdf
+    Forbidden    http://www.ifid.ca/pdf_workingpapers/WP2006OCT3.pdf
+    Not Found    http://www.aaii.com/journal/200307/portstrategies.pdfRetirement
+
+Variance drain   https://bogleheads.org/wiki/Variance%20drain
+    Not Found    http://www.iijournals.com/doi/abs/10.3905/jpm.1995.409536#sthash.JVY5Rhgf.dpbs
+    Forbidden    http://www.investinganswers.com/about-us
+    Forbidden    http://www.investinganswers.com/education/how-invest/cagr-vs-average-annual-return-why-your-advisor-quoting-wrong-number-1996
+    Gone    http://ssrn.com/abstract=202747
+
+Variations on Bogleheads┬« investing   https://bogleheads.org/wiki/Variations%20on%20Bogleheads┬«%20investing
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/vgsix
+    Forbidden    https://investor.vanguard.com/investment-products/mutual-funds/profile/visvx
+    Forbidden    https://personal.vanguard.com/us/insights/article/active-index-funds-05042011
+
+Vermont 529 plan archive   https://bogleheads.org/wiki/Vermont%20529%20plan%20archive
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://529.morningstar.com/overview.action?state=VT&planID=5PUSA0001A
+    Forbidden    http://www.vheip.org/
+    Forbidden    http://www.vheip.org/documents/vt_disclosure.pdf
+    Forbidden    http://www.vheip.org/portfolios/portfolios.shtml#managed
+
+Video:Bogleheads┬« investment philosophy   https://bogleheads.org/wiki/Video:Bogleheads┬«%20investment%20philosophy
+
+Virginia 529 plan archive   https://bogleheads.org/wiki/Virginia%20529%20plan%20archive
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://529.morningstar.com/overview.action?state=VA&planID=5PUSA0001B
+    Not Found    http://www.virginia529.com/documents/vest/program_description/va529_vest_program_description.pdf
+
+WA Cares Fund   https://bogleheads.org/wiki/WA%20Cares%20Fund
+    Forbidden    https://www.merriman.com/advisors/how-to-guide-for-applying-for-a-wa-cares-exemption/
+    Not Found    https://www.opb.org/article/2021/08/30/washingtons-long-term-care-tax/
+
+Wade Pfau   https://bogleheads.org/wiki/Wade%20Pfau
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/52944726/wade-donald-pfau
+    Forbidden    http://retirementresearcher.com/
+    Forbidden    http://retirementresearcher.com/bogleheads-conference-2013/
+
+Walter L. Morgan   https://bogleheads.org/wiki/Walter%20L.%20Morgan
+    Not Found    http://www.prnewswire.com/news-releases/walter-l-morgan-mutual-fund-pioneer-and-founder-of-vanguardwellington-fund-dies-76443247.html
+
+Wayne Ferson   https://bogleheads.org/wiki/Wayne%20Ferson
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/309444/wayne-e-ferson
+    No such host is known. (bcf.usc.edu:443)    http://www-bcf.usc.edu/~ferson/
+    No such host is known. (bcf.usc.edu:443)    http://www-bcf.usc.edu/~ferson//
+    Forbidden    http://www.cfapubs.org/page/faj/all-graham-dodd-winners
+    Forbidden    http://www.jstor.org/stable/4479957
+
+Wealth transfer insurance   https://bogleheads.org/wiki/Wealth%20transfer%20insurance
+
+Wei Jiang   https://bogleheads.org/wiki/Wei%20Jiang
+    No such host is known. (www4.gsb.columbia.edu:80)    http://www4.gsb.columbia.edu/cbs-directory/detail/494746/Wei%20Jiang
+    Not Found    http://www.afajof.org/details/page/2870731/Prizes.html
+    Not Found    http://www.q-group.org/prize-winners/
+
+Wellington Management Company   https://bogleheads.org/wiki/Wellington%20Management%20Company
+    redirected to http://www.wellington.com/en    from http://www.wellington.com
+    redirected to http://www.wellington.com/Who_We_Are/Overview    from http://www.wellington.com/Who_We_Are/Overview/
+    No such host is known. (www.anbhf.org:80)    http://www.anbhf.org/laureates/jbogle.html
+    Not Found    https://www.wellington.com/en/facts-and-figures
+
+West Virginia Direct 529 plan (SMART 529) archive   https://bogleheads.org/wiki/West%20Virginia%20Direct%20529%20plan%20(SMART%20529)%20archive
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://529.morningstar.com/overview.action?state=WV&planID=5PUSA0003C
+
+West Virginia Smart 529 Select plan archive   https://bogleheads.org/wiki/West%20Virginia%20Smart%20529%20Select%20plan%20archive
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://529.morningstar.com/overview.action?state=WV&planID=5PUSA0003C
+
+Why did my fund unexpectedly drop in value   https://bogleheads.org/wiki/Why%20did%20my%20fund%20unexpectedly%20drop%20in%20value
+    Forbidden    https://investor.vanguard.com/mutual-funds/list#/etf/asset-class/distributions
+    Forbidden    https://investor.vanguard.com/mutual-funds/list#/mutual-funds/asset-class/distributions
+    Forbidden    https://personal.vanguard.com/us/insights/article/buying-dividend-042015
+    Forbidden    https://personal.vanguard.com/us/insights/taxcenter/tax-information-vanguardfunds
+
+William F. Sharpe   https://bogleheads.org/wiki/William%20F.%20Sharpe
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/3787/william-f-sharpe
+    Forbidden    http://www.cfapubs.org/page/faj/all-graham-dodd-winners
+
+William N. Goetzmann   https://bogleheads.org/wiki/William%20N.%20Goetzmann
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/997092/william-n-goetzmann
+    Forbidden    http://depts.washington.edu/jfqa/SharpeBallot2000/ballot.htm
+    Not Found    http://www.afajof.org/details/page/2870731/Prizes.html
+    Forbidden    http://www.cfapubs.org/doi/abs/10.2469/faj.v65.n1.8
+    Forbidden    http://www.cfapubs.org/page/faj/all-graham-dodd-winners
+
+Wisconsin 529 plan archive   https://bogleheads.org/wiki/Wisconsin%20529%20plan%20archive
+    Not Found    http://www.edvest.com/documents/wi_disclosure.pdf
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://529.morningstar.com/overview.action?state=WI&planID=5PUSA0001E
+
+Worker's compensation insurance   https://bogleheads.org/wiki/Worker's%20compensation%20insurance
+    redirected to http://www.dol.gov/agencies/owcp/wc    from http://www.dol.gov/owcp/dfec/regs/compliance/wc.htm
+
+World Bond/Stock Portfolio   https://bogleheads.org/wiki/World%20Bond/Stock%20Portfolio
+    Forbidden    http://www.cfapubs.org/doi/full/10.2469/faj.v66.n5.11
+    Forbidden    http://www.cfapubs.org/doi/full/10.2469/faj.v66.n5.9
+
+Yong Chen   https://bogleheads.org/wiki/Yong%20Chen
+    Not Found    http://people.tamu.edu/~ychen/research.html
+
+Zero-coupon bond   https://bogleheads.org/wiki/Zero-coupon%20bond
+    Forbidden    http://www.allbusiness.com/glossaries/zero-coupon-security/4947891-1.html
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://www.investinginbonds.com/learnmore.asp?catid=5&subcatid=27
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://www.investinginbonds.com/learnmore.asp?catid=5&subcatid=27&id=148
+    The request was canceled due to the configured HttpClient.Timeout of 15 seconds elapsing.    http://www.sec.gov/answers/zero.htm
+    Not Found    http://www.treasurydirect.gov/instit/marketables/strips/strips.htm
+    Forbidden    http://emma.msrb.org/
+
+Zvi Bodie   https://bogleheads.org/wiki/Zvi%20Bodie
+    No such host is known. (academic.research.microsoft.com:80)    http://academic.research.microsoft.com/Author/874385/zvi-bodie
+    Not Found    http://questromapps.bu.edu/mgmt_new/profiles/BodieZvi.html
+    redirected to http://www.bu.edu/prsocial/for-the-press/bu-experts/    from http://www.bu.edu/experts/profiles/zvi-bodie/
+    Forbidden    http://www.cfapubs.org/doi/abs/10.2469/faj.v40.n2.16
+    Forbidden    http://www.cfapubs.org/doi/abs/10.2469/faj.v51.n3.1901
 
