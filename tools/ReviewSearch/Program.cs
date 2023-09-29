@@ -118,7 +118,7 @@ static async Task ProcessTopic(string topic, string title, double? minPortfolio,
     string postContent = await ForumUtilities.GetTopicPost(topic, "0", @"c:\reviews");
 
     postContent = postContent.Replace("<br>","").Replace("<em class=\"text-italics\">","").Replace("</em>","").Replace("<strong class=\"text-strong\">","").Replace("</strong>","").Replace("<span style=\"text-decoration:underline\">","").Replace("</span>","").Replace("<ul>","").Replace("</ul>","").Replace("<li>","").Replace("</li>","");
-    var importedFamilyData = ImportPortfolioReview.ParsePortfolioReview(postContent.Split("\n"), debug:debug, appData, funds);
+    (var importedFamilyData, var links) = ImportPortfolioReview.ParsePortfolioReview(postContent.Split("\n"), debug:debug, appData, funds);
 
     bool isMatchPortfolio = true;
     if (minPortfolio.HasValue && maxPortfolio.HasValue) {

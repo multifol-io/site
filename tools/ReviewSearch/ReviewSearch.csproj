@@ -9,6 +9,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../../Shared/Models/ImportPortfolioReview.cs" />
+    <Compile Include="../../Shared/Models/Link.cs" />
     <Compile Include="../../Shared/Models/FamilyData/*.cs" />
     <Compile Include="../../Shared/Models/IRS/*.cs" />
     <Compile Include="../../Shared/Models/Fund.cs" />

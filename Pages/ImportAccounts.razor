@@ -266,7 +266,7 @@
         ImportResult importResult = new();
         if (bhContent is not null) {
             var lines = bhContent.Split('\n');
-            var importedFamilyData = ImportPortfolioReview.ParsePortfolioReview(lines, debug:false, appData, Funds);
+            (var importedFamilyData, var links) = ImportPortfolioReview.ParsePortfolioReview(lines, debug:false, appData, Funds);
             if (importedFamilyData.Accounts.Count > 0) {
                 importResult.NewAccounts.AddRange(importedFamilyData.Accounts);
                 appData.ImportResult = importResult;

@@ -1,5 +1,5 @@
 public static class ImportPortfolioReview {
-     public static FamilyData ParsePortfolioReview(string[] lines, bool debug, IAppData appData, IList<Fund> funds) {
+     public static (FamilyData,List<Link>) ParsePortfolioReview(string[] lines, bool debug, IAppData appData, IList<Fund> funds) {
         double? portfolioSize = null;
         bool? assetParsing = null;
         bool afterAge = false;
@@ -8,6 +8,7 @@ public static class ImportPortfolioReview {
         FamilyData importedFamilyData = new(appData);
         string? lastLine = null;
         bool afterPortfolioSize = false;
+        List<Link> Links = new();
         foreach (var line in lines) {
             var tLine = line.ToLowerInvariant().Trim();
             try {
@@ -291,7 +292,7 @@ public static class ImportPortfolioReview {
             }
         }
 
-        return importedFamilyData;
+        return (importedFamilyData, Links);
     }
 
     private static Account ParseAccountLine(string line, FamilyData importedFamilyData) {
