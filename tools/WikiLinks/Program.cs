@@ -11,7 +11,7 @@ string wikiUrl = "https://bogleheads.org/w/api.php";
 int amountOfItems = 2000; // todo: don't hardcode this
 HttpClient httpClient = new() { Timeout = TimeSpan.FromSeconds(15) };
 WikitextParser parser = new WikitextParser();
-bool showSuccesses = true; //if set to true, will list all pages (even if they have no external links), and all external links, even if they are OK.
+bool showSuccesses = false; //if set to true, will list all pages (even if they have no external links), and all external links, even if they are OK.
 bool showLinkJson = false;
 bool includeTalk = false;
 
@@ -92,9 +92,9 @@ async Task ProcessPage(WikiPage page, bool talkNamespace = false) {
     }   
 }
 
-static List<string> HarvestAst(Node node, int level, WikitextParser parser, bool showAll = false)
+static List<string>? HarvestAst(Node node, int level, WikitextParser parser, bool showAll = false)
 {
-    List<string> ParserTags = null;
+    List<string>? ParserTags = null;
     var indension = new string('.', level);
     var ns = node.ToString();
     bool isParserTag = node.GetType().Name == "ParserTag";
@@ -102,7 +102,10 @@ static List<string> HarvestAst(Node node, int level, WikitextParser parser, bool
         //Console.WriteLine("{0,-20} [{1}]", indension + node.GetType()?.Name, Escapse(ns));
         if (isParserTag) {
             ParserTags = new();
-            ParserTags.Add(Escapse(ns));
+            var result = Escape(ns);
+            if (result != null) {
+                ParserTags.Add(result);
+            }
         }
     }
     foreach (var child in node.EnumChildren()) {
@@ -117,13 +120,19 @@ static List<string> HarvestAst(Node node, int level, WikitextParser parser, bool
     return ParserTags;
 }
 
-static string Escapse(string expr)
+static string? Escape(string? expr)
 {
-    return expr.Replace("\r", "\\r").Replace("\n", "\\n");
+    return expr?.Replace("\r", "\\r").Replace("\n", "\\n");
 }
 
 async Task ProcessAllPages(WikiSite wikiSite) {    
-    var allPages = new AllPagesGenerator(wikiSite) { StartTitle = "FTSE", EndTitle = "FU" };
+    var debugStart = "";
+    var debugEnd = "";
+    var allPages = new AllPagesGenerator(wikiSite) 
+        {
+            StartTitle = (debugStart != "" ? debugStart : "!"),
+            EndTitle = (debugEnd != "" ? debugEnd : null)
+        };
 
     var provider = WikiPageQueryProvider.FromOptions(PageQueryOptions.None);
     var pages = await allPages.EnumPagesAsync(provider).Take(amountOfItems).ToArrayAsync();
