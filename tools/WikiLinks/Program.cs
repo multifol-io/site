@@ -4,12 +4,16 @@ using WikiClientLibrary.Generators;
 using WikiClientLibrary.Pages;
 using WikiClientLibrary.Pages.Queries;
 using WikiClientLibrary.Sites;
+using MwParserFromScratch;
+using MwParserFromScratch.Nodes;
 
 string wikiUrl = "https://bogleheads.org/w/api.php";
 int amountOfItems = 2000; // todo: don't hardcode this
 HttpClient httpClient = new() { Timeout = TimeSpan.FromSeconds(15) };
-bool showSuccesses = false; //if set to true, will list all pages (even if they have no external links), and all external links, even if they are OK.
+WikitextParser parser = new WikitextParser();
+bool showSuccesses = true; //if set to true, will list all pages (even if they have no external links), and all external links, even if they are OK.
 bool showLinkJson = false;
+bool includeTalk = false;
 
 var client = new WikiClient();
 var wikiSite = new WikiSite(client, wikiUrl);
@@ -30,36 +34,52 @@ async Task ProcessPage(WikiPage page, bool talkNamespace = false) {
 
     bool? handlePage = true; //page?.Title?.StartsWith("Talk:");
     if (handlePage != null && !handlePage.Value) return;
-
-    var linkInfoUrl = $"https://www.bogleheads.org/w/api.php?action=query&titles="+pageTitle+"&prop=links%7Cextlinks&pllimit=max&format=json";
+    var linkInfoUrl = $"https://www.bogleheads.org/w/api.php?action=parse&page="+pageTitle+"&prop=wikitext%7Cexternallinks&format=json";
     var jsonResponse = await httpClient.GetAsync(linkInfoUrl);
     var doc = await JsonDocument.ParseAsync(await jsonResponse.Content.ReadAsStreamAsync());
-    JsonElement pageInfo = new JsonElement(); //weird
+    JsonElement parseElement = new JsonElement(); //weird
     try {
-        JsonElement pagesElement = doc.RootElement.GetProperty("query").GetProperty("pages");
-        bool pageFound = false;
-        foreach (var property in pagesElement.EnumerateObject()) {
-            pageInfo = property.Value;
-
-            if (property.Name != "-1") {
-                pageFound = true;
-            }
+        bool foundPage = doc.RootElement.TryGetProperty("parse", out parseElement);
+        if (!foundPage) {
+            return;
         }
-
-        if (!pageFound) return;
     } catch (Exception e) {
         ShowTitle(pageTitle, linkJson:showLinkJson?await jsonResponse.Content.ReadAsStringAsync():null);
-        Console.WriteLine("    PROGRAM ERROR: " + e.Message);
+        Console.WriteLine("    PROGRAM ERROR: " + e.Message + "\n" + e.StackTrace);
         Console.WriteLine();
         return;
     }
 
-    var hasExtLinks = pageInfo.TryGetProperty("extlinks", out JsonElement extLinks);
+    var hasExtLinks = parseElement.TryGetProperty("externallinks", out JsonElement extLinks);
+    var hasWikiText = parseElement.TryGetProperty("wikitext", out JsonElement wikitext);
     if (hasExtLinks) {
+        var text = wikitext.GetProperty("*").GetString();
+        var ast = parser.Parse(text);
+        var parserTags = HarvestAst(ast, 0, parser);
+
         bool headerShown = false;
         foreach (var link in extLinks.EnumerateArray()) {
-            var linkUrl = link.GetProperty("*").GetString();
-            headerShown = await ProcessLink(pageTitle, linkUrl, headerShown, jsonResponse);
+            var linkUrl = link.GetString();
+            bool deadLinkKnown = false;
+            if (parserTags != null) {
+                foreach (var parserTag in parserTags) {
+                    if (parserTag.Contains("|url="+linkUrl+" ") && parserTag.Contains("|url-status=dead ")) {
+                        deadLinkKnown = true;
+                    }
+                }
+            }
+            
+            if (deadLinkKnown) {
+                if (showSuccesses) {
+                    if (!headerShown) {
+                        ShowTitle(pageTitle, linkJson:showLinkJson?await jsonResponse.Content.ReadAsStringAsync():null);
+                        headerShown = true;
+                    }
+                    Console.WriteLine("    Known As Dead    " + linkUrl);
+                }
+            } else {
+                headerShown = await ProcessLink(pageTitle, linkUrl, headerShown, jsonResponse);
+            }
         }
 
         if (headerShown) {
@@ -72,15 +92,47 @@ async Task ProcessPage(WikiPage page, bool talkNamespace = false) {
     }   
 }
 
+static List<string> HarvestAst(Node node, int level, WikitextParser parser, bool showAll = false)
+{
+    List<string> ParserTags = null;
+    var indension = new string('.', level);
+    var ns = node.ToString();
+    bool isParserTag = node.GetType().Name == "ParserTag";
+    if (showAll || isParserTag) {
+        //Console.WriteLine("{0,-20} [{1}]", indension + node.GetType()?.Name, Escapse(ns));
+        if (isParserTag) {
+            ParserTags = new();
+            ParserTags.Add(Escapse(ns));
+        }
+    }
+    foreach (var child in node.EnumChildren()) {
+        var parserTags = HarvestAst(child, level + 1, parser);
+        if (parserTags != null) {
+            if (ParserTags == null) {
+                ParserTags = new();
+            }
+            ParserTags.AddRange(parserTags);
+        }
+    }
+    return ParserTags;
+}
+
+static string Escapse(string expr)
+{
+    return expr.Replace("\r", "\\r").Replace("\n", "\\n");
+}
+
 async Task ProcessAllPages(WikiSite wikiSite) {    
-    var allPages = new AllPagesGenerator(wikiSite) { StartTitle = "!", EndTitle = null };
+    var allPages = new AllPagesGenerator(wikiSite) { StartTitle = "FTSE", EndTitle = "FU" };
 
     var provider = WikiPageQueryProvider.FromOptions(PageQueryOptions.None);
     var pages = await allPages.EnumPagesAsync(provider).Take(amountOfItems).ToArrayAsync();
 
     foreach (var page in pages) {
         await ProcessPage(page);
-        await ProcessPage(page, talkNamespace:true); 
+        if (includeTalk) {
+            await ProcessPage(page, talkNamespace:true);
+        }
     }
 }
 
@@ -142,7 +194,6 @@ async Task<bool> ProcessLink(string? pageTitle, string? linkUrl, bool headerShow
         Console.WriteLine("    OK    " + linkUrl);
     }
 
-
     return headerShown;
 }
 
@@ -157,7 +208,7 @@ async Task<(HttpResponseMessage?, Exception?)> FetchUrl(string? linkUrl) {
     HttpResponseMessage? response = null;
     Exception? e = null;
     try {
-        response = await httpClient.GetAsync(linkUrl, HttpCompletionOption.ResponseHeadersRead);
+        response = await httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Head, linkUrl));
     } catch (Exception ex) {
         e = ex;
     }
