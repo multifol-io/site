@@ -9,6 +9,7 @@ string wikiUrl = "https://bogleheads.org/w/api.php";
 int amountOfItems = 2000; // todo: don't hardcode this
 HttpClient httpClient = new() { Timeout = TimeSpan.FromSeconds(15) };
 bool showSuccesses = false; //if set to true, will list all pages (even if they have no external links), and all external links, even if they are OK.
+bool showLinkJson = false;
 
 var client = new WikiClient();
 var wikiSite = new WikiSite(client, wikiUrl);
@@ -47,8 +48,7 @@ async Task ProcessPage(WikiPage page, bool talkNamespace = false) {
 
         if (!pageFound) return;
     } catch (Exception e) {
-        Console.WriteLine(pageTitle + "   " + "https://bogleheads.org/wiki/" + pageTitle?.Replace(" ","%20"));
-        Console.WriteLine(await jsonResponse.Content.ReadAsStringAsync());
+        ShowTitle(pageTitle, linkJson:showLinkJson?await jsonResponse.Content.ReadAsStringAsync():null);
         Console.WriteLine("    PROGRAM ERROR: " + e.Message);
         Console.WriteLine();
         return;
@@ -59,21 +59,21 @@ async Task ProcessPage(WikiPage page, bool talkNamespace = false) {
         bool headerShown = false;
         foreach (var link in extLinks.EnumerateArray()) {
             var linkUrl = link.GetProperty("*").GetString();
-            headerShown = await ProcessLink(pageTitle, linkUrl, headerShown);
+            headerShown = await ProcessLink(pageTitle, linkUrl, headerShown, jsonResponse);
         }
 
         if (headerShown) {
             Console.WriteLine();
         }
     } else if (showSuccesses) {
-        Console.WriteLine(pageTitle + "   " + "https://bogleheads.org/wiki/" + pageTitle?.Replace(" ","%20"));
+        ShowTitle(pageTitle, linkJson:showLinkJson?await jsonResponse.Content.ReadAsStringAsync():null);
         Console.WriteLine("    No External Links");
         Console.WriteLine();
     }   
 }
 
 async Task ProcessAllPages(WikiSite wikiSite) {    
-    var allPages = new AllPagesGenerator(wikiSite) {};
+    var allPages = new AllPagesGenerator(wikiSite) { StartTitle = "!", EndTitle = null };
 
     var provider = WikiPageQueryProvider.FromOptions(PageQueryOptions.None);
     var pages = await allPages.EnumPagesAsync(provider).Take(amountOfItems).ToArrayAsync();
@@ -84,7 +84,7 @@ async Task ProcessAllPages(WikiSite wikiSite) {
     }
 }
 
-async Task<bool> ProcessLink(string? pageTitle, string? linkUrl, bool headerShown) {
+async Task<bool> ProcessLink(string? pageTitle, string? linkUrl, bool headerShown, HttpResponseMessage jsonResponse) {
     if (linkUrl != null && linkUrl.StartsWith("//")) {
         linkUrl = "https:" + linkUrl;
     }
@@ -93,7 +93,7 @@ async Task<bool> ProcessLink(string? pageTitle, string? linkUrl, bool headerShow
 
     if (response == null || !response.IsSuccessStatusCode) {
         if (!headerShown) {
-            Console.WriteLine(pageTitle + "   " + "https://bogleheads.org/wiki/" + pageTitle?.Replace(" ","%20"));
+            ShowTitle(pageTitle, linkJson:showLinkJson?await jsonResponse.Content.ReadAsStringAsync():null);
             headerShown = true;
         }
 
@@ -119,7 +119,7 @@ async Task<bool> ProcessLink(string? pageTitle, string? linkUrl, bool headerShow
                         }
                         break;
                     case "Too Many Requests":
-                        if (!(linkUrl.StartsWith("http://ssrn.com/abstract") || linkUrl.StartsWith("http://papers.ssrn.com"))) {
+                        if (linkUrl != null && (!(linkUrl.StartsWith("http://ssrn.com/abstract") || linkUrl.StartsWith("http://papers.ssrn.com")))) {
                             Console.WriteLine("    " + response.ReasonPhrase + "    " + linkUrl);
                         }
                         break;
@@ -135,7 +135,7 @@ async Task<bool> ProcessLink(string? pageTitle, string? linkUrl, bool headerShow
         }
     } else if (showSuccesses) {
         if (!headerShown) {
-            Console.WriteLine(pageTitle + "   " + "https://bogleheads.org/wiki/" + pageTitle?.Replace(" ","%20"));
+            ShowTitle(pageTitle, linkJson:showLinkJson?await jsonResponse.Content.ReadAsStringAsync():null);
             headerShown = true;
         }
 
@@ -146,11 +146,18 @@ async Task<bool> ProcessLink(string? pageTitle, string? linkUrl, bool headerShow
     return headerShown;
 }
 
+void ShowTitle(string? pageTitle, string? linkJson = null) {
+    Console.WriteLine(pageTitle + "   " + "https://bogleheads.org/wiki/" + pageTitle?.Replace(" ","%20"));
+    if (linkJson != null) {
+        Console.WriteLine(linkJson);
+    }
+}
+
 async Task<(HttpResponseMessage?, Exception?)> FetchUrl(string? linkUrl) {
     HttpResponseMessage? response = null;
     Exception? e = null;
     try {
-        response = await httpClient.GetAsync(linkUrl);
+        response = await httpClient.GetAsync(linkUrl, HttpCompletionOption.ResponseHeadersRead);
     } catch (Exception ex) {
         e = ex;
     }
