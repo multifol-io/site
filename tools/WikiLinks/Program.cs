@@ -10,6 +10,7 @@ using MwParserFromScratch.Nodes;
 string wikiUrl = "https://bogleheads.org/w/api.php";
 int amountOfItems = 2000; // todo: don't hardcode this
 HttpClient httpClient = new() { Timeout = TimeSpan.FromSeconds(15) };
+httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (compatible; AcmeInc/1.0)");
 WikitextParser parser = new WikitextParser();
 bool showSuccesses = false; //if set to true, will list all pages (even if they have no external links), and all external links, even if they are OK.
 bool showLinkJson = false;
@@ -217,7 +218,7 @@ async Task<(HttpResponseMessage?, Exception?)> FetchUrl(string? linkUrl) {
     HttpResponseMessage? response = null;
     Exception? e = null;
     try {
-        response = await httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Head, linkUrl));
+        response = await httpClient.GetAsync(linkUrl);
     } catch (Exception ex) {
         e = ex;
     }
