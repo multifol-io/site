@@ -7,6 +7,7 @@ using WikiClientLibrary.Sites;
 using MwParserFromScratch;
 using MwParserFromScratch.Nodes;
 
+string linkJsonLocation = "c:\\linkJson";
 string wikiUrl = "https://bogleheads.org/w/api.php";
 int amountOfItems = 2000; // todo: don't hardcode this
 HttpClient httpClient = new() { Timeout = TimeSpan.FromSeconds(15) };
@@ -22,6 +23,22 @@ await wikiSite.Initialization;
 
 await ProcessAllPages(wikiSite);
 
+async Task<(JsonDocument, string)> GetLinksJsonDocument(string pageTitle) {
+    var filePath = Path.Combine(linkJsonLocation,pageTitle.Replace("/","--")+".json");
+    if (!File.Exists(filePath)) {
+        var linkInfoUrl = $"https://www.bogleheads.org/w/api.php?action=parse&page="+pageTitle+"&prop=wikitext%7Cexternallinks&format=json";
+        var jsonResponse = await httpClient.GetAsync(linkInfoUrl);
+        var fileStream = File.Create(filePath);
+        (await jsonResponse.Content.ReadAsStreamAsync()).CopyTo(fileStream);
+        fileStream.Close();
+    }
+    
+    using (FileStream fs = File.Open(filePath, FileMode.Open)) {
+        var doc = await JsonDocument.ParseAsync(fs);
+        return (doc, filePath);
+    }
+}
+
 async Task ProcessPage(WikiPage page, bool talkNamespace = false) {
     string? pageTitle = null;
     int pageId = -1;
@@ -35,9 +52,7 @@ async Task ProcessPage(WikiPage page, bool talkNamespace = false) {
 
     bool? handlePage = true; //page?.Title?.StartsWith("Talk:");
     if (handlePage != null && !handlePage.Value) return;
-    var linkInfoUrl = $"https://www.bogleheads.org/w/api.php?action=parse&page="+pageTitle+"&prop=wikitext%7Cexternallinks&format=json";
-    var jsonResponse = await httpClient.GetAsync(linkInfoUrl);
-    var doc = await JsonDocument.ParseAsync(await jsonResponse.Content.ReadAsStreamAsync());
+    (JsonDocument doc, string filePath) = await GetLinksJsonDocument(pageTitle);
     JsonElement parseElement = new JsonElement(); //weird
     try {
         bool foundPage = doc.RootElement.TryGetProperty("parse", out parseElement);
@@ -45,7 +60,7 @@ async Task ProcessPage(WikiPage page, bool talkNamespace = false) {
             return;
         }
     } catch (Exception e) {
-        ShowTitle(pageTitle, linkJson:showLinkJson?await jsonResponse.Content.ReadAsStringAsync():null);
+        ShowTitle(pageTitle, linkJson:showLinkJson?File.ReadAllText(filePath):null);
         Console.WriteLine("    PROGRAM ERROR: " + e.Message + "\n" + e.StackTrace);
         Console.WriteLine();
         return;
@@ -64,7 +79,19 @@ async Task ProcessPage(WikiPage page, bool talkNamespace = false) {
             bool deadLinkKnown = false;
             if (parserTags != null) {
                 foreach (var parserTag in parserTags) {
-                    if (parserTag.Contains("|url="+linkUrl+" ") && parserTag.Contains("|url-status=dead ")) {
+                    var chunks = parserTag.Split('|');
+                    bool urlMatch = false;
+                    bool deadLink = false;
+                    foreach (var chunk in chunks) {
+                        if (chunk.Trim() == "url="+linkUrl) {
+                            urlMatch = true;
+                        }
+                        if (chunk.Trim() == "url-status=dead") {
+                            deadLink = true;
+                        }
+                    }
+
+                    if (urlMatch && deadLink) {
                         deadLinkKnown = true;
                     }
                 }
@@ -73,13 +100,13 @@ async Task ProcessPage(WikiPage page, bool talkNamespace = false) {
             if (deadLinkKnown) {
                 if (showSuccesses) {
                     if (!headerShown) {
-                        ShowTitle(pageTitle, linkJson:showLinkJson?await jsonResponse.Content.ReadAsStringAsync():null);
+                        ShowTitle(pageTitle, linkJson:showLinkJson?File.ReadAllText(filePath):null);
                         headerShown = true;
                     }
                     Console.WriteLine("    Known As Dead    " + linkUrl);
                 }
             } else {
-                headerShown = await ProcessLink(pageTitle, linkUrl, headerShown, jsonResponse);
+                headerShown = await ProcessLink(pageTitle, linkUrl, headerShown, filePath);
             }
         }
 
@@ -87,7 +114,7 @@ async Task ProcessPage(WikiPage page, bool talkNamespace = false) {
             Console.WriteLine();
         }
     } else if (showSuccesses) {
-        ShowTitle(pageTitle, linkJson:showLinkJson?await jsonResponse.Content.ReadAsStringAsync():null);
+        ShowTitle(pageTitle, linkJson:showLinkJson?File.ReadAllText(filePath):null);
         Console.WriteLine("    No External Links");
         Console.WriteLine();
     }   
@@ -115,6 +142,7 @@ static List<string>? HarvestAst(Node node, int level, WikitextParser parser, boo
             if (ParserTags == null) {
                 ParserTags = new();
             }
+
             ParserTags.AddRange(parserTags);
         }
     }
@@ -128,7 +156,7 @@ static string? Escape(string? expr)
 
 async Task ProcessAllPages(WikiSite wikiSite) {    
     var debugStart = "";
-    var debugEnd = "";
+    var debugEnd = debugStart;
     var allPages = new AllPagesGenerator(wikiSite) 
         {
             StartTitle = (debugStart != "" ? debugStart : "!"),
@@ -146,7 +174,7 @@ async Task ProcessAllPages(WikiSite wikiSite) {
     }
 }
 
-async Task<bool> ProcessLink(string? pageTitle, string? linkUrl, bool headerShown, HttpResponseMessage jsonResponse) {
+async Task<bool> ProcessLink(string? pageTitle, string? linkUrl, bool headerShown, string filePath) {
     if (linkUrl != null && linkUrl.StartsWith("//")) {
         linkUrl = "https:" + linkUrl;
     }
@@ -155,7 +183,7 @@ async Task<bool> ProcessLink(string? pageTitle, string? linkUrl, bool headerShow
 
     if (response == null || !response.IsSuccessStatusCode) {
         if (!headerShown) {
-            ShowTitle(pageTitle, linkJson:showLinkJson?await jsonResponse.Content.ReadAsStringAsync():null);
+            ShowTitle(pageTitle, linkJson:showLinkJson?File.ReadAllText(filePath):null);
             headerShown = true;
         }
 
@@ -197,7 +225,7 @@ async Task<bool> ProcessLink(string? pageTitle, string? linkUrl, bool headerShow
         }
     } else if (showSuccesses) {
         if (!headerShown) {
-            ShowTitle(pageTitle, linkJson:showLinkJson?await jsonResponse.Content.ReadAsStringAsync():null);
+            ShowTitle(pageTitle, linkJson:showLinkJson?File.ReadAllText(filePath):null);
             headerShown = true;
         }
 
