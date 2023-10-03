@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Collections.Concurrent;
+using System.Text.Json;
 using WikiClientLibrary.Client;
 using WikiClientLibrary.Generators;
 using WikiClientLibrary.Pages;
@@ -23,8 +24,7 @@ await wikiSite.Initialization;
 
 await ProcessAllPages(wikiSite);
 
-async Task<(JsonDocument, string)> GetLinksJsonDocument(string pageTitle) {
-    var filePath = Path.Combine(linkJsonLocation,pageTitle.Replace("/","--")+".json");
+async Task<JsonDocument> GetLinksJsonDocument(string pageTitle, string filePath) {
     if (!File.Exists(filePath)) {
         var linkInfoUrl = $"https://www.bogleheads.org/w/api.php?action=parse&page="+pageTitle+"&prop=wikitext%7Cexternallinks&format=json";
         var jsonResponse = await httpClient.GetAsync(linkInfoUrl);
@@ -35,7 +35,7 @@ async Task<(JsonDocument, string)> GetLinksJsonDocument(string pageTitle) {
     
     using (FileStream fs = File.Open(filePath, FileMode.Open)) {
         var doc = await JsonDocument.ParseAsync(fs);
-        return (doc, filePath);
+        return doc;
     }
 }
 
@@ -52,72 +52,106 @@ async Task ProcessPage(WikiPage page, bool talkNamespace = false) {
 
     bool? handlePage = true; //page?.Title?.StartsWith("Talk:");
     if (handlePage != null && !handlePage.Value) return;
-    (JsonDocument doc, string filePath) = await GetLinksJsonDocument(pageTitle);
-    JsonElement parseElement = new JsonElement(); //weird
-    try {
-        bool foundPage = doc.RootElement.TryGetProperty("parse", out parseElement);
-        if (!foundPage) {
+    var filePathBase = Path.Combine(linkJsonLocation,pageTitle.Replace("/","--").Replace("*","--").Replace("?",""));
+    var linksFilePath = filePathBase+".json";
+    string resultsFileName = filePathBase+".results.json";
+    ConcurrentDictionary<string,string> linkResults = new();
+    bool headerShown = false;
+
+    if (!File.Exists(resultsFileName)) {
+        JsonDocument doc = await GetLinksJsonDocument(pageTitle, linksFilePath);
+        JsonElement parseElement = new JsonElement(); //weird
+        try {
+            bool foundPage = doc.RootElement.TryGetProperty("parse", out parseElement);
+            if (!foundPage) {
+                return;
+            }
+        } catch (Exception e) {
+            ShowTitle(pageTitle, linkJson:showLinkJson?File.ReadAllText(linksFilePath):null);
+            Console.WriteLine("    PROGRAM ERROR: " + e.Message + "\n" + e.StackTrace);
+            Console.WriteLine();
             return;
         }
-    } catch (Exception e) {
-        ShowTitle(pageTitle, linkJson:showLinkJson?File.ReadAllText(filePath):null);
-        Console.WriteLine("    PROGRAM ERROR: " + e.Message + "\n" + e.StackTrace);
-        Console.WriteLine();
-        return;
-    }
 
-    var hasExtLinks = parseElement.TryGetProperty("externallinks", out JsonElement extLinks);
-    var hasWikiText = parseElement.TryGetProperty("wikitext", out JsonElement wikitext);
-    if (hasExtLinks) {
-        var text = wikitext.GetProperty("*").GetString();
-        var ast = parser.Parse(text);
-        var parserTags = HarvestAst(ast, 0, parser);
+        var hasExtLinks = parseElement.TryGetProperty("externallinks", out JsonElement extLinks);
+        var hasWikiText = parseElement.TryGetProperty("wikitext", out JsonElement wikitext);
 
-        bool headerShown = false;
-        foreach (var link in extLinks.EnumerateArray()) {
-            var linkUrl = link.GetString();
-            bool deadLinkKnown = false;
-            if (parserTags != null) {
-                foreach (var parserTag in parserTags) {
-                    var chunks = parserTag.Split('|');
-                    bool urlMatch = false;
-                    bool deadLink = false;
-                    foreach (var chunk in chunks) {
-                        if (chunk.Trim() == "url="+linkUrl) {
-                            urlMatch = true;
-                        }
-                        if (chunk.Trim() == "url-status=dead") {
-                            deadLink = true;
-                        }
-                    }
+        if (hasExtLinks) {
+            var text = wikitext.GetProperty("*").GetString();
+            var ast = parser.Parse(text);
+            var parserTags = HarvestAst(ast, 0, parser);
 
-                    if (urlMatch && deadLink) {
-                        deadLinkKnown = true;
-                    }
+            var extlinksArray = extLinks.EnumerateArray().ToList();
+            if (extlinksArray.Count > 0) {
+                if (!headerShown) {
+                    Console.WriteLine(pageTitle + "   " +  "https://bogleheads.org/wiki/" + pageTitle?.Replace(" ","%20"));
+                    headerShown = true;
                 }
-            }
-            
-            if (deadLinkKnown) {
-                if (showSuccesses) {
-                    if (!headerShown) {
-                        ShowTitle(pageTitle, linkJson:showLinkJson?File.ReadAllText(filePath):null);
-                        headerShown = true;
-                    }
-                    Console.WriteLine("    Known As Dead    " + linkUrl);
-                }
-            } else {
-                headerShown = await ProcessLink(pageTitle, linkUrl, headerShown, filePath);
-            }
-        }
+                var tasks = extlinksArray.Select(async link =>
+                {
+                    var linkUrl = link.GetString()!;
+                    bool deadLinkKnown = false;
+                    if (parserTags != null) {
+                        foreach (var parserTag in parserTags) {
+                            var chunks = parserTag.Split('|');
+                            bool urlMatch = false;
+                            bool deadLink = false;
+                            foreach (var chunk in chunks) {
+                                if (chunk.Trim() == "url="+linkUrl) {
+                                    urlMatch = true;
+                                }
+                                if (chunk.Trim() == "url-status=dead") {
+                                    deadLink = true;
+                                }
+                            }
 
-        if (headerShown) {
+                            if (urlMatch && deadLink) {
+                                deadLinkKnown = true;
+                            }
+                        }
+                    }
+                    
+                    if (deadLinkKnown) {
+                        if (showSuccesses) {
+                            if (!headerShown) {
+                                ShowTitle(pageTitle, linkJson:showLinkJson?File.ReadAllText(linksFilePath):null);
+                                headerShown = true;
+                            }
+                            linkResults.TryAdd(linkUrl,"OK:Known As Dead");
+                        }
+                    } else {
+                        headerShown = await ProcessLink(pageTitle, linkUrl, headerShown, linksFilePath, linkResults);
+                    }
+                }).ToList();
+                await Task.WhenAll(tasks);
+            }
+        } else if (showSuccesses) {
+            ShowTitle(pageTitle, linkJson:showLinkJson?File.ReadAllText(linksFilePath):null);
+            Console.WriteLine("    No External Links");
             Console.WriteLine();
         }
-    } else if (showSuccesses) {
-        ShowTitle(pageTitle, linkJson:showLinkJson?File.ReadAllText(filePath):null);
-        Console.WriteLine("    No External Links");
+    } else {
+        var resultsJson = File.ReadAllText(resultsFileName);
+        linkResults = JsonSerializer.Deserialize<ConcurrentDictionary<string,string>>(resultsJson);
+        if (!headerShown) {
+            Console.WriteLine(pageTitle + "   " +  "https://bogleheads.org/wiki/" + pageTitle?.Replace(" ","%20"));
+            headerShown = true;
+        }
+    }
+
+    foreach (var entry in linkResults) {
+        Console.WriteLine("    "+entry.Value + "    " + entry.Key);
+    }
+
+    if (linkResults != null) {
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        string jsonString = JsonSerializer.Serialize(linkResults, options);
+        File.WriteAllText(resultsFileName, jsonString);
+    }
+
+    if (headerShown) {
         Console.WriteLine();
-    }   
+    }
 }
 
 static List<string>? HarvestAst(Node node, int level, WikitextParser parser, bool showAll = false)
@@ -174,7 +208,7 @@ async Task ProcessAllPages(WikiSite wikiSite) {
     }
 }
 
-async Task<bool> ProcessLink(string? pageTitle, string? linkUrl, bool headerShown, string filePath) {
+async Task<bool> ProcessLink(string? pageTitle, string? linkUrl, bool headerShown, string filePath, ConcurrentDictionary<string, string> linkResults) {
     if (linkUrl != null && linkUrl.StartsWith("//")) {
         linkUrl = "https:" + linkUrl;
     }
@@ -193,32 +227,59 @@ async Task<bool> ProcessLink(string? pageTitle, string? linkUrl, bool headerShow
                 message = e?.InnerException?.Message;
             }
 
-            Console.WriteLine("    " + message + "    " + linkUrl);                            
+            if (message!.StartsWith("No such host is known.")) {
+                linkResults.TryAdd(linkUrl!,"ERROR:" + message!);
+            } else if (message!.StartsWith("The remote certificate is invalid because of errors in the certificate chain: NotTimeValid")) {
+                if (showSuccesses) {
+                    linkResults.TryAdd(linkUrl!,"OK?:" + message!);
+                }
+            } else if (message!.StartsWith("The remote certificate is invalid")) {
+                linkResults.TryAdd(linkUrl!,"ERROR:" + message!);                
+            } else if (message!.StartsWith("The request was canceled due to the configured HttpClient.Timeout")) {
+                linkResults.TryAdd(linkUrl!,"ERROR:" + message!);
+            } else {
+                linkResults.TryAdd(linkUrl!,message!);
+            }
         } else {
             if (response.Headers.Location != null) {
-                Console.WriteLine("    redirected to " + response.Headers.Location + "    from " + linkUrl);
+                linkResults.TryAdd(linkUrl!,"UPDATE LINK:redirected to " + response.Headers.Location);
             } else {
                 switch (response.ReasonPhrase) {
                     case "Bad Request":
-                        var newUrl = linkUrl?.Replace("http://", "https://");
-                        (HttpResponseMessage? response2, Exception? e2) = await FetchUrl(newUrl);
-                        if (response2 != null && response2.IsSuccessStatusCode) {
-                            Console.WriteLine("    Update to use https. " + "    " + linkUrl);
-                        } else {
-                            Console.WriteLine("    " + response.ReasonPhrase + "    " + linkUrl);
-                        }
+                        linkResults.TryAdd(linkUrl!,response.ReasonPhrase);
                         break;
                     case "Too Many Requests":
-                        if (linkUrl != null && (!(linkUrl.StartsWith("http://ssrn.com/abstract") || linkUrl.StartsWith("http://papers.ssrn.com")))) {
-                            Console.WriteLine("    " + response.ReasonPhrase + "    " + linkUrl);
+                        if (linkUrl != null) {
+                            if ((linkUrl.StartsWith("http://ssrn.com/abstract") || linkUrl.StartsWith("http://papers.ssrn.com"))) {
+                                if (showSuccesses) {
+                                    linkResults.TryAdd(linkUrl!,"OK ssrn.com:" + response.ReasonPhrase);
+                                }
+                            } else {
+                                linkResults.TryAdd(linkUrl!,"WARNING:" + response.ReasonPhrase);
+                            }
                         }
                         break;
                     // These reasons should be ignored, not a problem that requires a URL change.
                     case "Unauthorized": 
                     case "Internal Server Error":
+                        if (showSuccesses) {
+                            linkResults.TryAdd(linkUrl!,"OK:" + response.ReasonPhrase!);
+                        }
+                        break;
+                    case "Service Temporarily Unavailable":
+                        linkResults.TryAdd(linkUrl!,"WARNING:" + response.ReasonPhrase!);
                         break;
                     default:
-                        Console.WriteLine("    " + response.ReasonPhrase + "    " + linkUrl);
+                        if (response.ReasonPhrase != null) {
+                                switch (response.ReasonPhrase) {
+                                    case "Not Found":
+                                        linkResults.TryAdd(linkUrl!,"ERROR:"+response.ReasonPhrase!);
+                                        break;
+                                    default:
+                                        linkResults.TryAdd(linkUrl!,response.ReasonPhrase!);
+                                        break;
+                                }
+                        }
                         break;
                 }
             }
@@ -229,14 +290,14 @@ async Task<bool> ProcessLink(string? pageTitle, string? linkUrl, bool headerShow
             headerShown = true;
         }
 
-        Console.WriteLine("    OK    " + linkUrl);
+        linkResults.TryAdd(linkUrl!,"OK");
     }
 
     return headerShown;
 }
 
 void ShowTitle(string? pageTitle, string? linkJson = null) {
-    Console.WriteLine(pageTitle + "   " + "https://bogleheads.org/wiki/" + pageTitle?.Replace(" ","%20"));
+    //Console.WriteLine(pageTitle + "   " + "https://bogleheads.org/wiki/" + pageTitle?.Replace(" ","%20"));
     if (linkJson != null) {
         Console.WriteLine(linkJson);
     }
