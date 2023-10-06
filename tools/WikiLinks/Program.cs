@@ -8,7 +8,7 @@ using WikiClientLibrary.Sites;
 using MwParserFromScratch;
 using MwParserFromScratch.Nodes;
 
-string linkJsonLocation = "c:\\linkJson";
+string linkJsonLocation = @"c:\linkJson";
 string wikiApiUrl = "https://bogleheads.org/w/api.php";
 string wikiBaseUrl = "https://bogleheads.org/wiki/";
 
@@ -16,9 +16,10 @@ int amountOfItems = 2000; // todo: don't hardcode this
 HttpClient httpClient = new() { Timeout = TimeSpan.FromSeconds(15) };
 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (compatible; AcmeInc/1.0)");
 WikitextParser parser = new WikitextParser();
+
 bool showSuccesses = false; //if set to true, will list all pages (even if they have no external links), and all external links, even if they are OK.
-bool includeTalk = false;
-bool forceFetch = true;
+bool forceFetch = false;
+bool outputCSV = false;
 
 var client = new WikiClient();
 var wikiSite = new WikiSite(client, wikiApiUrl);
@@ -41,7 +42,7 @@ async Task<JsonDocument> GetLinksJsonDocument(string pageTitle, string filePath)
     }
 }
 
-async Task ProcessPage(WikiPage page, bool talkNamespace = false) {
+async Task ProcessPage(WikiPage page, Dictionary<string, string> linkInfos, bool talkNamespace = false) {
     string? pageTitle = null;
     int pageId = -1;
 
@@ -52,9 +53,11 @@ async Task ProcessPage(WikiPage page, bool talkNamespace = false) {
         return;
     }
 
-    bool? handlePage = true; //page?.Title?.StartsWith("Talk:");
+    bool? handlePage = true;
     if (handlePage != null && !handlePage.Value) return;
-    var filePathBase = Path.Combine(linkJsonLocation,pageTitle.Replace("/","--").Replace("*","--").Replace("?",""));
+    var escapedPageTitle = pageTitle.Replace("/","--").Replace("*","--").Replace("?","");
+    var filePathBase = Path.Combine(linkJsonLocation,escapedPageTitle);
+
     var linksFilePath = filePathBase+".json";
     string resultsFileName = filePathBase+".results.json";
     ConcurrentDictionary<string,string> linkResults = new();
@@ -130,15 +133,19 @@ async Task ProcessPage(WikiPage page, bool talkNamespace = false) {
     }
 
     foreach (var entry in sortedLinkResults!) {
-        string uriHost;
-        try {
-            var uri = new Uri(entry.Key);
-            uriHost = uri.Host;
-        } catch (Exception) {
-            uriHost = "";
-        }
+        linkInfos.Add(entry.Key, entry.Value);
 
-        Console.WriteLine(pageTitle + "," +  wikiBaseUrl + pageTitle?.Replace(" ","%20")+" ,"+entry.Value + ",\"" + entry.Key+"\"," + uriHost);
+        if (outputCSV) { 
+            string uriHost;
+            try {
+                var uri = new Uri(entry.Key);
+                uriHost = uri.Host;
+            } catch (Exception) {
+                uriHost = "";
+            }
+
+            Console.WriteLine(pageTitle + "," +  wikiBaseUrl + pageTitle?.Replace(" ","%20")+" ,"+entry.Value + ",\"" + entry.Key+"\"," + uriHost);
+        }
     }
 
     if (sortedLinkResults != null) {
@@ -183,8 +190,10 @@ static string? Escape(string? expr)
 }
 
 async Task ProcessAllPages(WikiSite wikiSite) {    
-    var debugStart = "T. Rowe Price";
-    var debugEnd = "";
+    var debugStart = "";
+    var debugEnd = debugStart;
+    Scan scanInfo = new("github.com/bogle-tools/site/tree/main/tools/WikiLinks",DateTime.Now);
+
     var allPages = new AllPagesGenerator(wikiSite) 
         {
             StartTitle = (debugStart != "" ? debugStart : "!"),
@@ -194,13 +203,21 @@ async Task ProcessAllPages(WikiSite wikiSite) {
     var provider = WikiPageQueryProvider.FromOptions(PageQueryOptions.None);
     var pages = await allPages.EnumPagesAsync(provider).Take(amountOfItems).ToArrayAsync();
 
-    Console.WriteLine("Page,PageUrl,LinkStatus,LinkStatusDetail,LinkUrl,LinkDomain");
+    if (outputCSV) {
+        Console.WriteLine("Page,PageUrl,LinkStatus,LinkStatusDetail,LinkUrl,LinkDomain");
+    }
+
     foreach (var page in pages) {
-        await ProcessPage(page);
-        if (includeTalk) {
-            await ProcessPage(page, talkNamespace:true);
+        Dictionary<string, string> results = new();
+        await ProcessPage(page, results, talkNamespace:false);
+        if (results.Count > 0) {
+            scanInfo.Results.Add(page.Title!,results);
         }
     }
+
+    var options = new JsonSerializerOptions { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+    string scanInfoJson = JsonSerializer.Serialize<Scan>(scanInfo, options);
+    File.WriteAllText("brokenLinks.json", scanInfoJson);
 }
 
 async Task ProcessLink(string? pageTitle, string? linkUrl, string filePath, ConcurrentDictionary<string, string> linkResults) {
@@ -295,4 +312,16 @@ async Task<(HttpResponseMessage?, Exception?)> FetchUrl(string? linkUrl) {
     }
 
     return (response,e);
+}
+
+
+public class Scan {
+    public Scan(string tool, DateTime timestamp) {
+        Tool = tool;
+        Timestamp = timestamp;
+    }
+    
+    public string Tool { get; private set; }
+    public DateTime Timestamp { get; private set; }
+    public Dictionary<string, Dictionary<string,string>> Results { get; set; } = new();
 }
