@@ -217,7 +217,7 @@ async Task ProcessAllPages(WikiSite wikiSite) {
 
     var options = new JsonSerializerOptions { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
     string scanInfoJson = JsonSerializer.Serialize<Scan>(scanInfo, options);
-    File.WriteAllText("brokenLinks.json", scanInfoJson);
+    File.WriteAllText(@"..\..\..\bogleheads-wiki-links\brokenLinks.json", scanInfoJson);
 }
 
 async Task ProcessLink(string? pageTitle, string? linkUrl, string filePath, ConcurrentDictionary<string, string> linkResults) {
