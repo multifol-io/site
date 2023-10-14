@@ -133,7 +133,21 @@ async Task ProcessPage(WikiPage page, Dictionary<string, string> linkInfos, bool
     }
 
     foreach (var entry in sortedLinkResults!) {
-        linkInfos.Add(entry.Key, entry.Value);
+        string value = entry.Value;
+        string[] values = entry.Value.Split(',');
+
+        if (values.Length > 1) {
+            if (values[1].StartsWith("The request was canceled due to the configured HttpClient.Timeout")) {
+                values[1] = "HttpClient Timeout - " + httpClient.Timeout;
+            } else if (values[1].StartsWith("No such host is known.")) {
+                values [1] = "Hostname not resolved in DNS.";
+            }
+
+    
+            value = $"{values[0]},{values[1]}";
+        }
+
+        linkInfos.Add(entry.Key, value);
 
         if (outputCSV) { 
             string uriHost;
@@ -253,7 +267,7 @@ async Task ProcessLink(string? pageTitle, string? linkUrl, string filePath, Conc
             } else if (message!.StartsWith("The remote certificate is invalid")) {
                 linkResults.TryAdd(linkUrl!,"ERROR," + message);                
             } else if (message!.StartsWith("The request was canceled due to the configured HttpClient.Timeout")) {
-                linkResults.TryAdd(linkUrl!,"ERROR," + message);
+                linkResults.TryAdd(linkUrl!,"ERROR,HttpClient Timeout - " + httpClient.Timeout);
             } else {
                 linkResults.TryAdd(linkUrl!,"OTHER,"+message);
             }
