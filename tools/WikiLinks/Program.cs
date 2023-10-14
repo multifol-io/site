@@ -143,7 +143,6 @@ async Task ProcessPage(WikiPage page, Dictionary<string, string> linkInfos, bool
                 values [1] = "Hostname not resolved in DNS.";
             }
 
-    
             value = $"{values[0]},{values[1]}";
         }
 
@@ -267,7 +266,7 @@ async Task ProcessLink(string? pageTitle, string? linkUrl, string filePath, Conc
             } else if (message!.StartsWith("The remote certificate is invalid")) {
                 linkResults.TryAdd(linkUrl!,"ERROR," + message);                
             } else if (message!.StartsWith("The request was canceled due to the configured HttpClient.Timeout")) {
-                linkResults.TryAdd(linkUrl!,"ERROR,HttpClient Timeout - " + httpClient.Timeout);
+                linkResults.TryAdd(linkUrl!,"ERROR," + message);
             } else {
                 linkResults.TryAdd(linkUrl!,"OTHER,"+message);
             }
