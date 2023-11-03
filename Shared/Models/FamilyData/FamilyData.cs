@@ -616,7 +616,7 @@ public string estimatePortfolio()
         var loadedData = JsonSerializer.Deserialize<FamilyData>(json, options);
         if (loadedData != null) {
             loadedData.AppData = appData;
-            loadedData.Year = 2023;
+            loadedData.Year = 2024;
             loadedData.SetBackPointers();
             if (loadedData.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart) {
                 loadedData.TaxFilingStatus = TaxFilingStatus.MarriedFilingSeperately;
