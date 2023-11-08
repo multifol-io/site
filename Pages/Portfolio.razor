@@ -1250,7 +1250,7 @@
             newAccount.Investments.Add(newInvestment);
             newAccount.Edit = true;
             appData.FamilyData?.Accounts.Add(newAccount);
-            
+
             Navigation.NavigateTo("/portfolio-tracker/accounts");
         }
     }
@@ -1376,7 +1376,7 @@
         HalfDay,
         WeekEnd
     }
-    
+
     static DateTime[] holidays = {
         new DateTime(2023, 1, 2),
         new DateTime(2023, 1 , 16 ),
@@ -1406,7 +1406,7 @@
                 if (holidays.Contains(date)) {
                     return MarketDay.Holiday;
                 }
-                
+
                 if (halfDays.Contains(date)) {
                     return MarketDay.HalfDay;
                 }
@@ -1443,11 +1443,29 @@
             case MarketDay.WeekEnd:
                 return MarketClose(marketCloseDay.AddDays(direction), direction);
             case MarketDay.HalfDay:
-                return new DateTime(marketCloseDay.Year, marketCloseDay.Month, marketCloseDay.Day, 17, 0, 0);
+            {
+                var datetime = new DateTime(marketCloseDay.Year, marketCloseDay.Month, marketCloseDay.Day, 13, 0, 0);
+                var datetimeutc = TimeZoneInfo.ConvertTimeToUtc(datetime, GetEasternTimeZoneInfo());
+                var datetimelocal = TimeZoneInfo.ConvertTimeFromUtc(datetimeutc, TimeZoneInfo.Local);
+                return datetimelocal;
+            }
             default:
-                return new DateTime(marketCloseDay.Year, marketCloseDay.Month, marketCloseDay.Day, 20, 0, 0);
-            
+            {
+                var datetime = new DateTime(marketCloseDay.Year, marketCloseDay.Month, marketCloseDay.Day, 16, 0, 0);
+                var datetimeutc = TimeZoneInfo.ConvertTimeToUtc(datetime, GetEasternTimeZoneInfo());
+                var datetimelocal = TimeZoneInfo.ConvertTimeFromUtc(datetimeutc, TimeZoneInfo.Local);
+                return datetimelocal;
+            }
         }
+    }
+
+    private static TimeZoneInfo GetEasternTimeZoneInfo()
+    {
+        TimeZoneInfo tz = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows)
+           ? TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time")
+           : TimeZoneInfo.FindSystemTimeZoneById("America/New_York");
+
+        return tz;
     }
 
     private (double? change, double? percentChange) portfolioChange() 
