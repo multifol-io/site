@@ -427,7 +427,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                         </select> <br/>
                                         <br/>
         
-                                        <label>Target Year:</label> <select @bind=appData.FamilyData.Year><option>2022</option><option>2023</option></select><br/>
+                                        <label>Target Year:</label> <select @bind=appData.FamilyData.Year><option>2023</option><option>2024</option></select><br/>
 
                                         @if (appData?.IRSData?.TaxRateData?.TaxData?.TaxFilers is not null) {
                                             foreach (var taxFiler in appData.IRSData.TaxRateData.TaxData.TaxFilers) {
