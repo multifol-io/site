@@ -174,22 +174,12 @@ public class Importer {
                 var accountName = chunks[1];
                 var symbol = chunks[2];
 
-                // many tickers have "**" at end, signifying money market fund.
-                if (symbol.Length >= 2 && symbol.Substring(symbol.Length-2) == "**") { 
-                    symbol = symbol.Substring(0, symbol.Length - 2);
-                }
-
                 string? investmentName;
                 double value;
                 double? price = null;
                 double? shares = null;
                 double? costBasis = null;
                 double? expenseRatio = null;
-
-                // many tickers have "**" at end, signifying money market fund.
-                if (symbol.Length >= 2 && symbol.Substring(symbol.Length-2) == "**") { 
-                    symbol = symbol.Substring(0, symbol.Length - 2);
-                }
 
                 if (symbol == "Pending Activity")
                 {
@@ -203,6 +193,13 @@ public class Importer {
                     price = FormatUtilities.ParseDouble(chunks[5], allowCurrency:true);
                     shares = FormatUtilities.ParseDouble(chunks[4]);
                     costBasis = FormatUtilities.ParseDouble(chunks[13], allowCurrency:true);
+                }
+
+                // many tickers have "**" at end, signifying money market fund.
+                if (symbol.Length >= 2 && symbol.Substring(symbol.Length-2) == "**") { 
+                    symbol = symbol.Substring(0, symbol.Length - 2);
+                    shares = value;
+                    price = 1.0;
                 }
 
                 if (lastAccountNumber != accountNumber)
@@ -222,7 +219,7 @@ public class Importer {
                     newInvestment.ExpenseRatio = expenseRatio;
                 }
 
-                if (newInvestment.Ticker == "PENDING") {
+                if (newInvestment.Ticker == "PENDING" || newInvestment.Ticker == "FCASH") {
                     newInvestment.AssetType = global::AssetType.Cash;
                 }
 
