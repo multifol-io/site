@@ -372,23 +372,27 @@ public class Importer {
             var symbol = chunks[0];
             string? investmentName = null;
 
-            double shares = FormatUtilities.ParseDouble(chunks[4]);
-            double value = FormatUtilities.ParseDouble(chunks[9], allowCurrency:true);
-            double price = FormatUtilities.ParseDouble(chunks[1], allowCurrency:true);
-            double costBasis = value - FormatUtilities.ParseDouble(chunks[7], allowCurrency:true);
+            if (chunks.Length > 1)
+            {
+                double shares = FormatUtilities.ParseDouble(chunks[4]);
+                double value = FormatUtilities.ParseDouble(chunks[9], allowCurrency:true);
+                double price = FormatUtilities.ParseDouble(chunks[1], allowCurrency:true);
+                double costBasis = value - FormatUtilities.ParseDouble(chunks[7], allowCurrency:true);
 
-            if (symbol == "CASH") {
-                shares = value;
-                assetType = AssetType.Cash_MoneyMarket;
-            } else if (symbol == "TOTAL") {
-                break;
-            }
+                if (symbol == "CASH") {
+                    shares = value;
+                    assetType = AssetType.Cash_MoneyMarket;
+                    price = 1.0;
+                } else if (symbol == "TOTAL") {
+                    break;
+                }
 
-            Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Price = price, Name = (investmentName != null ? investmentName : null), Value = value, SharesPIN = shares, CostBasis = costBasis };
-            if (assetType != null) {
-                newInvestment.AssetType = assetType;
+                Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Price = price, Name = (investmentName != null ? investmentName : null), Value = value, SharesPIN = shares, CostBasis = costBasis };
+                if (assetType != null) {
+                    newInvestment.AssetType = assetType;
+                }
+                newAccount?.Investments.Add(newInvestment);
             }
-            newAccount?.Investments.Add(newInvestment);
         }
 
         return importedAccounts;
