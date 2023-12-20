@@ -309,7 +309,9 @@
                                                             string bgColor = alternateRow2 ? "white" : "lightgray";
                                                             if (!account.Edit) {
                                                                 <tr style=background-color:@bgColor @onclick='@(e=>editAccount(e,accBuffer))'>
-                                                                    <td style=padding-left:8px title=@investment.Name>@investment.Ticker</td>
+                                                                    <td style=padding-left:8px title=@investment.Name>
+                                                                        @(investment.Ticker != null ? investment.Ticker : investment.Name)
+                                                                    </td>
                                                                     <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleTwoDecimal(investment.SharesPIN)</td>
                                                                     <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(investment.Price)</td>
                                                                     <td style=text-align:right;padding-left:8px>
@@ -520,7 +522,8 @@
                                                         string ftsize = investment.Ticker?.Length > 5 ? ";font-size:8pt" : "";
                                                         groupSize++;
                                                         <tr style=background-color:@bgColor>
-                                                            <td style=padding-left:8px;vertical-align:text-top;@ftsize title=@investment.Name>@investment.Ticker 
+                                                            <td style=padding-left:8px;vertical-align:text-top;@ftsize title=@investment.Name>
+                                                                @(investment.Ticker != null ? investment.Ticker : investment.Name)
                                                                 @if (appData.ApplyStockSizeRules && investment.IsStock && (investment.ValuePIN > appData.FamilyData.Value * .05)) {
                                                                     <sub title='@FormatUtilities.formatMoney(appData.FamilyData.Value*.05) is 5% of portfolio' style=background-color:yellow>&nbsp;&gt;5%</sub>
                                                                 }
