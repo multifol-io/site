@@ -62,23 +62,13 @@ namespace Employer {
     {
         // back pointer
         [JsonIgnore]
-        public Person person { get; set; }
+        public object? person { get; set; }
 
         private string? _Company;
         public string? Company { 
             get { return _Company; }
             set { 
                 _Company = value;
-            }
-        }
-        public int Year
-        {
-            get {
-                if (person?.FamilyData != null) {
-                    return person.FamilyData.Year;
-                } else {
-                    throw new Exception("EmployerBenefits.Year in unexpected state");
-                }
             }
         }
 
