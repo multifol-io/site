@@ -91,14 +91,33 @@ public class Account
 
     public double? CalculateCostBasis() {
         double costBasis = 0.0;
-        foreach (var investment in Investments)
-        {
-            if (investment.CostBasis != null)
-            {
-                costBasis += investment.CostBasis.Value;
-            }
+        int investmentsMissingCostBasis = 0;
+        switch (TaxType) {
+            case "Taxable":
+                foreach (var investment in Investments)
+                {
+                    if (investment.CostBasis != null)
+                    {
+                        costBasis += investment.CostBasis.Value;
+                    }
+                    else if (investment.AssetType == AssetType.Cash
+                        || investment.AssetType == AssetType.Cash_BankAccount
+                        || investment.AssetType == AssetType.Cash_MoneyMarket)
+                    {
+                        costBasis += investment.Value ?? 0.0;
+                    }
+                    else
+                    {
+                        investmentsMissingCostBasis++;
+                    }
+                }
+                break;
+            case "Post-Tax":
+            case "Pre-Tax":
+                return costBasis;
         }
-        if (costBasis == 0.0) {
+
+        if (investmentsMissingCostBasis > 0) {
             return null;
         } else {
             return costBasis;

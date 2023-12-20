@@ -751,7 +751,7 @@
                                                                         }
                                                                     </td>                                                                        
                                                                     <td style=text-align:right;padding-left:8px>
-                                                                        @if (!account.TaxType.EndsWith("-Tax")) {
+                                                                        @if (account.TaxType == "Taxable") {
                                                                             var costBasis = account.CalculateCostBasis();
                                                                             if (costBasis != null)
                                                                             {
