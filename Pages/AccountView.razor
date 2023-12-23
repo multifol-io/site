@@ -95,6 +95,7 @@
         <div style=clear:left>
                             @{var accountIndex = 0;}
                             @{selectedInvestment = null;}
+                            @{Account? accountEditing = null;}
                             @foreach (var account in appData.FamilyData.Accounts) {
                                 int accBuffer = accountIndex;
                                 accountIndex++;
@@ -102,10 +103,11 @@
                                     bool alternateRow2 = false;
                                     if (account.Investments.Count == 0 && account.AccountType == null && account.Custodian == null && account.Note == null)
                                     {
-                                        editingAccountInfo = true;
+                                        accountEditing = account;
+                                        account.Edit = true;
                                     }
 
-                                    @if(editingAccountInfo) {
+                                    @if(accountEditing == account) {
                                         @((MarkupString)bold("Edit Account Info:"))
                                     }
 
@@ -117,14 +119,10 @@
                                             </td>
                                             <td style=text-align:right;padding-left:8px>
                                                 @FormatUtilities.formatMoney(account.Value, decimalPlaces:0)
+                                                <a style=margin:0px;padding:0px;width:20px class="m-0 btn" >✏️</a>
                                             </td>
                                         </tr>
-                                        @if (!editingAccountInfo) {
-                                            <tr><td style=text-align:right;font-size:9pt;font-style:italic colspan=4>
-                                            @((MarkupString)bold("[Select Account Info to Edit]"))
-                                            </td></tr>
-                                        }
-                                        @if (editingAccountInfo) {
+                                        @if (accountEditing == account) {
                                             <tr style=color:white;background:black;padding-left:8px>
                                                 <td colspan=4>
                                                     @if (appData.FamilyData.PersonCount == 2) {
