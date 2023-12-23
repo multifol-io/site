@@ -95,7 +95,6 @@
         <div style=clear:left>
                             @{var accountIndex = 0;}
                             @{selectedInvestment = null;}
-                            @{Account? accountEditing = null;}
                             @foreach (var account in appData.FamilyData.Accounts) {
                                 int accBuffer = accountIndex;
                                 accountIndex++;
@@ -103,17 +102,16 @@
                                     bool alternateRow2 = false;
                                     if (account.Investments.Count == 0 && account.AccountType == null && account.Custodian == null && account.Note == null)
                                     {
-                                        accountEditing = account;
                                         account.Edit = true;
                                     }
 
-                                    @if(accountEditing == account) {
+                                    @if(account.Edit) {
                                         @((MarkupString)bold("Edit Account Info:"))
                                     }
 
                                     <br/>
                                     <table class=mainTable>
-                                        <tr style=color:white;background:black; @onclick=editAccountInfo>
+                                        <tr style=color:white;background:black; @onclick='@(e=>editAccountInfo(e,account))'>
                                             <td colspan=3>
                                                 @account.Title
                                             </td>
@@ -122,7 +120,7 @@
                                                 <a style=margin:0px;padding:0px;width:20px class="m-0 btn" >✏️</a>
                                             </td>
                                         </tr>
-                                        @if (accountEditing == account) {
+                                        @if (account.Edit) {
                                             <tr style=color:white;background:black;padding-left:8px>
                                                 <td colspan=4>
                                                     @if (appData.FamilyData.PersonCount == 2) {
@@ -191,7 +189,7 @@
                                                     <button @onclick='@(e=>deleteAccount2(e,accBuffer))' title='delete account'>❌ account</button>
                                                 </td>
                                                 <td colspan=1 style=text-align:right>
-                                                    <button @onclick=editAccountInfo>save info</button>
+                                                    <button @onclick='@(e=>editAccountInfo(e,account))'>save info</button>
                                                 </td>
                                             </tr>
                                         }
@@ -337,8 +335,8 @@
 
 @code {
     bool editingAccountInfo = false;
-    void editAccountInfo() {
-        editingAccountInfo = !editingAccountInfo;
+    void editAccountInfo(MouseEventArgs e, Account account) {
+        account.Edit = !account.Edit;
     }
     void deleteSelectedInvestment(MouseEventArgs e, Investment selectedInvestment)
     {
