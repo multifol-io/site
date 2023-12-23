@@ -68,7 +68,8 @@ public class Account
 
     [JsonIgnore]
     public bool Edit { get; set; }
-
+    [JsonIgnore]
+    public bool View { get; set; }
     [JsonIgnore]
     public double Percentage { get; set; }
 

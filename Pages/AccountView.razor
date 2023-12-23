@@ -89,13 +89,16 @@
         </div>
         <div style=clear:left;margin-left:1.5in><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault >(manage profiles)</a></div>
 
+        <div style=clear:left><a href=/portfolio-tracker/accounts @onclick=navToAccounts @onclick:preventDefault >All Accounts</a> > This Account</div>
+
+
         <div style=clear:left>
                             @{var accountIndex = 0;}
                             @{selectedInvestment = null;}
                             @foreach (var account in appData.FamilyData.Accounts) {
                                 int accBuffer = accountIndex;
                                 accountIndex++;
-                                if(account.Edit) {
+                                if(account.View) {
                                     bool alternateRow2 = false;
                                     if (account.Investments.Count == 0 && account.AccountType == null && account.Custodian == null && account.Note == null)
                                     {
@@ -186,7 +189,10 @@
                                                 </td>
                                             </tr>
                                             <tr style=color:white;background:black;>
-                                                <td colspan=4 style=text-align:right>
+                                                <td colspan=3>
+                                                    <button @onclick='@(e=>deleteAccount2(e,accBuffer))' title='delete account'>❌ account</button>
+                                                </td>
+                                                <td colspan=1 style=text-align:right>
                                                     <button @onclick=editAccountInfo>save info</button>
                                                 </td>
                                             </tr>
@@ -233,22 +239,19 @@
 
                                             alternateRow2 = !alternateRow2;
                                         }
-                                        <tr>
-                                            <td colspan=4 style=text-align:right;font-size:9pt;font-style:italic>
-                                                @if(account.Investments.Count > 0 && selectedInvestment == null) {
-                                                    @((MarkupString)bold("[Select an Investment to Edit]"))
-                                                }
-                                            </td>
-                                        </tr>
 
                                         <tr style=background:black;color:white>
                                             <td colspan=4>
-                                                <button @onclick='@(e=>addInvestment2(e,accBuffer))' style=margin-left:20px>➕ Investment</button>
-                                                @if(selectedInvestment != null) {<button @onclick='@(e=>deleteSelectedInvestment(e,selectedInvestment))' title='delete investment'>❌ investment</button>}
+                                                <button @onclick='@(e=>addInvestment2(e,accBuffer))' style=margin-left:8px>➕</button>
                                             </td>
                                         </tr>
-
-                                        <button @onclick='@(e=>deleteAccount2(e,accBuffer))' title='delete account'>❌ account</button>
+                                        <tr>
+                                            <td colspan=4 style=text-align:right;font-size:9pt;font-style:italic>
+                                                @if(account.Investments.Count > 0 && selectedInvestment == null) {
+                                                    @((MarkupString)bold("[Select a Holding to Edit]"))
+                                                }
+                                            </td>
+                                        </tr>
                                     </table>
                                 }
                             }
@@ -256,8 +259,16 @@
                             @if (selectedInvestment != null) {
                                 var bgColor = "white";
                                 <br/>
+                                @* @((MarkupString)bold("Exchange "+selectedInvestment.Ticker + "&nbsp;|&nbsp;" + selectedInvestment.Name + ":"))
                                 <br/>
-                                @((MarkupString)bold("Edit Investment Info:"))
+                                <label>Shares:&nbsp;</label><input type=radio name=quantity value=all /><label>All</label> <input type=radio name=quantity value=partial /><label>Partial:&nbsp;</label><input style=width:50px type=text /><br/>
+                                <select><option>to</option><option>from</option></select><br/>
+                                <label>Account:&nbsp;</label><select><option>this account</option></select>
+                                <label>&nbsp;Investment:&nbsp;</label><select></select>
+                                <br/>
+                                <label>Shares:&nbsp;</label><input type=radio name=quantity value=all /><label>All</label> <input type=radio name=quantity value=partial /><label>Partial:&nbsp;</label><input style=width:50px type=text /><br/> *@
+                                <br/>
+                                @((MarkupString)bold("Edit Holding:"))
                                 <table>
                                     <tr style=background-color:@bgColor>
                                         <td style=padding-left:16px>
@@ -281,7 +292,12 @@
                                             $<input type=text style=width:100px;text-align:right @bind-Value=selectedInvestment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
                                         </td>
                                         <td></td>
-                                    </tr> 
+                                    </tr>
+                                    <tr style=background-color:@bgColor>
+                                        <td>
+                                                <button @onclick='@(e=>deleteSelectedInvestment(e,selectedInvestment))' title='delete investment'>❌ investment</button>
+                                        </td>
+                                    </tr>
                                     <tr style=background-color:@bgColor>
                                         <td colspan=4><label style=padding-left:16px>Name:</label><input type=text style=width:300px @bind-Value=selectedInvestment.Name @bind-Value:event=oninput placeholder='name'/></td>
                                     </tr>
@@ -332,7 +348,7 @@
             var accounts = appData.FamilyData.Accounts;
             foreach (var account in accounts) 
             {
-                if (account.Edit) 
+                if (account.View) 
                 {
                     account.Investments.Remove(selectedInvestment);
                 }
@@ -371,7 +387,7 @@
             var accounts = appData.FamilyData.Accounts;
             foreach (var account in accounts)
             {
-                if (account.Edit)
+                if (account.View)
                 {
                     var investmentIndex = 0;
                     foreach (var investment in account.Investments) {
@@ -403,7 +419,7 @@
     string refreshButtonText = "🔃 Quotes";
     bool assetAllocationEditing = false;
     bool taxFilingStatusEditing = false;
-    int? accountIndexEditing = null;
+    int? accountIndexViewing = null;
     public enum Mode {
         normal = 0,
         href,
@@ -742,6 +758,7 @@
             var newAccount = new Account(appData.FamilyData.PIN);
             var newInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds };
             newAccount.Investments.Add(newInvestment);
+            newAccount.View = true;
             newAccount.Edit = true;
             appData.FamilyData?.Accounts.Add(newAccount);
 
@@ -754,7 +771,7 @@
         if (appData.FamilyData is not null) {
             var accountToDelete = appData.FamilyData.Accounts[accountIndex];
             appData.FamilyData.Accounts.Remove(accountToDelete);
-            accountIndexEditing = null;
+            accountIndexViewing = null;
             appData.FamilyData.UpdatePercentages();
             await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         }
@@ -991,12 +1008,18 @@
         Navigation.NavigateTo("/profiles");
     }
 
+    private void navToAccounts()
+    {
+        appData.LastPageUri = Navigation.Uri;
+        Navigation.NavigateTo("/portfolio-tracker/accounts");
+    }
+
     async void LocationChanged(object? sender, LocationChangedEventArgs e)
     {
         Console.WriteLine("location changed " + DateTime.Now.ToLongTimeString());
         @foreach (var account in appData.FamilyData.Accounts) {
-            if (account.Edit) {
-                account.Edit = false;
+            if (account.View) {
+                account.View = false;
                 foreach (var investment in account.Investments)
                 {
                     investment.Selected = false;
