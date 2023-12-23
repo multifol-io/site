@@ -4,7 +4,6 @@ using System.Text.Json.Serialization;
 public class Investment 
 {
     public Investment() {
-
     }
 
     public Investment(int? pin) : this()
@@ -12,6 +11,9 @@ public class Investment
         PIN = pin;
     }
 
+    [JsonIgnore]
+    public bool Selected { get; set; }
+    
     [JsonIgnore]
     public IList<Fund>? funds { get; set; }
 
@@ -22,6 +24,14 @@ public class Investment
         }
         set {
             _Name = value;
+        }
+    }
+
+    private List<Transaction> _Transactions = new();
+    public List<Transaction> Transactions
+    {
+        get {
+            return _Transactions;
         }
     }
 

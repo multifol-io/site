@@ -1,0 +1,1010 @@
+@page "/portfolio-tracker/account"
+@inject HttpClient Http
+@inject IAppData appData
+@inject IRSData irsData
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+@inject IList<Fund> Funds
+@using System.Text.Json.Serialization
+
+<PageTitle>
+@pageHeading - bogle.tools
+</PageTitle>
+
+<style>
+    .mainTable {
+        border-collapse: collapse;
+        border-top: 1px solid rgba(0,0,0,0.2);
+    }
+    .mainTable thead tr th{
+        border-bottom: 1px solid #000000;
+    }
+    .mainTable th, .mainTable td {
+        border-left: 1px solid rgba(0,0,0,0.2);
+        border-right: 1px solid rgba(0,0,0,0.2);
+    }
+    .mainTable th, .mainTable td{ /* Added padding for better layout after collapsing */
+        padding: 4px 8px;
+    }
+
+    .btn {
+        color: white;
+        padding: 10px 10px;
+        text-decoration: none;
+        display:inline-block;
+        text-align:center;
+        width:60px;
+        border-radius: 10px;
+    }
+    .dollar {
+        width: 100px;
+    }
+    .percent {
+        width: 50px;
+    }
+    .article a[href^="http"]::after,
+    .article a[href^="https://"]::after
+    {
+        content: "";
+        width: 11px;
+        height: 11px;
+        margin-left: 4px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z'/%3E%3Cpath fill-rule='evenodd' d='M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z'/%3E%3C/svg%3E");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        display: inline-block;
+    }
+</style>
+    @if (appData is null)
+    {
+        <p>
+            @if(appData == null || appData.CurrentProfileName==null){<em>No active <a href=/profiles>profile</a>.</em>} 
+            else {<em>Loading...</em>}
+        </p>
+        <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
+            @if(appData!.CurrentProfileName==null){<span>choose a</span>}else {<span>@appData.CurrentProfileName</span>}</a> profile
+        </div>
+    } else if (appData is not null && appData.FamilyData!.PINProtected && appData.FamilyData.PIN == null) {
+        <div style=float:left>
+            <h4 style="max-width:450px">
+                @pageHeading
+            </h4>
+        </div>
+        <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
+
+        <p style=clear:left>Need PIN</p>
+        <input style=width:50px;text-align:right type=text @bind-Value=PINEntry @bind-Value:event=oninput />
+        <button @onclick=setPIN>Go</button>
+    } else if (appData is not null && appData.FamilyData is not null) {
+        if (appData.FamilyData.TaxFilingStatus == TaxFilingStatus.ChoiceNeeded) {
+            taxFilingStatusEditing = true;
+        }
+        appData.FamilyData.UpdatePercentages();
+        
+        <div style=float:left>
+            <h4 style="max-width:450px">
+                @pageHeading <h6 style=display:inline>for @appData.CurrentProfileName profile</h6>
+            </h4>
+        </div>
+        <div style=clear:left;margin-left:1.5in><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault >(manage profiles)</a></div>
+
+        <div style=clear:left>
+                            @{var accountIndex = 0;}
+                            @{selectedInvestment = null;}
+                            @foreach (var account in appData.FamilyData.Accounts) {
+                                int accBuffer = accountIndex;
+                                accountIndex++;
+                                if(account.Edit) {
+                                    bool alternateRow2 = false;
+                                    if (account.Investments.Count == 0 && account.AccountType == null && account.Custodian == null && account.Note == null)
+                                    {
+                                        editingAccountInfo = true;
+                                    }
+
+                                    @if(editingAccountInfo) {
+                                        @((MarkupString)bold("Edit Account Info:"))
+                                    }
+
+                                    <br/>
+                                    <table class=mainTable>
+                                        <tr style=color:white;background:black; @onclick=editAccountInfo>
+                                            <td colspan=3>
+                                                @account.Title
+                                            </td>
+                                            <td style=text-align:right;padding-left:8px>
+                                                @FormatUtilities.formatMoney(account.Value, decimalPlaces:0)
+                                            </td>
+                                        </tr>
+                                        @if (!editingAccountInfo) {
+                                            <tr><td style=text-align:right;font-size:9pt;font-style:italic colspan=4>
+                                            @((MarkupString)bold("[Select Account Info to Edit]"))
+                                            </td></tr>
+                                        }
+                                        @if (editingAccountInfo) {
+                                            <tr style=color:white;background:black;padding-left:8px>
+                                                <td colspan=4>
+                                                    @if (appData.FamilyData.PersonCount == 2) {
+                                                        <label style=padding-left:8px>Owner:</label>
+                                                        <select style=margin-left:4px @bind=account.Identifier>
+                                                            @if(account.TaxType == "Taxable" || account.TaxType == "Other") {
+                                                                <option>our</option>
+                                                            }
+                                                            @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
+                                                                <option>@appData.FamilyData.People[p].PossessiveID</option>
+                                                            }
+                                                        </select>
+                                                    }
+
+                                                    <label style=padding-left:8px>Account Type:</label>
+                                                    <select style=margin-left:4px @bind=account.AccountType>
+                                                        <option>choice needed</option>
+                                                        <option>401(k)</option>
+                                                        <option>403(b)</option>
+                                                        <option>457(b)</option>
+                                                        <option>457(b) Governmental</option>
+                                                        <option>529</option>
+                                                        <option>Annuity (Non-Qualified)</option>
+                                                        <option>Annuity (Qualified)</option>
+                                                        <option>Brokerage</option>
+                                                        <option>HSA</option>
+                                                        <option>Individual</option>
+                                                        <option>Inherited IRA</option>
+                                                        <option>Inherited Roth IRA</option>
+                                                        <option value="Traditional IRA">IRA</option>
+                                                        <option>Refundable Deposit</option>
+                                                        <option>Rollover IRA</option>
+                                                        <option>Roth 401(k)</option>
+                                                        <option>Roth IRA</option>
+                                                        <option>SEP IRA</option>
+                                                        <option>SIMPLE IRA</option>
+                                                        <option>Solo 401(k)</option>
+                                                        <option>Taxable</option>
+                                                        <option>Traditional IRA</option>
+                                                    </select> 
+                                                </td>
+                                            </tr>
+                                            <tr style=color:white;background:black;padding-left:8px>
+                                                <td colspan=4>
+                                                    <label style=padding-left:8px>at</label> <input style="width:140px" type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' />
+                                                </td>
+                                            </tr>
+                                            @if (account.TaxType == "Pre-Tax(work)") {
+                                                <tr style=color:white;background:black;>
+                                                    <td colspan=2>
+                                                        <InputCheckbox id=currentEmployer style=margin-left:20px @bind-Value=account.CurrentEmployerRetirementFund /> <label for=currentEmployer>&nbsp;Current Employer</label>
+                                                    </td>
+                                                    <td colspan="2">
+                                                        @if (appData.AllowAfterTaxPercentage) {
+                                                            <label style=padding-left:8px>After Tax %:</label> <input type=text id=currentEmployer style=margin-left:8px;width:60px @bind-Value=account.AfterTaxPercentage @bind-Value:event=onchange />
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                            <tr style=color:white;background:black;><td colspan=4>
+                                                <label style=padding-left:8px>Note: </label><input type=text @bind-value=account.Note @bind-value:event=oninput placeholder='account note'/>
+                                                </td>
+                                            </tr>
+                                            <tr style=color:white;background:black;>
+                                                <td colspan=4 style=text-align:right>
+                                                    <button @onclick=editAccountInfo>save info</button>
+                                                </td>
+                                            </tr>
+                                        }
+                                        <tr style=height:40px;background:white></tr>
+                                        </table>
+                                        <table>
+                                        @if (account.Investments.Count > 0)
+                                        {
+                                            <tr style=vertical-align:bottom>
+                                                <th style=padding-left:8px>Ticker</th>
+                                                <th style=padding-left:8px;text-align:center>Quantity</th>
+                                                <th style=padding-left:8px;text-align:center>Price</th>
+                                                <th style=padding-left:8px;text-align:center>Balance</th>
+                                            </tr>
+                                        }
+                                        @{var investmentIndex = 0;}
+                                        @foreach (var investment in account.Investments) {
+                                            var advice = Advisor.Advise(investment, account, appData);
+                                            int invBuffer = investmentIndex;
+                                            investmentIndex++;
+                                            string bgColor = alternateRow2 ? "white" : "lightgray";
+                                            if (investment.Selected) {
+                                                bgColor = "yellow";
+                                                selectedInvestment = investment;
+                                            }
+                                            <tr style=background-color:@bgColor @onclick='@(e=>chooseInvestment(e,invBuffer))'>
+                                                <td style=padding-left:8px;height:30px; title=@investment.Name>
+                                                    @(investment.Ticker != null ? investment.Ticker : investment.Name)
+                                                </td>
+                                                <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleTwoDecimal(investment.SharesPIN)</td>
+                                                <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(investment.Price)</td>
+                                                <td style=text-align:right;padding-left:8px>
+                                                    @FormatUtilities.formatMoney(investment.ValuePIN, decimalPlaces:0)
+                                                </td>
+                                            </tr>
+                                            @foreach (var adviceItem in advice) {
+                                                <tr style=background-color:@bgColor>
+                                                    <td colspan=4 style=padding-left:16px>
+                                                        <span style=background-color:yellow>@adviceItem</span>
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                            alternateRow2 = !alternateRow2;
+                                        }
+                                        <tr>
+                                            <td colspan=4 style=text-align:right;font-size:9pt;font-style:italic>
+                                                @if(account.Investments.Count > 0 && selectedInvestment == null) {
+                                                    @((MarkupString)bold("[Select an Investment to Edit]"))
+                                                }
+                                            </td>
+                                        </tr>
+
+                                        <tr style=background:black;color:white>
+                                            <td colspan=4>
+                                                <button @onclick='@(e=>addInvestment2(e,accBuffer))' style=margin-left:20px>➕ Investment</button>
+                                                @if(selectedInvestment != null) {<button @onclick='@(e=>deleteSelectedInvestment(e,selectedInvestment))' title='delete investment'>❌ investment</button>}
+                                            </td>
+                                        </tr>
+
+                                        <button @onclick='@(e=>deleteAccount2(e,accBuffer))' title='delete account'>❌ account</button>
+                                    </table>
+                                }
+                            }
+
+                            @if (selectedInvestment != null) {
+                                var bgColor = "white";
+                                <br/>
+                                <br/>
+                                @((MarkupString)bold("Edit Investment Info:"))
+                                <table>
+                                    <tr style=background-color:@bgColor>
+                                        <td style=padding-left:16px>
+                                            <input type=text style=width:70px @bind-Value=selectedInvestment.Ticker @bind-Value:event=oninput placeholder='ticker'/></td>
+                                        <label>Quantity: </label>
+                                        <td style=text-align:right;padding-left:8px><input type=text style=width:100px;text-align:right @bind-Value=selectedInvestment.SharesPIN @bind-Value:event=onchange placeholder='shares'/></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr style=background-color:@bgColor>
+                                        <td style=text-align:right;padding-left:8px colspan=2>
+                                            <label>Price: </label>
+                                            $<input type=text style=width:80px;text-align:right @bind-Value=selectedInvestment.Price @bind-Value:event=onchange placeholder='price'/></td>
+                                        <td style=text-align:right;padding-left:8px colspan=2>
+                                            <label>Balance: </label>
+                                            $<input type=text style=width:100px;text-align:right @bind-Value=selectedInvestment.ValuePIN @bind-Value:event=onchange placeholder='value'/>
+                                        </td>
+                                    </tr>
+                                    <tr style=background-color:@bgColor>
+                                        <td style=text-align:right;padding-left:8px colspan=3>
+                                            <label>Cost Basis: </label>
+                                            $<input type=text style=width:100px;text-align:right @bind-Value=selectedInvestment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
+                                        </td>
+                                        <td></td>
+                                    </tr> 
+                                    <tr style=background-color:@bgColor>
+                                        <td colspan=4><label style=padding-left:16px>Name:</label><input type=text style=width:300px @bind-Value=selectedInvestment.Name @bind-Value:event=oninput placeholder='name'/></td>
+                                    </tr>
+                                    <tr style=background-color:@bgColor>
+                                        <td colspan=4>
+                                            <label style=padding-left:16px>Expense Ratio:</label><input width= type=text style=width:100px;text-align:right @bind-Value=selectedInvestment.ExpenseRatio @bind-Value:event=oninput placeholder='exp. ratio'/>%
+                                        </td>
+                                    </tr>
+                                    <tr style=background-color:@bgColor>
+                                        <td colspan=4>
+                                            <label style=padding-left:16px>Asset Type:</label>
+                                            <select @bind=selectedInvestment.AssetType>
+                                                @foreach (AssetType assetType in (AssetType[]) Enum.GetValues(typeof(AssetType))) {
+                                                    <option>@assetType</option>
+                                                }
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    @if (selectedInvestment.AssetType == global::AssetType.StocksAndBonds_ETF || selectedInvestment.AssetType == global::AssetType.StocksAndBonds_Fund) {
+                                        <tr style=background-color:@bgColor>
+                                            <td colspan=4 style=text-align:right>
+                                                <div style=margin-right:50px><label>US Stock:</label> <input type=text style=width:60px @bind-Value=selectedInvestment.USStockPercent @bind-Value:event=oninput />%</div>
+                                                <div style=margin-right:50px><label>International Stock:</label> <input type=text style=width:60px @bind-Value=selectedInvestment.InternationalStockPercent @bind-Value:event=oninput />%</div>
+                                                <div style=margin-right:50px><label>US Bonds:</label> <input type=text style=width:60px @bind-Value=selectedInvestment.USBondsPercent @bind-Value:event=oninput />%</div>
+                                                <div style=margin-right:50px><label>International Bonds:</label> <input type=text style=width:60px @bind-Value=selectedInvestment.InternationalBondsPercent @bind-Value:event=oninput />%</div>
+                                                <div style=margin-right:50px><label>Cash:</label> <input type=text style=width:60px @bind-Value=selectedInvestment.CashPercent @bind-Value:event=oninput />%</div>
+                                                <div style=margin-right:50px><label><b>Total:</b></label>
+                                                    <span style=text-align:left;width:60px;display:inline-block>
+                                                        @((selectedInvestment.USStockPercent??0.0)+(selectedInvestment.InternationalStockPercent??0.0)+(selectedInvestment.USBondsPercent??0.0)+(selectedInvestment.InternationalBondsPercent??0.0)+(selectedInvestment.CashPercent??0.0))%
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }                    
+                                </table>
+                            }
+            </div>
+        }
+
+@code {
+    bool editingAccountInfo = false;
+    void editAccountInfo() {
+        editingAccountInfo = !editingAccountInfo;
+    }
+    void deleteSelectedInvestment(MouseEventArgs e, Investment selectedInvestment)
+    {
+        if (appData.FamilyData is not null) {
+            var accounts = appData.FamilyData.Accounts;
+            foreach (var account in accounts) 
+            {
+                if (account.Edit) 
+                {
+                    account.Investments.Remove(selectedInvestment);
+                }
+            }
+        }
+    }
+    Investment fromInvestment = null;
+    Investment toInvestment = null;
+    void selectInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
+    {
+        if (appData.FamilyData is not null) {
+            var accounts = appData.FamilyData.Accounts;
+            if (fromInvestment == null) 
+            {
+                fromInvestment = accounts[accountIndex].Investments[investmentIndex];
+            }
+            else
+            {
+                toInvestment = accounts[accountIndex].Investments[investmentIndex];
+                if (fromInvestment != toInvestment)
+                {
+                    Transaction t = new() { FromInvestment = fromInvestment, ToInvestment = toInvestment, Value = fromInvestment.Value };
+                    fromInvestment.Transactions.Add(t);
+                    toInvestment.Transactions.Add(t);
+
+                    fromInvestment = null;
+                    toInvestment = null;
+                }
+            }
+        }
+    }
+
+    void chooseInvestment(MouseEventArgs e, int index)
+    {
+        if (appData.FamilyData is not null) {
+            var accounts = appData.FamilyData.Accounts;
+            foreach (var account in accounts)
+            {
+                if (account.Edit)
+                {
+                    var investmentIndex = 0;
+                    foreach (var investment in account.Investments) {
+                        if (index == investmentIndex)
+                        {
+                            investment.Selected = !investment.Selected;
+                        }
+                        else
+                        {
+                            investment.Selected = false;
+                        }
+
+                        investmentIndex++;
+                    }
+                }
+            }
+        }
+    }
+
+    void toggleTaxFilingStatusEditing() {
+        taxFilingStatusEditing = !taxFilingStatusEditing;
+    }
+
+    void toggleAssetAllocationEditing() {
+        assetAllocationEditing = !assetAllocationEditing;
+    }
+
+    bool showEditAccountHelpers = false;
+    string refreshButtonText = "🔃 Quotes";
+    bool assetAllocationEditing = false;
+    bool taxFilingStatusEditing = false;
+    int? accountIndexEditing = null;
+    public enum Mode {
+        normal = 0,
+        href,
+        text,
+    }
+    public bool pastTotal = false;
+    public int runningTotal = 0;
+
+    public string checkTotal(int? itemTotal) {
+        if (appData.FamilyData is not null) {
+            runningTotal += itemTotal ?? 0;
+            if (!pastTotal) {
+                pastTotal = appData.FamilyData.PlannedSavings <= runningTotal;
+
+                if (pastTotal) {
+                    return "<div>-------<br/><div>Planned savings " + (appData.FamilyData.PlannedSavings==runningTotal?"met":"exceeded") + " after " + FormatUtilities.formatMoney(itemTotal+(appData.FamilyData.PlannedSavings-runningTotal)) + " towards previous step</div>-------<br/></div>";
+                }
+            }
+        }
+
+        return "";
+    }
+
+    public int? GetRecommdedIRAAmount(Person person) {
+        switch(person.IRATypeRecommendation) {
+            case IRAType.DeductibleIRAThenBackdoorRoth:
+            case IRAType.DeductibleIRA:
+                return person.IRA.AmountToSave;
+            case IRAType.Roth:
+                return person.RothIRA.AmountToSave;
+            case IRAType.NondeductibleIRAThenBackdoorRoth:
+            case IRAType.NondeductibleIRA:
+                return person.IRA.AmountToSave;
+            default:
+                return null;
+        }
+    }
+
+    public string GetRecommendedIRAMarkup(Person person) {
+        switch(person.IRATypeRecommendation) {
+            case IRAType.DeductibleIRAThenBackdoorRoth:
+                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.formatMoney(person.IRA.DeductionAllowed) + " Deductible), then backdoor roth</span>";
+            case IRAType.DeductibleIRA:
+                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.formatMoney(person.IRA.DeductionAllowed) + " Deductible)</span>";
+            case IRAType.Roth:
+                return "<span>" + FormatUtilities.formatMoney(person.RothIRA.AmountToSave) + " in " + person.PossessiveID + " Roth IRA</span>";
+            case IRAType.NondeductibleIRAThenBackdoorRoth:
+                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " (nondeductible), then backdoor roth</span>";
+            case IRAType.NondeductibleIRA:
+                return "<span>$" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " (nondeductible)</span>";
+            default:
+                return "<p>do nothing</p>";
+        }
+    }
+
+    public string getPronoun(Person person)
+    {
+        return getPronoun(person, true);
+    }
+
+    public string getPronoun(Person person, bool inParanthesis)
+    {
+        if (person?.FamilyData != null && person.FamilyData.PersonCount > 1 && person.Identifier != null && person.Identifier != "None") {
+            if (inParanthesis) { return "(" + person.Identifier + ")"; }
+            else { return "\"" + person.Identifier + "\""; }
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+    public string bold(string text) {
+        if (ShowMarkup) {
+            return "[b]<b>" + text + "</b>[/b]";
+        } else {
+            return "<b>" + text + "</b>";
+        }
+    }
+
+    public string boldUnderline(string text) {
+        if (ShowMarkup) {
+            return "[b][u]<b><u>" + text + "</u></b>[/u][/b]";
+        } else {
+            return "<b><u>" + text + "</u></b>";
+        }
+    }
+
+    public string markupize(string? wikiText) {
+        if (wikiText == null) return "";
+        string returnVal = "<span>";
+        char lastChar = 'x';
+        var mode = Mode.normal;
+        string href = "";
+        string text = "";
+        foreach (var c in wikiText) {
+            switch (c) {
+                case '[':
+                    if (lastChar == '[') {
+                        mode = Mode.href;
+                    }
+                    break;
+                case ']':
+                    if (lastChar == ']') {
+                        if (text == "") { text = href; }
+                        if (href.StartsWith("https://bogle.tools/")) 
+                        {
+                            returnVal += "<a href='" + href.Substring(19) + "'>" + text + "</a>";
+                        }
+                        else if (href.StartsWith("https://"))
+                        {
+                            returnVal += "<a target=_blank href='" + href + "'>" + text + "</a>";
+                        } 
+                        else
+                        {
+                            returnVal += "<a target=_blank href='https://www.bogleheads.org/wiki/" + href + "'>" + text + "</a>";
+                        }
+                        href = "";
+                        text = "";
+                        mode = Mode.normal;
+                    }
+                    break;
+                case '|':
+                    if (mode == Mode.href) {
+                        mode = Mode.text;
+                    }
+                    break;
+            }
+
+            switch (mode) {
+                case Mode.href:
+                    switch (c) {
+                        case '[':
+                        case ']':
+                            break;
+                        default:
+                            href += c;
+                            break;
+                    }
+                    break;
+                case Mode.text:
+                    switch (c) {
+                        case '[':
+                        case ']':
+                        case '|':
+                            break;
+                        default:
+                            text += c;
+                            break;
+                    }
+                    break;
+                default:
+                    switch (c) {
+                        case '[':
+                        case ']':
+                            break;
+                        case '\n':
+                            returnVal += "<br/>";
+                            break;
+                        default:
+                            returnVal += c;
+                            break;
+                    }
+                    break;
+            }
+
+            lastChar = c;
+        }
+        returnVal += "</span>";
+
+        return returnVal;
+    }
+
+    [Parameter]
+    public string? View { get; set; }
+
+    public bool ShowMarkup { get; set; }
+    public string? currentAccountIndex { get; set; }
+    public int accountIndex = 0;
+    public int investmentIndex = 0;
+    private const string pagePath = "/portfolio-tracker";
+    private const string folderName = pagePath + "/";
+    private const string pageHeading = "Portfolio Tracker";
+    private Investment? selectedInvestment = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Navigation.LocationChanged += LocationChanged;
+        base.OnInitialized();
+    }
+
+    private void ShowImport() {
+        @* showImport = !showImport;
+        if (!showImport) {
+            showError = false;
+        } *@
+        Navigation.NavigateTo("/import-accounts");
+    }
+
+    private void showOpenBH() {
+        @* showImport = !showImport;
+        if (!showImport) {
+            showError = false;
+        } *@
+        Navigation.NavigateTo("/import-accounts-bh");
+    }
+
+    private async Task UpdateInvestmentPrice(Investment investment)
+    {
+        var quoteDataJson = await Http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={investment.Ticker}&apikey={appData.EODHistoricalDataApiKey}");
+        var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
+        if (quoteData?.Close != null) {
+            investment.Price = quoteData.Close;
+            investment.UpdateValue();
+        }
+    }
+    public static DateTime? UnixTimeStampToDateTime( int? unixTimeStamp )
+    {
+        if (!unixTimeStamp.HasValue) return null;
+        // Unix timestamp is seconds past epoch
+        DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+        dateTime = dateTime.AddSeconds( unixTimeStamp ?? 0 ).ToLocalTime();
+        return dateTime;
+    }
+    private async Task UpdateInvestmentsPrice(string ticker, List<Investment> investments)
+    {
+        if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey)) {
+            var quoteDataJson = await Http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={ticker}&apikey={appData.EODHistoricalDataApiKey}");
+            var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
+            if (quoteData?.Close != null) {
+                foreach (var investment in investments) {
+                    investment.Price = quoteData.Close;
+                    if (quoteData.Volume > 0) {
+                        investment.PreviousClose = quoteData.PreviousClose; 
+                        investment.PercentChange = quoteData.ChangeP;
+                        investment.LastUpdated = UnixTimeStampToDateTime(quoteData.Timestamp);
+                    } else if (quoteData.Volume == 0) {
+                        investment.PreviousClose = quoteData.PreviousClose;
+                        investment.PercentChange = quoteData.ChangeP;
+                        investment.LastUpdated = UnixTimeStampToDateTime(quoteData.Timestamp);
+                    } else {
+                        investment.PreviousClose = quoteData.Close;
+                        investment.PercentChange = null;
+                        investment.LastUpdated = null;
+                    }
+
+                    investment.UpdateValue();
+                }
+            }
+        }
+    }
+
+    private async Task UpdatePrice(MouseEventArgs e, Investment investment) {
+        if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey)) {
+            await UpdateInvestmentPrice(investment);
+        }
+    }
+
+    private void finishImport()
+    {
+        if (appData is not null && appData.FamilyData is not null && appData.ImportResult is not null) {
+
+            foreach (var updatedAccount in appData.ImportResult.UpdatedAccounts)
+            {
+                if (updatedAccount.Import && updatedAccount.ReplaceAccount != null)
+                {
+                    updatedAccount.ReplaceAccount.Investments.Clear();
+                    updatedAccount.ReplaceAccount.Investments.AddRange(updatedAccount.Investments);
+                }
+            }
+
+            foreach (var newAccount in appData.ImportResult.NewAccounts)
+            {
+                if (newAccount.Import)
+                {
+                    appData.FamilyData.Accounts.Add(newAccount);
+                }
+            }
+
+            appData.ImportResult = null;
+        }
+    }
+
+    private void cancelImport()
+    {
+        appData.ImportResult = null;
+    }
+
+    private void addInvestment2(MouseEventArgs e, int accountIndex) {
+        if (appData.FamilyData is not null) {
+            var account = appData.FamilyData.Accounts[accountIndex];
+            if (selectedInvestment != null)
+            {
+                selectedInvestment.Selected = false;
+            }
+
+            selectedInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds, Selected = true };
+            account.Investments.Add(selectedInvestment);
+        }
+    }
+
+    void deleteInvestment2(MouseEventArgs e, int accountIndex, int investmentIndex)
+    {
+        if (appData.FamilyData is not null) {
+            var account = appData.FamilyData.Accounts[accountIndex];
+            var investmentToDelete = account.Investments[investmentIndex];
+            account.Investments.Remove(investmentToDelete);
+            appData.FamilyData.UpdatePercentages();
+        }
+    }
+
+    void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
+    {
+        if (appData.FamilyData is not null) {
+            appData.FamilyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
+            Navigation.NavigateTo("/portfolio-tracker/reload");
+            appData.FamilyData.UpdatePercentages();
+        }
+    }
+    void addAvailableFund(MouseEventArgs e, Account account)
+    {
+        if (appData.FamilyData is not null) {
+            var newFund = new Investment(appData.FamilyData.PIN) { funds = Funds };
+            account.AvailableFunds.Add(newFund);
+        }
+    }
+
+    void deleteAvailableFund(MouseEventArgs e, Account account, int investmentIndex)
+    {
+        account.AvailableFunds.RemoveAt(investmentIndex);
+    }
+
+    void addAccountInline()
+    {
+        if (appData.FamilyData is not null) {
+            var newAccount = new Account(appData.FamilyData.PIN);
+            var newInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds };
+            newAccount.Investments.Add(newInvestment);
+            newAccount.Edit = true;
+            appData.FamilyData?.Accounts.Add(newAccount);
+
+            Navigation.NavigateTo("/portfolio-tracker/accounts");
+        }
+    }
+
+    private async void deleteAccount2(MouseEventArgs e, int accountIndex)
+    {
+        if (appData.FamilyData is not null) {
+            var accountToDelete = appData.FamilyData.Accounts[accountIndex];
+            appData.FamilyData.Accounts.Remove(accountToDelete);
+            accountIndexEditing = null;
+            appData.FamilyData.UpdatePercentages();
+            await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
+        }
+    }
+
+    void addAccount()
+    {
+        if (appData.FamilyData is not null) {
+            var newAccount = new Account(appData.FamilyData.PIN);
+            var newInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds };
+            newAccount.Investments.Add(newInvestment);
+            appData.FamilyData?.Accounts.Add(newAccount);
+        }
+    }
+    void deleteAccount(MouseEventArgs e, int accountIndex)
+    {
+        if (appData.FamilyData is not null) {
+            appData.FamilyData.Accounts.RemoveAt(accountIndex);
+            Navigation.NavigateTo("/portfolio-tracker/reload");
+            appData.FamilyData.UpdatePercentages();
+        }
+    }
+
+    private async Task LoadPortfolioForTopic(string topicStr) {
+        var options = new JsonSerializerOptions() 
+            {
+                Converters =
+                    {
+                        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                    }
+            };
+        var topicJsonUri = "https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/portfolios/" + topicStr + ".json";
+        var stream = await Http.GetStreamAsync(topicJsonUri);
+        appData.FamilyData = await FamilyData.LoadFromJsonStream(appData, stream, options);
+    }
+
+    private async Task CopyTextToClipboard()
+    {
+        var text = await JS.InvokeAsync<string>("getTableInnerText");
+        text = text.Replace("\n✏️\t","");
+        text = text.Replace("✏️\t","");
+        text = text.Replace("Show Portfolio Analysis\n", "");
+        await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
+    }
+
+    private async Task refreshPrices() {
+        refreshButtonText = "Updating...";
+        Dictionary<string,List<Investment>> quotes = new();
+
+        var now = DateTime.Now.Date;
+        var previousMarketClose = PreviousMarketClose(now).ToLocalTime();
+        var nextMarketClose = NextMarketClose(now).ToLocalTime();
+        var nextMarketOpen = new DateTime(nextMarketClose.Year,nextMarketClose.Month,nextMarketClose.Day,13,30,00).ToLocalTime();
+        var marketIsBeforeOpen = DateTime.Now < nextMarketOpen;
+        bool marketIsOpen = DateTime.Now >= nextMarketOpen && DateTime.Now <= nextMarketClose;
+        var marketIsAfterClose = DateTime.Now > nextMarketClose;
+        if (appData.FamilyData is not null) {
+            foreach (var account in appData.FamilyData.Accounts) {
+                foreach (var investment in account.Investments) {
+                    bool fetchQuote = false;
+                    if (investment.IsStock || investment.IsETF) {
+                        fetchQuote = investment.LastUpdated == null || (marketIsBeforeOpen && investment.LastUpdated < previousMarketClose) || marketIsOpen || (marketIsAfterClose && investment.LastUpdated < nextMarketClose);
+                    } else if (investment.IsFund) {
+                        fetchQuote = investment.LastUpdated == null || investment.LastUpdated?.Date != previousMarketClose.Date;
+                    }
+
+                    if (fetchQuote && investment.Ticker != null) {
+                        if (!quotes.ContainsKey(investment.Ticker)) {
+                            quotes.Add(investment.Ticker, new List<Investment> () { investment });
+                        } else {
+                            var investments = quotes[investment.Ticker];
+                            investments.Add(investment);
+                        }
+                    }
+                }
+            }
+
+            List<string> rsuTickers = new();
+            for(int p=0;p<appData.FamilyData.PersonCount;p++) {
+                var person = appData.FamilyData.People[p];
+                foreach (var rsuGrant in person.RSUGrants) {
+                    if (!string.IsNullOrEmpty(rsuGrant.Ticker)) {
+                        var ticker = rsuGrant.Ticker.ToUpper();
+                        var grantInvestment = new Investment() { Ticker = ticker, GrantToUpdateQuote = rsuGrant };
+                        if (!quotes.ContainsKey(ticker)) {
+                            quotes.Add(ticker, new List<Investment> () { grantInvestment });
+                        } else {
+                            var investments = quotes[ticker];
+                            investments.Add(grantInvestment);
+                        }
+                    }
+                }
+            }
+
+            foreach (var quote in quotes)
+            {
+                try {
+                    await UpdateInvestmentsPrice(quote.Key, quote.Value);
+                } catch (Exception ex) {
+                    Console.WriteLine(ex.GetType().Name + ": " + ex.Message + " " + ex.StackTrace);
+                }
+            }
+
+            await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
+        }
+
+        refreshButtonText = "🔃 Quotes";
+    }
+
+    enum MarketDay {
+        MarketDay,
+        Holiday,
+        HalfDay,
+        WeekEnd
+    }
+
+    static DateTime[] holidays = {
+        new DateTime(2023, 1, 2),
+        new DateTime(2023, 1 , 16 ),
+        new DateTime(2023, 2, 20),
+        new DateTime(2023, 4, 7),
+        new DateTime(2023, 5, 29),
+        new DateTime(2023, 6, 19),
+        new DateTime(2023, 7, 4),
+        new DateTime(2023, 9, 4),
+        new DateTime(2023, 11, 23),
+        new DateTime(2023, 12, 25),
+    };
+
+    static DateTime[] halfDays = {
+        new DateTime(2023, 7, 3),
+        new DateTime(2023, 11, 24),
+        new DateTime(2023, 12, 24),
+    };
+
+    private MarketDay GetMarketDay(DateTime dateTime) {
+        switch (dateTime.DayOfWeek) {
+            case DayOfWeek.Saturday: 
+            case DayOfWeek.Sunday:
+                return MarketDay.WeekEnd;
+            default:
+                var date = dateTime.Date;
+                if (holidays.Contains(date)) {
+                    return MarketDay.Holiday;
+                }
+
+                if (halfDays.Contains(date)) {
+                    return MarketDay.HalfDay;
+                }
+
+                return MarketDay.MarketDay;
+        }
+    }
+
+    private int? PINEntry { get; set; }
+    private void setPIN() {
+        if (appData.FamilyData is not null) {
+            if (PINEntry != null) {
+                appData.FamilyData.PIN = PINEntry;
+            }
+        }
+    }
+
+    private DateTime PreviousMarketClose(DateTime dateTime) {
+        return MarketClose(dateTime, -1);
+    }
+    private DateTime NextMarketClose(DateTime dateTime) {
+        return MarketClose(dateTime, 1);
+    }
+    private DateTime MarketClose(DateTime dateTime, int direction) {
+        DateTime marketCloseDay;
+        if (direction == -1) {
+            marketCloseDay = dateTime.AddDays(direction);
+        } else {
+            marketCloseDay = dateTime;
+        }
+
+        switch (GetMarketDay(marketCloseDay)) {
+            case MarketDay.Holiday:
+            case MarketDay.WeekEnd:
+                return MarketClose(marketCloseDay.AddDays(direction), direction);
+            case MarketDay.HalfDay:
+            {
+                var datetime = new DateTime(marketCloseDay.Year, marketCloseDay.Month, marketCloseDay.Day, 13, 0, 0);
+                var datetimeutc = TimeZoneInfo.ConvertTimeToUtc(datetime, GetEasternTimeZoneInfo());
+                var datetimelocal = TimeZoneInfo.ConvertTimeFromUtc(datetimeutc, TimeZoneInfo.Local);
+                return datetimelocal;
+            }
+            default:
+            {
+                var datetime = new DateTime(marketCloseDay.Year, marketCloseDay.Month, marketCloseDay.Day, 16, 0, 0);
+                var datetimeutc = TimeZoneInfo.ConvertTimeToUtc(datetime, GetEasternTimeZoneInfo());
+                var datetimelocal = TimeZoneInfo.ConvertTimeFromUtc(datetimeutc, TimeZoneInfo.Local);
+                return datetimelocal;
+            }
+        }
+    }
+
+    private static TimeZoneInfo GetEasternTimeZoneInfo()
+    {
+        TimeZoneInfo tz = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows)
+           ? TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time")
+           : TimeZoneInfo.FindSystemTimeZoneById("America/New_York");
+
+        return tz;
+    }
+
+    private (double? change, double? percentChange) portfolioChange() 
+    {
+        if (appData.FamilyData is not null) {
+            double? change = 0.0;
+            double? total = 0.0;
+            foreach (var investment in appData.FamilyData.GroupedInvestments)
+            {
+                total += investment.Value ?? 0.0;
+                if (investment.PercentChange != null)
+                {
+                    change += (investment.Price - investment.PreviousClose) * investment.SharesPIN;
+                }
+            }
+
+            var startOfDayTotal = total - change;
+            return change == 0.0 ? (null, null) : (change, change/startOfDayTotal * 100.0);
+        }
+        else 
+        {
+            return (null, null);
+        }
+    }
+
+    private void navWithBackStack()
+    {
+        appData.LastPageUri = Navigation.Uri;
+        Navigation.NavigateTo("/profiles");
+    }
+
+    async void LocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        Console.WriteLine("location changed " + DateTime.Now.ToLongTimeString());
+        @foreach (var account in appData.FamilyData.Accounts) {
+            if (account.Edit) {
+                account.Edit = false;
+                foreach (var investment in account.Investments)
+                {
+                    investment.Selected = false;
+                }
+            }
+        }
+
+        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
+        Navigation.LocationChanged -= LocationChanged;
+    }
+}

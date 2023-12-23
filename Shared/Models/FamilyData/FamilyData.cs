@@ -288,6 +288,12 @@ public class FamilyData
     public double? CashBalance { get; set; }
     public double? OtherBalance { get; set; }
 
+    public double ActualTotalStockAllocation {
+        get {
+            return ActualStockAllocation*100.0 * (1.0-ActualInternationalStockAllocation);
+        }
+    }
+    
     public double ActualStockAllocation {
         get {
             var overallTotal = (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0) + (BondBalance ?? 0.0) + (OtherBalance ?? 0.0) + (CashBalance ?? 0.0);

@@ -129,51 +129,12 @@ public class Account
         foreach (var investment in Investments)
         {
             investment.Percentage = (investment.Value ?? 0) / totalValue * 100;
-            if (investment.AssetType == null)
+            
+            UpdateInvestmentCategoryTotals(investment, familyData);
+            foreach (var transaction in investment.Transactions)
             {
-                familyData.OtherBalance += investment.Value;
-            } 
-            else
-            {
-                switch (investment.AssetType) {
-                    case AssetType.Stock: 
-                    case AssetType.USStock:
-                    case AssetType.USStock_ETF:
-                    case AssetType.USStock_Fund:
-                        familyData.StockBalance += investment.Value;
-                        break;
-                    case AssetType.InternationalStock:
-                    case AssetType.InternationalStock_ETF:
-                    case AssetType.InternationalStock_Fund:
-                        familyData.InternationalStockBalance += investment.Value;
-                        break;
-                    case AssetType.Bond:
-                    case AssetType.Bond_ETF:
-                    case AssetType.Bond_Fund:
-                    case AssetType.InternationalBond:
-                    case AssetType.InternationalBond_ETF:
-                    case AssetType.InternationalBond_Fund:
-                        familyData.BondBalance += investment.Value;
-                        break;
-                    case AssetType.Cash:
-                    case AssetType.Cash_BankAccount:
-                    case AssetType.Cash_MoneyMarket:
-                        familyData.CashBalance += investment.Value;
-                        break;
-                    case AssetType.StocksAndBonds_ETF:
-                    case AssetType.StocksAndBonds_Fund:
-                        familyData.StockBalance += investment.Value * investment.GetPercentage(AssetType.USStock);
-                        familyData.InternationalStockBalance += investment.Value * investment.GetPercentage(AssetType.InternationalStock);
-                        familyData.BondBalance += investment.Value * investment.GetPercentage(AssetType.Bond);
-                        familyData.BondBalance += investment.Value * investment.GetPercentage(AssetType.InternationalBond);
-                        familyData.CashBalance += investment.Value * investment.GetPercentage(AssetType.Cash);
-                        break;
-                    case AssetType.Unknown:
-                        familyData.OtherBalance += investment.Value;
-                        break;
-                    default:
-                        throw new InvalidDataException("unexpected case");
-                }
+                var fromInvestment = (transaction.FromInvestment == investment);
+                UpdateInvestmentCategoryTotals(investment, familyData, overrideValue:transaction.Value, useNegative:fromInvestment);
             }
 
             if (investment.ExpenseRatio.HasValue && investment.Value.HasValue) {
@@ -183,6 +144,62 @@ public class Account
                 familyData.InvestmentsMissingER++;
             }
 
+        }
+    }
+
+    public void UpdateInvestmentCategoryTotals(Investment investment, FamilyData familyData, double? overrideValue = null, bool useNegative = false)
+    {
+        var value = investment.Value * (useNegative?-1:1);
+        if (overrideValue != null)
+        {
+            value = overrideValue * (useNegative?-1:1);
+        }
+
+        if (investment.AssetType == null)
+        {
+            familyData.OtherBalance += value;
+        } 
+        else
+        {
+            switch (investment.AssetType) {
+                case AssetType.Stock: 
+                case AssetType.USStock:
+                case AssetType.USStock_ETF:
+                case AssetType.USStock_Fund:
+                    familyData.StockBalance += value;
+                    break;
+                case AssetType.InternationalStock:
+                case AssetType.InternationalStock_ETF:
+                case AssetType.InternationalStock_Fund:
+                    familyData.InternationalStockBalance += value;
+                    break;
+                case AssetType.Bond:
+                case AssetType.Bond_ETF:
+                case AssetType.Bond_Fund:
+                case AssetType.InternationalBond:
+                case AssetType.InternationalBond_ETF:
+                case AssetType.InternationalBond_Fund:
+                    familyData.BondBalance += value;
+                    break;
+                case AssetType.Cash:
+                case AssetType.Cash_BankAccount:
+                case AssetType.Cash_MoneyMarket:
+                    familyData.CashBalance += value;
+                    break;
+                case AssetType.StocksAndBonds_ETF:
+                case AssetType.StocksAndBonds_Fund:
+                    familyData.StockBalance += value * investment.GetPercentage(AssetType.USStock);
+                    familyData.InternationalStockBalance += value * investment.GetPercentage(AssetType.InternationalStock);
+                    familyData.BondBalance += value * investment.GetPercentage(AssetType.Bond);
+                    familyData.BondBalance += value * investment.GetPercentage(AssetType.InternationalBond);
+                    familyData.CashBalance += value * investment.GetPercentage(AssetType.Cash);
+                    break;
+                case AssetType.Unknown:
+                    familyData.OtherBalance += value;
+                    break;
+                default:
+                    throw new InvalidDataException("unexpected case");
+            }
         }
     }
 
