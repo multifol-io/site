@@ -148,30 +148,30 @@
                             case "asset-allocation":
                                 @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) {
                                     <td>
-                                        @((MarkupString)bold("Desired Asset allocation:"))
+                                        @((MarkupString)bold("Desired Asset Allocation:&nbsp;"))<a @onclick=toggleAssetAllocationEditing style=margin:0px;padding:0px;width:20px class="m-0 btn" >✏️</a><br/>
                                         @if(!assetAllocationEditing) { 
                                             if (appData.FamilyData.Stocks != null && appData.FamilyData.Bonds != null) {
-                                                <span>&nbsp;@appData.FamilyData.Stocks% stocks / @appData.FamilyData.Bonds% fixed assets</span>
+                                                <span style=margin-left:.5in>&nbsp;@appData.FamilyData.Stocks% stocks / @appData.FamilyData.Bonds% fixed assets</span>
                                             }
-                                            <a @onclick=toggleAssetAllocationEditing style=margin:0px;padding:0px;width:20px class="m-0 btn" >✏️</a> <br/>
+                                            <br/>
                                             @if (appData.FamilyData.International != null) {
-                                                <span style=margin-left:2in;>% stocks are international: </span>
+                                                <span style=margin-left:.5in;>% stocks are international: </span>
                                                 <span>@appData.FamilyData.International%</span>
                                             }
                                         } else {
                                             <span>
-                                                &nbsp;<input style=width:50px;text-align:right type=text @bind-Value=appData.FamilyData.Stocks @bind-Value:event=oninput />% stocks
+                                                <input style=margin-left:.5in;width:50px;text-align:right type=text @bind-Value=appData.FamilyData.Stocks @bind-Value:event=oninput />% stocks
                                                 /
                                                 <input style=width:50px;text-align:right type=text @bind-Value=appData.FamilyData.Bonds @bind-Value:event=oninput />% fixed assets
                                             </span>
-                                            <a @onclick=toggleAssetAllocationEditing style=margin:0px;padding:0px;width:20px class="m-0 btn" >✏️</a> <br/>
-                                            <span style=margin-left:2in;>% stocks are international: </span>
+                                            <br/>
+                                            <span style=margin-left:.5in;>% stocks are international: </span>
                                             <span><input style=width:50px;text-align:right type=text @bind-Value=appData.FamilyData.International @bind-Value:event=oninput />%</span>
                                         }
                                         <br/>
-                                        @((MarkupString)bold("Actual Asset Allocation:"))
-                                        <span>&nbsp;@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation * 100.0) stocks / @FormatUtilities.formatPercent((appData.FamilyData.ActualBondAllocation + appData.FamilyData.ActualCashAllocation) * 100.0) fixed assets</span><br/>
-                                        <span style=margin-left:2in;>% stocks are International: </span>
+                                        @((MarkupString)bold("Actual Asset Allocation:"))<br/>
+                                        <span style=margin-left:.5in>&nbsp;@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation * 100.0) stocks / @FormatUtilities.formatPercent((appData.FamilyData.ActualBondAllocation + appData.FamilyData.ActualCashAllocation) * 100.0) fixed assets</span><br/>
+                                        <span style=margin-left:.5in;>% stocks are International: </span>
                                         <span>@FormatUtilities.formatPercent(appData.FamilyData.ActualInternationalStockAllocation*100.0)</span><br/>
                                         <hr/>
                                     </td>
