@@ -31,6 +31,8 @@ public class Account
     }
 
     [JsonIgnore]
+    public Investment? SelectedInvestment { get; set; }
+    [JsonIgnore]
     public int Owner { get; set; }
     public string? Identifier { get; set; }
     private string? _AccountType;

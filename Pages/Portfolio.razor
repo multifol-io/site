@@ -794,11 +794,13 @@
                             account.Edit = true;
                         }
                         
+                        account.SelectedInvestment = null;
                         foreach (var investment in account.Investments)
                         {
                             if (investmentIndex == invIndex)
                             {
                                 investment.Selected = true;
+                                account.SelectedInvestment = investment;
                             }
 
                             investmentIndex++;
