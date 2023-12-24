@@ -260,6 +260,27 @@
                                                                 </tr>
                                                             }
 
+                                                            @foreach (var transaction in investment.Transactions) {
+                                                                bool transferFrom = (investment == transaction.FromInvestment);
+                                                                <tr style=background-color:@bgColor>
+                                                                    <td colspan=3 style=padding-left:16px>
+                                                                        @if (transferFrom)
+                                                                        {
+                                                                        <span>..transfer to @transaction.ToInvestment.Ticker</span>
+                                                                        }
+                                                                        else 
+                                                                        {
+                                                                        <span>..transfer from @transaction.FromInvestment.Ticker</span>
+                                                                        }
+
+                                                                    </td>
+                                                                    <td style=text-align:right;padding-left:8px>
+                                                                        <span>@(transferFrom?"-":"+")</span>
+                                                                        @FormatUtilities.formatMoney(transaction.Value, decimalPlaces:0)
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                            
                                                             alternateRow2 = !alternateRow2;
                                                         }
                                                         

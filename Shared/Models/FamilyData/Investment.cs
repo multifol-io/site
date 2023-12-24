@@ -12,6 +12,8 @@ public class Investment
     }
 
     [JsonIgnore]
+    public string Transaction { get; set; }
+    [JsonIgnore]
     public bool Selected { get; set; }
     
     [JsonIgnore]
