@@ -261,22 +261,19 @@
                                                             }
 
                                                             @foreach (var transaction in investment.Transactions) {
-                                                                bool transferFrom = (investment == transaction.FromInvestment);
                                                                 <tr style=background-color:@bgColor>
                                                                     <td colspan=3 style=padding-left:16px>
-                                                                        @if (transferFrom)
+                                                                        @if (transaction.HostTicker == investment.Ticker)
                                                                         {
-                                                                        <span>..transfer to @transaction.ToInvestment.Ticker</span>
+                                                                        <span>..future @transaction.Type @transaction.HostTicker</span>
                                                                         }
                                                                         else 
                                                                         {
-                                                                        <span>..transfer from @transaction.FromInvestment.Ticker</span>
+                                                                        <span>..future @transaction.Type @transaction.HostTicker</span>
                                                                         }
-
                                                                     </td>
                                                                     <td style=text-align:right;padding-left:8px>
-                                                                        <span>@(transferFrom?"-":"+")</span>
-                                                                        @FormatUtilities.formatMoney(transaction.Value, decimalPlaces:0)
+                                                                        @FormatUtilities.formatMoney(transaction.CustomValue(investment), decimalPlaces:0)
                                                                     </td>
                                                                 </tr>
                                                             }
@@ -403,6 +400,7 @@
                                                                 </td>
                                                             </tr>
                                                         }
+
                                                         string bgColor = alternateRow ? "white" : "lightgray";
                                                         string ftsize = investment.Ticker?.Length > 5 ? ";font-size:8pt" : "";
                                                         groupSize++;
@@ -751,14 +749,18 @@
 
 @code {
 
-    Investment fromInvestment = null;
-    Investment toInvestment = null;
+
     void selectInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
     {
+        string? fromTicker = null;
+        Investment? fromInvestment = null;
+        Investment? toInvestment = null;
+        string? toTicker = null;
         if (appData.FamilyData is not null) {
             var accounts = appData.FamilyData.Accounts;
-            if (fromInvestment == null) 
+            if (fromTicker == null) 
             {
+                fromTicker = accounts[accountIndex].Investments[investmentIndex].Ticker;
                 fromInvestment = accounts[accountIndex].Investments[investmentIndex];
             }
             else
@@ -766,9 +768,9 @@
                 toInvestment = accounts[accountIndex].Investments[investmentIndex];
                 if (fromInvestment != toInvestment)
                 {
-                    Transaction t = new() { FromInvestment = fromInvestment, ToInvestment = toInvestment, Value = fromInvestment.Value };
-                    fromInvestment.Transactions.Add(t);
-                    toInvestment.Transactions.Add(t);
+                    Transaction t = new() { HostTicker = fromTicker, OtherTicker = toTicker, Value = fromInvestment?.Value ?? 0.0 };
+                    fromInvestment?.Transactions.Add(t);
+                    toInvestment?.Transactions.Add(t);
 
                     fromInvestment = null;
                     toInvestment = null;
@@ -832,7 +834,7 @@
                 accountIndex++;
             }
 
-            Navigation.NavigateTo("/portfolio-tracker/account");
+            Navigation.NavigateTo("/portfolio-tracker/view/"+query);
         }
     }
 
