@@ -37,6 +37,23 @@ public class Account
     public int Owner { get; set; }
     public string? Identifier { get; set; }
     private string? _AccountType;
+
+    public Investment? SettlementInvestment {
+        get {
+            foreach (var investment in this.Investments)
+            {
+                if (investment.AssetType == AssetType.Cash_MoneyMarket 
+                    || investment.AssetType == AssetType.Cash_BankAccount 
+                    || investment.AssetType == AssetType.Cash)
+                {
+                    return investment;
+                }
+            }
+
+            return null;
+        }
+    }
+
     public string? AccountType {
         get { return _AccountType; }
         set {
@@ -63,6 +80,10 @@ public class Account
             foreach (var investment in Investments) 
             {
                 newValue += investment.ValuePIN ?? 0;
+                foreach (var transaction in investment.Transactions)
+                {
+                    newValue += transaction.CustomValue(investment) ?? 0;
+                }
             }
 
             return newValue;
@@ -81,6 +102,19 @@ public class Account
         get {
             return (Identifier != null ? Identifier+ " " : "") + AccountType + (Custodian != null ? " at " + Custodian : "");
         }
+    }
+
+    public Investment? FindInvestment(string ticker)
+    {
+        foreach (var investment in Investments)
+        {
+            if (investment.Ticker == ticker)
+            {
+                return investment;
+            }
+        }
+
+        return null;
     }
 
     public List<Investment> Investments { get; set; }
@@ -137,8 +171,7 @@ public class Account
             UpdateInvestmentCategoryTotals(investment, familyData);
             foreach (var transaction in investment.Transactions)
             {
-                var fromInvestment = (transaction.FromInvestment == investment);
-                UpdateInvestmentCategoryTotals(investment, familyData, overrideValue:transaction.Value, useNegative:fromInvestment);
+                UpdateInvestmentCategoryTotals(investment, familyData, overrideValue:transaction.CustomValue(this.FindInvestment(transaction.HostTicker)));
             }
 
             if (investment.ExpenseRatio.HasValue && investment.Value.HasValue) {
@@ -147,7 +180,6 @@ public class Account
             } else {
                 familyData.InvestmentsMissingER++;
             }
-
         }
     }
 

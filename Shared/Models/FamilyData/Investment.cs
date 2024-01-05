@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 public class Investment 
 {
     public Investment() {
+        Transactions = new();
     }
 
     public Investment(int? pin) : this()
@@ -12,7 +13,8 @@ public class Investment
     }
 
     [JsonIgnore]
-    public string Transaction { get; set; }
+    public Transaction SelectedTransaction { get; set; }
+
     [JsonIgnore]
     public bool Selected { get; set; }
     
@@ -29,13 +31,7 @@ public class Investment
         }
     }
 
-    private List<Transaction> _Transactions = new();
-    public List<Transaction> Transactions
-    {
-        get {
-            return _Transactions;
-        }
-    }
+    public List<Transaction> Transactions { get; set; }
 
     public bool AutoCompleted { get; set; }
     private string? _Ticker;
