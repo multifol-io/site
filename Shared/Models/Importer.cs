@@ -280,6 +280,41 @@ public class Importer {
             }
         }
 
+        newAccount = null;
+        while (await rowEnumerator.MoveNextAsync()) {
+            chunks = rowEnumerator.Current;
+            if (chunks.Length == 7)
+            {
+                    await rowEnumerator.MoveNextAsync();
+                    break;
+            }
+        }
+
+        // handle the separate PLAN section if this Vanguard account has a 401(k) plan in the CSV file.
+        chunks = rowEnumerator.Current;
+        while (chunks.Length == 7)
+        {
+            var planName = chunks[1];
+            var investmentName = chunks[2];
+            double shares = FormatUtilities.ParseDouble(chunks[3]);
+            double price = FormatUtilities.ParseDouble(chunks[4], allowCurrency:true);
+            double value = FormatUtilities.ParseDouble(chunks[5], allowCurrency:true);
+                            
+            if (newAccount == null) {
+                newAccount = new(PIN) {
+                    Custodian = "Vanguard",
+                    Note = planName
+                };
+                importedAccounts.Add(newAccount);
+            }
+
+            Investment newInvestment = new (PIN) { funds = funds, Name = investmentName, Price = price, Value = value, SharesPIN = shares };
+            newAccount?.Investments.Add(newInvestment);
+
+            await rowEnumerator.MoveNextAsync();
+            chunks = rowEnumerator.Current;
+        }
+
         return importedAccounts;
     }
                     

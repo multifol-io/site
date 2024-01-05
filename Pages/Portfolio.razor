@@ -227,7 +227,8 @@
                                                         bool alternateRow2 = false;
                                                         int accBuffer = accountIndex;
                                                         accountIndex++;
-                                                        <tr style=color:white;background:black; @onclick='@(e=>editAccount(e,accBuffer,-1, ""))'>
+                                                        var accountQuery = "account:" + account.Title;
+                                                        <tr style=color:white;background:black; @onclick='@(e=>editAccount(e,-1,-1, accountQuery))'>
                                                             <td colspan=3>
                                                                 @account.Title
                                                             </td>
@@ -242,7 +243,8 @@
                                                             int invBuffer = investmentIndex;
                                                             investmentIndex++;
                                                             string bgColor = alternateRow2 ? "white" : "lightgray";
-                                                            <tr style=background-color:@bgColor @onclick='@(e=>editAccount(e,accBuffer,invBuffer, ""))'>
+                                                            var tickerQuery = "ticker:"+investment.Ticker;
+                                                            <tr style=background-color:@bgColor @onclick='@(e=>editAccount(e,-1,-1, tickerQuery))'>
                                                                 <td style=padding-left:8px title=@investment.Name>
                                                                     @(investment.Ticker != null ? investment.Ticker : investment.Name)
                                                                 </td>
