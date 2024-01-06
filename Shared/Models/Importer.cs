@@ -72,9 +72,17 @@ public class Importer {
             await RowEnumerator.MoveNextAsync();
             string[] headerChunks = RowEnumerator.Current;
             int headerChunksLen = headerChunks.Length;
+            if (headerChunksLen > 1)
+            {
+                Console.WriteLine(headerChunks[0] + ":" + headerChunks[1]);
+            }
             if (headerChunksLen > 1 && headerChunks[0] == "COB Date" && headerChunks[1] == "Security #")
             {
                 return await ImportMerrillEdge(RowEnumerator, funds, PIN);
+            }
+            else if (headerChunksLen > 1 && headerChunks[0].StartsWith("Asset Class") && headerChunks[1] == "Asset Strategy")
+            {
+                return await ImportJPMorganChase(RowEnumerator, funds, PIN);
             }
             else if (headerChunksLen > 1 && headerChunks[0].StartsWith("Account Number") && headerChunks[1] == "Account Name")
             {
@@ -106,7 +114,7 @@ public class Importer {
             }
             else
             {
-                throw new InvalidDataException("Importing this CSV file failed. We currently support importing CSV files from Ameriprise, eTrade, Fidelity, Merrill Edge, Schwab, or Vanguard");
+                throw new InvalidDataException("Importing this CSV file failed. We currently support importing CSV files from Ameriprise, eTrade, Fidelity, JPMorgan Chase, Merrill Edge, Schwab, or Vanguard");
             }
         } 
         catch (Exception e) {
@@ -116,7 +124,7 @@ public class Importer {
             }
             else 
             {
-                throw new InvalidDataException("Importing this CSV file failed, even though we think it should have worked (we think it was from Ameriprise, eTrade, Fidelity, Merrill Edge, Schwab, or Vanguard).", e);
+                throw new InvalidDataException("Importing this CSV file failed, even though we think it should have worked (we think it was from Ameriprise, eTrade, Fidelity, JPMorgan Chase, Merrill Edge, Schwab, or Vanguard).", e);
             }
         }
     }
@@ -159,6 +167,63 @@ public class Importer {
 
         return importedAccounts;
     }
+
+    private static async Task<List<Account>> ImportJPMorganChase(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds, int? PIN) {
+        List<Account> importedAccounts = new();
+        await rowEnumerator.MoveNextAsync();
+        string[] chunks = rowEnumerator.Current;
+        Account? newAccount = null;
+        while (chunks != null && chunks.Length != 0) {
+            try {
+                var symbol = chunks[4];
+
+                string? investmentName;
+                double value;
+                double? price = null;
+                double? shares = null;
+                double? costBasis = null;
+                double? expenseRatio = null;
+
+                investmentName = chunks[3];
+                value = FormatUtilities.ParseDouble(chunks[15], allowCurrency:true);
+                price = FormatUtilities.ParseDouble(chunks[9], allowCurrency:true);
+                shares = FormatUtilities.ParseDouble(chunks[6]);
+                costBasis = FormatUtilities.ParseDouble(chunks[22], allowCurrency:true);
+
+                if (newAccount == null)
+                {
+                    newAccount = new(PIN) {
+                        Custodian = "JP Morgan Chase",
+                    };
+                    //TODO: there is no account name or number in this file, so importing a second time won't be great given current code.
+                    newAccount.GuessAccountType();
+                    importedAccounts.Add(newAccount);
+                }
+
+                Investment newInvestment = new (PIN) { funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, SharesPIN = shares, CostBasis = costBasis };
+                if (expenseRatio != null)
+                {
+                    newInvestment.ExpenseRatio = expenseRatio;
+                }
+
+                newAccount?.Investments.Add(newInvestment);
+            } 
+            catch (Exception e)
+            {
+                string? line = null;
+                foreach (var chunk in chunks) {
+                    line += (line == null ? "," : "" )+ chunk.ToString();
+                } 
+                Console.WriteLine("skipped line due to error: " + line);
+                Console.WriteLine(e.GetType().Name + " " + e.Message + " " + e.StackTrace);
+            }
+
+            await rowEnumerator.MoveNextAsync();
+            chunks = rowEnumerator.Current;
+        }
+
+        return importedAccounts;
+    } 
 
     private static async Task<List<Account>> ImportFidelity(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds, int? PIN) {
         List<Account> importedAccounts = new();

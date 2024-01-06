@@ -1244,7 +1244,6 @@
 
     async void LocationChanged(object? sender, LocationChangedEventArgs e)
     {
-        Console.WriteLine("location changed " + DateTime.Now.ToLongTimeString());
         @foreach (var account in appData.FamilyData.Accounts) {
             if (account.View) {
                 account.View = false;
