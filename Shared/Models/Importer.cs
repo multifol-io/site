@@ -439,7 +439,7 @@ public class Importer {
 
             Account? newAccount = new(PIN) {
                 Custodian = "Schwab",
-                Note = string.Concat("*", chunks[0].AsSpan(1, chunks[0].Length - 2))
+                Note = chunks[0]
             };
             importedAccounts.Add(newAccount);
             
