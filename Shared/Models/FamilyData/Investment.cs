@@ -33,6 +33,7 @@ public class Investment
 
     public List<Transaction> Transactions { get; set; }
 
+    public DateOnly? PurchaseDate { get; set; }
     public bool AutoCompleted { get; set; }
     private string? _Ticker;
     public string? Ticker {

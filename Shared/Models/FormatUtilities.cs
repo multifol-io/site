@@ -6,6 +6,17 @@ public static class FormatUtilities {
         return String.Format("${0:#,0.##}", amount);
     }
 
+    public static string formatMonth(DateOnly? date)
+    {
+        if (date == null) {
+            return "";
+        }
+        else
+        {
+            return date?.ToString("MM/yyyy");
+        }
+    }
+    
     public static string formatMoney(double? amount, bool withColor = false, int decimalPlaces = 2) 
     {
         if (decimalPlaces != 2 && decimalPlaces != 0) {
