@@ -223,7 +223,7 @@
                         var advice = Advisor.Advise(investment, account, appData);
                         int invBuffer = investmentIndex;
                         investmentIndex++;
-                        if (investment.Selected && investment.SelectedTransaction == null) {
+                        if (investment.Selected && (investment.SelectedTransaction == null || investment.SelectedTransaction.Type == "Edit")) {
                             bgColor = "yellow";
                         } else {
                             bgColor = alternateRow2 ? "white" : "lightgray";
@@ -550,9 +550,13 @@
         selectedInvestment.SelectedTransaction = null;
     }
 
-    void commit(MouseEventArgs e, Account account, Investment selectedInvestment)
+    async void commit(MouseEventArgs e, Account account, Investment selectedInvestment)
     {
         plan(e, account, selectedInvestment);
+        if (selectedInvestment.CostBasis != null && selectedInvestment.PurchaseDate.HasValue && selectedInvestment.AssetType == global::AssetType.IBond)
+        {
+            await selectedInvestment.CalculateIBondValue();
+        }
     }
 
     void cancel(MouseEventArgs e, Investment selectedInvestment)
@@ -983,6 +987,8 @@
 
             account.SelectedInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds, Selected = true };
             account.Investments.Add(account.SelectedInvestment);
+
+            account.SelectedInvestment.SelectedTransaction = new Transaction() { Type = "Edit" };
         }
     }
 

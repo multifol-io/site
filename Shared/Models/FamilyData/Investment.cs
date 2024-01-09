@@ -337,4 +337,109 @@ public class Investment
 
     [JsonIgnore]
     public double Percentage { get; set; }
+
+    public static Dictionary<string,List<double>>? IBondRates { get; set; }
+    
+    static async Task LoadIBondRates() {
+        IBondRates = new();
+        var ibondsUri = new Uri("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/treasury-direct/i-bond-rate-chart.csv");
+        var httpClient = new HttpClient();
+        var ibondsCsv = await httpClient.GetAsync(ibondsUri.AbsoluteUri);
+        var stream = await ibondsCsv.Content.ReadAsStreamAsync();
+        using var reader = new CsvReader(stream);
+        var RowEnumerator = reader.GetRowEnumerator().GetAsyncEnumerator();
+        await RowEnumerator.MoveNextAsync();
+        await RowEnumerator.MoveNextAsync();
+        while (await RowEnumerator.MoveNextAsync())
+        {
+            string[] chunks = RowEnumerator.Current;
+            int chunkNum = 0;
+            string? date = null;
+            List<double> rates = new();
+            foreach (var chunk in chunks)
+            {
+                switch (chunkNum) 
+                {
+                    case 0:
+                        date = chunk[..5];
+                        if (!char.IsDigit(date[0])) 
+                        {
+                            // lines at bottom of the csv file that don't start with a dates should be skipped.
+                            return;
+                        }
+                        break;
+                    case 1:
+                        break;
+                    default:
+                        if (string.IsNullOrEmpty(chunk))
+                        {
+                            continue;
+                        }
+                        else 
+                        {
+                            var rate = DoubleFromPercentageString(chunk);
+                            rates.Add(rate);
+                        }
+                        break;
+                }
+                
+                chunkNum++;
+            }
+
+            IBondRates[date!] = rates;
+        }
+    }
+
+    static string GetRateDate(int month, int year) 
+    {
+        if (month < 5) {
+            return "11/" + (year-1).ToString().Substring(2);
+        }
+        else if (month < 11) {
+            return "05/" + (year).ToString().Substring(2);
+        } else {
+            return "11/" + (year).ToString().Substring(2);
+        }
+    }
+
+    public async Task CalculateIBondValue()
+    {
+        if (IBondRates == null) {
+            await LoadIBondRates();
+        }
+
+        if (IBondRates != null)
+        {
+            if (PurchaseDate.HasValue)
+            {
+                var month = PurchaseDate.Value.Month;
+                var year = PurchaseDate.Value.Year;
+                var date = GetRateDate(month, year);
+                var rates = IBondRates[date];
+
+                var nowMonth = DateTime.Now.Month;
+                var nowYear = DateTime.Now.Year;
+                double value = CostBasis ?? 0.0;
+                double bondQuantity = (value / 25.0);
+                for (int i = rates.Count - 1; i >= 0; i--)
+                {
+                    var monthCount = i > 0 ? 6 : GetMonthsLeft(PurchaseDate.Value, DateTime.Now);
+                    value = (bondQuantity*Math.Round(value/bondQuantity*Math.Pow((1.0+rates[i]/2.0),((double)monthCount/6.0)),2));
+                }
+
+                ValuePIN = (int)value;
+            }
+        }
+    }
+
+    private static int GetMonthsLeft(DateOnly purchaseDate, DateTime now)
+    {
+        var months = ((now.Year - purchaseDate.Year) * 12 + now.Month - purchaseDate.Month) % 6;
+        return months;
+    }
+
+    private static double DoubleFromPercentageString(string value)
+    {
+        return double.Parse(value.Replace("%","")) / 100;
+    }
 }
