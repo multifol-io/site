@@ -37,6 +37,7 @@ public static class Advisor {
                             adviceItems.Add("2nd: international->taxable");
                         }
                         break;                    
+                    case AssetType.IBond:
                     case AssetType.Bond:
                     case AssetType.Bond_ETF:
                     case AssetType.Bond_Fund:

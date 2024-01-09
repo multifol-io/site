@@ -217,7 +217,7 @@ public class Investment
             {
                 global::AssetType.USStock or global::AssetType.USStock_ETF or global::AssetType.USStock_Fund or global::AssetType.Stock=> 1,
                 global::AssetType.InternationalStock or global::AssetType.InternationalStock_ETF or global::AssetType.InternationalStock_Fund => 2,
-                global::AssetType.Bond or global::AssetType.Bond_ETF or global::AssetType.Bond_Fund or global::AssetType.InternationalBond or global::AssetType.InternationalBond_ETF or global::AssetType.InternationalBond_Fund => 3,
+                global::AssetType.Bond or global::AssetType.IBond or global::AssetType.Bond_ETF or global::AssetType.Bond_Fund or global::AssetType.InternationalBond or global::AssetType.InternationalBond_ETF or global::AssetType.InternationalBond_Fund => 3,
                 global::AssetType.StocksAndBonds_ETF or global::AssetType.StocksAndBonds_Fund => 4,
                 global::AssetType.Cash or global::AssetType.Cash_BankAccount or global::AssetType.Cash_MoneyMarket => 5,
                 _ => 6,
@@ -334,6 +334,7 @@ public class Investment
     public double? PreviousClose { get; set; }
     public double? PercentChange { get; set; }
     public DateTime? LastUpdated { get; set; }
+
     [JsonIgnore]
     public double Percentage { get; set; }
 }

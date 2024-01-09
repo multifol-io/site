@@ -212,6 +212,7 @@ public class Account
                 case AssetType.Bond:
                 case AssetType.Bond_ETF:
                 case AssetType.Bond_Fund:
+                case AssetType.IBond:
                 case AssetType.InternationalBond:
                 case AssetType.InternationalBond_ETF:
                 case AssetType.InternationalBond_Fund:

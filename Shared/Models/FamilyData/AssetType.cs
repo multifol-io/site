@@ -7,6 +7,7 @@ public enum AssetType
     Cash,
     Cash_BankAccount,
     Cash_MoneyMarket,
+    IBond,
     InternationalStock,
     InternationalStock_ETF,
     InternationalStock_Fund,
