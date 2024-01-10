@@ -83,7 +83,7 @@
     <div style=clear:left>
         @if (Query == "editAccounts") {
             <br/>
-            <span>Add account:&nbsp;</span><button @onclick=addAccountInline>➕ Account</button>
+            <span>Track another account:&nbsp;</span><button @onclick=addAccountInline>➕ account</button>
             <br/><br/>
         }
         @{
@@ -223,7 +223,7 @@
                     </table>
                     <table style=margin-left:.5in>
                         <tr style=vertical-align:bottom>
-                            <th style=padding-left:8px>Ticker</th>
+                            <th style=padding-left:8px>Holding</th>
                             <th style=padding-left:8px;text-align:center>Quantity</th>
                             <th style=padding-left:8px;text-align:center>Price</th>
                             <th style=padding-left:8px;text-align:center>Balance</th>
@@ -301,13 +301,13 @@
 
                     <tr style=background:black;color:white>
                         <td colspan=4>
-                            <button @onclick='@(e=>addInvestment2(e,accBuffer))' style=margin-left:8px>➕</button> [add investment]
+                            <button @onclick='@(e=>addInvestment2(e,accBuffer))' style=margin-left:8px>➕ holding</button>
                         </td>
                     </tr>
                     <tr>
                         <td colspan=4 style=text-align:right;font-size:9pt;font-style:italic>
                             @if(account.Investments.Count > 0 && account.SelectedInvestment == null) {
-                                @((MarkupString)bold("[Select a Holding to Edit]"))
+                                @((MarkupString)bold("Select a Holding to Change"))
                             }
                         </td>
                     </tr>
@@ -318,7 +318,7 @@
                 @if (account.SelectedInvestment != null) {
                     switch (account.SelectedInvestment.SelectedTransaction?.Type) {
                         case null:
-                            @((MarkupString)bold("Holding:"))<br/>
+                            @((MarkupString)bold("Actions:"))<br/>
                             <button @onclick='@(e=>edit(e,account.SelectedInvestment))'>Edit @account.SelectedInvestment.Ticker</button>
                             <button @onclick='@(e=>deleteSelectedInvestment(e,account.SelectedInvestment))' title='delete investment'>Delete @account.SelectedInvestment.Ticker</button>
                             <br/><br/>
@@ -408,7 +408,7 @@
                                         <td style=text-align:right>
                                             <label>Quantity: </label>
                                         </td>
-                                        <td style=text-align:right;padding-left:8px>
+                                        <td style=padding-left:8px>
                                             <input type=text style=width:100px;text-align:right @bind-Value=account.SelectedInvestment.SharesPIN @bind-Value:event=onchange placeholder='shares'/></td>
                                         <td></td>
                                     </tr>
