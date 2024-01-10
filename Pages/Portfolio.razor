@@ -1197,14 +1197,11 @@
 
     void addAccountInline()
     {
-        if (appData.FamilyData is not null) {
-            var newAccount = new Account(appData.FamilyData.PIN);
-            newAccount.View = true;
-            newAccount.Edit = true;
-            appData.FamilyData?.Accounts.Add(newAccount);
-
-            Navigation.NavigateTo("/portfolio-tracker/account");
-        }
+        var newAccount = new Account(appData.FamilyData.PIN) { };
+        newAccount.Edit = true;
+        newAccount.View = true;
+        appData.FamilyData?.Accounts.Add(newAccount);
+        Navigation.NavigateTo("/portfolio-tracker/view/newAccount");
     }
 
     private async void deleteAccount2(MouseEventArgs e, int accountIndex)

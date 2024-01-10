@@ -70,7 +70,7 @@
         taxFilingStatusEditing = true;
     }
     appData.FamilyData.UpdatePercentages();
-    
+
     <div style=float:left>
         <h4 style="max-width:450px">
             @pageHeading <h6 style=display:inline>for @appData.CurrentProfileName profile</h6>
@@ -100,8 +100,19 @@
                 }
 
                 account.View = found;
+            } else if (Query.StartsWith("newAccount")) {
+                account.View = true;
             } else if (Query.StartsWith("account:")) {
-                var accountToFind = Query.Substring(8);
+                string accountToFind;
+                if (Query.Length > 8)
+                {
+                    accountToFind = Query.Substring(8);
+                }
+                else
+                {
+                    accountToFind = "";
+                }
+
                 account.View = (account.Title == accountToFind);
             } else if (Query.StartsWith("custodian:")) {
                 var custodianToFind = Query.Substring(10);
@@ -206,15 +217,12 @@
                     <tr style=height:15px;background:white></tr>
                     </table>
                     <table style=margin-left:.5in>
-                    @if (account.Investments.Count > 0)
-                    {
                         <tr style=vertical-align:bottom>
                             <th style=padding-left:8px>Ticker</th>
                             <th style=padding-left:8px;text-align:center>Quantity</th>
                             <th style=padding-left:8px;text-align:center>Price</th>
                             <th style=padding-left:8px;text-align:center>Balance</th>
                         </tr>
-                    }
                     @{
                         var investmentIndex = 0;
                         string bgColor;
