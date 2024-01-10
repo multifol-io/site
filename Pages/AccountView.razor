@@ -81,6 +81,11 @@
     <div style=clear:left><a href=/portfolio-tracker @onclick=navToAccounts @onclick:preventDefault >Portfolio</a> > @Query</div>
 
     <div style=clear:left>
+        @if (Query == "editAccounts") {
+            <br/>
+            <span>Add account:&nbsp;</span><button @onclick=addAccountInline>➕ Account</button>
+            <br/><br/>
+        }
         @{
             var accountIndex = 0;
         }
@@ -100,7 +105,7 @@
                 }
 
                 account.View = found;
-            } else if (Query.StartsWith("newAccount")) {
+            } else if (Query.StartsWith("editAccounts")) {
                 account.View = true;
             } else if (Query.StartsWith("account:")) {
                 string accountToFind;
@@ -296,7 +301,7 @@
 
                     <tr style=background:black;color:white>
                         <td colspan=4>
-                            <button @onclick='@(e=>addInvestment2(e,accBuffer))' style=margin-left:8px>➕</button>
+                            <button @onclick='@(e=>addInvestment2(e,accBuffer))' style=margin-left:8px>➕</button> [add investment]
                         </td>
                     </tr>
                     <tr>
@@ -476,7 +481,7 @@
         }
     </div>
 } else if (appData.FamilyData == null) {
-    <p>waiting</p>
+    Navigation.NavigateTo("/portfolio-tracker");
 }
 
 @code {
@@ -1035,13 +1040,9 @@
     {
         if (appData.FamilyData is not null) {
             var newAccount = new Account(appData.FamilyData.PIN);
-            var newInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds };
-            newAccount.Investments.Add(newInvestment);
             newAccount.View = true;
             newAccount.Edit = true;
-            appData.FamilyData?.Accounts.Add(newAccount);
-
-            Navigation.NavigateTo("/portfolio-tracker/accounts");
+            appData.FamilyData?.Accounts.Insert(0,newAccount);
         }
     }
 
@@ -1295,18 +1296,21 @@
 
     async void LocationChanged(object? sender, LocationChangedEventArgs e)
     {
-        @foreach (var account in appData.FamilyData.Accounts) {
-            if (account.View) {
-                account.View = false;
-                account.SelectedInvestment = null;
-                foreach (var investment in account.Investments)
-                {
-                    investment.Selected = false;
+        if (appData != null && appData.FamilyData != null) {
+            foreach (var account in appData.FamilyData.Accounts) {
+                if (account.View) {
+                    account.View = false;
+                    account.SelectedInvestment = null;
+                    foreach (var investment in account.Investments)
+                    {
+                        investment.Selected = false;
+                    }
                 }
             }
+
+            await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         }
 
-        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         Navigation.LocationChanged -= LocationChanged;
     }
 }

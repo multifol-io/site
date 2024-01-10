@@ -1200,8 +1200,8 @@
         var newAccount = new Account(appData.FamilyData.PIN) { };
         newAccount.Edit = true;
         newAccount.View = true;
-        appData.FamilyData?.Accounts.Add(newAccount);
-        Navigation.NavigateTo("/portfolio-tracker/view/newAccount");
+        appData.FamilyData?.Accounts.Insert(0, newAccount);
+        Navigation.NavigateTo("/portfolio-tracker/view/editAccounts");
     }
 
     private async void deleteAccount2(MouseEventArgs e, int accountIndex)
