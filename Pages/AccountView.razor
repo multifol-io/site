@@ -403,6 +403,15 @@
                                             <input type=text style=width:100px @bind-Value=account.SelectedInvestment.PurchaseDate @bind-Value:event=oninput placeholder='m/yyyy'/>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td style=text-align:right>
+                                            <label>Cost Basis: </label>
+                                        </td>
+                                        <td style=padding-left:8px colspan=3>
+                                            $<input type=text style=width:100px;text-align:right @bind-Value=account.SelectedInvestment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
+                                        </td>
+                                        <td></td>
+                                    </tr>
                                 } else {
                                     <tr>
                                         <td style=text-align:right>
@@ -429,15 +438,18 @@
                                         $<input type=text style=width:100px;text-align:right @bind-Value=account.SelectedInvestment.ValuePIN @bind-Value:event=onchange placeholder='value'/>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td style=text-align:right>
-                                        <label>Cost Basis: </label>
-                                    </td>
-                                    <td style=padding-left:8px colspan=3>
-                                        $<input type=text style=width:100px;text-align:right @bind-Value=account.SelectedInvestment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
-                                    </td>
-                                    <td></td>
-                                </tr>
+                                @if (!isIBond)
+                                {
+                                    <tr>
+                                        <td style=text-align:right>
+                                            <label>Cost Basis: </label>
+                                        </td>
+                                        <td style=padding-left:8px colspan=3>
+                                            $<input type=text style=width:100px;text-align:right @bind-Value=account.SelectedInvestment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                }
                                 <tr>
                                     <td colspan=4><label style=padding-left:16px>Name:</label><input type=text style=width:300px @bind-Value=account.SelectedInvestment.Name @bind-Value:event=oninput placeholder='name'/></td>
                                 </tr>
