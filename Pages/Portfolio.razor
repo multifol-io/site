@@ -105,7 +105,6 @@
                         @switch (step.step) {
                             case "people": 
                                 <td>
-                                    <a @onclick=toggleTaxFilingStatusEditing style=margin:0px;padding:0px;width:20px class="m-2 btn" >✏️</a>
                                     @((MarkupString)bold("Tax Filing Status:"))
                                     @if (!taxFilingStatusEditing) {
                                         @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@appData.FamilyData.TaxFilingString</span> }
@@ -115,7 +114,8 @@
                                         @if(appData.FamilyData.PersonCount > 1) {
                                             <span>&nbsp;and @getPronoun(appData.FamilyData.People[1], false)</span>
                                         }
-                                        <br/><hr/>
+                                        <a @onclick=toggleTaxFilingStatusEditing style=margin:0px;padding:0px;width:20px class="m-2 btn" >✏️</a>
+                                        <br/><br/><hr/>
                                     } else {
                                         <select @bind=appData.FamilyData.TaxFilingStatus>
                                             <option value="ChoiceNeeded">ChoiceNeeded</option>
@@ -123,25 +123,30 @@
                                             <option value=MarriedFilingJointly>Married filing jointly</option>
                                             <option value=MarriedFilingSeperately>Married filing separately</option>
                                             <option value=HeadOfHousehold>Head of Household</option>
-                                        </select> <span style=@required>*</span><br/><br/>
+                                        </select> <span style=@required>*</span><br/>
                                         
-                                        @for (int i = 0; i < appData.FamilyData.PersonCount; i++) {
-                                            var person = appData.FamilyData.People[i];
-                                            int personIndex = i + 1;
+                                        <EditForm Model="appData.FamilyData" style=margin-left:25px>
+                                            @for (int i = 0; i < appData.FamilyData.PersonCount; i++) {
+                                                var person = appData.FamilyData.People[i];
+                                                int personIndex = i + 1;
 
-                                            <EditForm Model="person" style=margin-left:25px>
-                                                @if(person?.FamilyData?.PersonCount>1){
-                                                    <b>Person @personIndex:</b><br/>
-                                                    <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
-                                                    <option value="ChoiceNeeded">ChoiceNeeded</option>
-                                                    <option>person @personIndex</option>
-                                                    <option>him</option>
-                                                    <option>her</option>
-                                                    <option>me</option>
-                                                    <option>them</option>
-                                                </select><br/>}
-                                            </EditForm><br/>
-                                        }
+                                                    @if(person?.FamilyData?.PersonCount>1){
+                                                        <b>Person @personIndex:</b><br/>
+                                                        <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
+                                                        <option value="ChoiceNeeded">ChoiceNeeded</option>
+                                                        <option>person @personIndex</option>
+                                                        <option>him</option>
+                                                        <option>her</option>
+                                                        <option>me</option>
+                                                        <option>them</option>
+                                                    </select><br/>}
+                                            }
+                                            <button @onclick=@toggleTaxFilingStatusEditing>save</button>
+
+                                        </EditForm>
+
+                                        <br/>
+                                        <br/>
                                     }
                                 </td>
                                 break;
@@ -193,10 +198,10 @@
                                     @((MarkupString)bold("Investable Assets"))
                                     @if (appData.FamilyData.Accounts.Count > 0) {
                                         if (View == null) {
-                                            View = "allocations";
+                                            View = "holdings";
                                         }
                                         
-                                        var allocationsBold = (View == "allocations") ? ";font-weight:bold" : ""; 
+                                        var holdingsBold = (View == "holdings") ? ";font-weight:bold" : ""; 
                                         var accountsBold = (View == "accounts") ? ";font-weight:bold" : "";
                                         var bogleheadsBold = (View == "bogleheads") ? ";font-weight:bold" : "";
                                         var custodiansBold = (View == "custodians") ? ";font-weight:bold" : "";
@@ -204,7 +209,7 @@
                                     
                                         <label>&nbsp;by</label>
                                         <span>
-                                            <a style="@allocationsBold" href=/portfolio-tracker>allocations</a> |
+                                            <a style="@holdingsBold" href=/portfolio-tracker>holdings</a> |
                                             <a style="@accountsBold" href=/portfolio-tracker/accounts>accounts</a> | 
                                             <a style="@taxTypesBold" href=/portfolio-tracker/tax-types>tax-types</a> | 
                                             <a style="@custodiansBold" href=/portfolio-tracker/custodians>custodians</a> | 
@@ -216,7 +221,7 @@
                                                 <table class=mainTable>
                                                     @if (appData.FamilyData.Accounts.Count > 0) {
                                                         <tr style=vertical-align:bottom>
-                                                            <th style=padding-left:8px>Ticker</th>
+                                                            <th style=padding-left:8px>Holding</th>
                                                             <th style=padding-left:8px;text-align:center>Quantity</th>
                                                             <th style=padding-left:8px;text-align:center>Price</th>
                                                             <th style=padding-left:8px;text-align:center>Balance</th>
@@ -243,13 +248,20 @@
                                                             int invBuffer = investmentIndex;
                                                             investmentIndex++;
                                                             string bgColor = alternateRow2 ? "white" : "lightgray";
+                                                            bool isIBond = investment.Ticker == "IBOND";
+
                                                             var tickerQuery = "ticker:"+investment.Ticker;
                                                             <tr style=background-color:@bgColor @onclick='@(e=>editAccount(e,-1,-1, tickerQuery))'>
                                                                 <td style=padding-left:8px title=@investment.Name>
                                                                     @(investment.Ticker != null ? investment.Ticker : investment.Name)
                                                                 </td>
-                                                                <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleTwoDecimal(investment.SharesPIN)</td>
-                                                                <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(investment.Price)</td>
+                                                                @if (isIBond) 
+                                                                {
+                                                                    <td style=text-align:center colspan="2">@FormatUtilities.formatMonth(investment.PurchaseDate)</td>
+                                                                } else {
+                                                                    <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleTwoDecimal(investment.SharesPIN)</td>
+                                                                    <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(investment.Price)</td>
+                                                                }
                                                                 <td style=text-align:right;padding-left:8px>
                                                                     @FormatUtilities.formatMoney(investment.ValuePIN, decimalPlaces:0)
                                                                 </td>
@@ -295,7 +307,7 @@
                                                             }
                                                             <br/>
                                                             <label>Accounts: </label><br/>
-                                                            <button @onclick=addAccountInline title='add account'>➕</button>
+                                                            <button @onclick=addAccountInline title='add account'>➕ account</button>
                                                             <button @onclick=ShowImport title='to import Account info from a CSV/XLSX file'>
                                                                 Import CSV... ⬆️
                                                             </button>
@@ -309,12 +321,12 @@
                                                     </tr>
                                                 </table>
                                                 break;
-                                            case "allocations":
+                                            case "holdings":
                                                 bool alternateRow = false;
                                                 <table class=mainTable>
                                                     @if (appData.FamilyData.Accounts.Count > 0) {
                                                         <tr style=vertical-align:bottom>
-                                                            <th style=padding-left:8px>Ticker</th>
+                                                            <th style=padding-left:8px>Holding</th>
                                                             <th style=padding-left:8px;text-align:center>Quantity</th>
                                                             <th style=text-align:right;padding-left:8px>Price</th>
                                                             <th style=padding-left:8px;text-align:center>Balance</th>
@@ -702,7 +714,7 @@
                                         }
                                     }
                                     @if (appData.FamilyData.Accounts.Count == 0) {
-                                        <button style=margin-left:40px @onclick=addAccountInline title='add account'>➕</button>
+                                        <button style=margin-left:40px @onclick=addAccountInline title='add account'>➕ account</button>
                                         <button @onclick=ShowImport title='import Accounts from a CSV/XLSX file'>
                                             Import CSV... ⬆️
                                         </button>
@@ -714,7 +726,7 @@
                                         <br/><br/><i>Editing Investable Assets:</i>
                                         <ul>
                                             <li>
-                                                To hand enter an account, click the add account button "➕" above.
+                                                To hand enter an account, click the add account button "➕ account" above.
                                             </li>
                                             <li>
                                                 To import accounts via a CSV file from the account custodian (Vanguard, Fidelity, Schwab, etc...), click the import accounts button "Import CSV... ⬆️" above.

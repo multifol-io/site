@@ -434,9 +434,15 @@
                                     <td style=text-align:right>
                                         <label>Balance: </label>
                                     </td>
-                                    <td style=padding-left:8px colspan=2>
+                                    <td style=padding-left:8px colspan=1>
                                         $<input type=text style=width:100px;text-align:right @bind-Value=account.SelectedInvestment.ValuePIN @bind-Value:event=onchange placeholder='value'/>
                                     </td>
+                                    @if (isIBond)
+                                    {
+                                        <td>
+                                            <button @onclick='@(e=>account.SelectedInvestment.CalculateIBondValue())'>calculate</button>
+                                        </td>
+                                    }
                                 </tr>
                                 @if (!isIBond)
                                 {
