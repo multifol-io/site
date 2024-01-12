@@ -185,16 +185,16 @@
                             case "advice-settings":
                                 @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) {
                                     @((MarkupString)bold("Advanced Portfolio Settings:"))<span>&nbsp;(experimental)</span><br/>
-                                    <InputCheckbox id=stockSizeRules style=margin-left:20px @bind-Value=appData.ApplyStockSizeRules /> <label for=stockSizeRules>&nbsp;Show warning if &gt; 5% concentration of an individual stock</label><br/>
-                                    <InputCheckbox id=taxEfficientRules style=margin-left:20px @bind-Value=appData.ApplyTaxEfficientPlacementRules  /> <label for=taxEfficientRules>&nbsp;Show advice for tax efficient placement</label><br/> 
-                                    <InputCheckbox id=allowAfterTaxPercentage style=margin-left:20px @bind-Value=appData.AllowAfterTaxPercentage  /> <label for=allowAfterTaxPercentage>&nbsp;Track After-Tax Percentage for Account that might have Pre and Post-Tax contributions</label><br/> 
+                                    <InputCheckbox id=stockSizeRules style=margin-left:20px @bind-Value=appData.ApplyStockSizeRules /> <label style=display:inline for=stockSizeRules>&nbsp;Show warning if &gt; 5% concentration of an individual stock</label><br/>
+                                    <InputCheckbox id=taxEfficientRules style=margin-left:20px @bind-Value=appData.ApplyTaxEfficientPlacementRules  /> <label style=display:inline for=taxEfficientRules>&nbsp;Show advice for tax efficient placement</label><br/> 
+                                    <InputCheckbox id=allowAfterTaxPercentage style=margin-left:20px @bind-Value=appData.AllowAfterTaxPercentage  /> <label style=display:inline for=allowAfterTaxPercentage>&nbsp;Track After-Tax Percentage for Account that might have Pre and Post-Tax contributions</label><br/> 
                                     <br/>
                                 }
                                 break;
                             case "retirement-assets":
                                 @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) {
                                 <td>
-                                    <a @onclick=editAccounts style=margin:0px;padding:0px;width:20px class="m-0 btn" >✏️</a>
+                                    <a @onclick=editor style=margin:0px;padding:0px;width:20px class="m-0 btn" >✏️</a>
                                     @((MarkupString)bold("Investable Assets"))
                                     @if (appData.FamilyData.Accounts.Count > 0) {
                                         if (View == null) {
@@ -852,11 +852,8 @@
         }
     }
 
-    void editAccounts() {
-        showEditAccountHelpers = !showEditAccountHelpers;
-        if (!Navigation.Uri.EndsWith("/portfolio-tracker/accounts")) {
-            Navigation.NavigateTo("/portfolio-tracker/accounts");
-        }
+    void editor() {
+        Navigation.NavigateTo("/portfolio-tracker/view/editor");
     }
 
     void toggleTaxFilingStatusEditing() {
@@ -1213,7 +1210,7 @@
         newAccount.Edit = true;
         newAccount.View = true;
         appData.FamilyData?.Accounts.Insert(0, newAccount);
-        Navigation.NavigateTo("/portfolio-tracker/view/editAccounts");
+        Navigation.NavigateTo("/portfolio-tracker/view/editor");
     }
 
     private async void deleteAccount2(MouseEventArgs e, int accountIndex)
