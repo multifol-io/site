@@ -425,8 +425,11 @@
                                         <td style=text-align:right>
                                             <label>Price: </label>
                                         </td>                                    
-                                        <td style=text-align:left;padding-left:8px colspan=2>
+                                        <td style=text-align:left;padding-left:8px>
                                             $<input type=text style=width:80px;text-align:right @bind-Value=account.SelectedInvestment.Price @bind-Value:event=onchange placeholder='price'/>
+                                        </td>
+                                        <td>
+                                            <button @onclick=@refreshPrices title="fetch prices">fetch</button>
                                         </td>
                                     </tr>
                                 }
