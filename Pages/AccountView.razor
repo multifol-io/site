@@ -302,7 +302,12 @@
                     <tr style=background:black;color:white>
                         <td colspan=4>
                             <button @onclick='@(e=>addInvestment2(e,accBuffer))' style=margin-left:8px>➕ holding</button>
+                            @if (account.Custodian?.ToLowerInvariant() == "treasury direct"  || account.Custodian?.ToLowerInvariant() == "treasurydirect")
+                            {
+                                <button @onclick='@(e=>addIBOND(e,accBuffer))' style=margin-left:8px>➕ IBOND</button>
+                            }
                         </td>
+                        
                     </tr>
                     <tr>
                         <td colspan=4 style=text-align:right;font-size:9pt;font-style:italic>
@@ -1009,6 +1014,22 @@
     private void cancelImport()
     {
         appData.ImportResult = null;
+    }
+
+    private void addIBOND(MouseEventArgs e, int accountIndex)
+    {
+        if (appData.FamilyData is not null) {
+            var account = appData.FamilyData.Accounts[accountIndex];
+            if (account.SelectedInvestment != null)
+            {
+                account.SelectedInvestment.Selected = false;
+            }
+
+            account.SelectedInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds, Selected = true, Ticker = "IBOND" };
+            account.Investments.Add(account.SelectedInvestment);
+
+            account.SelectedInvestment.SelectedTransaction = new Transaction() { Type = "Edit" };
+        }
     }
 
     private void addInvestment2(MouseEventArgs e, int accountIndex) {
