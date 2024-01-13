@@ -301,10 +301,10 @@
 
                     <tr style=background:black;color:white>
                         <td colspan=4>
-                            <button @onclick='@(e=>addInvestment2(e,accBuffer))' style=margin-left:8px>➕ holding</button>
+                            <button @onclick='@(e=>addInvestment2(e,accBuffer))' style=margin-left:8px title="add holding">➕ holding</button>
                             @if (account.Custodian?.ToLowerInvariant() == "treasury direct"  || account.Custodian?.ToLowerInvariant() == "treasurydirect")
                             {
-                                <button @onclick='@(e=>addIBOND(e,accBuffer))' style=margin-left:8px>➕ IBOND</button>
+                                <button title="add ibond" @onclick='@(e=>addIBOND(e,accBuffer))' style=margin-left:8px>➕ IBOND</button>
                             }
                         </td>
                         
@@ -321,11 +321,17 @@
                 <br/>
 
                 @if (account.SelectedInvestment != null) {
-                    switch (account.SelectedInvestment.SelectedTransaction?.Type) {
+                    var investment = account.SelectedInvestment;
+                    switch (investment.SelectedTransaction?.Type) {
                         case null:
                             @((MarkupString)bold("Actions:"))<br/>
                             <button @onclick='@(e=>edit(e,account.SelectedInvestment))'>Edit @account.SelectedInvestment.Ticker</button>
                             <button @onclick='@(e=>deleteSelectedInvestment(e,account.SelectedInvestment))' title='delete investment'>Delete @account.SelectedInvestment.Ticker</button>
+                            @if (account.SelectedInvestment.Ticker.ToUpper() == "IBOND")
+                            {
+                                var ebURL = "https://eyebonds.info/ibonds/" + investment.CostBasis.ToString() + "/ib_" + investment.PurchaseDate?.Year + "_" + investment.PurchaseDate?.Month.ToString("D2") + ".html";
+                                <br/><br/><a href=@ebURL target=_new>Open tab to details from eyebonds.info</a>
+                            }
                             <br/><br/>
                             @* @((MarkupString)bold("Record Transaction:"))<br/>
                             <button @onclick='@(e=>buy(e,account,account.SelectedInvestment))'>Buy @account.SelectedInvestment.Ticker</button>
