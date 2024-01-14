@@ -125,6 +125,7 @@
             }
 
             if (account.View) {
+                bool isTreasuryDirect = account.Custodian?.ToLowerInvariant() == "treasury direct"  || account.Custodian?.ToLowerInvariant() == "treasurydirect";
                 bool alternateRow2 = false;
                 if (account.Investments.Count == 0 && account.AccountType == null && account.Custodian == null && account.Note == null)
                 {
@@ -221,13 +222,23 @@
                     }
                     <tr style=height:15px;background:white></tr>
                     </table>
-                    <table style=margin-left:.5in>
-                        <tr style=vertical-align:bottom>
-                            <th style=padding-left:8px>Holding</th>
-                            <th style=padding-left:8px;text-align:center>Quantity</th>
-                            <th style=padding-left:8px;text-align:center>Price</th>
-                            <th style=padding-left:8px;text-align:center>Balance</th>
-                        </tr>
+                    <table style=margin-left:.25in>
+                        @if (!isTreasuryDirect)
+                        {
+                            <tr style=vertical-align:bottom>
+                                <th style=padding-left:8px>Holding</th>
+                                <th style=padding-left:8px;text-align:center>Quantity</th>
+                                <th style=padding-left:8px;text-align:center>Price</th>
+                                <th style=padding-left:8px;text-align:center>Balance</th>
+                            </tr>
+                        } else {
+                            <tr style=vertical-align:bottom>
+                                <th style=padding-left:8px>Holding</th>
+                                <th style=padding-left:8px;text-align:center>'Fixed'<br/>Rate</th>
+                                <th style=padding-left:8px;text-align:center>Current<br/>Rate</th>
+                                <th style=padding-left:8px;text-align:center>Balance</th>
+                            </tr>
+                        }
                     @{
                         var investmentIndex = 0;
                         string bgColor;
@@ -245,10 +256,14 @@
                         <tr style=background-color:@bgColor @onclick='@(e=>chooseInvestment(e,accBuffer,invBuffer))'>
                             <td style=padding-left:8px;height:30px; title=@investment.Name>
                                 @(investment.Ticker != null ? investment.Ticker : investment.Name)
+                                @if(isIBond) { 
+                                    <span>&nbsp;</span>@FormatUtilities.formatMonthPlus2DigitYear(investment.PurchaseDate)
+                                }
                             </td>
                             @if (isIBond) 
                             {
-                                <td style=text-align:center colspan="2">@FormatUtilities.formatMonth(investment.PurchaseDate)</td>
+                                <td style=text-align:right>@FormatUtilities.formatPercent3(investment.InterestRate*100.0)</td>
+                                <td style=text-align:right>@FormatUtilities.formatPercent3(investment.CurrentRate*100.0)</td>
                             } else {
                                 <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleTwoDecimal(investment.SharesPIN)</td>
                                 <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(investment.Price)</td>
@@ -302,7 +317,7 @@
                     <tr style=background:black;color:white>
                         <td colspan=4>
                             <button @onclick='@(e=>addInvestment2(e,accBuffer))' style=margin-left:8px title="add holding">➕ holding</button>
-                            @if (account.Custodian?.ToLowerInvariant() == "treasury direct"  || account.Custodian?.ToLowerInvariant() == "treasurydirect")
+                            @if (isTreasuryDirect)
                             {
                                 <button title="add ibond" @onclick='@(e=>addIBOND(e,accBuffer))' style=margin-left:8px>➕ IBOND</button>
                             }

@@ -34,6 +34,8 @@ public class Investment
     public List<Transaction> Transactions { get; set; }
 
     public DateOnly? PurchaseDate { get; set; }
+    public double? InterestRate { get; set; }
+    public double? CurrentRate { get; set; }
     public bool AutoCompleted { get; set; }
     private string? _Ticker;
     public string? Ticker {
@@ -369,6 +371,8 @@ public class Investment
                         }
                         break;
                     case 1:
+                        var rate = DoubleFromPercentageString(chunk);
+                        rates.Add(rate);
                         break;
                     default:
                         if (string.IsNullOrEmpty(chunk))
@@ -377,8 +381,8 @@ public class Investment
                         }
                         else 
                         {
-                            var rate = DoubleFromPercentageString(chunk);
-                            rates.Add(rate);
+                            var fixedRate = DoubleFromPercentageString(chunk);
+                            rates.Add(fixedRate);
                         }
                         break;
                 }
@@ -421,12 +425,16 @@ public class Investment
                 var nowYear = DateTime.Now.Year;
                 double value = CostBasis ?? 0.0;
                 double bondQuantity = (value / 25.0);
-                for (int i = rates.Count - 1; i >= 0; i--)
+                double currentRate = 0.0;
+                for (int i = rates.Count - 1; i >= 1; i--)
                 {
                     var monthCount = i > 0 ? 6 : GetMonthsLeft(PurchaseDate.Value, DateTime.Now);
-                    value = (bondQuantity*Math.Round(value/bondQuantity*Math.Pow((1.0+rates[i]/2.0),((double)monthCount/6.0)),2));
+                    currentRate = rates[i];
+                    value = (bondQuantity*Math.Round(value/bondQuantity*Math.Pow((1.0+currentRate/2.0),((double)monthCount/6.0)),2));
                 }
 
+                InterestRate = rates[0];
+                CurrentRate = currentRate;
                 ValuePIN = (int)value;
             }
         }

@@ -229,6 +229,7 @@
                                                     }
                                                     @{var accountIndex = 0;}
                                                     @foreach (var account in appData.FamilyData.Accounts) {
+                                                        bool isTreasuryDirect = account.Custodian?.ToLowerInvariant() == "treasury direct"  || account.Custodian?.ToLowerInvariant() == "treasurydirect";
                                                         bool alternateRow2 = false;
                                                         int accBuffer = accountIndex;
                                                         accountIndex++;
@@ -242,6 +243,14 @@
                                                             </td>
                                                         </tr>
 
+                                                        @if(isTreasuryDirect) {
+                                                            <tr style=vertical-align:bottom>
+                                                                <td style=padding-left:8px>Holding</td>
+                                                                <td style=padding-left:8px;text-align:center>'Fixed'<br/>Rate</td>
+                                                                <td style=padding-left:8px;text-align:center>Current<br/>Rate</td>
+                                                                <td style=padding-left:8px;text-align:center>Balance</td>
+                                                            </tr>
+                                                        }
                                                         var investmentIndex = 0;
                                                         foreach (var investment in account.Investments) {
                                                             var advice = Advisor.Advise(investment, account, appData);
@@ -254,10 +263,14 @@
                                                             <tr style=background-color:@bgColor @onclick='@(e=>editAccount(e,-1,-1, tickerQuery))'>
                                                                 <td style=padding-left:8px title=@investment.Name>
                                                                     @(investment.Ticker != null ? investment.Ticker : investment.Name)
+                                                                    @if(isIBond) { 
+                                                                        <span>&nbsp;</span>@FormatUtilities.formatMonthPlus2DigitYear(investment.PurchaseDate)
+                                                                    }
                                                                 </td>
                                                                 @if (isIBond) 
                                                                 {
-                                                                    <td style=text-align:center colspan="2">@FormatUtilities.formatMonth(investment.PurchaseDate)</td>
+                                                                    <td style=text-align:right>@FormatUtilities.formatPercent3(investment.InterestRate*100.0)</td>
+                                                                    <td style=text-align:right>@FormatUtilities.formatPercent3(investment.CurrentRate*100.0)</td>
                                                                 } else {
                                                                     <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleTwoDecimal(investment.SharesPIN)</td>
                                                                     <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(investment.Price)</td>
@@ -299,11 +312,9 @@
                                                     }
                                                     <tr>
                                                         <td colspan=2>
-                                                            @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
-                                                            {
-                                                                <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button>
-                                                            } else {
-                                                                <a href="/updating-portfolio">Update quotes</a>
+                                                            <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button>
+                                                            @if (string.IsNullOrEmpty(appData.EODHistoricalDataApiKey)) {
+                                                                <br/><a href="/updating-portfolio">Enable price updates</a>
                                                             }
                                                             <br/>
                                                             <label>Accounts: </label><br/>
@@ -451,11 +462,9 @@
                                                     </tr>
                                                     <tr>
                                                         <td colspan=2>
-                                                            @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
-                                                            {
-                                                                <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button>
-                                                            } else {
-                                                                <a href="/updating-portfolio">Update quotes</a>
+                                                            <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button>
+                                                            @if (string.IsNullOrEmpty(appData.EODHistoricalDataApiKey)) {
+                                                                <br/><a href="/updating-portfolio">Enable price updates</a>
                                                             }
                                                         </td>                                                            
                                                         <td style=text-align:right;padding-left:8px colspan=2>
@@ -532,11 +541,9 @@
                                                     }
                                                     <tr>
                                                         <td>
-                                                            @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
-                                                            {
-                                                                <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button>
-                                                            } else {
-                                                                <a href="/updating-portfolio">Update quotes</a>
+                                                            <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button>
+                                                            @if (string.IsNullOrEmpty(appData.EODHistoricalDataApiKey)) {
+                                                                <br/><a href="/updating-portfolio">Enable price updates</a>
                                                             }
                                                         </td>
                                                         <td style=text-align:right;padding-left:8px><hr/><b>@(FormatUtilities.formatMoney(appData.FamilyData.Value))</b></td>
@@ -677,11 +684,9 @@
                                                     }
                                                     <tr>
                                                         <td colspan=2>
-                                                            @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
-                                                            {
-                                                                <button @onclick=@refreshPrices title='Refresh Quotes' style=min-width:80px;>@refreshButtonText</button>
-                                                            } else {
-                                                                <a href="/updating-portfolio">Update quotes</a>
+                                                            <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button>
+                                                            @if (string.IsNullOrEmpty(appData.EODHistoricalDataApiKey)) {
+                                                                <br/><a href="/updating-portfolio">Enable price updates</a>
                                                             }
                                                         </td>
                                                         <td colspan=2 style=text-align:right;padding-left:8px><hr/><b>@(FormatUtilities.formatMoney(appData.FamilyData.Value))</b></td>

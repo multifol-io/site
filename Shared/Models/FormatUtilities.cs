@@ -17,6 +17,17 @@ public static class FormatUtilities {
         }
     }
     
+    public static string formatMonthPlus2DigitYear(DateOnly? date)
+    {
+        if (date == null) {
+            return "";
+        }
+        else
+        {
+            return date?.ToString("MM/yy");
+        }
+    }
+
     public static string formatMoney(double? amount, bool withColor = false, int decimalPlaces = 2) 
     {
         if (decimalPlaces != 2 && decimalPlaces != 0) {
