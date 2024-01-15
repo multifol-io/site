@@ -418,6 +418,7 @@ public class Investment
             {
                 var month = PurchaseDate.Value.Month;
                 var year = PurchaseDate.Value.Year;
+                Console.WriteLine(PurchaseDate.ToString());
                 var date = GetRateDate(month, year);
                 var rates = IBondRates[date];
 
@@ -428,9 +429,10 @@ public class Investment
                 double currentRate = 0.0;
                 var monthsLeft = GetTotalMonths(PurchaseDate.Value, DateTime.Now);
                 var i = rates.Count - 1;
+                int monthsToCompoundThisRound = 6;
                 while (monthsLeft > 0)
                 {
-                    var monthsToCompoundThisRound = monthsLeft >= 6 ? 6 : monthsLeft;
+                    monthsToCompoundThisRound = monthsLeft >= 6 ? 6 : monthsLeft;
                     currentRate = rates[i];
                     value = (bondQuantity*Math.Round(value/bondQuantity*Math.Pow((1.0+currentRate/2.0),((double)monthsToCompoundThisRound/6.0)),2));
                     monthsLeft -= monthsToCompoundThisRound;
@@ -438,7 +440,7 @@ public class Investment
                 }
 
                 InterestRate = rates[0];
-                CurrentRate = currentRate;
+                CurrentRate = monthsToCompoundThisRound != 6 ? currentRate : rates[i];
                 ValuePIN = (int)value;
             }
         }
