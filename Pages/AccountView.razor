@@ -342,7 +342,7 @@
                             @((MarkupString)bold("Actions:"))<br/>
                             <button @onclick='@(e=>edit(e,account.SelectedInvestment))'>Edit @account.SelectedInvestment.Ticker</button>
                             <button @onclick='@(e=>deleteSelectedInvestment(e,account.SelectedInvestment))' title='delete investment'>Delete @account.SelectedInvestment.Ticker</button>
-                            @if (account.SelectedInvestment.Ticker.ToUpper() == "IBOND")
+                            @if (account.SelectedInvestment.Ticker?.ToUpper() == "IBOND")
                             {
                                 var ebURL = "https://eyebonds.info/ibonds/" + investment.CostBasis.ToString() + "/ib_" + investment.PurchaseDate?.Year + "_" + investment.PurchaseDate?.Month.ToString("D2") + ".html";
                                 <br/><br/><a href=@ebURL target=_new>Open tab to details from eyebonds.info</a>
