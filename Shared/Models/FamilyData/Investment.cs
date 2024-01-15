@@ -426,11 +426,15 @@ public class Investment
                 double value = CostBasis ?? 0.0;
                 double bondQuantity = (value / 25.0);
                 double currentRate = 0.0;
-                for (int i = rates.Count - 1; i >= 1; i--)
+                var monthsLeft = GetTotalMonths(PurchaseDate.Value, DateTime.Now);
+                var i = rates.Count - 1;
+                while (monthsLeft > 0)
                 {
-                    var monthCount = i > 0 ? 6 : GetMonthsLeft(PurchaseDate.Value, DateTime.Now);
+                    var monthsToCompoundThisRound = monthsLeft >= 6 ? 6 : monthsLeft;
                     currentRate = rates[i];
-                    value = (bondQuantity*Math.Round(value/bondQuantity*Math.Pow((1.0+currentRate/2.0),((double)monthCount/6.0)),2));
+                    value = (bondQuantity*Math.Round(value/bondQuantity*Math.Pow((1.0+currentRate/2.0),((double)monthsToCompoundThisRound/6.0)),2));
+                    monthsLeft -= monthsToCompoundThisRound;
+                    i--;
                 }
 
                 InterestRate = rates[0];
@@ -440,12 +444,12 @@ public class Investment
         }
     }
 
-    private static int GetMonthsLeft(DateOnly purchaseDate, DateTime now)
+    private static int GetTotalMonths(DateOnly purchaseDate, DateTime now)
     {
-        var months = ((now.Year - purchaseDate.Year) * 12 + now.Month - purchaseDate.Month) % 6;
+        var months = ((now.Year - purchaseDate.Year) * 12 + now.Month - purchaseDate.Month);
         return months;
     }
-
+    
     private static double DoubleFromPercentageString(string value)
     {
         return double.Parse(value.Replace("%","")) / 100;
