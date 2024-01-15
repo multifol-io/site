@@ -493,7 +493,8 @@ public string estimatePortfolio()
         }
         else
         {
-            matchingInvestment = new Investment(PIN) { Name = investment.Name, AssetType = assetType == null ? investment.AssetType : assetType, Ticker = key, PercentChange = investment.PercentChange, LastUpdated = investment.LastUpdated, SharesPIN = null, Price = investment.GetPrice(assetType, investment.Price), PreviousClose = investment.PreviousClose, ValuePIN = 0.0 };
+            matchingInvestment = new Investment(PIN) { Name = investment.Name, AssetType = assetType == null ? investment.AssetType : assetType, Ticker = key, PercentChange = investment.PercentChange, LastUpdated = investment.LastUpdated, SharesPIN = null, Price = investment.GetPrice(assetType, investment.Price), PreviousClose = investment.GetPrice(assetType, investment.PreviousClose), ValuePIN = 0.0 };
+            Console.WriteLine(matchingInvestment.Ticker + " " + matchingInvestment.Price + " prev: "+ matchingInvestment.PreviousClose);
             _GroupedInvestments.Add(key, matchingInvestment);
         }
 
