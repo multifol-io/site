@@ -34,8 +34,10 @@ public class Investment
     public List<Transaction> Transactions { get; set; }
 
     public DateOnly? PurchaseDate { get; set; }
+    public DateOnly? NextRateStart { get; set; }
     public double? InterestRate { get; set; }
     public double? CurrentRate { get; set; }
+    public double? NextRate { get; set; }
     public bool AutoCompleted { get; set; }
     private string? _Ticker;
     public string? Ticker {
@@ -418,7 +420,6 @@ public class Investment
             {
                 var month = PurchaseDate.Value.Month;
                 var year = PurchaseDate.Value.Year;
-                Console.WriteLine(PurchaseDate.ToString());
                 var date = GetRateDate(month, year);
                 var rates = IBondRates[date];
 
@@ -441,6 +442,22 @@ public class Investment
 
                 InterestRate = rates[0];
                 CurrentRate = monthsToCompoundThisRound != 6 ? currentRate : rates[i];
+                if (monthsToCompoundThisRound != 6 && i > 0) 
+                {
+                    NextRate = rates[i];
+                    var nextMonthStart = nowMonth + 6 - monthsToCompoundThisRound + 1;
+                    var nextYearStart = nowYear;
+                    if (nextMonthStart > 12)
+                    {
+                        nextMonthStart -= 12;
+                        nextYearStart++;
+                    }
+                    NextRateStart = new DateOnly(nextYearStart, nextMonthStart, 1);
+                } else {
+                    NextRate = null;
+                    NextRateStart = null;
+                }
+                
                 ValuePIN = (int)value;
             }
         }
@@ -451,7 +468,7 @@ public class Investment
         var months = ((now.Year - purchaseDate.Year) * 12 + now.Month - purchaseDate.Month);
         return months;
     }
-    
+
     private static double DoubleFromPercentageString(string value)
     {
         return double.Parse(value.Replace("%","")) / 100;

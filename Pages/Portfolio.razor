@@ -279,6 +279,18 @@
                                                                     @FormatUtilities.formatMoney(investment.ValuePIN, decimalPlaces:0)
                                                                 </td>
                                                             </tr>
+                                                            if (isIBond && investment.NextRate.HasValue)
+                                                            {
+                                                                <tr style=background-color:@bgColor @onclick='@(e=>editAccount(e,-1,-1, tickerQuery))'>
+                                                                    <td colspan=2 style=text-align:right>
+                                                                        as of @FormatUtilities.formatMonthPlus2DigitYear(@investment.NextRateStart):
+                                                                    </td>
+                                                                    <td style=text-align:right>
+                                                                        @FormatUtilities.formatPercent3(investment.NextRate*100.0)
+                                                                    </td>
+                                                                    <td></td>
+                                                                </tr>
+                                                            }
                                                             @foreach (var adviceItem in advice) {
                                                                 <tr style=background-color:@bgColor>
                                                                     <td colspan=4 style=padding-left:16px>
