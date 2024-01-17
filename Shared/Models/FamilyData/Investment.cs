@@ -139,6 +139,17 @@ public class Investment
     }
 
     [JsonIgnore]
+    public bool IsIBond {
+        get {
+            return AssetType switch
+            {
+                global::AssetType.IBond => true,
+                _ => false,
+            };
+        }
+    }
+
+    [JsonIgnore]
     public bool IsStock {
         get {
             return AssetType switch
@@ -421,44 +432,56 @@ public class Investment
                 var month = PurchaseDate.Value.Month;
                 var year = PurchaseDate.Value.Year;
                 var date = GetRateDate(month, year);
-                var rates = IBondRates[date];
 
-                var nowMonth = DateTime.Now.Month;
-                var nowYear = DateTime.Now.Year;
-                double value = CostBasis ?? 0.0;
-                double bondQuantity = (value / 25.0);
-                double currentRate = 0.0;
-                var monthsLeft = GetTotalMonths(PurchaseDate.Value, DateTime.Now);
-                var i = rates.Count - 1;
-                int monthsToCompoundThisRound = 6;
-                while (monthsLeft > 0)
-                {
-                    monthsToCompoundThisRound = monthsLeft >= 6 ? 6 : monthsLeft;
-                    currentRate = rates[i];
-                    value = (bondQuantity*Math.Round(value/bondQuantity*Math.Pow((1.0+currentRate/2.0),((double)monthsToCompoundThisRound/6.0)),2));
-                    monthsLeft -= monthsToCompoundThisRound;
-                    i--;
-                }
+                bool foundDate = IBondRates.TryGetValue(date, out List<double>? rates);
 
-                InterestRate = rates[0];
-                CurrentRate = monthsToCompoundThisRound != 6 ? currentRate : rates[i];
-                if (monthsToCompoundThisRound != 6 && i > 0) 
+                if (foundDate && rates != null)
                 {
-                    NextRate = rates[i];
-                    var nextMonthStart = nowMonth + 6 - monthsToCompoundThisRound + 1;
-                    var nextYearStart = nowYear;
-                    if (nextMonthStart > 12)
+                    var nowMonth = DateTime.Now.Month;
+                    var nowYear = DateTime.Now.Year;
+                    double value = CostBasis ?? 0.0;
+                    double bondQuantity = (value / 25.0);
+                    double currentRate = 0.0;
+                    var monthsLeft = GetTotalMonths(PurchaseDate.Value, DateTime.Now);
+                    var i = rates.Count - 1;
+                    int monthsToCompoundThisRound = 6;
+                    while (monthsLeft > 0)
                     {
-                        nextMonthStart -= 12;
-                        nextYearStart++;
+                        monthsToCompoundThisRound = monthsLeft >= 6 ? 6 : monthsLeft;
+                        currentRate = rates[i];
+                        value = (bondQuantity*Math.Round(value/bondQuantity*Math.Pow((1.0+currentRate/2.0),((double)monthsToCompoundThisRound/6.0)),2));
+                        monthsLeft -= monthsToCompoundThisRound;
+                        i--;
                     }
-                    NextRateStart = new DateOnly(nextYearStart, nextMonthStart, 1);
-                } else {
+
+                    InterestRate = rates[0];
+                    CurrentRate = monthsToCompoundThisRound != 6 ? currentRate : rates[i];
+                    if (monthsToCompoundThisRound != 6 && i > 0) 
+                    {
+                        NextRate = rates[i];
+                        var nextMonthStart = nowMonth + 6 - monthsToCompoundThisRound + 1;
+                        var nextYearStart = nowYear;
+                        if (nextMonthStart > 12)
+                        {
+                            nextMonthStart -= 12;
+                            nextYearStart++;
+                        }
+                        NextRateStart = new DateOnly(nextYearStart, nextMonthStart, 1);
+                    } else {
+                        NextRate = null;
+                        NextRateStart = null;
+                    }
+                    
+                    ValuePIN = (int)value;
+                }
+                else
+                {
+                    InterestRate = null;
+                    CurrentRate = null;
+                    Value = null;
                     NextRate = null;
                     NextRateStart = null;
                 }
-                
-                ValuePIN = (int)value;
             }
         }
     }

@@ -653,4 +653,193 @@ public string estimatePortfolio()
             return null;
         }
     }
+
+    public async Task RefreshPrices(HttpClient http) {
+        Dictionary<string,List<Investment>> quotes = new();
+
+        var now = DateTime.Now.Date;
+        var previousMarketClose = PreviousMarketClose(now).ToLocalTime();
+        var nextMarketClose = NextMarketClose(now).ToLocalTime();
+        var nextMarketOpen = new DateTime(nextMarketClose.Year,nextMarketClose.Month,nextMarketClose.Day,13,30,00).ToLocalTime();
+        var marketIsBeforeOpen = DateTime.Now < nextMarketOpen;
+        bool marketIsOpen = DateTime.Now >= nextMarketOpen && DateTime.Now <= nextMarketClose;
+        var marketIsAfterClose = DateTime.Now > nextMarketClose;
+        foreach (var account in this.Accounts) {
+            foreach (var investment in account.Investments) {
+                bool fetchQuote = false;
+                if (investment.IsStock || investment.IsETF) {
+                    fetchQuote = investment.LastUpdated == null || (marketIsBeforeOpen && investment.LastUpdated < previousMarketClose) || marketIsOpen || (marketIsAfterClose && investment.LastUpdated < nextMarketClose);
+                } else if (investment.IsFund) {
+                    fetchQuote = investment.LastUpdated == null || investment.LastUpdated?.Date != previousMarketClose.Date;
+                } else if (investment.IsIBond) {
+                    await investment.CalculateIBondValue();
+                }
+
+                if (fetchQuote && investment.Ticker != null) {
+                    if (!quotes.ContainsKey(investment.Ticker)) {
+                        quotes.Add(investment.Ticker, new List<Investment> () { investment });
+                    } else {
+                        var investments = quotes[investment.Ticker];
+                        investments.Add(investment);
+                    }
+                }
+            }
+        }
+
+        List<string> rsuTickers = new();
+        for(int p=0;p<this.PersonCount;p++) {
+            var person = this.People[p];
+            foreach (var rsuGrant in person.RSUGrants) {
+                if (!string.IsNullOrEmpty(rsuGrant.Ticker)) {
+                    var ticker = rsuGrant.Ticker.ToUpper();
+                    var grantInvestment = new Investment() { Ticker = ticker, GrantToUpdateQuote = rsuGrant };
+                    if (!quotes.ContainsKey(ticker)) {
+                        quotes.Add(ticker, new List<Investment> () { grantInvestment });
+                    } else {
+                        var investments = quotes[ticker];
+                        investments.Add(grantInvestment);
+                    }
+                }
+            }
+        }
+
+        foreach (var quote in quotes)
+        {
+            try {
+                await UpdateInvestmentsPrice(quote.Key, quote.Value, http);
+            } catch (Exception ex) {
+                Console.WriteLine(ex.GetType().Name + ": " + ex.Message + " " + ex.StackTrace);
+            }
+        }
+
+        await ProfileUtilities.Save(this.AppData.CurrentProfileName, this);
+    }
+
+    private async Task UpdateInvestmentsPrice(string ticker, List<Investment> investments, HttpClient http)
+    {
+        if (!string.IsNullOrEmpty(this.AppData.EODHistoricalDataApiKey)) {
+            var quoteDataJson = await http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={ticker}&apikey={this.AppData.EODHistoricalDataApiKey}");
+            var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
+            if (quoteData?.Close != null) {
+                foreach (var investment in investments) {
+                    investment.Price = quoteData.Close;
+                    if (quoteData.Volume > 0) {
+                        investment.PreviousClose = quoteData.PreviousClose; 
+                        investment.PercentChange = quoteData.ChangeP;
+                        investment.LastUpdated = UnixTimeStampToDateTime(quoteData.Timestamp);
+                    } else if (quoteData.Volume == 0) {
+                        investment.PreviousClose = quoteData.PreviousClose;
+                        investment.PercentChange = quoteData.ChangeP;
+                        investment.LastUpdated = UnixTimeStampToDateTime(quoteData.Timestamp);
+                    } else {
+                        investment.PreviousClose = quoteData.Close;
+                        investment.PercentChange = null;
+                        investment.LastUpdated = null;
+                    }
+
+                    investment.UpdateValue();
+                }
+            }
+        }
+    }
+
+    public static DateTime? UnixTimeStampToDateTime( int? unixTimeStamp )
+    {
+        if (!unixTimeStamp.HasValue) return null;
+        // Unix timestamp is seconds past epoch
+        DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+        dateTime = dateTime.AddSeconds( unixTimeStamp ?? 0 ).ToLocalTime();
+        return dateTime;
+    }
+
+    private DateTime PreviousMarketClose(DateTime dateTime) {
+        return MarketClose(dateTime, -1);
+    }
+
+    private DateTime NextMarketClose(DateTime dateTime) {
+        return MarketClose(dateTime, 1);
+    }
+    
+    private DateTime MarketClose(DateTime dateTime, int direction) {
+        DateTime marketCloseDay;
+        if (direction == -1) {
+            marketCloseDay = dateTime.AddDays(direction);
+        } else {
+            marketCloseDay = dateTime;
+        }
+
+        switch (GetMarketDay(marketCloseDay)) {
+            case MarketDay.Holiday:
+            case MarketDay.WeekEnd:
+                return MarketClose(marketCloseDay.AddDays(direction), direction);
+            case MarketDay.HalfDay:
+            {
+                var datetime = new DateTime(marketCloseDay.Year, marketCloseDay.Month, marketCloseDay.Day, 13, 0, 0);
+                var datetimeutc = TimeZoneInfo.ConvertTimeToUtc(datetime, GetEasternTimeZoneInfo());
+                var datetimelocal = TimeZoneInfo.ConvertTimeFromUtc(datetimeutc, TimeZoneInfo.Local);
+                return datetimelocal;
+            }
+            default:
+            {
+                var datetime = new DateTime(marketCloseDay.Year, marketCloseDay.Month, marketCloseDay.Day, 16, 0, 0);
+                var datetimeutc = TimeZoneInfo.ConvertTimeToUtc(datetime, GetEasternTimeZoneInfo());
+                var datetimelocal = TimeZoneInfo.ConvertTimeFromUtc(datetimeutc, TimeZoneInfo.Local);
+                return datetimelocal;
+            }
+        }
+    }
+
+    private static TimeZoneInfo GetEasternTimeZoneInfo()
+    {
+        TimeZoneInfo tz = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows)
+           ? TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time")
+           : TimeZoneInfo.FindSystemTimeZoneById("America/New_York");
+
+        return tz;
+    }
+
+    enum MarketDay {
+        MarketDay,
+        Holiday,
+        HalfDay,
+        WeekEnd
+    }
+
+    static DateTime[] holidays = {
+        new DateTime(2023, 1, 2),
+        new DateTime(2023, 1 , 16 ),
+        new DateTime(2023, 2, 20),
+        new DateTime(2023, 4, 7),
+        new DateTime(2023, 5, 29),
+        new DateTime(2023, 6, 19),
+        new DateTime(2023, 7, 4),
+        new DateTime(2023, 9, 4),
+        new DateTime(2023, 11, 23),
+        new DateTime(2023, 12, 25),
+    };
+
+    static DateTime[] halfDays = {
+        new DateTime(2023, 7, 3),
+        new DateTime(2023, 11, 24),
+        new DateTime(2023, 12, 24),
+    };
+
+    private MarketDay GetMarketDay(DateTime dateTime) {
+        switch (dateTime.DayOfWeek) {
+            case DayOfWeek.Saturday: 
+            case DayOfWeek.Sunday:
+                return MarketDay.WeekEnd;
+            default:
+                var date = dateTime.Date;
+                if (holidays.Contains(date)) {
+                    return MarketDay.Holiday;
+                }
+
+                if (halfDays.Contains(date)) {
+                    return MarketDay.HalfDay;
+                }
+
+                return MarketDay.MarketDay;
+        }
+    }
 }
