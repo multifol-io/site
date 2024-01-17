@@ -263,6 +263,7 @@
                                                             <tr style=background-color:@bgColor @onclick='@(e=>editAccount(e,-1,-1, tickerQuery))'>
                                                                 <td style=padding-left:8px title=@investment.Name>
                                                                     @(investment.Ticker != null ? investment.Ticker : investment.Name)
+                                                                    @if (investment.AssetType == global::AssetType.Unknown) { <span style=color:red>*</span> }
                                                                     @if(isIBond) { 
                                                                         <span>&nbsp;</span>@FormatUtilities.formatMonthPlus2DigitYear(investment.PurchaseDate)
                                                                     }
@@ -445,6 +446,7 @@
                                                         <tr style=background-color:@bgColor>
                                                             <td style=padding-left:8px;vertical-align:text-top;@ftsize title=@investment.Name @onclick='@(e=>editAccount(e,-1,-1,tickerQuery))'>
                                                                 @(investment.Ticker != null ? investment.Ticker : investment.Name)
+                                                                @if (investment.AssetType == global::AssetType.Unknown) { <span style=color:red>*</span> }
                                                                 @if (appData.ApplyStockSizeRules && investment.IsStock && (investment.ValuePIN > appData.FamilyData.Value * .05)) {
                                                                     <sub title='@FormatUtilities.formatMoney(appData.FamilyData.Value*.05) is 5% of portfolio' style=background-color:yellow>&nbsp;&gt;5%</sub>
                                                                 }

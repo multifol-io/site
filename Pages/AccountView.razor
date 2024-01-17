@@ -256,6 +256,7 @@
                         <tr style=background-color:@bgColor @onclick='@(e=>chooseInvestment(e,accBuffer,invBuffer))'>
                             <td style=padding-left:8px;height:30px; title=@investment.Name>
                                 @(investment.Ticker != null ? investment.Ticker : investment.Name)
+                                @if (investment.AssetType == global::AssetType.Unknown) { <span style=color:red>*</span> }
                                 @if(isIBond) { 
                                     <span>&nbsp;</span>@FormatUtilities.formatMonthPlus2DigitYear(investment.PurchaseDate)
                                 }
@@ -347,8 +348,13 @@
 
                 <br/>
 
+
                 @if (account.SelectedInvestment != null) {
                     var investment = account.SelectedInvestment;
+                    if (investment.AssetType == global::AssetType.Unknown) {
+                        <span><span style=color:red>*</span> - Asset type is unknown. Please edit, and choose asset type.</span><br/><br/>
+                    }
+
                     switch (investment.SelectedTransaction?.Type) {
                         case null:
                             @((MarkupString)bold("Actions:"))<br/>
@@ -508,6 +514,7 @@
                                                 <option>@assetType</option>
                                             }
                                         </select>
+                                        <span style=color:red>&nbsp;*</span>
                                     </td>
                                 </tr>
                                 <tr>

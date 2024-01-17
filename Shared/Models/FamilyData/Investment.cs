@@ -106,7 +106,7 @@ public class Investment
         if (fund == null) {
             Name = null;
             ExpenseRatio = null;
-            AssetType = null;
+            AssetType = global::AssetType.Unknown;
             VanguardFundId = null;
             AutoCompleted = false;
         }
