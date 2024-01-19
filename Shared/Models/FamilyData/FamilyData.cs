@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Components.Routing;
 
 public class FamilyData
 {
@@ -654,8 +655,11 @@ public string estimatePortfolio()
         }
     }
 
+    [JsonIgnore]
+    public SortedDictionary<string,List<Investment>> TickersToUpdate;
+
     public async Task RefreshPrices(HttpClient http) {
-        Dictionary<string,List<Investment>> quotes = new();
+        TickersToUpdate = new();
 
         var now = DateTime.Now.Date;
         var previousMarketClose = PreviousMarketClose(now).ToLocalTime();
@@ -675,12 +679,17 @@ public string estimatePortfolio()
                     await investment.CalculateIBondValue();
                 }
 
-                if (fetchQuote && investment.Ticker != null) {
-                    if (!quotes.ContainsKey(investment.Ticker)) {
-                        quotes.Add(investment.Ticker, new List<Investment> () { investment });
-                    } else {
-                        var investments = quotes[investment.Ticker];
-                        investments.Add(investment);
+                if (fetchQuote) {
+                    var ticker = string.IsNullOrEmpty(investment.Ticker) ? investment.Name : investment.Ticker;
+                    if (ticker != null)
+                    {
+                        if (!TickersToUpdate.ContainsKey(ticker)) {
+                            Console.WriteLine(ticker + " " + investment.Shares);
+                            TickersToUpdate.Add(ticker, new List<Investment> () { investment });
+                        } else {
+                            var investments = TickersToUpdate[ticker];
+                            investments.Add(investment);
+                        }
                     }
                 }
             }
@@ -693,26 +702,30 @@ public string estimatePortfolio()
                 if (!string.IsNullOrEmpty(rsuGrant.Ticker)) {
                     var ticker = rsuGrant.Ticker.ToUpper();
                     var grantInvestment = new Investment() { Ticker = ticker, GrantToUpdateQuote = rsuGrant };
-                    if (!quotes.ContainsKey(ticker)) {
-                        quotes.Add(ticker, new List<Investment> () { grantInvestment });
+                    if (!TickersToUpdate.ContainsKey(ticker)) {
+                        TickersToUpdate.Add(ticker, new List<Investment> () { grantInvestment });
                     } else {
-                        var investments = quotes[ticker];
+                        var investments = TickersToUpdate[ticker];
                         investments.Add(grantInvestment);
                     }
                 }
             }
         }
 
-        foreach (var quote in quotes)
+        if (!string.IsNullOrEmpty(this.AppData.EODHistoricalDataApiKey))
         {
-            try {
-                await UpdateInvestmentsPrice(quote.Key, quote.Value, http);
-            } catch (Exception ex) {
-                Console.WriteLine(ex.GetType().Name + ": " + ex.Message + " " + ex.StackTrace);
+            foreach (var quote in TickersToUpdate)
+            {
+                try {
+                    await UpdateInvestmentsPrice(quote.Key, quote.Value, http);
+                } catch (Exception ex) {
+                    Console.WriteLine(ex.GetType().Name + ": " + ex.Message + " " + ex.StackTrace);
+                }
             }
-        }
 
-        await ProfileUtilities.Save(this.AppData.CurrentProfileName, this);
+            TickersToUpdate.Clear();
+            await ProfileUtilities.Save(this.AppData.CurrentProfileName, this);
+        }
     }
 
     private async Task UpdateInvestmentsPrice(string ticker, List<Investment> investments, HttpClient http)
@@ -752,7 +765,7 @@ public string estimatePortfolio()
         return dateTime;
     }
 
-    private DateTime PreviousMarketClose(DateTime dateTime) {
+    public static DateTime PreviousMarketClose(DateTime dateTime) {
         return MarketClose(dateTime, -1);
     }
 
@@ -760,7 +773,7 @@ public string estimatePortfolio()
         return MarketClose(dateTime, 1);
     }
     
-    private DateTime MarketClose(DateTime dateTime, int direction) {
+    private static DateTime MarketClose(DateTime dateTime, int direction) {
         DateTime marketCloseDay;
         if (direction == -1) {
             marketCloseDay = dateTime.AddDays(direction);
@@ -824,7 +837,7 @@ public string estimatePortfolio()
         new DateTime(2023, 12, 24),
     };
 
-    private MarketDay GetMarketDay(DateTime dateTime) {
+    private static MarketDay GetMarketDay(DateTime dateTime) {
         switch (dateTime.DayOfWeek) {
             case DayOfWeek.Saturday: 
             case DayOfWeek.Sunday:

@@ -222,6 +222,89 @@
                                         </span><br/>
 
                                         @switch (View) {
+                                            case "refresh-prices":
+                                                var tickersToUpdate = appData.FamilyData.TickersToUpdate;
+                                                if (tickersToUpdate != null)
+                                                {
+                                                    <b>Manual entry of price updates:</b>
+                                                    <table>
+                                                    @foreach (var tickerToUpdate in tickersToUpdate)
+                                                    {
+                                                        var investments = tickerToUpdate.Value;
+                                                        var investment = investments[0];
+                                                        <tr style='border-top:1pt solid'>
+                                                            <td colspan=4>
+                                                                @investment.Ticker&nbsp;&nbsp;
+                                                                @investment.Name
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td style=text-align:right>
+                                                                Last Price:
+                                                            </td>
+                                                            <td style=text-align:right;width:120px>
+                                                                @FormatUtilities.formatMoney(investment.Price, decimalPlaces:2)
+                                                            </td>
+                                                            <td>
+                                                                @if (investment.IsFund) {
+                                                                    <span title=@investment.LastUpdated>
+                                                                        on @investment.LastUpdated?.ToString("ddd MM/dd")
+                                                                    </span>
+                                                                } else {
+                                                                    <span title=@investment.LastUpdated>
+                                                                        at @investment.LastUpdated?.ToShortTimeString()
+                                                                    </span>
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                        @if (!investment.IsFund)
+                                                        {
+                                                            var now = DateTime.Now;
+                                                            var currentLocalTime = now.ToLocalTime();
+                                                            <tr>
+                                                                <td></td>
+                                                                <td style=text-align:right>
+                                                                    Last Price:
+                                                                </td>
+                                                                <td style=width:120px>
+                                                                    $<input style=text-align:right;width:100px type=text @bind-Value=investment.Price @bind-Value:event=oninput placeholder='price' />
+                                                                </td>
+                                                                <td>
+                                                                    <span title=@investment.LastUpdated>
+                                                                        at @currentLocalTime.ToShortTimeString()
+                                                                    </span>
+                                                                    <button @onclick=@(e=>updateNonFund(e, investment, currentLocalTime))>Update</button>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                        @if (investment.IsFund)
+                                                        {
+                                                            var now = DateTime.Now.Date;
+                                                            var previousMarketClose = FamilyData.PreviousMarketClose(now).ToLocalTime();
+                                                            <tr style='border-bottom:1pt solid;'>
+                                                                <td></td>
+                                                                <td style=text-align:right>
+                                                                    Last Close:
+                                                                </td>
+                                                                <td style=width:120px>
+                                                                    $<input style=text-align:right;width:100px type=text @bind-Value=investment.Price @bind-Value:event=oninput placeholder='price' />
+                                                                </td>
+                                                                <td>
+                                                                    <span title=@investment.LastUpdated>
+                                                                        on @previousMarketClose.ToString("ddd MM/dd")
+                                                                    </span>
+                                                                    <button @onclick=@(e=>updateFund(e, investment, previousMarketClose))>Update</button>
+                                                                </td>
+                                                            </tr>
+                                                        }                                                        
+                                                    }
+                                                    </table>
+                                                    <br/>
+                                                    <span><b>Automated quotes:</b> Get 20 quotes per day for free - <a href=https://eodhd.com/register>register for eodhd.com account</a> (each 100k additional quotes cost $5)</span><br/>
+                                                    <span>To use it, copy API Token <a href=https://eodhd.com/cp/settings>from control panel of eodhd.com</a> to here: <input type=text @bind-Value=appData.EODHistoricalDataApiKey @bind-Value:event=oninput placeholder='apikey' /></span><br/>
+                                                }
+                                                break;
                                             case "accounts":
                                                 <table class=mainTable>
                                                     @if (appData.FamilyData.Accounts.Count > 0) {
@@ -331,9 +414,6 @@
                                                     <tr>
                                                         <td colspan=2>
                                                             <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button>
-                                                            @if (string.IsNullOrEmpty(appData.EODHistoricalDataApiKey)) {
-                                                                <br/><a href="/updating-portfolio">Enable price updates</a>
-                                                            }
                                                             <br/>
                                                             <label>Accounts: </label><br/>
                                                             <button @onclick=addAccountInline title='add account'>➕ account</button>
@@ -482,9 +562,6 @@
                                                     <tr>
                                                         <td colspan=2>
                                                             <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button>
-                                                            @if (string.IsNullOrEmpty(appData.EODHistoricalDataApiKey)) {
-                                                                <br/><a href="/updating-portfolio">Enable price updates</a>
-                                                            }
                                                         </td>                                                            
                                                         <td style=text-align:right;padding-left:8px colspan=2>
                                                             <b>@(FormatUtilities.formatMoney(appData.FamilyData.Value))</b>
@@ -561,10 +638,7 @@
                                                     <tr>
                                                         <td>
                                                             <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button>
-                                                            @if (string.IsNullOrEmpty(appData.EODHistoricalDataApiKey)) {
-                                                                <br/><a href="/updating-portfolio">Enable price updates</a>
-                                                            }
-                                                        </td>
+                                                         </td>
                                                         <td style=text-align:right;padding-left:8px><hr/><b>@(FormatUtilities.formatMoney(appData.FamilyData.Value))</b></td>
                                                     </tr>
                                                     <tr>
@@ -704,9 +778,6 @@
                                                     <tr>
                                                         <td colspan=2>
                                                             <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button>
-                                                            @if (string.IsNullOrEmpty(appData.EODHistoricalDataApiKey)) {
-                                                                <br/><a href="/updating-portfolio">Enable price updates</a>
-                                                            }
                                                         </td>
                                                         <td colspan=2 style=text-align:right;padding-left:8px><hr/><b>@(FormatUtilities.formatMoney(appData.FamilyData.Value))</b></td>
                                                     </tr>
@@ -787,6 +858,19 @@
 
 @code {
 
+    void updateFund(MouseEventArgs e, Investment investment, DateTime time)
+    {
+        investment.LastUpdated = time;
+        investment.PreviousClose = null;
+        investment.PercentChange = null;
+    }
+
+    void updateNonFund(MouseEventArgs e, Investment investment, DateTime time)
+    {
+        investment.LastUpdated = time;
+        investment.PreviousClose = null;
+        investment.PercentChange = null;
+    }
 
     void selectInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
     {
@@ -889,7 +973,7 @@
     }
 
     bool showEditAccountHelpers = false;
-    string refreshButtonText = "🔃 Quotes";
+    string refreshButtonText = "🔃 Prices";
     bool assetAllocationEditing = false;
     bool taxFilingStatusEditing = false;
     int? accountIndexViewing = null;
@@ -1240,7 +1324,12 @@
     private async Task refreshPrices() {
         refreshButtonText = "Updating...";
         await appData.FamilyData.RefreshPrices(Http);
-        refreshButtonText = "🔃 Quotes";
+        if (appData.FamilyData.TickersToUpdate.Count > 0)
+        {
+            Navigation.NavigateTo("/portfolio-tracker/refresh-prices");
+        }
+
+        refreshButtonText = "🔃 Prices";
     }
     
     private int? PINEntry { get; set; }

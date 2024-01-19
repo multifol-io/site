@@ -58,6 +58,7 @@
 </style>
 @if (appData is null && !loaded!)
 {
+    <p>more</p>
     <p>
         @if(appData == null || appData.CurrentProfileName==null){<em>No active <a href=/profiles>profile</a>.</em>} 
         else {<em>Loading...</em>}
@@ -88,9 +89,6 @@
         }
 
         <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button><br/>
-        @if (string.IsNullOrEmpty(appData.EODHistoricalDataApiKey)) {
-            <br/><a href="/updating-portfolio">Enable price updates</a>
-        }
 
         @{
             var accountIndex = 0;
@@ -769,7 +767,7 @@
     }
 
     bool showEditAccountHelpers = false;
-    string refreshButtonText = "🔃 Quotes";
+    string refreshButtonText = "🔃 Prices";
     bool assetAllocationEditing = false;
     bool taxFilingStatusEditing = false;
     int? accountIndexViewing = null;
@@ -1153,7 +1151,7 @@
     private async Task refreshPrices() {
         refreshButtonText = "Updating...";
         await appData.FamilyData.RefreshPrices(Http);
-        refreshButtonText = "🔃 Quotes";
+        refreshButtonText = "🔃 Prices";
     }
 
     private int? PINEntry { get; set; }
