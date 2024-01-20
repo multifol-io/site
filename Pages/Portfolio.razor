@@ -274,7 +274,7 @@
                                                                     <span title=@investment.LastUpdated>
                                                                         at @currentLocalTime.ToShortTimeString()
                                                                     </span>
-                                                                    <button @onclick=@(e=>updateNonFund(e, investment, currentLocalTime))>Update</button>
+                                                                    <button @onclick=@(e=>updateNonFund(e, investments, currentLocalTime))>Update</button>
                                                                 </td>
                                                             </tr>
                                                         }
@@ -294,7 +294,7 @@
                                                                     <span title=@investment.LastUpdated>
                                                                         on @previousMarketClose.ToString("ddd MM/dd")
                                                                     </span>
-                                                                    <button @onclick=@(e=>updateFund(e, investment, previousMarketClose))>Update</button>
+                                                                    <button @onclick=@(e=>updateFund(e, investments, previousMarketClose))>Update</button>
                                                                 </td>
                                                             </tr>
                                                         }                                                        
@@ -857,19 +857,14 @@
     }
 
 @code {
-
-    void updateFund(MouseEventArgs e, Investment investment, DateTime time)
+    void updateFund(MouseEventArgs e, List<Investment> investments, DateTime lastUpdated)
     {
-        investment.LastUpdated = time;
-        investment.PreviousClose = null;
-        investment.PercentChange = null;
+        appData.FamilyData.UpdateInvestmentsPrice(investments, investments[0].Price, null, null, lastUpdated);
     }
 
-    void updateNonFund(MouseEventArgs e, Investment investment, DateTime time)
+    void updateNonFund(MouseEventArgs e, List<Investment> investments, DateTime lastUpdated)
     {
-        investment.LastUpdated = time;
-        investment.PreviousClose = null;
-        investment.PercentChange = null;
+        appData.FamilyData.UpdateInvestmentsPrice(investments, investments[0].Price, null, null, lastUpdated);
     }
 
     void selectInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)

@@ -717,7 +717,7 @@ public string estimatePortfolio()
             foreach (var quote in TickersToUpdate)
             {
                 try {
-                    await UpdateInvestmentsPrice(quote.Key, quote.Value, http);
+                    await FetchPriceAndUpdateInvestments(quote.Key, quote.Value, http);
                 } catch (Exception ex) {
                     Console.WriteLine(ex.GetType().Name + ": " + ex.Message + " " + ex.StackTrace);
                 }
@@ -728,31 +728,28 @@ public string estimatePortfolio()
         }
     }
 
-    private async Task UpdateInvestmentsPrice(string ticker, List<Investment> investments, HttpClient http)
+    private async Task FetchPriceAndUpdateInvestments(string ticker, List<Investment> investments, HttpClient http)
     {
         if (!string.IsNullOrEmpty(this.AppData.EODHistoricalDataApiKey)) {
             var quoteDataJson = await http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={ticker}&apikey={this.AppData.EODHistoricalDataApiKey}");
             var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
-            if (quoteData?.Close != null) {
-                foreach (var investment in investments) {
-                    investment.Price = quoteData.Close;
-                    if (quoteData.Volume > 0) {
-                        investment.PreviousClose = quoteData.PreviousClose; 
-                        investment.PercentChange = quoteData.ChangeP;
-                        investment.LastUpdated = UnixTimeStampToDateTime(quoteData.Timestamp);
-                    } else if (quoteData.Volume == 0) {
-                        investment.PreviousClose = quoteData.PreviousClose;
-                        investment.PercentChange = quoteData.ChangeP;
-                        investment.LastUpdated = UnixTimeStampToDateTime(quoteData.Timestamp);
-                    } else {
-                        investment.PreviousClose = quoteData.Close;
-                        investment.PercentChange = null;
-                        investment.LastUpdated = null;
-                    }
-
-                    investment.UpdateValue();
-                }
+            if (quoteData != null && quoteData?.Close != null) {
+                bool usePercent = quoteData.Volume >= 0;
+                UpdateInvestmentsPrice(investments, quoteData.Close, quoteData.PreviousClose, usePercent? quoteData.ChangeP : null, usePercent ? UnixTimeStampToDateTime(quoteData.Timestamp) : null);
             }
+        }
+    }
+
+    public void UpdateInvestmentsPrice(List<Investment> investments, double? price, double? previousClose, double? percentChange, DateTime? lastUpdated) 
+    {
+        foreach (var investment in investments)
+        {
+            investment.Price = price;
+            investment.PreviousClose = previousClose; 
+            investment.PercentChange = percentChange;
+            investment.LastUpdated = lastUpdated;
+
+            investment.UpdateValue();
         }
     }
 
