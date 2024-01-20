@@ -136,7 +136,7 @@
                 }
 
                 @if(account.Edit) {
-                    @((MarkupString)bold("Edit Account Info:"))
+                    @((MarkupString)FormatUtilities.Bold("Edit Account Info:", ShowMarkup))
                 }
 
                 <br/>
@@ -343,7 +343,7 @@
                     <tr>
                         <td colspan=4 style=text-align:right;font-size:9pt;font-style:italic>
                             @if(account.Investments.Count > 0 && account.SelectedInvestment == null) {
-                                @((MarkupString)bold("Select a Holding to Change"))
+                                @((MarkupString)FormatUtilities.Bold("Select a Holding to Change", ShowMarkup))
                             }
                         </td>
                     </tr>
@@ -358,7 +358,7 @@
 
                     switch (investment.SelectedTransaction?.Type) {
                         case null:
-                            @((MarkupString)bold("Actions:"))<br/>
+                            @((MarkupString)FormatUtilities.Bold("Actions:", ShowMarkup))<br/>
                             <button @onclick='@(e=>edit(e,account.SelectedInvestment))'>Edit @account.SelectedInvestment.Ticker</button>
                             <button @onclick='@(e=>deleteSelectedInvestment(e,account.SelectedInvestment))' title='delete investment'>Delete @account.SelectedInvestment.Ticker</button>
                             @if (account.SelectedInvestment.Ticker?.ToUpper() == "IBOND")
@@ -368,7 +368,7 @@
                             }
 
                             <br/><br/>
-                            @* @((MarkupString)bold("Record Transaction:"))<br/>
+                            @* @((MarkupString)FormatUtilities.Bold("Record Transaction:"))<br/>
                             <button @onclick='@(e=>buy(e,account,account.SelectedInvestment))'>Buy @account.SelectedInvestment.Ticker</button>
                             <button @onclick='@(e=>sell(e,account,account.SelectedInvestment))'>Sell @account.SelectedInvestment.Ticker</button>
                             <br/><br/>
@@ -378,7 +378,7 @@
                             break;
                         case "Buy":
                         case "Sale":
-                            @((MarkupString)bold("Record " + account.SelectedInvestment.SelectedTransaction.Type + " of " + account.SelectedInvestment.Ticker + ":"))<br/>
+                            @((MarkupString)FormatUtilities.Bold("Record " + account.SelectedInvestment.SelectedTransaction.Type + " of " + account.SelectedInvestment.Ticker + ":", ShowMarkup))<br/>
                             <span><input style=text-align:right;width:80px type=text @bind-Value=account.SelectedInvestment.SelectedTransaction.Shares @bind-Value:event=onchange /> shares</span>
                             <span>@@ $ <input style=text-align:right;width:80px type=text @bind-Value=account.SelectedInvestment.SelectedTransaction.Price @bind-Value:event=onchange /> / share</span><br/>
                             <span>= $ <input style=text-align:right;width:80px type=text @bind-Value=account.SelectedInvestment.SelectedTransaction.Value @bind-Value:event=onchange /></span><br/>
@@ -397,7 +397,7 @@
                             <button @onclick='@(e=>plan(e,account,account.SelectedInvestment))'>Plan</button> <button @onclick='@(e=>commit(e,account,account.SelectedInvestment))'>Commit</button><br/>
                             break;
                         case "Dividend":
-                            @((MarkupString)bold("Record " + account.SelectedInvestment.SelectedTransaction.Type + " of " + account.SelectedInvestment.Ticker + ":"))<br/>
+                            @((MarkupString)FormatUtilities.Bold("Record " + account.SelectedInvestment.SelectedTransaction.Type + " of " + account.SelectedInvestment.Ticker + ":", ShowMarkup))<br/>
                             <span>$ <input style=text-align:right;width:100px type=text @bind-Value=account.SelectedInvestment.SelectedTransaction.Value @bind-Value:event=oninput /></span><br/>
                             <span>money transferred to:&nbsp;@account.SelectedInvestment.SelectedTransaction?.OtherTicker</span><br/><br/>
                             @if(account.SelectedInvestment.SelectedTransaction.IsDraft)
@@ -412,7 +412,7 @@
                             <button @onclick='@(e=>plan(e,account,account.SelectedInvestment))'>Plan</button> <button @onclick='@(e=>commit(e,account,account.SelectedInvestment))'>Commit</button><br/>
                             break;
                         case "Reinvest Dividend":
-                            @((MarkupString)bold("Record " + account.SelectedInvestment.SelectedTransaction.Type + " of " + account.SelectedInvestment.Ticker + ":"))<br/>
+                            @((MarkupString)FormatUtilities.Bold("Record " + account.SelectedInvestment.SelectedTransaction.Type + " of " + account.SelectedInvestment.Ticker + ":", ShowMarkup))<br/>
                             <span><input type=text style=text-align:right;width:80px @bind-Value=account.SelectedInvestment.SelectedTransaction.Shares @bind-Value:event=onchange/> shares</span>
                             <span>@@&nbsp;&nbsp;$ <input style=text-align:right;width:80px type=text @bind-Value=account.SelectedInvestment.SelectedTransaction.Price @bind-Value:event=onchange /> / share</span><br/>
                             <span>= $ <input style=text-align:right;width:100px type=text @bind-Value=account.SelectedInvestment.SelectedTransaction.Value @bind-Value:event=onchange /> total</span><br/><br/>
@@ -428,7 +428,7 @@
                             <button @onclick='@(e=>plan(e,account,account.SelectedInvestment))'>Plan</button> <button @onclick='@(e=>commit(e,account,account.SelectedInvestment))'>Commit</button><br/>
                             break;
                         case "Edit":
-                            <span>@((MarkupString)bold("Edit:"))</span><br/>
+                            <span>@((MarkupString)FormatUtilities.Bold("Edit:", ShowMarkup))</span><br/>
                             <table>
                                 <tr>
                                     <td style=text-align:right>
@@ -793,38 +793,6 @@
         return "";
     }
 
-    public int? GetRecommdedIRAAmount(Person person) {
-        switch(person.IRATypeRecommendation) {
-            case IRAType.DeductibleIRAThenBackdoorRoth:
-            case IRAType.DeductibleIRA:
-                return person.IRA.AmountToSave;
-            case IRAType.Roth:
-                return person.RothIRA.AmountToSave;
-            case IRAType.NondeductibleIRAThenBackdoorRoth:
-            case IRAType.NondeductibleIRA:
-                return person.IRA.AmountToSave;
-            default:
-                return null;
-        }
-    }
-
-    public string GetRecommendedIRAMarkup(Person person) {
-        switch(person.IRATypeRecommendation) {
-            case IRAType.DeductibleIRAThenBackdoorRoth:
-                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.formatMoney(person.IRA.DeductionAllowed) + " Deductible), then backdoor roth</span>";
-            case IRAType.DeductibleIRA:
-                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.formatMoney(person.IRA.DeductionAllowed) + " Deductible)</span>";
-            case IRAType.Roth:
-                return "<span>" + FormatUtilities.formatMoney(person.RothIRA.AmountToSave) + " in " + person.PossessiveID + " Roth IRA</span>";
-            case IRAType.NondeductibleIRAThenBackdoorRoth:
-                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " (nondeductible), then backdoor roth</span>";
-            case IRAType.NondeductibleIRA:
-                return "<span>$" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " (nondeductible)</span>";
-            default:
-                return "<p>do nothing</p>";
-        }
-    }
-
     public string getPronoun(Person person)
     {
         return getPronoun(person, true);
@@ -840,107 +808,6 @@
         {
             return "";
         }
-    }
-
-    public string bold(string text) {
-        if (ShowMarkup) {
-            return "[b]<b>" + text + "</b>[/b]";
-        } else {
-            return "<b>" + text + "</b>";
-        }
-    }
-
-    public string boldUnderline(string text) {
-        if (ShowMarkup) {
-            return "[b][u]<b><u>" + text + "</u></b>[/u][/b]";
-        } else {
-            return "<b><u>" + text + "</u></b>";
-        }
-    }
-
-    public string markupize(string? wikiText) {
-        if (wikiText == null) return "";
-        string returnVal = "<span>";
-        char lastChar = 'x';
-        var mode = Mode.normal;
-        string href = "";
-        string text = "";
-        foreach (var c in wikiText) {
-            switch (c) {
-                case '[':
-                    if (lastChar == '[') {
-                        mode = Mode.href;
-                    }
-                    break;
-                case ']':
-                    if (lastChar == ']') {
-                        if (text == "") { text = href; }
-                        if (href.StartsWith("https://bogle.tools/")) 
-                        {
-                            returnVal += "<a href='" + href.Substring(19) + "'>" + text + "</a>";
-                        }
-                        else if (href.StartsWith("https://"))
-                        {
-                            returnVal += "<a target=_blank href='" + href + "'>" + text + "</a>";
-                        } 
-                        else
-                        {
-                            returnVal += "<a target=_blank href='https://www.bogleheads.org/wiki/" + href + "'>" + text + "</a>";
-                        }
-                        href = "";
-                        text = "";
-                        mode = Mode.normal;
-                    }
-                    break;
-                case '|':
-                    if (mode == Mode.href) {
-                        mode = Mode.text;
-                    }
-                    break;
-            }
-
-            switch (mode) {
-                case Mode.href:
-                    switch (c) {
-                        case '[':
-                        case ']':
-                            break;
-                        default:
-                            href += c;
-                            break;
-                    }
-                    break;
-                case Mode.text:
-                    switch (c) {
-                        case '[':
-                        case ']':
-                        case '|':
-                            break;
-                        default:
-                            text += c;
-                            break;
-                    }
-                    break;
-                default:
-                    switch (c) {
-                        case '[':
-                        case ']':
-                            break;
-                        case '\n':
-                            returnVal += "<br/>";
-                            break;
-                        default:
-                            returnVal += c;
-                            break;
-                    }
-                    break;
-            }
-
-            lastChar = c;
-        }
-        returnVal += "</span>";
-
-        return returnVal;
     }
 
     [Parameter]

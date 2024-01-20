@@ -464,9 +464,9 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                         <hr/>
                     </div>
                     
-                    <h4 style=clear:left>@((MarkupString)markupize(step.priority))</h4>
+                    <h4 style=clear:left>@((MarkupString)FormatUtilities.Markupize(step.priority))</h4>
 
-                    <p class="article"><b>Summary:</b> @((MarkupString)markupize(step.summary))</p>
+                    <p class="article"><b>Summary:</b> @((MarkupString)FormatUtilities.Markupize(step.summary))</p>
                         @switch (step.number) {
                             case 0:
                                 <ol>
@@ -970,7 +970,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                 break;
                         }
                     @if(step.returns != "N/A") {<p><b>Approximate Return:</b> @step.returns</p>}
-                    @if(step.description != "") {<p class="article"><b>Details:</b> @((MarkupString)markupize(step.description))</p>}
+                    @if(step.description != "") {<p class="article"><b>Details:</b> @((MarkupString)FormatUtilities.Markupize(step.description))</p>}
 
                     <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
                 }
@@ -1018,91 +1018,6 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
             default:
                 return "<p>do nothing</p>";
         }
-    }
-
-    public string markupize(string? wikiText) {
-        if (wikiText == null) return "";
-        string returnVal = "<span>";
-        char lastChar = 'x';
-        var mode = Mode.normal;
-        string href = "";
-        string text = "";
-        foreach (var c in wikiText) {
-            switch (c) {
-                case '[':
-                    if (lastChar == '[') {
-                        mode = Mode.href;
-                    }
-                    break;
-                case ']':
-                    if (lastChar == ']') {
-                        if (text == "") { text = href; }
-                        if (href.StartsWith("https://bogle.tools/")) 
-                        {
-                            returnVal += "<a href='" + href.Substring(19) + "'>" + text + "</a>";
-                        }
-                        else if (href.StartsWith("https://"))
-                        {
-                            returnVal += "<a target=_blank href='" + href + "'>" + text + "</a>";
-                        } 
-                        else
-                        {
-                            returnVal += "<a target=_blank href='https://www.bogleheads.org/wiki/" + href + "'>" + text + "</a>";
-                        }
-                        href = "";
-                        text = "";
-                        mode = Mode.normal;
-                    }
-                    break;
-                case '|':
-                    if (mode == Mode.href) {
-                        mode = Mode.text;
-                    }
-                    break;
-            }
-
-            switch (mode) {
-                case Mode.href:
-                    switch (c) {
-                        case '[':
-                        case ']':
-                            break;
-                        default:
-                            href += c;
-                            break;
-                    }
-                    break;
-                case Mode.text:
-                    switch (c) {
-                        case '[':
-                        case ']':
-                        case '|':
-                            break;
-                        default:
-                            text += c;
-                            break;
-                    }
-                    break;
-                default:
-                    switch (c) {
-                        case '[':
-                        case ']':
-                            break;
-                        case '\n':
-                            returnVal += "<br/>";
-                            break;
-                        default:
-                            returnVal += c;
-                            break;
-                    }
-                    break;
-            }
-
-            lastChar = c;
-        }
-        returnVal += "</span>";
-
-        return returnVal;
     }
 
     private string yesno(bool yes) {

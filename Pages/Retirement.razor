@@ -77,7 +77,7 @@ Retirement - bogle.tools
                                 </span>
                             </td>
                             <td>
-                                @((MarkupString)bold(step.title + ":"))
+                                @((MarkupString)FormatUtilities.Bold(step.title + ":", ShowMarkup))
                                 @switch (step.step) {
                                     case "time-frame":
                                         <br/>
@@ -200,9 +200,9 @@ Retirement - bogle.tools
                     </div>
                     <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
 
-                    <h4 style=clear:left>@((MarkupString)markupize(step.priority))</h4>
+                    <h4 style=clear:left>@((MarkupString)FormatUtilities.Markupize(step.priority))</h4>
 
-                    <p class="article">@((MarkupString)markupize(step.summary))</p>
+                    <p class="article">@((MarkupString)FormatUtilities.Markupize(step.summary))</p>
 
                         @switch (step.step) {
                             case "time-frame":
@@ -326,7 +326,7 @@ Retirement - bogle.tools
                         }
                     <p>
                         @if(step.description != "") {
-                            <b>Details:</b> <span>@((MarkupString)markupize(step.description))</span>
+                            <b>Details:</b> <span>@((MarkupString)FormatUtilities.Markupize(step.description))</span>
                         }
                     </p>
 
@@ -337,11 +337,6 @@ Retirement - bogle.tools
     }
 
 @code {
-    public enum Mode {
-        normal = 0,
-        href,
-        text,
-    }
     public bool pastTotal = false;
     public int runningTotal = 0;
 
@@ -358,38 +353,6 @@ Retirement - bogle.tools
         }
 
         return null;
-    }
-
-    public int? GetRecommdedIRAAmount(Person person) {
-        switch(person.IRATypeRecommendation) {
-            case IRAType.DeductibleIRAThenBackdoorRoth:
-            case IRAType.DeductibleIRA:
-                return person.IRA.AmountToSave;
-            case IRAType.Roth:
-                return person.RothIRA.AmountToSave;
-            case IRAType.NondeductibleIRAThenBackdoorRoth:
-            case IRAType.NondeductibleIRA:
-                return person.IRA.AmountToSave;
-            default:
-                return null;
-        }
-    }
-
-    public string GetRecommendedIRAMarkup(Person person) {
-        switch(person.IRATypeRecommendation) {
-            case IRAType.DeductibleIRAThenBackdoorRoth:
-                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.formatMoney(person.IRA.DeductionAllowed) + " Deductible), then backdoor roth</span>";
-            case IRAType.DeductibleIRA:
-                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.formatMoney(person.IRA.DeductionAllowed) + " Deductible)</span>";
-            case IRAType.Roth:
-                return "<span>" + FormatUtilities.formatMoney(person.RothIRA.AmountToSave) + " in " + person.PossessiveID + " Roth IRA</span>";
-            case IRAType.NondeductibleIRAThenBackdoorRoth:
-                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " (nondeductible), then backdoor roth</span>";
-            case IRAType.NondeductibleIRA:
-                return "<span>$" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " (nondeductible)</span>";
-            default:
-                return "<p>do nothing</p>";
-        }
     }
 
     public string getPronoun(Person person)
@@ -431,107 +394,6 @@ Retirement - bogle.tools
         if (appData?.FamilyData is not null) {
             appData.FamilyData.RetirementData.IncomeExpenses.RemoveAt(accountIndex);
         }
-    }
-
-    public string bold(string text) {
-        if (ShowMarkup) {
-            return "[b]<b>" + text + "</b>[/b]";
-        } else {
-            return "<b>" + text + "</b>";
-        }
-    }
-
-    public string boldUnderline(string text) {
-        if (ShowMarkup) {
-            return "[b][u]<b><u>" + text + "</u></b>[/u][/b]";
-        } else {
-            return "<b><u>" + text + "</u></b>";
-        }
-    }
-
-    public string markupize(string? wikiText) {
-        if (wikiText == null) return "";
-        string returnVal = "<span>";
-        char lastChar = 'x';
-        var mode = Mode.normal;
-        string href = "";
-        string text = "";
-        foreach (var c in wikiText) {
-            switch (c) {
-                case '[':
-                    if (lastChar == '[') {
-                        mode = Mode.href;
-                    }
-                    break;
-                case ']':
-                    if (lastChar == ']') {
-                        if (text == "") { text = href; }
-                        if (href.StartsWith("https://bogle.tools/")) 
-                        {
-                            returnVal += "<a href='" + href.Substring(19) + "'>" + text + "</a>";
-                        }
-                        else if (href.StartsWith("https://"))
-                        {
-                            returnVal += "<a target=_blank href='" + href + "'>" + text + "</a>";
-                        } 
-                        else
-                        {
-                            returnVal += "<a target=_blank href='https://www.bogleheads.org/wiki/" + href + "'>" + text + "</a>";
-                        }
-                        href = "";
-                        text = "";
-                        mode = Mode.normal;
-                    }
-                    break;
-                case '|':
-                    if (mode == Mode.href) {
-                        mode = Mode.text;
-                    }
-                    break;
-            }
-
-            switch (mode) {
-                case Mode.href:
-                    switch (c) {
-                        case '[':
-                        case ']':
-                            break;
-                        default:
-                            href += c;
-                            break;
-                    }
-                    break;
-                case Mode.text:
-                    switch (c) {
-                        case '[':
-                        case ']':
-                        case '|':
-                            break;
-                        default:
-                            text += c;
-                            break;
-                    }
-                    break;
-                default:
-                    switch (c) {
-                        case '[':
-                        case ']':
-                            break;
-                        case '\n':
-                            returnVal += "<br/>";
-                            break;
-                        default:
-                            returnVal += c;
-                            break;
-                    }
-                    break;
-            }
-
-            lastChar = c;
-        }
-        returnVal += "</span>";
-
-        return returnVal;
     }
 
     [Parameter]

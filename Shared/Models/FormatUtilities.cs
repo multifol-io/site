@@ -140,6 +140,114 @@ public static class FormatUtilities {
         return input.Substring(start, end);
     }
     
+    public static string Bold(string text, bool showMarkup) {
+        if (showMarkup) {
+            return "[b]<b>" + text + "</b>[/b]";
+        } else {
+            return "<b>" + text + "</b>";
+        }
+    }
+
+    public static string BoldUnderline(string text, bool showMarkup) {
+        if (showMarkup) {
+            return "[b][u]<b><u>" + text + "</u></b>[/u][/b]";
+        } else {
+            return "<b><u>" + text + "</u></b>";
+        }
+    }
+
+
+    public enum Mode {
+        normal = 0,
+        href,
+        text,
+    }
+
+    public static string Markupize(string? wikiText) {
+        if (wikiText == null) return "";
+        string returnVal = "<span>";
+        char lastChar = 'x';
+        var mode = Mode.normal;
+        string href = "";
+        string text = "";
+        foreach (var c in wikiText) {
+            switch (c) {
+                case '[':
+                    if (lastChar == '[') {
+                        mode = Mode.href;
+                    }
+                    break;
+                case ']':
+                    if (lastChar == ']') {
+                        if (text == "") { text = href; }
+                        if (href.StartsWith("https://bogle.tools/")) 
+                        {
+                            returnVal += "<a href='" + href.Substring(19) + "'>" + text + "</a>";
+                        }
+                        else if (href.StartsWith("https://"))
+                        {
+                            returnVal += "<a target=_blank href='" + href + "'>" + text + "</a>";
+                        } 
+                        else
+                        {
+                            returnVal += "<a target=_blank href='https://www.bogleheads.org/wiki/" + href + "'>" + text + "</a>";
+                        }
+                        href = "";
+                        text = "";
+                        mode = Mode.normal;
+                    }
+                    break;
+                case '|':
+                    if (mode == Mode.href) {
+                        mode = Mode.text;
+                    }
+                    break;
+            }
+
+            switch (mode) {
+                case Mode.href:
+                    switch (c) {
+                        case '[':
+                        case ']':
+                            break;
+                        default:
+                            href += c;
+                            break;
+                    }
+                    break;
+                case Mode.text:
+                    switch (c) {
+                        case '[':
+                        case ']':
+                        case '|':
+                            break;
+                        default:
+                            text += c;
+                            break;
+                    }
+                    break;
+                default:
+                    switch (c) {
+                        case '[':
+                        case ']':
+                            break;
+                        case '\n':
+                            returnVal += "<br/>";
+                            break;
+                        default:
+                            returnVal += c;
+                            break;
+                    }
+                    break;
+            }
+
+            lastChar = c;
+        }
+        returnVal += "</span>";
+
+        return returnVal;
+    }
+
     private static NumberStyles numbers = NumberStyles.Float | NumberStyles.AllowThousands;
     private static NumberStyles currency = NumberStyles.AllowCurrencySymbol | numbers;
 }

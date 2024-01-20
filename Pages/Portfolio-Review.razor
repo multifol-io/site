@@ -98,7 +98,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                 @switch (step.step) {
                                     case "age": 
                                         <td>
-                                            @((MarkupString)bold("Age:"))
+                                            @((MarkupString)FormatUtilities.Bold("Age:", ShowMarkup))
                                             @if(appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].Age != null) {
                                                 <span>&nbsp;@appData.FamilyData.People[0].Age @getPronoun(appData.FamilyData.People[0])</span>
                                             }
@@ -110,14 +110,14 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                     break;
                                     case "emergency-fund":
                                     <td style=text-align:left>
-                                            @((MarkupString)bold("Emergency funds:"))
+                                            @((MarkupString)FormatUtilities.Bold("Emergency funds:", ShowMarkup))
                                             <span>@appData.FamilyData.EmergencyFund.Answer</span>
                                             <br/><br/>
                                     </td>
                                     break;
                                     case "debts":
                                         <td style=text-align:left>
-                                            @((MarkupString)bold("Debt:"))
+                                            @((MarkupString)FormatUtilities.Bold("Debt:", ShowMarkup))
                                             @if (appData.FamilyData.Debts.Count == 0 && appData.FamilyData.DebtsComplete) { <span>&nbsp;no debts</span> } 
                                             else if (appData.FamilyData.Debts.Count >= 1) { 
                                                 <br/>
@@ -133,13 +133,13 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                     case "tax-status":
                                         <td>
                                             <span>
-                                                @((MarkupString)bold("Tax Filing Status:"))
+                                                @((MarkupString)FormatUtilities.Bold("Tax Filing Status:", ShowMarkup))
                                                 @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@appData.FamilyData.TaxFilingString</span> }
                                                 <br/><br/>
-                                                @((MarkupString)bold("Tax Rate:"))
+                                                @((MarkupString)FormatUtilities.Bold("Tax Rate:", ShowMarkup))
                                                 @if (appData.FamilyData.FederalMarginalTaxBracket != null) { <span>&nbsp;@appData.FamilyData.FederalMarginalTaxBracket Federal, @appData.FamilyData.StateTaxRate% State</span> }
                                                 <br/><br/>
-                                                @((MarkupString)bold("State of Residence:"))
+                                                @((MarkupString)FormatUtilities.Bold("State of Residence:", ShowMarkup))
                                                 <span>&nbsp;@appData.FamilyData.StateOfResidence</span>
                                             </span>
                                             <br/><br/>
@@ -147,7 +147,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                         break;
                                     case "asset-allocation":
                                         <td>
-                                            @((MarkupString)bold("Desired Asset allocation:"))
+                                            @((MarkupString)FormatUtilities.Bold("Desired Asset allocation:", ShowMarkup))
                                             @if (appData.FamilyData.Stocks != null && appData.FamilyData.Bonds != null) {
                                                 <span>&nbsp;@appData.FamilyData.Stocks% stocks / @appData.FamilyData.Bonds% bonds</span><br/>
                                             } else {
@@ -165,14 +165,14 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                         break;
                                     case "retirement-assets":
                                         <td>
-                                            @((MarkupString)bold("Portfolio Size:"))&nbsp;@(appData.FamilyData.ValueStyle==0?FormatUtilities.formatMoneyThousands(appData.FamilyData.Value):(appData.FamilyData.ValueStyle==1?appData.FamilyData.estimatePortfolio():FormatUtilities.formatMoney(appData.FamilyData.Value)))<br/>
+                                            @((MarkupString)FormatUtilities.Bold("Portfolio Size:", ShowMarkup))&nbsp;@(appData.FamilyData.ValueStyle==0?FormatUtilities.formatMoneyThousands(appData.FamilyData.Value):(appData.FamilyData.ValueStyle==1?appData.FamilyData.estimatePortfolio():FormatUtilities.formatMoney(appData.FamilyData.Value)))<br/>
                                             <br/>
-                                            @((MarkupString)boldUnderline("Current Retirement Assets:"))<br/>
+                                            @((MarkupString)FormatUtilities.BoldUnderline("Current Retirement Assets:", ShowMarkup))<br/>
                                             @foreach (var account in appData.FamilyData.Accounts.OrderBy(a=>a.PortfolioReviewOrder).ThenByDescending(a=>a.Value)) {
                                                 <br/>
-                                                @((MarkupString)bold((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "")
+                                                @((MarkupString)FormatUtilities.Bold((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "")
                                                     + (account.TaxType == "Pre-Tax(work)" ? (account.CurrentEmployerRetirementFund ? "<span>current&nbsp;</span>" : "<span>previous&nbsp;</span>") : "") 
-                                                    + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + " (" + FormatUtilities.formatPercent(account.Percentage) + ")" ))
+                                                    + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + " (" + FormatUtilities.formatPercent(account.Percentage) + ")" , ShowMarkup))
                                                 <br/>
                                                 @foreach (var investment in account.Investments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.ValuePIN)) {
                                                     <span>&nbsp;&nbsp;&nbsp;&nbsp;@FormatUtilities.formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@(investment.ExpenseRatio!=null?investment.ExpenseRatio:"??")%)</span><br/>
@@ -183,11 +183,11 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                         break;
                                     case "available-funds":
                                         <td>
-                                            @((MarkupString)boldUnderline("Available funds:"))<br/>
+                                            @((MarkupString)FormatUtilities.BoldUnderline("Available funds:", ShowMarkup))<br/>
                                                 @foreach (var account in appData.FamilyData.Accounts) {
                                                     @if (account.AvailableFunds.Count > 0) {
                                                         <br/>
-                                                            @((MarkupString)bold("Funds available in " + account.FullName))<br/>
+                                                            @((MarkupString)FormatUtilities.Bold("Funds available in " + account.FullName, ShowMarkup))<br/>
                                                         <br/>
                                                         @foreach (var investment in account.AvailableFunds) {
                                                             <span>&nbsp;&nbsp;&nbsp;&nbsp;@investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span><br/>
@@ -198,13 +198,13 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                         </td>
                                         break;
                                     case "additional-background":
-                                        @((MarkupString)boldUnderline("Additional Background:"))<br/>
+                                        @((MarkupString)FormatUtilities.BoldUnderline("Additional Background:", ShowMarkup))<br/>
                                         @appData.FamilyData.AdditionalBackground
                                         <br/>
                                         break;
                                     case "questions":
                                         <td>
-                                            @((MarkupString)boldUnderline("Questions:"))<br/>
+                                            @((MarkupString)FormatUtilities.BoldUnderline("Questions:", ShowMarkup))<br/>
                                             @for (int i = 0; i < appData.FamilyData.Questions.Count; i++) {
                                                 var question = appData.FamilyData.Questions[i];
                                                 @(i+1 + ".") @question
@@ -218,7 +218,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
 
                                         <td>
                                             <span>
-                                                @((MarkupString)boldUnderline("Contributions:"))
+                                                @((MarkupString)FormatUtilities.BoldUnderline("Contributions:", ShowMarkup))
                                             </span><br/>
                                             @if (appData.FamilyData.PlannedSavings > 0) {
                                                 <span>Planned savings: @FormatUtilities.formatMoney(appData.FamilyData.PlannedSavings)</span><br/><br/>
@@ -331,9 +331,9 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                             <hr/>
                         </div>
 
-                        <h4 style=clear:left>@((MarkupString)markupize(step.priority))</h4>
+                        <h4 style=clear:left>@((MarkupString)FormatUtilities.Markupize(step.priority))</h4>
 
-                        <p class="article">@((MarkupString)markupize(step.summary))</p>
+                        <p class="article">@((MarkupString)FormatUtilities.Markupize(step.summary))</p>
 
                             @switch (step.step) {
                                 case "emergency-fund":
@@ -619,7 +619,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                         Enter/edit your Savings Contribution at: <a href="/savings-planner">Savings Planner</a>, then return here to <a href=/portfolio-review>Portfolio Review</a> to address all the needed information.<br/><br/>
 
                                         <span>
-                                            @((MarkupString)boldUnderline("Contributions:"))
+                                            @((MarkupString)FormatUtilities.BoldUnderline("Contributions:", ShowMarkup))
                                         </span><br/>
                                         @if (appData.FamilyData.PlannedSavings > 0) {
                                             <span>Planned savings: @FormatUtilities.formatMoney(appData.FamilyData.PlannedSavings)</span><br/><br/>
@@ -697,7 +697,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                             }
                         <p>
                             @if(step.description != "") {
-                                <b>Details:</b> <span>@((MarkupString)markupize(step.description))</span>
+                                <b>Details:</b> <span>@((MarkupString)FormatUtilities.Markupize(step.description))</span>
                             }
                         </p>
 
@@ -785,107 +785,6 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
         {
             return "";
         }
-    }
-
-    public string bold(string text) {
-        if (ShowMarkup) {
-            return "[b]<b>" + text + "</b>[/b]";
-        } else {
-            return "<b>" + text + "</b>";
-        }
-    }
-
-    public string boldUnderline(string text) {
-        if (ShowMarkup) {
-            return "[b][u]<b><u>" + text + "</u></b>[/u][/b]";
-        } else {
-            return "<b><u>" + text + "</u></b>";
-        }
-    }
-
-    public string markupize(string? wikiText) {
-        if (wikiText == null) return "";
-        string returnVal = "<span>";
-        char lastChar = 'x';
-        var mode = Mode.normal;
-        string href = "";
-        string text = "";
-        foreach (var c in wikiText) {
-            switch (c) {
-                case '[':
-                    if (lastChar == '[') {
-                        mode = Mode.href;
-                    }
-                    break;
-                case ']':
-                    if (lastChar == ']') {
-                        if (text == "") { text = href; }
-                        if (href.StartsWith("https://bogle.tools/")) 
-                        {
-                            returnVal += "<a href='" + href.Substring(19) + "'>" + text + "</a>";
-                        }
-                        else if (href.StartsWith("https://"))
-                        {
-                            returnVal += "<a target=_blank href='" + href + "'>" + text + "</a>";
-                        } 
-                        else
-                        {
-                            returnVal += "<a target=_blank href='https://www.bogleheads.org/wiki/" + href + "'>" + text + "</a>";
-                        }
-                        href = "";
-                        text = "";
-                        mode = Mode.normal;
-                    }
-                    break;
-                case '|':
-                    if (mode == Mode.href) {
-                        mode = Mode.text;
-                    }
-                    break;
-            }
-
-            switch (mode) {
-                case Mode.href:
-                    switch (c) {
-                        case '[':
-                        case ']':
-                            break;
-                        default:
-                            href += c;
-                            break;
-                    }
-                    break;
-                case Mode.text:
-                    switch (c) {
-                        case '[':
-                        case ']':
-                        case '|':
-                            break;
-                        default:
-                            text += c;
-                            break;
-                    }
-                    break;
-                default:
-                    switch (c) {
-                        case '[':
-                        case ']':
-                            break;
-                        case '\n':
-                            returnVal += "<br/>";
-                            break;
-                        default:
-                            returnVal += c;
-                            break;
-                    }
-                    break;
-            }
-
-            lastChar = c;
-        }
-        returnVal += "</span>";
-
-        return returnVal;
     }
 
     [Parameter]

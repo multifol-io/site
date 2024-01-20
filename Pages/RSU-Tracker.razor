@@ -110,7 +110,7 @@
                                 case "people": 
                                     <td>
                                         <a @onclick=toggleTaxFilingStatusEditing style=margin:0px;padding:0px;width:20px class="m-2 btn" >✏️</a>
-                                        @((MarkupString)bold("Tax Filing Status:"))
+                                        @((MarkupString)FormatUtilities.Bold("Tax Filing Status:", ShowMarkup))
                                         @if (!taxFilingStatusEditing) {
                                             @if (appData.FamilyData!.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@appData.FamilyData.TaxFilingString</span> }
                                             @if(appData.FamilyData.PersonCount > 0) {
@@ -431,107 +431,6 @@
         {
             return "";
         }
-    }
-
-    public string bold(string text) {
-        if (ShowMarkup) {
-            return "[b]<b>" + text + "</b>[/b]";
-        } else {
-            return "<b>" + text + "</b>";
-        }
-    }
-
-    public string boldUnderline(string text) {
-        if (ShowMarkup) {
-            return "[b][u]<b><u>" + text + "</u></b>[/u][/b]";
-        } else {
-            return "<b><u>" + text + "</u></b>";
-        }
-    }
-
-    public string markupize(string? wikiText) {
-        if (wikiText == null) return "";
-        string returnVal = "<span>";
-        char lastChar = 'x';
-        var mode = Mode.normal;
-        string href = "";
-        string text = "";
-        foreach (var c in wikiText) {
-            switch (c) {
-                case '[':
-                    if (lastChar == '[') {
-                        mode = Mode.href;
-                    }
-                    break;
-                case ']':
-                    if (lastChar == ']') {
-                        if (text == "") { text = href; }
-                        if (href.StartsWith("https://bogle.tools/")) 
-                        {
-                            returnVal += "<a href='" + href.Substring(19) + "'>" + text + "</a>";
-                        }
-                        else if (href.StartsWith("https://"))
-                        {
-                            returnVal += "<a target=_blank href='" + href + "'>" + text + "</a>";
-                        } 
-                        else
-                        {
-                            returnVal += "<a target=_blank href='https://www.bogleheads.org/wiki/" + href + "'>" + text + "</a>";
-                        }
-                        href = "";
-                        text = "";
-                        mode = Mode.normal;
-                    }
-                    break;
-                case '|':
-                    if (mode == Mode.href) {
-                        mode = Mode.text;
-                    }
-                    break;
-            }
-
-            switch (mode) {
-                case Mode.href:
-                    switch (c) {
-                        case '[':
-                        case ']':
-                            break;
-                        default:
-                            href += c;
-                            break;
-                    }
-                    break;
-                case Mode.text:
-                    switch (c) {
-                        case '[':
-                        case ']':
-                        case '|':
-                            break;
-                        default:
-                            text += c;
-                            break;
-                    }
-                    break;
-                default:
-                    switch (c) {
-                        case '[':
-                        case ']':
-                            break;
-                        case '\n':
-                            returnVal += "<br/>";
-                            break;
-                        default:
-                            returnVal += c;
-                            break;
-                    }
-                    break;
-            }
-
-            lastChar = c;
-        }
-        returnVal += "</span>";
-
-        return returnVal;
     }
 
     [Parameter]
