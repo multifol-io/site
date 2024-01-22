@@ -217,7 +217,7 @@
                                                                                 last price: $<input @onmousedown:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.LastPrice placeholder="last price" />
                                                                                 <div style=text-align:right>
                                                                                     <button title='delete grant' @onmousedown:stopPropagation="true" @onclick='@(e=>deleteGrant(e,pBuf, grantIndex))'>❌ grant</button>
-                                                                                    <button title='save grant' >save grant</button>
+                                                                                    <button @onclick='@(e=>toggleEdit(e,pBuf, grantIndex))' title='save grant' >save grant</button>
                                                                                 </div>
                                                                             </td>
                                                                         }
@@ -372,8 +372,9 @@
                 newGrant.LastPrice = lastGrant.LastPrice;
                 newGrant.Ticker = lastGrant.Ticker;
             }
+
             newGrant.Edit = true;
-            appData.FamilyData.People[personIndex].RSUGrants.Add(newGrant);
+            appData.FamilyData.People[personIndex].RSUGrants.Insert(0,newGrant);
         }
     }
 
