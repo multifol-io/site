@@ -201,7 +201,12 @@
                                                                     var grantIndex = grantCount++;
                                                                     <tr style=vertical-align:bottom;color:white;background-Color:black @onmousedown='@(e=>toggleEdit(e,pBuf, grantIndex))'>
                                                                         @if (!rsuGrant.Edit) {
-                                                                            <td style=padding-left:8px;text-align:left colspan=4>@rsuGrant.Shares @rsuGrant.Ticker shares granted on @rsuGrant.Date?.ToShortDateString()</td>
+                                                                            <td style=padding-left:8px;text-align:left colspan=4 >
+                                                                                @rsuGrant.Shares @rsuGrant.Ticker shares granted on @rsuGrant.Date?.ToShortDateString()
+                                                                            </td>
+                                                                            <td>
+                                                                                <a @onclick=@(e=>toggleEdit(e,pBuf, grantIndex)) @onmousedown:stopPropagation=true style=margin:0px;padding:0px;width:20px class="m-0 btn" >✏️</a>
+                                                                            </td>
                                                                         } else {
                                                                             <td style=padding-left:8px;text-align:left colspan=4>
                                                                                 <input @onmousedown:stopPropagation="true" type=text style=width:80px;text-align:right @bind-value=rsuGrant.Shares placeholder="shares" />
