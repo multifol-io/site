@@ -81,6 +81,10 @@
     <div style=clear:left><a href=/portfolio-tracker @onclick=navToAccounts @onclick:preventDefault >Portfolio</a> > @Query</div>
 
     <div style=clear:left>
+        @{
+            int accountsMatchingFilter = 0;
+        }   
+
         @if (Query == "editor") {
             <br/>
             <span>Track another account:&nbsp;</span><button @onclick=addAccountInline>➕ account</button>
@@ -91,6 +95,7 @@
 
         @{
             var accountIndex = 0;
+            accountsMatchingFilter = 0;
         }
         @foreach (var account in appData.FamilyData.Accounts) {
             int accBuffer = accountIndex;
@@ -108,8 +113,13 @@
                 }
 
                 account.View = found;
+                if (found)
+                {
+                    accountsMatchingFilter++;
+                }
             } else if (Query.StartsWith("editor")) {
                 account.View = true;
+                accountsMatchingFilter++;
             } else if (Query.StartsWith("account:")) {
                 string accountToFind;
                 if (Query.Length > 8)
@@ -121,10 +131,20 @@
                     accountToFind = "";
                 }
 
-                account.View = (account.Title == accountToFind);
+                bool accountFound = account.Title == accountToFind;
+                account.View = accountFound;
+                if (accountFound)
+                {
+                    accountsMatchingFilter++;
+                }
             } else if (Query.StartsWith("custodian:")) {
                 var custodianToFind = Query.Substring(10);
-                account.View = (account.Custodian == custodianToFind);
+                bool accountFound = account.Custodian == custodianToFind;
+                account.View = accountFound;
+                if (accountFound)
+                {
+                    accountsMatchingFilter++;
+                }
             }
 
             if (account.View) {
@@ -548,6 +568,14 @@
                 }
             }
         }
+
+        
+        @if (accountsMatchingFilter == 0 && Query == "ticker:IBOND")
+        {
+            <br/>
+            <span>Track a Treasury Direct account:&nbsp;</span><button @onclick=addTreasuryDirectAccount>➕ account</button>
+            <br/><br/>
+        }
     </div>
 } else if (appData.FamilyData == null) {
     Navigation.NavigateTo("/portfolio-tracker");
@@ -961,6 +989,14 @@
             newAccount.Edit = true;
             appData.FamilyData?.Accounts.Insert(0,newAccount);
         }
+    }
+
+    void addTreasuryDirectAccount()
+    {
+        var newAccount = new Account(appData.FamilyData.PIN) { Custodian = "Treasury Direct", AccountType = "Taxable" };
+        newAccount.View = true;
+        appData.FamilyData?.Accounts.Insert(0,newAccount);
+        newAccount.Investments.Add(new Investment() { Ticker = "IBOND", AssetType = AssetType.IBond, Name = "I Bonds", ExpenseRatio = 0.0 });
     }
 
     private async void deleteAccount2(MouseEventArgs e, int accountIndex)
