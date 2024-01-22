@@ -18,6 +18,8 @@ public class RSUGrant {
     public double Amount { get; set; }
     public double? Price { get; set; }
     public int? Shares { get; set; }
+    
+    [JsonIgnore]
     public bool Edit { get; set; }
 
     private double? _LastPrice;

@@ -167,25 +167,21 @@
                                                 <a style='@byGrantBold' href=/rsu-tracker/by-grant>by grant</a>
                                             </span>
                                             <br/>
-                                            <br/>
                                             @if(showEditAccountHelpers) {
                                                 <i>Editing RSU Grants:</i>
                                                 <br/><span>'➕' button will add a new grant to bottom of grants list.
                                                 <br/>To edit grant details or to delete a grant, click on grant table row in <a href=/rsu-tracker/by-grant>by grant</a> view</span><br/><br/>
                                             }
 
+                                            <button @onclick=@refreshPrices title='update prices' style=min-width:80px;>@refreshButtonText</button>
+                                            <br/>
+                                            <br/>
                                             @switch (View) {
                                                 case "by-grant":
                                                     @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
                                                         var pBuf = p;
                                                         var person = appData.FamilyData.People[p];
-                                                        <p><span style=font-size:14pt;font-weight:bold>@person.PossessiveID RSU Grants:</span> <button @onclick='@(e=>addGrant(e,pBuf))' title='add grant'>➕</button>
-                                                            @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
-                                                            {
-                                                                <button @onclick=@refreshPrices title='update prices' style=min-width:80px;>@refreshButtonText</button>
-                                                            } else {
-                                                                <a href="/updating-portfolio">Update prices</a>
-                                                            }
+                                                        <p><span style=font-size:14pt;font-weight:bold>@person.PossessiveID RSU Grants:</span><br/><button @onclick='@(e=>addGrant(e,pBuf))' title='add grant'>➕</button>
                                                         </p>
 
                                                         @if(person.RSUGrants.Count > 0) {
@@ -197,7 +193,7 @@
                                                                     <th style=padding-left:8px;text-align:center>~Value</th>
                                                                 </tr>
                                                                 @{var grantCount = 0;}
-                                                                @foreach (var rsuGrant in person.RSUGrants) {
+                                                                @foreach (var rsuGrant in person.RSUGrants.OrderByDescending(g=>(g.Date ?? DateOnly.FromDateTime(DateTime.Now)))) {
                                                                     var grantIndex = grantCount++;
                                                                     <tr style=vertical-align:bottom;color:white;background-Color:black @onmousedown='@(e=>toggleEdit(e,pBuf, grantIndex))'>
                                                                         @if (!rsuGrant.Edit) {
@@ -220,8 +216,11 @@
                                                                                 with first vest happening at month # <input @onmousedown:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.FirstVestMonth  /><br/>
                                                                                 <br/>
                                                                                 last price: $<input @onmousedown:stopPropagation="true" type=text style=width:80px @bind-value=rsuGrant.LastPrice placeholder="last price" />
+                                                                                <button @onclick=@refreshPrices @onmousedown:stopPropagation="true" title='update prices' style=min-width:80px;>fetch</button>
+                                                                                <br/>
+                                                                                <br/>
                                                                                 <div style=text-align:right>
-                                                                                    <button title='delete grant' @onmousedown:stopPropagation="true" @onclick='@(e=>deleteGrant(e,pBuf, grantIndex))'>❌ grant</button>
+                                                                                    <button title='delete grant' @onmousedown:stopPropagation="true" @onclick='@(e=>deleteGrant(e,pBuf, grantIndex))'>delete grant</button>
                                                                                     <button @onclick='@(e=>toggleEdit(e,pBuf, grantIndex))' title='save grant' >save grant</button>
                                                                                 </div>
                                                                             </td>
@@ -249,20 +248,15 @@
                                                         var pBuf = p;
                                                         var person = appData.FamilyData.People[p];
 
-                                                        var vestMonths = (from rsuGrant in person.RSUGrants  // First foreach loop
+                                                        var vestMonths = (from rsuGrant in person.RSUGrants.OrderBy(g=>g.Date)  // First foreach loop
                                                             from vestEvent in rsuGrant.VestEvents  // Second foreach loop
                                                             where vestEvent.Date >= DateOnly.FromDateTime(DateTime.Now)
                                                             group vestEvent by new { vestEvent.Date.Year, vestEvent.Date.Month }
                                                             into grp
                                                             select new { month = grp.Key.Month, year = grp.Key.Year, count = grp.Count(), shares = grp.Sum(ve=>ve.Shares), value = grp.Sum(ve=>ve.Value) });
                                                             
-                                                        <p><span style=font-size:14pt;font-weight:bold>@person.PossessiveID RSU Grants:</span> <button @onclick='@(e=>addGrant(e,pBuf))' title='add grant'>➕</button>
-                                                            @if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
-                                                            {
-                                                                <button @onclick=@refreshPrices title='update prices' style=min-width:80px;>@refreshButtonText</button>
-                                                            } else {
-                                                                <a href="/updating-portfolio">Update prices</a>
-                                                            }
+                                                        <p><span style=font-size:14pt;font-weight:bold>@person.PossessiveID RSU Grants:</span><br/>
+                                                        <button @onclick='@(e=>addGrant(e,pBuf))' title='add grant'>➕</button>
                                                         </p>
 
                                                         @if(person.RSUGrants.Count > 0) {
@@ -340,14 +334,15 @@
     async void deleteGrant(MouseEventArgs e, int personIndex, int grantIndex) {
         if (appData?.FamilyData is not null) {
             Console.WriteLine("personIndex:" + personIndex + " -- grantIndex: " + grantIndex);
-            appData.FamilyData.People[personIndex].RSUGrants.RemoveAt(grantIndex);
+            var grantToDelete = appData.FamilyData.People[personIndex].RSUGrants.OrderByDescending(g=>(g.Date??DateOnly.FromDateTime(DateTime.Now))).ElementAt(grantIndex);
+            appData.FamilyData.People[personIndex].RSUGrants.Remove(grantToDelete);
             await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         }
     }
 
     async void toggleEdit(MouseEventArgs e, int personIndex, int grantIndex) {
         if (appData?.FamilyData is not null) {
-            var grant = appData.FamilyData.People[personIndex].RSUGrants[grantIndex];
+            var grant = appData.FamilyData.People[personIndex].RSUGrants.OrderByDescending(g=>(g.Date??DateOnly.FromDateTime(DateTime.Now))).ElementAt(grantIndex);
             if (grant.Edit) {
                 var created = grant.CalculateVestEvents();
                 if (created) {
@@ -367,7 +362,7 @@
             }
 
             var lastGrant = appData.FamilyData.People[personIndex].RSUGrants.Count > 0 
-                ? appData.FamilyData.People[personIndex].RSUGrants[appData.FamilyData.People[personIndex].RSUGrants.Count-1]
+                ? appData.FamilyData.People[personIndex].RSUGrants.OrderByDescending(g=>g.Date).ElementAt(0)
                 : null;
             var newGrant = new RSUGrant();
             if (lastGrant != null) {
@@ -472,6 +467,11 @@
     private async Task refreshPrices() {
         refreshButtonText = "Updating...";
         await appData.FamilyData.RefreshPrices(Http);
+        if (appData.FamilyData.TickersToUpdate.Count > 0)
+        {
+            Navigation.NavigateTo("/portfolio-tracker/refresh-prices");
+        }
+
         refreshButtonText = "🔃 Prices";
     }
     
