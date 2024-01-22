@@ -1,5 +1,4 @@
 @page "/portfolio-tracker"
-@page "/ibond-tracker"
 @page "/portfolio-tracker/{View}"
 @page "/portfolio"
 @page "/portfolio/{View}"
@@ -204,12 +203,6 @@
                                     @((MarkupString)FormatUtilities.Bold("Investable Assets", ShowMarkup))
                                     @if (appData.FamilyData.Accounts.Count > 0) {
                                         if (View == null) {
-                                            var uri = new Uri(Navigation.Uri);
-
-                                            if (uri.PathAndQuery == "/ibond-tracker")
-                                            {
-                                                Navigation.NavigateTo("/ibond-tracker/view/ticker:IBOND");
-                                            }
                                             View = "holdings";
                                         }
                                         
