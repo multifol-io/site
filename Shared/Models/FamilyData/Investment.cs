@@ -472,7 +472,14 @@ public class Investment
                         NextRateStart = null;
                     }
                     
-                    ValuePIN = (int)value;
+                    if (PurchaseDate <= DateOnly.FromDateTime(DateTime.Now))
+                    {
+                        ValuePIN = (int)value;
+                    }
+                    else
+                    {
+                        ValuePIN = null;
+                    }
                 }
                 else
                 {
