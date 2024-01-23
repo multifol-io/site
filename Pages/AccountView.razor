@@ -583,8 +583,12 @@
 
 @code {
     bool editingAccountInfo = false;
-    void editAccountInfo(MouseEventArgs e, Account account) {
+    async void editAccountInfo(MouseEventArgs e, Account account) {
         account.Edit = !account.Edit;
+        if (!account.Edit)
+        {
+            await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
+        }
     }
     
     void buy(MouseEventArgs e, Account account, Investment selectedInvestment)
@@ -667,6 +671,8 @@
         {
             await selectedInvestment.CalculateIBondValue();
         }
+
+        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
     }
 
     void cancel(MouseEventArgs e, Investment selectedInvestment)
@@ -785,14 +791,6 @@
         }
     }
 
-    void toggleTaxFilingStatusEditing() {
-        taxFilingStatusEditing = !taxFilingStatusEditing;
-    }
-
-    void toggleAssetAllocationEditing() {
-        assetAllocationEditing = !assetAllocationEditing;
-    }
-
     bool showEditAccountHelpers = false;
     string refreshButtonText = "🔃 Prices";
     bool assetAllocationEditing = false;
@@ -873,52 +871,6 @@
         Navigation.NavigateTo("/import-accounts-bh");
     }
 
-    private async Task UpdateInvestmentPrice(Investment investment)
-    {
-        var quoteDataJson = await Http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={investment.Ticker}&apikey={appData.EODHistoricalDataApiKey}");
-        var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
-        if (quoteData?.Close != null) {
-            investment.Price = quoteData.Close;
-            investment.UpdateValue();
-        }
-    }
-
-    private async Task UpdatePrice(MouseEventArgs e, Investment investment) {
-        if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey)) {
-            await UpdateInvestmentPrice(investment);
-        }
-    }
-
-    private void finishImport()
-    {
-        if (appData is not null && appData.FamilyData is not null && appData.ImportResult is not null) {
-
-            foreach (var updatedAccount in appData.ImportResult.UpdatedAccounts)
-            {
-                if (updatedAccount.Import && updatedAccount.ReplaceAccount != null)
-                {
-                    updatedAccount.ReplaceAccount.Investments.Clear();
-                    updatedAccount.ReplaceAccount.Investments.AddRange(updatedAccount.Investments);
-                }
-            }
-
-            foreach (var newAccount in appData.ImportResult.NewAccounts)
-            {
-                if (newAccount.Import)
-                {
-                    appData.FamilyData.Accounts.Add(newAccount);
-                }
-            }
-
-            appData.ImportResult = null;
-        }
-    }
-
-    private void cancelImport()
-    {
-        appData.ImportResult = null;
-    }
-
     private void addIBOND(MouseEventArgs e, int accountIndex)
     {
         if (appData.FamilyData is not null) {
@@ -950,37 +902,6 @@
         }
     }
 
-    void deleteInvestment2(MouseEventArgs e, int accountIndex, int investmentIndex)
-    {
-        if (appData.FamilyData is not null) {
-            var account = appData.FamilyData.Accounts[accountIndex];
-            var investmentToDelete = account.Investments[investmentIndex];
-            account.Investments.Remove(investmentToDelete);
-            appData.FamilyData.UpdatePercentages();
-        }
-    }
-
-    void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
-    {
-        if (appData.FamilyData is not null) {
-            appData.FamilyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
-            Navigation.NavigateTo("/portfolio-tracker/reload");
-            appData.FamilyData.UpdatePercentages();
-        }
-    }
-    void addAvailableFund(MouseEventArgs e, Account account)
-    {
-        if (appData.FamilyData is not null) {
-            var newFund = new Investment(appData.FamilyData.PIN) { funds = Funds };
-            account.AvailableFunds.Add(newFund);
-        }
-    }
-
-    void deleteAvailableFund(MouseEventArgs e, Account account, int investmentIndex)
-    {
-        account.AvailableFunds.RemoveAt(investmentIndex);
-    }
-
     void addAccountInline()
     {
         if (appData.FamilyData is not null) {
@@ -1007,24 +928,6 @@
             accountIndexViewing = null;
             appData.FamilyData.UpdatePercentages();
             await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
-        }
-    }
-
-    void addAccount()
-    {
-        if (appData.FamilyData is not null) {
-            var newAccount = new Account(appData.FamilyData.PIN);
-            var newInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds };
-            newAccount.Investments.Add(newInvestment);
-            appData.FamilyData?.Accounts.Add(newAccount);
-        }
-    }
-    void deleteAccount(MouseEventArgs e, int accountIndex)
-    {
-        if (appData.FamilyData is not null) {
-            appData.FamilyData.Accounts.RemoveAt(accountIndex);
-            Navigation.NavigateTo("/portfolio-tracker/reload");
-            appData.FamilyData.UpdatePercentages();
         }
     }
 
