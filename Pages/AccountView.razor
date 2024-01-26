@@ -246,27 +246,33 @@
                     <tr style=height:15px;background:white></tr>
                     </table>
                     <table style=margin-left:.25in>
-                        @if (!isTreasuryDirect)
-                        {
-                            <tr style=vertical-align:bottom>
-                                <th style=padding-left:8px>Holding</th>
-                                <th style=padding-left:8px;text-align:center>Quantity</th>
-                                <th style=padding-left:8px;text-align:center>Price</th>
-                                <th style=padding-left:8px;text-align:center>Balance</th>
-                            </tr>
-                        } else {
-                            <tr style=vertical-align:bottom>
-                                <th style=padding-left:8px>Holding</th>
-                                <th style=padding-left:8px;text-align:center>'Fixed'<br/>Rate</th>
-                                <th style=padding-left:8px;text-align:center>Current<br/>Rate</th>
-                                <th style=padding-left:8px;text-align:center>Balance</th>
-                            </tr>
-                        }
                     @{
                         var investmentIndex = 0;
                         string bgColor;
+                        bool headerShown = false;
                     }
                     @foreach (var investment in account.Investments) {
+                        if (!headerShown)
+                        {
+                            if (!isTreasuryDirect && investment.Ticker != "IBOND")
+                            {
+                                <tr style=vertical-align:bottom>
+                                    <th style=padding-left:8px>Holding</th>
+                                    <th style=padding-left:8px;text-align:center>Quantity</th>
+                                    <th style=padding-left:8px;text-align:center>Price</th>
+                                    <th style=padding-left:8px;text-align:center>Balance</th>
+                                </tr>
+                            } else {
+                                <tr style=vertical-align:bottom>
+                                    <th style=padding-left:8px>Holding</th>
+                                    <th style=padding-left:8px;text-align:center>'Fixed'<br/>Rate</th>
+                                    <th style=padding-left:8px;text-align:center>Current<br/>Rate</th>
+                                    <th style=padding-left:8px;text-align:center>Balance</th>
+                                </tr>
+                            }
+
+                            headerShown = true;
+                        }
                         var advice = Advisor.Advise(investment, account, appData);
                         int invBuffer = investmentIndex;
                         investmentIndex++;
