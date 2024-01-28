@@ -471,8 +471,8 @@ public class Investment
                 {
                     var nowMonth = DateTime.Now.Month;
                     var nowYear = DateTime.Now.Year;
-                    double value = CostBasis ?? 0.0;
-                    double bondQuantity = (value / 25.0);
+                    decimal value = CostBasis == null ? 0.0m : (decimal)CostBasis;
+                    decimal bondQuantity = (value / 25.0m);
                     double currentRate = 0.0;
                     var monthsLeft = GetTotalMonths(PurchaseDate.Value, DateTime.Now);
                     var i = rates.Count - 1;
@@ -481,7 +481,8 @@ public class Investment
                     {
                         monthsToCompoundThisRound = monthsLeft >= 6 ? 6 : monthsLeft;
                         currentRate = rates[i];
-                        value = (bondQuantity*Math.Round(value/bondQuantity*Math.Pow((1.0+currentRate/2.0),((double)monthsToCompoundThisRound/6.0)),2));
+                        var price = Math.Round(value/bondQuantity*(decimal)Math.Pow((1.0+currentRate/2.0),((double)monthsToCompoundThisRound/6.0)),2, MidpointRounding.AwayFromZero);
+                        value = bondQuantity * price;
                         monthsLeft -= monthsToCompoundThisRound;
                         i--;
                     }
