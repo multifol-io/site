@@ -330,17 +330,18 @@
                                                                 @FormatUtilities.formatMoney(account.Value, decimalPlaces:0)
                                                             </td>
                                                         </tr>
-
-                                                        @if(isTreasuryDirect) {
-                                                            <tr style=vertical-align:bottom>
-                                                                <td style=padding-left:8px>Holding</td>
-                                                                <td style=padding-left:8px;text-align:center>'Fixed'<br/>Rate</td>
-                                                                <td style=padding-left:8px;text-align:center>Current<br/>Rate</td>
-                                                                <td style=padding-left:8px;text-align:center>Balance</td>
-                                                            </tr>
-                                                        }
+                                                        bool ibondHeaderShown = false;
                                                         var investmentIndex = 0;
                                                         foreach (var investment in account.Investments) {
+                                                            if (investment.Ticker == "IBOND" && !ibondHeaderShown) {
+                                                                ibondHeaderShown = true;
+                                                                <tr style=vertical-align:bottom>
+                                                                    <td style=padding-left:8px>Holding</td>
+                                                                    <td style=padding-left:8px;text-align:center>'Fixed'<br/>Rate</td>
+                                                                    <td style=padding-left:8px;text-align:center>Current<br/>Rate</td>
+                                                                    <td style=padding-left:8px;text-align:center>Balance</td>
+                                                                </tr>
+                                                            }
                                                             var advice = Advisor.Advise(investment, account, appData);
                                                             int invBuffer = investmentIndex;
                                                             investmentIndex++;
@@ -350,7 +351,8 @@
                                                             <tr style=background-color:@bgColor @onclick='@(e=>editAccount(e,-1,-1, tickerQuery))'>
                                                                 <td style=padding-left:8px title=@investment.Name>
                                                                     @(investment.Ticker != null ? investment.Ticker : investment.Name)
-                                                                    @if (investment.AssetType == global::AssetType.Unknown) { <span style=color:red>*</span> }
+                                                                    @if (investment.IsAssetTypeUnknown) { <span style=color:red>*</span> }
+                                                                    @if (investment.IsBalancedFund && !investment.DoesBalancedFundEqual100) { <span style=color:red>^</span> }
                                                                     @if (investment.IsIBond) { 
                                                                         <span>&nbsp;</span>@FormatUtilities.formatMonthPlus2DigitYear(investment.PurchaseDate)
                                                                     }

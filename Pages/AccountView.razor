@@ -284,8 +284,9 @@
                         <tr style=background-color:@bgColor @onclick='@(e=>chooseInvestment(e,accBuffer,invBuffer))'>
                             <td style=padding-left:8px;height:30px; title=@investment.Name>
                                 @(investment.Ticker != null ? investment.Ticker : investment.Name)
-                                @if (investment.AssetType == global::AssetType.Unknown) { <span style=color:red>*</span> }
-                                @if (investment.IsIBond) { 
+                                @if (investment.IsAssetTypeUnknown) { <span style=color:red>*</span> }
+                                @if (investment.IsBalancedFund && !investment.DoesBalancedFundEqual100) { <span style=color:red>^</span> }
+                                @if (investment.IsIBond) {
                                     <span>&nbsp;</span>@FormatUtilities.formatMonthPlus2DigitYear(investment.PurchaseDate)
                                 }
                             </td>
@@ -378,8 +379,14 @@
 
                 @if (account.SelectedInvestment != null) {
                     var investment = account.SelectedInvestment;
-                    if (investment.AssetType == global::AssetType.Unknown) {
+                    if (investment.IsAssetTypeUnknown)
+                    {
                         <span><span style=color:red>*</span> - Asset type is unknown. Please edit, and choose asset type.</span><br/><br/>
+                    }
+                    
+                    if (investment.IsBalancedFund && !investment.DoesBalancedFundEqual100)
+                    { 
+                        <span><span style=color:red>^</span> - Stock and Bond fund components don't total 100%. Please edit.</span><br/><br/>
                     }
 
                     switch (investment.SelectedTransaction?.Type) {
@@ -561,7 +568,8 @@
                                             <div style=margin-right:50px><label>Cash:</label> <input type=text style=width:60px @bind-Value=account.SelectedInvestment.CashPercent @bind-Value:event=oninput />%</div>
                                             <div style=margin-right:50px><label><b>Total:</b></label>
                                                 <span style=text-align:left;width:60px;display:inline-block>
-                                                    @((account.SelectedInvestment.USStockPercent??0.0)+(account.SelectedInvestment.InternationalStockPercent??0.0)+(account.SelectedInvestment.USBondsPercent??0.0)+(account.SelectedInvestment.InternationalBondsPercent??0.0)+(account.SelectedInvestment.CashPercent??0.0))%
+                                                    @(account.SelectedInvestment.TotalPercent)%
+                                                    @if (investment.IsBalancedFund && !investment.DoesBalancedFundEqual100) { <span style=color:red>^</span> }
                                                 </span>
                                             </div>
                                         </td>

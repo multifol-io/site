@@ -87,6 +87,38 @@ public class Investment
         }
     }
 
+    [JsonIgnore]
+    public bool IsAssetTypeUnknown
+    {
+        get {
+            return AssetType == global::AssetType.Unknown;
+        }
+    }
+
+    [JsonIgnore]
+    public bool IsBalancedFund
+    {
+        get {
+            return (AssetType == global::AssetType.StocksAndBonds_ETF || AssetType == global::AssetType.StocksAndBonds_Fund);
+        }
+    }
+
+    [JsonIgnore]
+    public double TotalPercent
+    {
+        get {
+            return (USStockPercent ?? 0.0) + (InternationalStockPercent ?? 0.0) + (USBondsPercent ?? 0.0) + (InternationalBondsPercent ?? 0.0) + (CashPercent ?? 0.0);
+        }
+    }
+
+    [JsonIgnore]
+    public bool DoesBalancedFundEqual100
+    {
+        get {
+            return Math.Round(TotalPercent, 1) > 99.5;
+        }
+    }
+
     public double? GetPercentage(AssetType? assetType) {
         if (assetType == null) { return 100.0 / 100.0; }
         else {
