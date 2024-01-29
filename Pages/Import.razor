@@ -6,9 +6,11 @@
 @inject IList<Fund> Funds
 @inject HttpClient Http
 
-<PageTitle>
-@pageHeading
-</PageTitle>
+@if (Custodian == null) {
+    <PageTitle>@pageHeading</PageTitle>
+} else {
+    <PageTitle>Import from @Custodian</PageTitle>
+}
 
 <div style=float:left>
     <h4 style="max-width:450px">
@@ -23,7 +25,7 @@
             @if(showError){<br/><br/><span style=color:red>ERROR: must be a CSV file from Ameriprise, eTrade, Fidelity, Merrill Edge, Schwab, T Rowe Price, or Vanguard or a XLSX file from Morgan Stanley.</span><br/>}
             <br/>
             
-            <p>As mentioned in <a href=/updating-portfolio>/updating-portfolio</a> there are 3 ways to enter/update data about your portolio. Importing CSV files is one of those techniques.</p>
+            <p>As mentioned in <a href=/updating-portfolio>/updating-portfolio</a> there are 3 ways to enter/update data about your portolio. Importing CSV files is one of those techniques. Choose your account custodian:</p>
 
             <div style=margin:.25in>
                 <b>Import account data:</b>
