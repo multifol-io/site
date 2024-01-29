@@ -119,6 +119,14 @@ public class Investment
         }
     }
 
+    [JsonIgnore]
+    public bool MissingCostBasis
+    {
+        get {
+            return CostBasis == null;
+        }
+    }
+
     public double? GetPercentage(AssetType? assetType) {
         if (assetType == null) { return 100.0 / 100.0; }
         else {
@@ -473,44 +481,50 @@ public class Investment
                     var nowYear = DateTime.Now.Year;
                     decimal value = CostBasis == null ? 0.0m : (decimal)CostBasis;
                     decimal bondQuantity = (value / 25.0m);
-                    double currentRate = 0.0;
-                    var monthsLeft = GetTotalMonths(PurchaseDate.Value, DateTime.Now);
-                    var i = rates.Count - 1;
-                    int monthsToCompoundThisRound = 6;
-                    while (monthsLeft > 0)
-                    {
-                        monthsToCompoundThisRound = monthsLeft >= 6 ? 6 : monthsLeft;
-                        currentRate = rates[i];
-                        var price = Math.Round(value/bondQuantity*(decimal)Math.Pow((1.0+currentRate/2.0),((double)monthsToCompoundThisRound/6.0)),2, MidpointRounding.AwayFromZero);
-                        value = bondQuantity * price;
-                        monthsLeft -= monthsToCompoundThisRound;
-                        i--;
-                    }
 
-                    InterestRate = rates[0];
-                    CurrentRate = monthsToCompoundThisRound != 6 ? currentRate : rates[i];
-                    if (monthsToCompoundThisRound != 6 && i > 0) 
+                    if (bondQuantity != 0m) 
                     {
-                        NextRate = rates[i];
-                        var nextMonthStart = nowMonth + 6 - monthsToCompoundThisRound + 1;
-                        var nextYearStart = nowYear;
-                        if (nextMonthStart > 12)
+                        double currentRate = 0.0;
+                        var monthsLeft = GetTotalMonths(PurchaseDate.Value, DateTime.Now);
+                        var i = rates.Count - 1;
+                        int monthsToCompoundThisRound = 6;
+                        while (monthsLeft > 0)
                         {
-                            nextMonthStart -= 12;
-                            nextYearStart++;
+                            monthsToCompoundThisRound = monthsLeft >= 6 ? 6 : monthsLeft;
+                            currentRate = rates[i];
+                            var price = Math.Round(value/bondQuantity*(decimal)Math.Pow((1.0+currentRate/2.0),((double)monthsToCompoundThisRound/6.0)),2, MidpointRounding.AwayFromZero);
+                            value = bondQuantity * price;
+                            monthsLeft -= monthsToCompoundThisRound;
+                            i--;
                         }
-                        NextRateStart = new DateOnly(nextYearStart, nextMonthStart, 1);
+
+                        InterestRate = rates[0];
+                        CurrentRate = monthsToCompoundThisRound != 6 ? currentRate : rates[i];
+                        if (monthsToCompoundThisRound != 6 && i > 0) 
+                        {
+                            NextRate = rates[i];
+                            var nextMonthStart = nowMonth + 6 - monthsToCompoundThisRound + 1;
+                            var nextYearStart = nowYear;
+                            if (nextMonthStart > 12)
+                            {
+                                nextMonthStart -= 12;
+                                nextYearStart++;
+                            }
+                            NextRateStart = new DateOnly(nextYearStart, nextMonthStart, 1);
+                        } else {
+                            NextRate = null;
+                            NextRateStart = null;
+                        }
+                        
+                        if (PurchaseDate <= DateOnly.FromDateTime(DateTime.Now))
+                        {
+                            ValuePIN = (int)value;
+                        }
+                        else
+                        {
+                            ValuePIN = null;
+                        }
                     } else {
-                        NextRate = null;
-                        NextRateStart = null;
-                    }
-                    
-                    if (PurchaseDate <= DateOnly.FromDateTime(DateTime.Now))
-                    {
-                        ValuePIN = (int)value;
-                    }
-                    else
-                    {
                         ValuePIN = null;
                     }
                 }

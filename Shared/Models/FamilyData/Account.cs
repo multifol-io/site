@@ -178,7 +178,10 @@ public class Account
                 familyData.OverallER += investment.Percentage / 100.0 * investment.ExpenseRatio.Value;
                 familyData.ExpensesTotal += investment.Value.Value * investment.ExpenseRatio.Value / 100.0;
             } else {
-                familyData.InvestmentsMissingER++;
+                if (investment.IsETF || investment.IsFund)
+                {
+                    familyData.InvestmentsMissingER++;
+                }
             }
         }
     }

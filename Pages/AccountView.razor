@@ -286,6 +286,8 @@
                                 @(investment.Ticker != null ? investment.Ticker : investment.Name)
                                 @if (investment.IsAssetTypeUnknown) { <span style=color:red>*</span> }
                                 @if (investment.IsBalancedFund && !investment.DoesBalancedFundEqual100) { <span style=color:red>^</span> }
+                                @if (account.TaxType == "Taxable" && investment.MissingCostBasis && !investment.IsCash) { <span style=color:red>~</span> }
+                                @if ((investment.IsFund || investment.IsETF) && investment.ExpenseRatio == null) { <span style=color:red>#</span> }
                                 @if (investment.IsIBond) {
                                     <span>&nbsp;</span>@FormatUtilities.formatMonthPlus2DigitYear(investment.PurchaseDate)
                                 }
@@ -387,6 +389,14 @@
                     if (investment.IsBalancedFund && !investment.DoesBalancedFundEqual100)
                     { 
                         <span><span style=color:red>^</span> - Stock and Bond fund components don't total 100%. Please edit.</span><br/><br/>
+                    }
+
+                    if (account.TaxType == "Taxable" && investment.MissingCostBasis && !investment.IsCash) { 
+                        <span><span style=color:red>~</span> - Missing CostBasis. Please edit.</span><br/><br/>
+                    }
+
+                    if ((investment.IsFund || investment.IsETF) && investment.ExpenseRatio == null) { 
+                        <span><span style=color:red>#</span> - Missing ExpenseRatio. Please edit.</span><br/><br/>
                     }
 
                     switch (investment.SelectedTransaction?.Type) {

@@ -353,6 +353,8 @@
                                                                     @(investment.Ticker != null ? investment.Ticker : investment.Name)
                                                                     @if (investment.IsAssetTypeUnknown) { <span style=color:red>*</span> }
                                                                     @if (investment.IsBalancedFund && !investment.DoesBalancedFundEqual100) { <span style=color:red>^</span> }
+                                                                    @if (account.TaxType == "Taxable" && investment.MissingCostBasis && !investment.IsCash) { <span style=color:red>~</span> }
+                                                                    @if ((investment.IsFund || investment.IsETF) && investment.ExpenseRatio == null) { <span style=color:red>#</span> }
                                                                     @if (investment.IsIBond) { 
                                                                         <span>&nbsp;</span>@FormatUtilities.formatMonthPlus2DigitYear(investment.PurchaseDate)
                                                                     }
@@ -806,7 +808,7 @@
                                             <fieldset>
                                                 @((MarkupString)FormatUtilities.Bold("Weighted Expense Ratio: ", ShowMarkup))
                                                 <span>&nbsp;@FormatUtilities.formatPercent3(appData.FamilyData.OverallER) or @FormatUtilities.formatMoney(appData.FamilyData.ExpensesTotal) /year</span>
-                                                @if (appData.FamilyData.InvestmentsMissingER > 0){<br/><span>&nbsp;(@appData.FamilyData.InvestmentsMissingER investment(s) missing ER)</span><br/>}
+                                                @if (appData.FamilyData.InvestmentsMissingER > 0){<br/><span>&nbsp;(@appData.FamilyData.InvestmentsMissingER investment(s) missing ER, select holdings marked with <span style=color:red>#</span> in accounts view)</span><br/>}
                                             </fieldset>
                                         }
                                     }
