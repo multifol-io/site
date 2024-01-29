@@ -31,7 +31,7 @@
                 <b>Import account data:</b>
                 <span>&nbsp;<a href='/import/Fidelity'>Fidelity</a> | 
                 <a href='/import/Schwab'>Schwab</a> | 
-                @* <a href='/import/TreasuryDirect'>Treasury&nbsp;Direct</a> |  *@
+                <a href='/import/TreasuryDirect'>Treasury&nbsp;Direct</a> | 
                 <a href='/import/Vanguard'>Vanguard</a></span><br/>
 
                 <b>Other supported accounts:</b>
@@ -64,7 +64,7 @@
                             </fieldset><br/>
                             <li>Choose Account Type for each new account</li>
                         </ol>
-                    </p>                
+                    </p>
                     break;
                 case "Schwab":
                     <h3>Import from @Custodian:</h3>
@@ -385,6 +385,7 @@
     }
 
     private async void importTD() {
+        await Investment.LoadIBondRates();
         ImportResult importResult = new();
         if (tdContent is not null) {
             var newAccount = new Account() { Custodian = "Treasury Direct", AccountType = "Taxable" };
@@ -412,7 +413,22 @@
 
             if (newAccount.Investments.Count > 0) {
                 importResult.NewAccounts.Add(newAccount);
+                
                 appData.ImportResult = importResult;
+                foreach (var account in appData.ImportResult.NewAccounts) 
+                {
+                    account.Import = true;
+                }
+
+                if (appData.ImportResult.UpdatedAccounts.Count == 0) {
+                    appData.ImportResult.ImportNewAccounts = true;
+                }
+
+                if (appData.ImportResult.NewAccounts.Count == 0) {
+                    appData.ImportResult.ImportUpdatedAccounts = true;
+                }
+
+                Navigation.NavigateTo("/import");
             }
         }
     }

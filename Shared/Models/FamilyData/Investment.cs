@@ -387,55 +387,57 @@ public class Investment
 
     public static Dictionary<string,List<double>>? IBondRates { get; set; }
     
-    static async Task LoadIBondRates() {
-        IBondRates = new();
-        var ibondsUri = new Uri("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/treasury-direct/i-bond-rate-chart.csv");
-        var httpClient = new HttpClient();
-        var ibondsCsv = await httpClient.GetAsync(ibondsUri.AbsoluteUri);
-        var stream = await ibondsCsv.Content.ReadAsStreamAsync();
-        using var reader = new CsvReader(stream);
-        var RowEnumerator = reader.GetRowEnumerator().GetAsyncEnumerator();
-        await RowEnumerator.MoveNextAsync();
-        await RowEnumerator.MoveNextAsync();
-        while (await RowEnumerator.MoveNextAsync())
-        {
-            string[] chunks = RowEnumerator.Current;
-            int chunkNum = 0;
-            string? date = null;
-            List<double> rates = new();
-            foreach (var chunk in chunks)
+    public static async Task LoadIBondRates() {
+        if (IBondRates == null) {
+            IBondRates = new();
+            var ibondsUri = new Uri("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/treasury-direct/i-bond-rate-chart.csv");
+            var httpClient = new HttpClient();
+            var ibondsCsv = await httpClient.GetAsync(ibondsUri.AbsoluteUri);
+            var stream = await ibondsCsv.Content.ReadAsStreamAsync();
+            using var reader = new CsvReader(stream);
+            var RowEnumerator = reader.GetRowEnumerator().GetAsyncEnumerator();
+            await RowEnumerator.MoveNextAsync();
+            await RowEnumerator.MoveNextAsync();
+            while (await RowEnumerator.MoveNextAsync())
             {
-                switch (chunkNum) 
+                string[] chunks = RowEnumerator.Current;
+                int chunkNum = 0;
+                string? date = null;
+                List<double> rates = new();
+                foreach (var chunk in chunks)
                 {
-                    case 0:
-                        date = chunk[..5];
-                        if (!char.IsDigit(date[0])) 
-                        {
-                            // lines at bottom of the csv file that don't start with a dates should be skipped.
-                            return;
-                        }
-                        break;
-                    case 1:
-                        var rate = DoubleFromPercentageString(chunk);
-                        rates.Add(rate);
-                        break;
-                    default:
-                        if (string.IsNullOrEmpty(chunk))
-                        {
-                            continue;
-                        }
-                        else 
-                        {
-                            var fixedRate = DoubleFromPercentageString(chunk);
-                            rates.Add(fixedRate);
-                        }
-                        break;
+                    switch (chunkNum) 
+                    {
+                        case 0:
+                            date = chunk[..5];
+                            if (!char.IsDigit(date[0])) 
+                            {
+                                // lines at bottom of the csv file that don't start with a dates should be skipped.
+                                return;
+                            }
+                            break;
+                        case 1:
+                            var rate = DoubleFromPercentageString(chunk);
+                            rates.Add(rate);
+                            break;
+                        default:
+                            if (string.IsNullOrEmpty(chunk))
+                            {
+                                continue;
+                            }
+                            else 
+                            {
+                                var fixedRate = DoubleFromPercentageString(chunk);
+                                rates.Add(fixedRate);
+                            }
+                            break;
+                    }
+                    
+                    chunkNum++;
                 }
-                
-                chunkNum++;
-            }
 
-            IBondRates[date!] = rates;
+                IBondRates[date!] = rates;
+            }
         }
     }
 
@@ -453,9 +455,7 @@ public class Investment
 
     public async Task CalculateIBondValue()
     {
-        if (IBondRates == null) {
-            await LoadIBondRates();
-        }
+        await LoadIBondRates();
 
         if (IBondRates != null)
         {
