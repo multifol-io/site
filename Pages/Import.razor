@@ -1,4 +1,5 @@
-@page "/import-accounts"
+@page "/import"
+@page "/import/{Custodian}"
 @page "/import-accounts-bh"
 @inject IAppData appData
 @inject NavigationManager Navigation
@@ -24,81 +25,168 @@
             
             <p>As mentioned in <a href=/updating-portfolio>/updating-portfolio</a> there are 3 ways to enter/update data about your portolio. Importing CSV files is one of those techniques.</p>
 
-            <ol>
-                <li><b>Download CSV file</b>: download portfolio details (CSV file) from custodian website (see Detailed steps below for each supported Custodian)</li>
-                <li><b>Import CSV file</b>: Click "Choose Files" button to import new or updated account information into your <a href=/profiles>active bogle.tools profile's</a> portfolio</li>
-                <li><b>Choose Account Type</b>: Choose Account Type for each new account</li>
-                <li><b>Cost Basis</b>: Enter/verify Cost Basis for each taxable investment</li>
-            </ol>
+            <div style=margin:.25in>
+                <b>Import account data:</b>
+                <span>&nbsp;<a href='/import/Fidelity'>Fidelity</a> | 
+                <a href='/import/Schwab'>Schwab</a> | 
+                @* <a href='/import/TreasuryDirect'>Treasury&nbsp;Direct</a> |  *@
+                <a href='/import/Vanguard'>Vanguard</a></span><br/>
 
-            <fieldset style=margin-left:20px>
-                <InputFile multiple accept=".csv,.xlsx" OnChange="@((e) => OnDataFilesImport(e))" /><br/>
-                <ul>
-                    <li>CAUTION: only share personal info (like these files) to apps worthy of your trust! See our privacy details in our <a href=/help>Help/FAQ page</a></li>
-                </ul>
-            </fieldset><br/>
+                <b>Other supported accounts:</b>
+                <span>&nbsp;<a href='/import/Ameriprise'>Ameriprise</a> | 
+                <a href='/import/EdwardJones'>Edward&nbsp;Jones</a> | 
+                <a href='/import/eTrade'>eTrade</a> | 
+                <a href='/import/JPMorganChase'>JPMorgan&nbsp;Chase</a> | 
+                <a href='/import/MerrillEdge'>Merrill&nbsp;Edge</a> | 
+                <a href='/import/MorganStanley'>Morgan&nbsp;Stanley</a> | 
+                <a href='/import/other'>other</a> | 
+                <a href='/import/RaymondJames'>Raymond&nbsp;James</a> | 
+                <a href='/import/TRowePrice'>T.&nbsp;Rowe&nbsp;Price</a></span><br/>
+            </div>
 
-                <p><b>Detailed steps for Vanguard accounts</b>:
-                <ol>
-                    <li>Log into <a target=_new href=https://vanguard.com>vanguard.com</a>↗️</li>
-                    <li>Click on the <a target=_new href=https://holdings.web.vanguard.com>Holdings</a>↗️ link</li>
-                    <li>Click on the <a target=_new href=https://personal1.vanguard.com/ofu-open-fin-exchange-webapp/ofx-welcome>Download Center</a>↗️ link to the right</li>
-                    <li>Step 1 - Choose "A spreadsheet-compatible CSV File"</li>
-                    <li>Step 2 - Choose any date range (I choose 18 months, but bogle.tools doesn't use this transaction information yet, so 1 month is fine too)</li>
-                    <li>Step 3 - Choose all accounts you'd like to export holdings info about</li>
-                    <li>Press Download button on bottom right of page - a file named OfxDownload.csv will be downloaded via your browser</li>
-                    <li>Click "Choose File" button on this page, find and choose the OfxDownload.csv file in Downloads folder</li>
-                    <li>Choose Account Type for each new account and enter/verify Cost Basis for each taxable investment</li>
-                    <li>For Taxable accounts, update Cost Basis by copying "Total cost" of each investment from <a target=_new href=https://cost-basis.web.vanguard.com/unrealized>Vanguard's Cost Basis view</a>↗️</li>
-                </ol>
-                </p>
-
-                <p><b>Detailed steps for Fidelity accounts</b>:
-                <ol>
-                    <li>Log into <a target=_new href=https://fidelity.com>fidelity.com</a>↗️</li>
-                    <li>Click on the <a target=_new href=https://digital.fidelity.com/ftgw/digital/portfolio/positions>Positions</a>↗️ link</li>
-                    <li>Click on the Download button with this image: <img src=/images/fidelity-download-csv.png />, found on the right side of screen just above the table for the first account's positions.</li>
-                    <li>A file named Portfolio_Positions_[DATE].csv will be downloaded via your browser</li>
-                    <li>Click "Choose File" button on this page, find and choose the Portfolio_Positions_[DATE].csv file in Downloads folder</li>
-                    <li>Choose Account Type for each new account</li>
-                </ol>
-                </p>
-                
-                <p><b>Detailed steps for Schwab accounts</b>:
-                <ol>
-                    <li>Log into <a target=_new href=https://schwab.com>schwab.com</a>↗️</li>
-                    <li>Click on the <a target=_new href='https://client.schwab.com/app/accounts/positions/#/'>Positions</a>↗️ link</li>
-                    <li>Click on the Export link, found on the top-right of page.</li>
-                    <li>Read schwab warnings to "exercise caution when downloading data". If ok after reading, press ok to continue.</li>
-                    <li>A file named [Account Type]-Positions-[DATE]-######.csv will be downloaded via your browser</li>
-                    <li>Click "Choose File" button on this page, find and choose the [Account Type]-Positions-[DATE]-######.csv file in Downloads folder</li>
-                    <li>Choose Account Type for each new account</li>
-                </ol>
-                </p>
-
-                <p><b>Basic steps for Ameriprise, eTrade, JPMorgan Chase, Merrill Edge, Morgan Stanley, or T Rowe Price accounts</b>:
-                <ol>
-                    <li>Log into that website</li>
-                    <li>Find and download the data file</li>
-                    <li>Click "Choose File" button on this page, find and choose the file that you downloaded</li>
-                    <li>please email <a href=mailto:suggestions@bogle.tools>suggestions@bogle.tools</a> with more details so these steps can be enhanced</li>
-                </ol>
-                </p>
-
-                <p><b>Other Custodians</b>:
+            @switch (Custodian) {
+                case "Fidelity":
+                    <h3>Import from @Custodian:</h3>
+                    <p>
+                        <ol>
+                            <li>Log into <a target=_new href=https://fidelity.com>fidelity.com</a>↗️</li>
+                            <li>Click on the <a target=_new href=https://digital.fidelity.com/ftgw/digital/portfolio/positions>Positions</a>↗️ link</li>
+                            <li>Click on the Download button with this image: <img style=width:20px;height:20px src=/images/fidelity-download-csv.png />, found on the right side of screen just above the table for the first account's positions.</li>
+                            <li>A file named Portfolio_Positions_[DATE].csv will be downloaded via your browser</li>
+                            <li>Click "Choose File" button, find and choose the Portfolio_Positions_[DATE].csv file in Downloads folder</li>
+                            <fieldset style=margin-left:20px>
+                                <InputFile multiple accept=".csv,.xlsx" OnChange="@((e) => OnDataFilesImport(e))" /><br/>
+                                <ul>
+                                    <li>CAUTION: only share personal info (like these files) to apps worthy of your trust! See our privacy details in our <a href=/help>Help/FAQ page</a></li>
+                                </ul>
+                            </fieldset><br/>
+                            <li>Choose Account Type for each new account</li>
+                        </ol>
+                    </p>                
+                    break;
+                case "Schwab":
+                    <h3>Import from @Custodian:</h3>
+                    <p>
+                        <ol>
+                            <li>Log into <a target=_new href=https://schwab.com>schwab.com</a>↗️</li>
+                            <li>Click on the <a target=_new href='https://client.schwab.com/app/accounts/positions/#/'>Positions</a>↗️ link</li>
+                            <li>Click on the Export link, found on the top-right of page.</li>
+                            <li>Read schwab warnings to "exercise caution when downloading data". If ok after reading, press ok to continue.</li>
+                            <li>A file named [Account Type]-Positions-[DATE]-######.csv will be downloaded via your browser</li>
+                            <li>Click "Choose File" button, find and choose the [Account Type]-Positions-[DATE]-######.csv file in Downloads folder</li>
+                            <fieldset style=margin-left:20px>
+                                <InputFile multiple accept=".csv,.xlsx" OnChange="@((e) => OnDataFilesImport(e))" /><br/>
+                                <ul>
+                                    <li>CAUTION: only share personal info (like these files) to apps worthy of your trust! See our privacy details in our <a href=/help>Help/FAQ page</a></li>
+                                </ul>
+                            </fieldset><br/>
+                            <li>Choose Account Type for each new account</li>
+                        </ol>
+                    </p>
+                    break;
+                case "TreasuryDirect":
+                    <h3>Import from @Custodian:</h3>
+                    <p>
+                        <ol>
+                            <li>(CSV file not available, but copy/paste technique works)</li>
+                            <li>Log into <a target=_new href=https://treasurydirect.gov>TreasuryDirect.gov</a>↗️</li>
+                            <li>Under current holdings, click on savings bonds link</li>
+                            <li>Select the radio button to the left of "Series I Savings Bond", press "submit" button</li>
+                            <li>In treasurydirect.gov page, find the table listing I bonds purchased in this account that looks like this:</li>
+        <pre>
+            Confirm #   Issue Date  Interest Rate  Status  Amount   Current Value
+            XXXXX       01-01-2024  5.27%                  $10,000  $10,000
+            XXXXX       01-01-2023  4.35%                  $10,000  $10,440
+        </pre>
+                            <li>Select that table including the header line and each row of data</li>
+                            <li>Copy it to the clipboard</li>
+                            <li>Paste it in textbox below, then press: <button @onclick=@importTD>Import text</button></li>
+                            <textarea style=width:100%;height:200px @bind-value="tdContent" @bind-value:event="oninput" /><br/>
+                        </ol>
+                    </p>                
+                    break;
+                case "Vanguard":
+                    <h3>Import from @Custodian:</h3>
+                    <p>
+                        <ol>
+                            <li>Log into <a target=_new href=https://vanguard.com>vanguard.com</a>↗️</li>
+                            <li>Click on the <a target=_new href=https://holdings.web.vanguard.com>Holdings</a>↗️ link</li>
+                            <li>Click on the <a target=_new href=https://personal1.vanguard.com/ofu-open-fin-exchange-webapp/ofx-welcome>Download Center</a>↗️ link to the right</li>
+                            <li>Step 1 - Choose "A spreadsheet-compatible CSV File"</li>
+                            <li>Step 2 - Choose any date range (I choose 18 months, but bogle.tools doesn't use this transaction information yet, so 1 month is fine too)</li>
+                            <li>Step 3 - Choose all accounts you'd like to export holdings info about</li>
+                            <li>Press Download button on bottom right of page - a file named OfxDownload.csv will be downloaded via your browser</li>
+                            <li>Click "Choose File" button, find and choose the OfxDownload.csv file in Downloads folder</li>
+                            <fieldset style=margin-left:20px>
+                                <InputFile multiple accept=".csv,.xlsx" OnChange="@((e) => OnDataFilesImport(e))" /><br/>
+                                <ul>
+                                    <li>CAUTION: only share personal info (like these files) to apps worthy of your trust! See our privacy details in our <a href=/help>Help/FAQ page</a></li>
+                                </ul>
+                            </fieldset><br/>                            
+                            <li>Choose Account Type for each new account and enter/verify Cost Basis for each taxable investment</li>
+                            <li>For Taxable accounts, update Cost Basis by copying "Total cost" of each investment from <a target=_new href=https://cost-basis.web.vanguard.com/unrealized>Vanguard's Cost Basis view</a>↗️</li>
+                        </ol>
+                    </p>
+                    break;
+                case "Ameriprise":
+                case "eTrade":
+                case "JPMorganChase":
+                case "MerrillEdge":
+                case "MorganStanley":
+                case "TRowePrice":
+                    string fileType =  Custodian=="MorganStanley"?"XLSX":"CSV";
+                    <h3>Import from @Custodian:</h3>
                     <ol>
-                        <li>If your custodian's format isn't supported yet, we're happy to try to add support</li>
-                        <li>download the CSV file for your account(s) from another Custodian</li>
-                        <li>anonymize/change the data in that CSV file (using a text editor)</li>
-                        <li>email it to <a href=mailto:suggestions@bogle.tools>suggestions@bogle.tools</a> with details on what custodian it is from.</li>
+                        <li><b>Download data file</b>: download portfolio details (@fileType file) from @Custodian website</li>
+
+                        <ul>
+                            <li>Log into @Custodian website</li>
+                            <li>Find and download the data file</li>
+                        </ul>
+
+                        <li><b>Import data file</b>: Click "Choose Files" button to import new or updated account information into your <a href=/profiles>active bogle.tools profile's</a> portfolio</li>
+                        <fieldset style=margin-left:20px>
+                            <InputFile multiple accept=".csv,.xlsx" OnChange="@((e) => OnDataFilesImport(e))" /><br/>
+                            <ul>
+                                <li>CAUTION: only share personal info (like these files) to apps worthy of your trust! See our privacy details in our <a href=/help>Help/FAQ page</a></li>
+                            </ul>
+                        </fieldset>
+                        <li><b>Choose Account Type</b>: Choose Account Type for each new account</li>
+                        <li><b>Cost Basis</b>: Enter/verify Cost Basis for each taxable investment</li>
                     </ol>
-                </p>
+                    break;
+                case "EdwardJones":
+                case "RaymondJames":
+                case "other":
+                    <h3>Import from @Custodian:</h3>
+                    <p>
+                        <ol>
+                            @if (Custodian == "other") {
+                                <li>If you custodian's CSV format isn't supported yet by Bogle.tools, we're probabaly happy to add support with your help:</li>
+                            } else {
+                                <li>@Custodian's CSV format isn't supported yet by Bogle.tools, we're happy to add support with your help:</li>
+                            }
+                            <li>Download the CSV file for your account(s) from another Custodian</li>
+                            <li>Anonymize/change the data in that CSV file [using a text editor: change account number AY-424523 to XX-123456, change $ amounts of investments if you like, change any other personally identifying info.]</li>
+                            <li>Email the changed CSV file to <a href=mailto:suggestions@bogle.tools>suggestions@bogle.tools</a>
+                            @if (Custodian != "other") {
+                                <span>&nbsp;along with the fact that it is a @Custodian CSV file.</span>
+                            } else {
+                                <span>&nbsp;along with your custodian's (broker's) company name</span>
+                            }    
+                            </li>
+                        </ol>
+                    </p>
+                    break;
+                default:
+                    break;
+            }
+
+            @if (Custodian != null) { <br/><p><a href='/import'>&lt; Import Center</a></p> }
         } else { // BH format import
             <p>Please paste in the text from a Bogleheads Portfolio Reivew post. Following correct format will improve chances of parsing working.</p>
             <button @onclick=importBH>load</button><br/>
             <textarea cols=100 rows=50 @bind-value="bhContent" @bind-value:event="oninput" />
-
-
         }
     }
     else
@@ -164,7 +252,9 @@
                                 string bgColor = alternateRow ? "white" : "lightgray";
                                 alternateRow = !alternateRow;
                                 <div style=margin-left:16px;background-color:@bgColor>
-                                    @investment.Name (@investment.Ticker) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)<br/>
+                                    @investment.Name (@investment.Ticker
+                                        <span>&nbsp;</span>@FormatUtilities.formatMonthPlus2DigitYear(investment.PurchaseDate)
+                                    ) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)<br/>
                                     @if(account?.ReplaceAccount?.AccountType == "Taxable" && investment.AssetType != AssetType.Cash_MoneyMarket) {
                                         <div>@account.AccountType
                                             &nbsp;<label>Cost Basis: </label>
@@ -245,7 +335,13 @@
                         {
                             string bgColor = alternateRow ? "white" : "lightgray";
                             alternateRow = !alternateRow;
-                            <div style=margin-left:16px;background-color:@bgColor>@investment.Name (@investment.Ticker) @(investment.SharesPIN) shares =&gt; @FormatUtilities.formatMoney(investment.ValuePIN)<br/>
+                            <div style=margin-left:16px;background-color:@bgColor>
+                                @investment.Name (@investment.Ticker
+                                @if (investment.IsIBond) {
+                                    <span>&nbsp;@FormatUtilities.formatMonthPlus2DigitYear(investment.PurchaseDate))</span><br/>
+                                } else {
+                                    <span>) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)</span><br/>
+                                }
                             @if(account.AccountType == "Taxable" && investment.AssetType != AssetType.Cash_MoneyMarket) {
                                 <label>Cost Basis: </label>
                                 <span>$</span><input type=text style=width:100px;text-align:right @bind-Value=investment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
@@ -281,6 +377,39 @@
             (var importedFamilyData, var links) = ImportPortfolioReview.ParsePortfolioReview(lines, debug:false, appData, Funds);
             if (importedFamilyData.Accounts.Count > 0) {
                 importResult.NewAccounts.AddRange(importedFamilyData.Accounts);
+                appData.ImportResult = importResult;
+            }
+        }
+    }
+
+    private async void importTD() {
+        ImportResult importResult = new();
+        if (tdContent is not null) {
+            var newAccount = new Account() { Custodian = "Treasury Direct", AccountType = "Taxable" };
+            var chunks = tdContent.Split('\t');
+            DateOnly? purchasedDate = null;
+            double? costBasis = null;
+            foreach (var chunk in chunks)
+            {
+                if (chunk.IndexOf('-') > -1)
+                {
+                    purchasedDate = DateOnly.Parse(chunk);
+                } else if (chunk.IndexOf('$') > -1) {
+                    costBasis = FormatUtilities.ParseDouble(chunk ?? "0.0", allowCurrency:true);
+                }
+
+                if (purchasedDate.HasValue && costBasis.HasValue)
+                {
+                    var investment = new Investment() { Ticker = "IBOND", AssetType = global::AssetType.IBond, PurchaseDate = purchasedDate, CostBasis = costBasis };
+                    newAccount.Investments.Add(investment);
+                    await investment.CalculateIBondValue();
+                    purchasedDate = null;
+                    costBasis = null;
+                }
+            }
+
+            if (newAccount.Investments.Count > 0) {
+                importResult.NewAccounts.Add(newAccount);
                 appData.ImportResult = importResult;
             }
         }
@@ -358,14 +487,17 @@
 
         protected override void OnInitialized()
         {
-            csvImport = Navigation.Uri.EndsWith("/import-accounts");
-            pageHeading = csvImport ? "Import Accounts via CSV files" : "Import Accounts from Bogleheads Portfolio Review format";
+            csvImport = !Navigation.Uri.Contains("/import-accounts-bh");
+            pageHeading = csvImport ? "Import Center" : "Import Accounts from Bogleheads Portfolio Review format";
 
             base.OnInitialized();
         }
 
+    [Parameter]
+    public string? Custodian { get; set; }
     private bool showError { get; set; }
     private string? pageHeading;
     private bool csvImport = false;
     private string bhContent = "";
+    private string tdContent = "";
 }
