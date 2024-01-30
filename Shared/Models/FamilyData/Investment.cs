@@ -132,11 +132,11 @@ public class Investment
         else {
             return assetType switch
             {
-                global::AssetType.USStock => USStockPercent / 100.0,
-                global::AssetType.InternationalStock => InternationalStockPercent / 100.0,
-                global::AssetType.Bond => USBondsPercent / 100.0,
-                global::AssetType.InternationalBond => InternationalBondsPercent / 100.0,
-                global::AssetType.Cash => CashPercent / 100.0,
+                global::AssetType.USStock => (USStockPercent ?? 0.0) / 100.0,
+                global::AssetType.InternationalStock => (InternationalStockPercent ?? 0.0) / 100.0,
+                global::AssetType.Bond => (USBondsPercent ?? 0.0) / 100.0,
+                global::AssetType.InternationalBond => (InternationalBondsPercent ?? 0.0) / 100.0,
+                global::AssetType.Cash => (CashPercent ?? 0.0) / 100.0,
                 _ => throw new ArgumentException("unexpected " + assetType.ToString()),
             };
         }
