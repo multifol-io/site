@@ -461,24 +461,35 @@ public class Investment
         }
     }
 
-    public async Task CalculateIBondValue()
+    public async Task<double?> CalculateIBondValue(bool current = false)
     {
         await LoadIBondRates();
 
+        double? currentValue = null;
         if (IBondRates != null)
         {
             if (PurchaseDate.HasValue)
             {
+                var now = DateTime.Now;
                 var month = PurchaseDate.Value.Month;
                 var year = PurchaseDate.Value.Year;
                 var date = GetRateDate(month, year);
+
+                if (current)
+                {
+                    var yearBeforeNow = new DateOnly(now.Year - 1, now.Month, 1);
+                    if (PurchaseDate.Value.CompareTo(yearBeforeNow) > 0)
+                    {
+                        currentValue = 0;
+                    }
+                }
 
                 bool foundDate = IBondRates.TryGetValue(date, out List<double>? rates);
 
                 if (foundDate && rates != null)
                 {
-                    var nowMonth = DateTime.Now.Month;
-                    var nowYear = DateTime.Now.Year;
+                    var nowMonth = now.Month;
+                    var nowYear = now.Year;
                     decimal value = CostBasis == null ? 0.0m : (decimal)CostBasis;
                     decimal bondQuantity = (value / 25.0m);
 
@@ -490,6 +501,7 @@ public class Investment
                         int monthsToCompoundThisRound = 6;
                         while (monthsLeft > 0)
                         {
+                            //TODO: if (current), calculate currentValue and value
                             monthsToCompoundThisRound = monthsLeft >= 6 ? 6 : monthsLeft;
                             currentRate = rates[i];
                             var price = Math.Round(value/bondQuantity*(decimal)Math.Pow((1.0+currentRate/2.0),((double)monthsToCompoundThisRound/6.0)),2, MidpointRounding.AwayFromZero);
@@ -537,6 +549,13 @@ public class Investment
                     NextRateStart = null;
                 }
             }
+        }
+
+        if (current)
+        {
+            return currentValue;
+        } else {
+            return ValuePIN;
         }
     }
 

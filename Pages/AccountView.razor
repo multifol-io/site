@@ -409,7 +409,7 @@
                             @if (account.SelectedInvestment.Ticker?.ToUpper() == "IBOND")
                             {
                                 var ebURL = "https://eyebonds.info/ibonds/" + investment.CostBasis.ToString() + "/ib_" + investment.PurchaseDate?.Year + "_" + investment.PurchaseDate?.Month.ToString("D2") + ".html";
-                                <span style='border:1.5pt solid;padding:3pt 2pt;margin:2pt'>&nbsp;<a href=@ebURL target=_new>eyebonds.info</a>&nbsp;↗️</span>
+                                <span style='border:1.5pt solid;padding:3pt 2pt;margin:2pt'>&nbsp;<a href=@ebURL target=_new>eyebonds.info</a>&nbsp;↗️</span><br/>
                             }
 
                             <br/><br/>
