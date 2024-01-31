@@ -502,9 +502,17 @@ public class Importer {
         while (await rowEnumerator.MoveNextAsync()) { // go to account name row
             string[] chunks = rowEnumerator.Current;
 
+            string? accNote = null;
+            if (chunks[0].Length > 3)
+            {
+                accNote = "*" + chunks[0].Substring(chunks[0].Length - 3);
+            } else {
+                accNote = chunks[0];
+            }
+
             Account? newAccount = new(PIN) {
                 Custodian = "Schwab",
-                Note = chunks[0]
+                Note = accNote
             };
             importedAccounts.Add(newAccount);
             
