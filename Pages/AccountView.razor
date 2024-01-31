@@ -236,7 +236,7 @@
                         </tr>
                         <tr style=color:white;background:black;>
                             <td colspan=3>
-                                <button @onclick='@(e=>deleteAccount2(e,accBuffer))' title='delete account'>Delete account</button>
+                                <button @onclick='@(e=>deleteAccount(e,accBuffer))' title='delete account'>Delete account</button>
                             </td>
                             <td colspan=1 style=text-align:right>
                                 <button @onclick='@(e=>editAccountInfo(e,account))'>save info</button>
@@ -273,6 +273,7 @@
 
                             headerShown = true;
                         }
+
                         var advice = Advisor.Advise(investment, account, appData);
                         int invBuffer = investmentIndex;
                         investmentIndex++;
@@ -281,6 +282,7 @@
                         } else {
                             bgColor = alternateRow2 ? "white" : "lightgray";
                         }
+
                         <tr style=background-color:@bgColor @onclick='@(e=>chooseInvestment(e,accBuffer,invBuffer))'>
                             <td style=padding-left:8px;height:30px; title=@investment.Name>
                                 @(investment.Ticker != null ? investment.Ticker : investment.Name)
@@ -720,7 +722,7 @@
         selectedInvestment.SelectedTransaction = null;
     }
 
-    void deleteSelectedInvestment(MouseEventArgs e, Investment selectedInvestment)
+    private async void deleteSelectedInvestment(MouseEventArgs e, Investment selectedInvestment)
     {
         if (appData.FamilyData is not null) {
             var accounts = appData.FamilyData.Accounts;
@@ -730,6 +732,7 @@
                 {
                     account.Investments.Remove(selectedInvestment);
                     account.SelectedInvestment = null;
+                    await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
                 }
             }
         }
@@ -944,7 +947,7 @@
         newAccount.Investments.Add(new Investment() { Ticker = "IBOND", AssetType = AssetType.IBond, Name = "I Bonds", ExpenseRatio = 0.0 });
     }
 
-    private async void deleteAccount2(MouseEventArgs e, int accountIndex)
+    private async void deleteAccount(MouseEventArgs e, int accountIndex)
     {
         if (appData.FamilyData is not null) {
             var accountToDelete = appData.FamilyData.Accounts[accountIndex];
