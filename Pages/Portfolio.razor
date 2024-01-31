@@ -417,7 +417,7 @@
                                                     }
                                                     <tr>
                                                         <td colspan=2>
-                                                            <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button>
+                                                            <button @onclick=@refreshPrices title=Refresh style=min-width:80px; @bind-disabled:event=onchange @bind-disabled=@refreshButtonDisabled>@refreshButtonText</button>
                                                             <br/>
                                                             <label>Accounts: </label><br/>
                                                             <button @onclick=addAccountThenEdit title='add account'>➕ account</button>
@@ -565,7 +565,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td colspan=2>
-                                                            <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button>
+                                                            <button @onclick=@refreshPrices title=Refresh style=min-width:80px; @bind-disabled:event=onchange @bind-disabled=@refreshButtonDisabled>@refreshButtonText</button>
                                                         </td>                                                            
                                                         <td style=text-align:right;padding-left:8px colspan=2>
                                                             <b>@(FormatUtilities.formatMoney(appData.FamilyData.Value))</b>
@@ -641,7 +641,7 @@
                                                     }
                                                     <tr>
                                                         <td>
-                                                            <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button>
+                                                            <button @onclick=@refreshPrices title=Refresh style=min-width:80px; @bind-disabled:event=onchange @bind-disabled=@refreshButtonDisabled>@refreshButtonText</button>
                                                          </td>
                                                         <td style=text-align:right;padding-left:8px><hr/><b>@(FormatUtilities.formatMoney(appData.FamilyData.Value))</b></td>
                                                     </tr>
@@ -781,7 +781,7 @@
                                                     }
                                                     <tr>
                                                         <td colspan=2>
-                                                            <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button>
+                                                            <button @onclick=@refreshPrices title=Refresh style=min-width:80px; @bind-disabled:event=onchange @bind-disabled=@refreshButtonDisabled>@refreshButtonText</button>
                                                         </td>
                                                         <td colspan=2 style=text-align:right;padding-left:8px><hr/><b>@(FormatUtilities.formatMoney(appData.FamilyData.Value))</b></td>
                                                     </tr>
@@ -973,6 +973,7 @@
 
     bool showEditAccountHelpers = false;
     string refreshButtonText = "🔃 Prices";
+    bool refreshButtonDisabled = false;
     bool assetAllocationEditing = false;
     bool taxFilingStatusEditing = false;
     int? accountIndexViewing = null;
@@ -1097,13 +1098,15 @@
 
     private async Task refreshPrices() {
         refreshButtonText = "Updating...";
+        refreshButtonDisabled = true;
         await appData.FamilyData.RefreshPrices(Http);
+
+        refreshButtonDisabled = false;
+        refreshButtonText = "🔃 Prices";
         if (appData.FamilyData.TickersToUpdate.Count > 0)
         {
             Navigation.NavigateTo("/portfolio-tracker/refresh-prices");
         }
-
-        refreshButtonText = "🔃 Prices";
     }
     
     private int? PINEntry { get; set; }

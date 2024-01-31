@@ -91,7 +91,7 @@
             <br/><br/>
         }
 
-        <button @onclick=@refreshPrices title=Refresh style=min-width:80px;>@refreshButtonText</button><br/>
+        <button @onclick=@refreshPrices title=Refresh style=min-width:80px; @bind-disabled:event=onchange @bind-disabled=@refreshButtonDisabled>@refreshButtonText</button><br/>
 
         @{
             var accountIndex = 0;
@@ -820,6 +820,7 @@
 
     bool showEditAccountHelpers = false;
     string refreshButtonText = "🔃 Prices";
+    bool refreshButtonDisabled = false;
     bool assetAllocationEditing = false;
     bool taxFilingStatusEditing = false;
     int? accountIndexViewing = null;
@@ -982,8 +983,10 @@
 
     private async Task refreshPrices() {
         refreshButtonText = "Updating...";
+        refreshButtonDisabled = true;
         await appData.FamilyData.RefreshPrices(Http);
         refreshButtonText = "🔃 Prices";
+        refreshButtonDisabled = false;
     }
 
     private int? PINEntry { get; set; }
