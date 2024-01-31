@@ -497,17 +497,34 @@ public class Importer {
 
     private static async Task<List<Account>> ImportSchwab(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds, int? PIN) {
         List<Account> importedAccounts = new();
-        await rowEnumerator.MoveNextAsync(); // goto empty chunks
+        string[] firstLineChunks = rowEnumerator.Current;
+        bool singleAccountFormat = false;
+        if (firstLineChunks[0].StartsWith("Positions for account "))
+        {
+            singleAccountFormat = true;
+            // stay on this line
+        } else {
+            await rowEnumerator.MoveNextAsync(); // goto empty line
+            await rowEnumerator.MoveNextAsync(); // go to account name row
+        }
 
-        while (await rowEnumerator.MoveNextAsync()) { // go to account name row
+        bool stillProcessing = true;
+        while (stillProcessing)
+        {
             string[] chunks = rowEnumerator.Current;
 
             string? accNote = null;
-            if (chunks[0].Length > 3)
+            if (chunks[0].Length >= 6)
             {
-                accNote = "*" + chunks[0].Substring(chunks[0].Length - 3);
+                var ellipsesIndex = chunks[0].IndexOf("...");
+                accNote = "*" + chunks[0].Substring(ellipsesIndex + 3, 3);
             } else {
                 accNote = chunks[0];
+            }
+
+            if (singleAccountFormat)
+            {
+                await rowEnumerator.MoveNextAsync(); // goto empty line
             }
 
             Account? newAccount = new(PIN) {
@@ -559,6 +576,8 @@ public class Importer {
 
                 newAccount?.Investments.Add(newInvestment);
             }
+
+            stillProcessing = await rowEnumerator.MoveNextAsync();
         }
 
         return importedAccounts;
