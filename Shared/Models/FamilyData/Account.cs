@@ -188,7 +188,7 @@ public class Account
 
     public void UpdateInvestmentCategoryTotals(Investment investment, FamilyData familyData, double? overrideValue = null, bool useNegative = false)
     {
-        var value = investment.Value * (useNegative?-1:1);
+        double? value = (investment.Value ?? 0.0) * (useNegative?-1:1);
         if (overrideValue != null)
         {
             value = overrideValue * (useNegative?-1:1);
