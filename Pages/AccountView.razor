@@ -552,11 +552,16 @@
                                 }
                                 
                                 <tr>
-                                    <td colspan=4><label style=padding-left:16px>Name:</label><input type=text style=width:300px @bind-Value=account.SelectedInvestment.Name @bind-Value:event=oninput placeholder='name'/></td>
+                                    <td style=text-align:right>
+                                        <label>Name:</label>
+                                    </td>
+                                    <td colspan=3><input type=text style=width:300px @bind-Value=account.SelectedInvestment.Name @bind-Value:event=oninput placeholder='name'/></td>
                                 </tr>
                                 <tr>
-                                    <td colspan=4>
-                                        <label style=padding-left:16px>Asset Type:</label>
+                                    <td style=text-align:right>
+                                        <label>Asset Type:</label>
+                                    </td>
+                                    <td colspan=3>
                                         <select @bind=account.SelectedInvestment.AssetType>
                                             @foreach (AssetType assetType in (AssetType[]) Enum.GetValues(typeof(AssetType))) {
                                                 <option>@assetType</option>
@@ -566,8 +571,11 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan=4>
-                                        <label style=padding-left:16px>Expense Ratio:</label><input width= type=text style=width:100px;text-align:right @bind-Value=account.SelectedInvestment.ExpenseRatio @bind-Value:event=oninput placeholder='exp. ratio'/>%
+                                    <td style=text-align:right>
+                                        <label style=padding-left:16px>Expense Ratio:</label>
+                                    </td>
+                                    <td colspan=3>
+                                        <input width= type=text style=width:100px;text-align:right @bind-Value=account.SelectedInvestment.ExpenseRatio @bind-Value:event=oninput placeholder='exp. ratio'/>%
                                     </td>
                                 </tr>
                                 @if (account.SelectedInvestment.AssetType == global::AssetType.StocksAndBonds_ETF || account.SelectedInvestment.AssetType == global::AssetType.StocksAndBonds_Fund) {
