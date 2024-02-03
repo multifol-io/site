@@ -422,7 +422,7 @@
                                                             <label>Accounts: </label><br/>
                                                             <button @onclick=addAccountThenEdit title='add account'>➕ account</button>
                                                             <button @onclick=ShowImport title='to import Account info from a CSV/XLSX file'>
-                                                                Import CSV... ⬆️
+                                                                Import Center ⬆️
                                                             </button>
                                                         </td>
                                                         <td style=text-align:right;padding-left:8px colspan=2>
@@ -815,7 +815,7 @@
                                     @if (appData.FamilyData.Accounts.Count == 0) {
                                         <button style=margin-left:40px @onclick=addAccountThenEdit title='add account'>➕ account</button>
                                         <button @onclick=ShowImport title='import Accounts from a CSV/XLSX file'>
-                                            Import CSV... ⬆️
+                                            Import Center ⬆️
                                         </button>
                                         <button @onclick=showOpenBH title='open Accounts (into a new profile) from a bogleheads.org Portfolio Review'>
                                             Import(bh)
@@ -828,7 +828,7 @@
                                                 To hand enter an account, click the add account button "➕ account" above.
                                             </li>
                                             <li>
-                                                To import accounts via a CSV file from the account custodian (Vanguard, Fidelity, Schwab, etc...), click the import accounts button "Import CSV... ⬆️" above.
+                                                To import accounts from the account custodian (Fidelity, Schwab, Treasury Direct, Vanguard, or others), click the "Import Center ⬆️" button above.
                                             </li>
                                             <li>
                                                 To import accounts from an existing portfolio review on bogleheads.org, click the "Import(bh)" button above.
