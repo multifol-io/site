@@ -398,7 +398,7 @@
                 if (chunk.IndexOf('-') > -1 || chunk.IndexOf('/') > -1)
                 {
                     purchasedDate = DateOnly.Parse(chunk);
-                } else if (chunk.IndexOf('$') > -1 && costBasis == null) {
+                } else if (chunk.IndexOf('$') > -1 && costBasis == null && purchasedDate != null) {
                     costBasis = FormatUtilities.ParseDouble(chunk ?? "0.0", allowCurrency:true);
                 }
 
