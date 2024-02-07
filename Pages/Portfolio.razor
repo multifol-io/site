@@ -190,8 +190,8 @@
                             case "advice-settings":
                                 @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) {
                                     @((MarkupString)FormatUtilities.Bold("Advanced Portfolio Settings:", ShowMarkup))<span>&nbsp;(experimental)</span><br/>
-                                    <InputCheckbox id=stockSizeRules style=margin-left:20px @bind-Value=appData.ApplyStockSizeRules /> <label style=display:inline for=stockSizeRules>&nbsp;Show warning if &gt; 5% concentration of an individual stock</label><br/>
-                                    <InputCheckbox id=taxEfficientRules style=margin-left:20px @bind-Value=appData.ApplyTaxEfficientPlacementRules  /> <label style=display:inline for=taxEfficientRules>&nbsp;Show advice for tax efficient placement</label><br/> 
+                                    <InputCheckbox id=stockSizeRules style=margin-left:20px @bind-Value=appData.ApplyStockSizeRules /> <label style=display:inline for=stockSizeRules>&nbsp;Show warning if &gt; 5% concentration of an individual stock (in <a href="/portfolio-tracker/accounts">accounts view</a>)</label><br/>
+                                    <InputCheckbox id=taxEfficientRules style=margin-left:20px @bind-Value=appData.ApplyTaxEfficientPlacementRules  /> <label style=display:inline for=taxEfficientRules>&nbsp;Show advice for tax efficient placement (in <a href="/portfolio-tracker/accounts">accounts view</a>)</label><br/> 
                                     <InputCheckbox id=allowAfterTaxPercentage style=margin-left:20px @bind-Value=appData.AllowAfterTaxPercentage  /> <label style=display:inline for=allowAfterTaxPercentage>&nbsp;Track After-Tax Percentage for Account that might have Pre and Post-Tax contributions</label><br/> 
                                     <br/>
                                 }
