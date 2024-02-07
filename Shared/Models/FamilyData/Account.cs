@@ -27,7 +27,7 @@ public class Account
 
     public string Title {
         get {
-            return (Identifier != null ? Identifier + " " : "") + AccountType + (Custodian != null ? " at " + Custodian : "") + (Note != null ? $" ({Note})":"");
+            return (Identifier != null ? Identifier + " " : "") + AccountType + (!string.IsNullOrEmpty(Custodian) ? " at " + Custodian : "") + (Note != null ? $" ({Note})":"");
         }
     }
 
