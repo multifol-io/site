@@ -294,7 +294,7 @@ public class Account
                 _ => 7 + ownerCategory,
             };
 
-            if (TaxType == "Pre-Tax(work)" && CurrentEmployerRetirementFund) {
+            if (TaxType == "Pre-Tax(work)" && CurrentOrPrevious == "current") {
                 order--;
             }
 
@@ -302,5 +302,31 @@ public class Account
         }
     }
 
-    public bool CurrentEmployerRetirementFund { get; set; }
+    [JsonIgnore] // on 2/9/2024 - moved from bool to string.
+    public bool CurrentEmployerRetirementFund {
+        get {
+            return false;
+        }
+        set {
+            //transition value to new property.
+            if (value)
+            {
+                CurrentOrPrevious = "current";
+            }
+            else
+            {
+                CurrentOrPrevious = "previous";
+            }
+        }
+    }
+
+    public string CurrentEmployerString {
+        get {
+            if (CurrentOrPrevious == "n/a") return "";
+            else return CurrentOrPrevious;
+        }
+    }
+
+    public string CurrentOrPrevious { get; set; } = "n/a";
+    public static List<string> CurrentOrPreviousOptions = new List<string> { "n/a", "current", "previous" };
 }

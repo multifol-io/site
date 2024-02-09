@@ -329,7 +329,14 @@
                         </div>
                         @if (account.TaxType == "Pre-Tax(work)") {
                             <div style=margin-left:8px;background-color:black;color:white>
-                                <InputCheckbox id=currentEmployer style=margin-left:20px @bind-Value=account.CurrentEmployerRetirementFund /> <label for=currentEmployer>&nbsp;Current Employer</label><br/>
+                                <label>Employer:&nbsp;</label>
+                                <InputRadioGroup @bind-Value="account.CurrentOrPrevious">
+                                    @foreach (var option in Account.CurrentOrPreviousOptions)
+                                    {
+                                        <InputRadio Value="option" /> 
+                                        @if(option!="previous") {<span>&nbsp;@option&nbsp;|&nbsp;</span>} else {<span>&nbsp;@option</span>}
+                                    }
+                                </InputRadioGroup>
                             </div>
                         }
 

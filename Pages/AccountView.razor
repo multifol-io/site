@@ -220,8 +220,17 @@
                         </tr>
                         @if (account.TaxType == "Pre-Tax(work)") {
                             <tr style=color:white;background:black;>
-                                <td colspan=2>
-                                    <InputCheckbox id=currentEmployer style=margin-left:20px @bind-Value=account.CurrentEmployerRetirementFund /> <label for=currentEmployer>&nbsp;Current Employer</label>
+                                <td colspan=3>
+                                    <EditForm Model="account">
+                                        <label>Employer:&nbsp;</label>
+                                        <InputRadioGroup @bind-Value="account.CurrentOrPrevious">
+                                            @foreach (var option in Account.CurrentOrPreviousOptions)
+                                            {
+                                                <InputRadio Value="option" /> 
+                                                @if(option!="previous") {<span>&nbsp;@option&nbsp;|&nbsp;</span>} else {<span>&nbsp;@option</span>}
+                                            }
+                                        </InputRadioGroup>
+                                    </EditForm>
                                 </td>
                                 <td colspan="2">
                                     @if (appData.AllowAfterTaxPercentage) {

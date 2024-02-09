@@ -171,7 +171,7 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                                             @foreach (var account in appData.FamilyData.Accounts.OrderBy(a=>a.PortfolioReviewOrder).ThenByDescending(a=>a.Value)) {
                                                 <br/>
                                                 @((MarkupString)FormatUtilities.Bold((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "")
-                                                    + (account.TaxType == "Pre-Tax(work)" ? (account.CurrentEmployerRetirementFund ? "<span>current&nbsp;</span>" : "<span>previous&nbsp;</span>") : "") 
+                                                    + (account.TaxType == "Pre-Tax(work)" ? "<span>"+account.CurrentEmployerString+"&nbsp;</span>" : "") 
                                                     + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + " (" + FormatUtilities.formatPercent(account.Percentage) + ")" , ShowMarkup))
                                                 <br/>
                                                 @foreach (var investment in account.Investments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.ValuePIN)) {
