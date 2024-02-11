@@ -578,6 +578,11 @@
                                                 break;
                                             case "bogleheads":
                                                 @foreach (var account in appData.FamilyData.Accounts.OrderBy(a=>a.PortfolioReviewOrder).ThenByDescending(a=>a.Value)) {
+                                                    @if (account.TaxType == "Pre-Tax(work)" && account.CurrentEmployerString == "")
+                                                    {
+                                                        <span>Following account should be classified as from 'current' employer or 'previous' employer using <a href=/portfolio-tracker/view/editor>Edit Accounts/Holdings</a>:</span>
+                                                        <br/>
+                                                    }
                                                     @((MarkupString)FormatUtilities.Bold((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "")
                                                      + (account.TaxType == "Pre-Tax(work)" ? "<span>"+account.CurrentEmployerString+"&nbsp;</span>" : "") 
                                                      + account.AccountType + (!string.IsNullOrEmpty(account.Custodian) ? " at " + account.Custodian : "") + " (" + FormatUtilities.formatPercent(account.Percentage) + ")" , ShowMarkup))

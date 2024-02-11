@@ -322,11 +322,11 @@ public class Account
 
     public string CurrentEmployerString {
         get {
-            if (CurrentOrPrevious == "n/a") return "";
+            if (CurrentOrPrevious == "n/a" || CurrentOrPrevious == "") return "";
             else return CurrentOrPrevious;
         }
     }
 
-    public string CurrentOrPrevious { get; set; } = "n/a";
-    public static List<string> CurrentOrPreviousOptions = new List<string> { "n/a", "current", "previous" };
+    public string CurrentOrPrevious { get; set; } = "";
+    public static List<string> CurrentOrPreviousOptions = new List<string> { "current", "previous" };
 }
