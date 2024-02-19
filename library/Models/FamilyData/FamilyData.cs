@@ -723,7 +723,6 @@ public string estimatePortfolio()
             }
 
             TickersToUpdate.Clear();
-            await ProfileUtilities.Save(this.AppData.CurrentProfileName, this);
         }
     }
 

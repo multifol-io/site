@@ -1002,6 +1002,7 @@
         refreshButtonText = "Updating...";
         refreshButtonDisabled = true;
         await appData.FamilyData.RefreshPrices(Http);
+        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         refreshButtonText = "🔃 Prices";
         refreshButtonDisabled = false;
     }
