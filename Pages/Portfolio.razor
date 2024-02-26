@@ -503,14 +503,14 @@
                                                                             alternateRow = false;
                                                                             <div style=margin-left:8px;background-color:DimGray>
                                                                                 @lastInvestmentCategory
-                                                                                <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation*appData.FamilyData.ActualInternationalStockAllocation/100.0) [@FormatUtilities.formatPercent(appData.FamilyData.ActualInternationalStockAllocation)]</span>
+                                                                                <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation*appData.FamilyData.ActualInternationalStockAllocation*100.0) [@FormatUtilities.formatPercent(appData.FamilyData.ActualInternationalStockAllocation*100.0)]</span>
                                                                             </div>
                                                                             break;
                                                                         case "Bonds":
                                                                             alternateRow = false;
                                                                             <div style=margin-left:8px;background-color:DimGray>
                                                                                 @lastInvestmentCategory
-                                                                                <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualBondAllocation)</span>
+                                                                                <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualBondAllocation*100.0)</span>
                                                                             </div>
                                                                             break;
                                                                         case "Cash":
@@ -676,8 +676,7 @@
                                                         {
                                                             TaxType = g.Key,
                                                             Value = g.Sum(a => a.Value),
-                                                            CostBasis = g.Sum(a => a.CalculateCostBasis()),
-                                                            Gain = g.Sum(a => a.Value) - g.Sum(a => a.CalculateCostBasis())
+                                                            CostBasis = g.Sum(a => a.CalculateCostBasis())
                                                         })
                                                         .OrderByDescending(g => g.Value);
                                                     }
