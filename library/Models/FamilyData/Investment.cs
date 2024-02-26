@@ -364,10 +364,9 @@ public class Investment : INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
-    
 
     public double? CostBasis { get; set; }
-    
+
     private double? _Price;
     public double? Price {
         get {
@@ -375,11 +374,12 @@ public class Investment : INotifyPropertyChanged
         }
         set {
             _Price = value;
-            OnPropertyChanged();
             if (_Price != null && GrantToUpdateQuote != null) {
                 GrantToUpdateQuote.LastPrice = Price;
             }
+
             UpdateValue();
+            OnPropertyChanged();
         }
     }
  

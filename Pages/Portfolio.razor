@@ -83,11 +83,11 @@
         if (appData.FamilyData.TaxFilingStatus == TaxFilingStatus.ChoiceNeeded) {
             taxFilingStatusEditing = true;
         }
+
         var prevStep = steps[steps.Length - 1];
         var nextStep = steps[0];
         string prevPage = folderName + prevStep?.step;
         string nextPage = folderName + nextStep?.step;
-        appData.FamilyData.UpdatePercentages();
         
         <div style=float:left>
             <h4 style="max-width:450px">
@@ -1105,6 +1105,7 @@
         refreshButtonText = "Updating...";
         refreshButtonDisabled = true;
         await appData.FamilyData.RefreshPrices(Http);
+        await appData.FamilyData.UpdatePercentagesAsync();
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         refreshButtonDisabled = false;
         refreshButtonText = "🔃 Prices";

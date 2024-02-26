@@ -463,38 +463,41 @@ public string estimatePortfolio()
         }
     }
 
-    public void UpdatePercentages()
+    public async Task UpdatePercentagesAsync()
     {
-        StockBalance = 0.0;
-        InternationalStockBalance = 0.0;
-        BondBalance = 0.0;
-        CashBalance = 0.0;
-        OtherBalance = 0.0;
-        OverallER = 0.0;
-        InvestmentsMissingER = 0;
-        ExpensesTotal = 0;
-
-        double totalValue = 0.0;
-        foreach (var account in Accounts)
+        await Task.Run(() =>
         {
-            double accountValue = 0.0;
-            foreach (var investment in account.Investments)
+            StockBalance = 0.0;
+            InternationalStockBalance = 0.0;
+            BondBalance = 0.0;
+            CashBalance = 0.0;
+            OtherBalance = 0.0;
+            OverallER = 0.0;
+            InvestmentsMissingER = 0;
+            ExpensesTotal = 0;
+
+            double totalValue = 0.0;
+            foreach (var account in Accounts)
             {
-                accountValue += investment.ValuePIN ?? 0.0;
+                double accountValue = 0.0;
+                foreach (var investment in account.Investments)
+                {
+                    accountValue += investment.ValuePIN ?? 0.0;
+                }
+
+                account.Value = accountValue;
+                totalValue += accountValue;
+            }
+            Value = totalValue;
+
+            foreach (var account in Accounts)
+            {
+                account.Percentage = account.Value / totalValue * 100;
+                account.UpdatePercentages(totalValue, this);
             }
 
-            account.Value = accountValue;
-            totalValue += accountValue;
-        }
-        Value = totalValue;
-
-        foreach (var account in Accounts)
-        {
-            account.Percentage = account.Value / totalValue * 100;
-            account.UpdatePercentages(totalValue, this);
-        }
-
-        UpdateAllocations();
+            UpdateAllocations();
+        });
     }
 
     public int YearIndex 

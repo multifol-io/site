@@ -65,7 +65,6 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
                 var nextStep = steps[0];
                 string prevPage = folderName + prevStep?.step;
                 string nextPage = folderName + nextStep?.step;
-                appData.FamilyData.UpdatePercentages();
                 
                 <div style=float:left>
                     <h4 style="max-width:450px">
@@ -882,11 +881,11 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
         }
     }
 
-    void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex) {
+    async void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex) {
         if (appData?.FamilyData is not null) {
             appData.FamilyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
             Navigation.NavigateTo("/portfolio-review/reload");
-            appData.FamilyData.UpdatePercentages();
+            await appData.FamilyData.UpdatePercentagesAsync();
         }
     }
 
@@ -908,11 +907,11 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
         }
     }
 
-    void deleteAccount(MouseEventArgs e, int accountIndex) {
+    async void deleteAccount(MouseEventArgs e, int accountIndex) {
         if (appData?.FamilyData is not null) {
             appData.FamilyData.Accounts.RemoveAt(accountIndex);
             Navigation.NavigateTo("/portfolio-review/reload");
-            appData.FamilyData.UpdatePercentages();
+            await appData.FamilyData.UpdatePercentagesAsync();
         }
     }
 

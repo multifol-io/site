@@ -326,7 +326,7 @@
             foreach (var account in accounts) {
                 account.Edit = false;
             }
-            
+
             await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         }
     }
@@ -445,7 +445,7 @@
     private const string pagePath = "/rsu-tracker";
     private const string folderName = pagePath + "/";
     private const string pageHeading = "RSU Tracker";
-    
+
     protected override async Task OnInitializedAsync()
     {
         steps = await Http.GetFromJsonAsync<Step[]>("data/rsu-tracker-steps.json");
@@ -467,6 +467,7 @@
     private async Task refreshPrices() {
         refreshButtonText = "Updating...";
         await appData.FamilyData.RefreshPrices(Http);
+        await appData.FamilyData.UpdatePercentagesAsync();
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
 
         if (appData.FamilyData.TickersToUpdate.Count > 0)

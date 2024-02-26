@@ -69,7 +69,6 @@
     if (appData.FamilyData.TaxFilingStatus == TaxFilingStatus.ChoiceNeeded) {
         taxFilingStatusEditing = true;
     }
-    appData.FamilyData.UpdatePercentages();
 
     <div style=float:left>
         <h4 style="max-width:450px">
@@ -630,6 +629,7 @@
         account.Edit = !account.Edit;
         if (!account.Edit)
         {
+            await appData.FamilyData.UpdatePercentagesAsync();
             await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         }
     }
@@ -715,6 +715,7 @@
             await selectedInvestment.CalculateIBondValue();
         }
 
+        await appData.FamilyData.UpdatePercentagesAsync();
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
     }
 
@@ -749,6 +750,7 @@
                 {
                     account.Investments.Remove(selectedInvestment);
                     account.SelectedInvestment = null;
+                    await appData.FamilyData.UpdatePercentagesAsync();
                     await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
                 }
             }
@@ -971,7 +973,7 @@
             var accountToDelete = appData.FamilyData.Accounts[accountIndex];
             appData.FamilyData.Accounts.Remove(accountToDelete);
             accountIndexViewing = null;
-            appData.FamilyData.UpdatePercentages();
+            await appData.FamilyData.UpdatePercentagesAsync();
             await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         }
     }
@@ -1002,6 +1004,7 @@
         refreshButtonText = "Updating...";
         refreshButtonDisabled = true;
         await appData.FamilyData.RefreshPrices(Http);
+        await appData.FamilyData.UpdatePercentagesAsync();
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         refreshButtonText = "🔃 Prices";
         refreshButtonDisabled = false;
@@ -1065,6 +1068,7 @@
                 }
             }
 
+            await appData.FamilyData.UpdatePercentagesAsync();
             await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         }
 

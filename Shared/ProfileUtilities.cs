@@ -79,6 +79,7 @@ public static class ProfileUtilities
                 }
             }
 
+            await loadedFamilyData.UpdatePercentagesAsync();
             appData.FamilyData = loadedFamilyData;
         }
     }
