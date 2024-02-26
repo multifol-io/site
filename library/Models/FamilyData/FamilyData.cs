@@ -1,9 +1,17 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-public class FamilyData
+public class FamilyData : INotifyPropertyChanged
 {
+    protected void OnPropertyChanged([CallerMemberName] string name = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     public FamilyData(IAppData appData) {
         AppData = appData;
         Year = DateTime.Now.Year;
@@ -46,126 +54,6 @@ public class FamilyData
         }
     }
     
-    public string RetirementIncomeNeeded {
-        get {
-            string outStr = "";
-            double incomeNeeded = 0.0;
-            double inflationAffectedIncome = 0.0;
-            double portfolioRunningBalance = Value + (EmergencyFund.CurrentBalance ?? 0.0);
-            int yearIndex = 0;
-            bool done = false;
-            bool?[] retired = { null, null };
-
-            for (var i = 0; i < PersonCount; i++) {
-                var ageThisYear = People[i].Age + yearIndex;
-                if (People[i].Retirement.RetirementAge < ageThisYear) {
-                    retired[i] = true;
-                    incomeNeeded = RetirementData.AnnualExpenses;
-                } else {
-                    retired[i] = false;
-                }
-
-                if (People[i].Retirement.SSAnnual.HasValue && (People[i].Retirement.SSAge < ageThisYear)) {
-                    incomeNeeded -= People[i].Retirement.SSAnnual.Value;
-                }
-
-                foreach (var pension in People[i].Retirement.Pensions) {
-                    if (pension.BeginningAge < ageThisYear) {
-                        if (!pension.OneTime) {
-                            if (pension.HasCola) {
-                                incomeNeeded -= pension.Income;
-                            } else {
-                                inflationAffectedIncome -= pension.Income;
-                            }
-                        }                        
-                    }
-                }
-            }
-            
-            bool?[] forecastDone = { null, null };
-            while (!done) {
-                double adjustBack = 0.0;
-                string? significantYear = null;
-                string? yearNote = null;
-                for (var i = 0; i < PersonCount; i++) {
-                    var ageThisYear = People[i].Age + yearIndex;
-                    forecastDone[i] = People[i].Retirement.ForecastEndAge <= ageThisYear;
-                    if (People[i].Retirement.RetirementAge == ageThisYear) {
-                        // TODO: what happens when ages don't both retire in same year? (1/2 income for both now)
-                        retired[i] = true;
-                        incomeNeeded += RetirementData.AnnualExpenses / PersonCount;
-                        significantYear += (significantYear != null ? ", " : "") + "retirement (" + People[i].Identifier + ")";
-                    }
-                    if (People[i].Retirement.RetirementAge > ageThisYear) {
-                        incomeNeeded -= (this.PlannedSavings ?? 0.0) / PersonCount;
-                        adjustBack += (this.PlannedSavings ?? 0.0) / PersonCount;
-                    }
-
-                    if (People[i].Retirement.SSAnnual.HasValue && (People[i].Retirement.SSAge == ageThisYear)) {
-                        incomeNeeded -= People[i].Retirement.SSAnnual.Value;
-                        significantYear += (significantYear != null ? ", " : "") + "social security ("+People[i].Identifier+")";
-                    }
-
-                    foreach (var pension in People[i].Retirement.Pensions)
-                    {
-                        if (pension.BeginningAge == ageThisYear) {
-                            if (pension.OneTime) {
-                                portfolioRunningBalance += pension.Income;
-                                yearNote += " "+(pension.Title != null?pension.Title:"adj.")+" (1 time)";
-                            }
-                            else
-                            {
-                                if (pension.HasCola) {
-                                    incomeNeeded -= pension.Income;
-                                } else {
-                                    inflationAffectedIncome -= pension.Income;
-                                }
-                            
-                                significantYear += (significantYear != null ? "; " : "") + (pension.Title != null?pension.Title:"adj.");
-                            }                        
-                        }
-                    }
-                }
-                
-                int year = yearIndex + DateTime.Now.Year;
-                foreach (var incomeExpense in this.RetirementData.IncomeExpenses) {
-                    if (incomeExpense.BeginningYear == year) {
-                        if (incomeExpense.OneTime) {
-                            portfolioRunningBalance += incomeExpense.Income;
-                            yearNote += " "+(incomeExpense.Title != null?incomeExpense.Title:"adj.")+" (1 time)";
-                        }
-                        else {
-                            if (incomeExpense.HasCola) {
-                                incomeNeeded -= incomeExpense.Income;
-                            } else {
-                                inflationAffectedIncome -= incomeExpense.Income;
-                            }
-
-                            significantYear += (significantYear != null ? "; " : "") + (incomeExpense.Title != null?incomeExpense.Title:"adj.");
-                        }
-                    }
-                }
-
-                done = forecastDone[0].Value && (forecastDone[1] == null || forecastDone[1].Value);
-
-                if (retired[0].Value || (retired[1] == null || retired[1].Value)) {
-                    if (significantYear != null) {
-                        outStr += "<b>========= "+significantYear+"</b><br/>";
-                    }
-
-                    outStr += (yearIndex+DateTime.Now.Year) + " " + FormatUtilities.formatMoneyThousands(+incomeNeeded+inflationAffectedIncome) + " " + FormatUtilities.formatPercent((incomeNeeded+inflationAffectedIncome)/portfolioRunningBalance*100.0) +"<b>" + (yearNote!=null?" &lt;== ":"") + yearNote + "</b><br/>";
-                }
-                
-                inflationAffectedIncome *= .97;
-
-                yearIndex++;
-                incomeNeeded += adjustBack;
-            }
-
-            return outStr;
-        }
-    }
-
     public TriState DebtFree { get; set; }
     public List<Debt> Debts { get; set; }
     
@@ -293,94 +181,110 @@ public class FamilyData
             return (ActualStockAllocation / 100.0)* (1.0-ActualInternationalStockAllocation / 100.0) * 100.0;
         }
     }
-    
+
+    private void UpdateAllocations()
+    {
+        double stockAllocation = double.NaN;
+        double internationalStockAllocation = double.NaN;
+        double bondAllocation = double.NaN;
+        double cashAllocation = double.NaN;
+        double otherAllocation = double.NaN;
+
+        var overallTotal = (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0) + (BondBalance ?? 0.0) + (OtherBalance ?? 0.0) + (CashBalance ?? 0.0);
+        if (overallTotal > 0.0)
+        {
+            stockAllocation = ((StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0)) / overallTotal * 100.0;
+            bondAllocation = (BondBalance ?? 0.0) / overallTotal * 100.0;
+            cashAllocation = (CashBalance ?? 0.0) / overallTotal * 100.0;
+            otherAllocation = (OtherBalance ?? 0.0) / overallTotal * 100.0;
+        }
+
+        var stockTotal = (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0);
+        if (stockTotal > 0.0)
+        {
+            internationalStockAllocation =  (InternationalStockBalance ?? 0.0) / stockTotal * 100.0;
+        }
+
+        ActualStockAllocation = stockAllocation;
+        ActualInternationalStockAllocation = internationalStockAllocation;
+        ActualBondAllocation = bondAllocation;
+        ActualCashAllocation = cashAllocation;
+        ActualOtherAllocation = otherAllocation;
+    }
+
+    private double _ActualStockAllocation;
     public double ActualStockAllocation {
         get {
-            var overallTotal = (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0) + (BondBalance ?? 0.0) + (OtherBalance ?? 0.0) + (CashBalance ?? 0.0);
-            if (overallTotal > 0.0)
-            {
-                return ( (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0) ) / overallTotal * 100.0;
-            }
-            else
-            {
-                return double.NaN;
-            }
+            return _ActualStockAllocation;
+        }
+        set {
+            _ActualStockAllocation = value;
+            OnPropertyChanged();
         }
     }
 
-    public double ActualInternationalStockAllocation {
+    private double _ActualBondAllocation;
+    public double ActualBondAllocation
+    {
         get {
-            var stockTotal = (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0);
-            if (stockTotal > 0.0)
-            {
-                return (InternationalStockBalance ?? 0.0) / stockTotal * 100.0;
-            }
-            else
-            {
-                return double.NaN;
-            }
+            return _ActualBondAllocation;
+        }
+        set {
+            _ActualBondAllocation = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private double _ActualInternationalStockAllocation;
+    public double ActualInternationalStockAllocation
+    {
+        get {
+            return _ActualInternationalStockAllocation;
+        }
+        set {
+            _ActualInternationalStockAllocation = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private double _ActualCashAllocation;
+    public double ActualCashAllocation
+    {
+        get {
+            return _ActualCashAllocation;
+        }
+        set {
+            _ActualCashAllocation = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private double _ActualOtherAllocation;
+    public double ActualOtherAllocation
+    {
+        get {
+            return _ActualOtherAllocation;
+        }
+        set {
+            _ActualOtherAllocation = value;
+            OnPropertyChanged();
         }
     }
 
     public double OverallER { get; set; }
     public int InvestmentsMissingER { get; set; }
     public double ExpensesTotal { get; set; }
-    
-    public double ActualBondAllocation {
-        get {
-            var overallTotal = (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0) + (BondBalance ?? 0.0) + (OtherBalance ?? 0.0) + (CashBalance ?? 0.0);
 
-            if (overallTotal > 0.0)
-            {
-                return (BondBalance ?? 0.0) / overallTotal * 100.0;
-            }
-            else
-            {
-                return double.NaN;
-            }
-        }
-    }
-
-    public double ActualCashAllocation {
-        get {
-            var overallTotal = (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0) + (BondBalance ?? 0.0) + (OtherBalance ?? 0.0) + (CashBalance ?? 0.0);
-
-            if (overallTotal > 0.0)
-            {
-                return (CashBalance ?? 0.0) / overallTotal * 100.0;
-            }
-            else
-            {
-                return double.NaN;
-            }
-        }
-    }
-
-    public double ActualOtherAllocation {
-        get {
-            var overallTotal = (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0) + (BondBalance ?? 0.0) + (OtherBalance ?? 0.0) + (CashBalance ?? 0.0);
-
-            if (overallTotal > 0.0)
-            {
-                return (OtherBalance ?? 0.0) / overallTotal * 100.0;
-            }
-            else
-            {
-                return double.NaN;
-            }
-        }
-    }
     public List<Person> People { get; set; }
 
+    private double _Value;
     public double Value { 
         get {
-            double newValue = 0;
-            foreach (var account in Accounts) 
-            {
-                newValue += account.Value;
-            }
-            
-            return newValue;
+            return _Value;
+        }
+        set {
+            _Value = value;
+            OnPropertyChanged();
         }
     }
 
@@ -570,12 +474,27 @@ public string estimatePortfolio()
         InvestmentsMissingER = 0;
         ExpensesTotal = 0;
 
-        double totalValue = this.Value;
+        double totalValue = 0.0;
+        foreach (var account in Accounts)
+        {
+            double accountValue = 0.0;
+            foreach (var investment in account.Investments)
+            {
+                accountValue += investment.ValuePIN ?? 0.0;
+            }
+
+            account.Value = accountValue;
+            totalValue += accountValue;
+        }
+        Value = totalValue;
+
         foreach (var account in Accounts)
         {
             account.Percentage = account.Value / totalValue * 100;
             account.UpdatePercentages(totalValue, this);
         }
+
+        UpdateAllocations();
     }
 
     public int YearIndex 

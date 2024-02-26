@@ -1,7 +1,15 @@
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
-public class Account 
+public class Account : INotifyPropertyChanged
 {
+    protected void OnPropertyChanged([CallerMemberName] string name = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     public Account() {
         Investments = new();
         AvailableFunds = new();
@@ -74,19 +82,15 @@ public class Account
     }
     public string? Custodian { get; set; }
     public string? Note { get; set; }
+
+    private double _Value;
     public double Value { 
         get {
-            double newValue = 0;
-            foreach (var investment in Investments) 
-            {
-                newValue += investment.ValuePIN ?? 0;
-                foreach (var transaction in investment.Transactions)
-                {
-                    newValue += transaction.CustomValue(investment) ?? 0;
-                }
-            }
-
-            return newValue;
+            return _Value;
+        }
+        set {
+            _Value = value;
+            OnPropertyChanged();
         }
     }
 

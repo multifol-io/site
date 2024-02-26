@@ -1,8 +1,15 @@
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
-public class Investment 
+public class Investment : INotifyPropertyChanged
 {
+    protected void OnPropertyChanged([CallerMemberName] string name = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     public Investment() {
         Transactions = new();
     }
@@ -354,11 +361,13 @@ public class Investment
         }
         set {
             _Value = value;
+            OnPropertyChanged();
         }
     }
     
 
     public double? CostBasis { get; set; }
+    
     private double? _Price;
     public double? Price {
         get {
@@ -366,13 +375,14 @@ public class Investment
         }
         set {
             _Price = value;
+            OnPropertyChanged();
             if (_Price != null && GrantToUpdateQuote != null) {
                 GrantToUpdateQuote.LastPrice = Price;
             }
             UpdateValue();
         }
     }
-
+ 
     public void UpdateValue() {
         if (Price != null && SharesPIN != null) {
             switch (AssetType ?? global::AssetType.Unknown) {
