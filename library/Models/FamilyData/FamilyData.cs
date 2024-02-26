@@ -290,7 +290,7 @@ public class FamilyData
 
     public double ActualTotalStockAllocation {
         get {
-            return ActualStockAllocation*100.0 * (1.0-ActualInternationalStockAllocation);
+            return (ActualStockAllocation / 100.0)* (1.0-ActualInternationalStockAllocation / 100.0) * 100.0;
         }
     }
     
@@ -299,7 +299,7 @@ public class FamilyData
             var overallTotal = (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0) + (BondBalance ?? 0.0) + (OtherBalance ?? 0.0) + (CashBalance ?? 0.0);
             if (overallTotal > 0.0)
             {
-                return ( (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0) ) / overallTotal;
+                return ( (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0) ) / overallTotal * 100.0;
             }
             else
             {
@@ -313,7 +313,7 @@ public class FamilyData
             var stockTotal = (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0);
             if (stockTotal > 0.0)
             {
-                return (InternationalStockBalance ?? 0.0) / stockTotal;
+                return (InternationalStockBalance ?? 0.0) / stockTotal * 100.0;
             }
             else
             {
@@ -332,7 +332,7 @@ public class FamilyData
 
             if (overallTotal > 0.0)
             {
-                return (BondBalance ?? 0.0) / overallTotal;
+                return (BondBalance ?? 0.0) / overallTotal * 100.0;
             }
             else
             {
@@ -347,7 +347,7 @@ public class FamilyData
 
             if (overallTotal > 0.0)
             {
-                return (CashBalance ?? 0.0) / overallTotal;
+                return (CashBalance ?? 0.0) / overallTotal * 100.0;
             }
             else
             {
@@ -362,7 +362,7 @@ public class FamilyData
 
             if (overallTotal > 0.0)
             {
-                return (OtherBalance ?? 0.0) / overallTotal;
+                return (OtherBalance ?? 0.0) / overallTotal * 100.0;
             }
             else
             {

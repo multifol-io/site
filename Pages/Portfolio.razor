@@ -180,9 +180,9 @@
                                         }
                                         <br/>
                                         @((MarkupString)FormatUtilities.Bold("Actual Asset Allocation:", ShowMarkup))<br/>
-                                        <span style=margin-left:.5in>&nbsp;@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation * 100.0) stocks / @FormatUtilities.formatPercent((appData.FamilyData.ActualBondAllocation + appData.FamilyData.ActualCashAllocation) * 100.0) fixed assets</span><br/>
+                                        <span style=margin-left:.5in>&nbsp;@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation) stocks / @FormatUtilities.formatPercent(appData.FamilyData.ActualBondAllocation + appData.FamilyData.ActualCashAllocation) fixed assets</span><br/>
                                         <span style=margin-left:.5in;>% stocks are International: </span>
-                                        <span>@FormatUtilities.formatPercent(appData.FamilyData.ActualInternationalStockAllocation*100.0)</span><br/>
+                                        <span>@FormatUtilities.formatPercent(appData.FamilyData.ActualInternationalStockAllocation)</span><br/>
                                         <hr/>
                                     </td>
                                 }
@@ -461,7 +461,7 @@
                                                                 groupCategories++;
                                                                 <tr style=vertical-align:bottom;color:white;background-Color:black>
                                                                     <td style=text-align:left colspan=4>
-                                                                        Stocks&nbsp;@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation * 100.0)
+                                                                        Stocks&nbsp;@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation)
                                                                     </td>
                                                                 </tr> 
                                                             }
@@ -469,7 +469,7 @@
                                                                 groupCategories++;
                                                                 <tr style=vertical-align:bottom;color:white;background-Color:black>
                                                                     <td style=text-align:left colspan=4>
-                                                                        Fixed Assets &nbsp;@FormatUtilities.formatPercent((appData.FamilyData.ActualBondAllocation + appData.FamilyData.ActualCashAllocation) * 100.0)
+                                                                        Fixed Assets &nbsp;@FormatUtilities.formatPercent(appData.FamilyData.ActualBondAllocation + appData.FamilyData.ActualCashAllocation)
                                                                     </td>
                                                                 </tr>
                                                             }
@@ -477,7 +477,7 @@
                                                                 groupCategories++;
                                                                 <tr style=vertical-align:bottom;color:white;background-Color:black>
                                                                     <td style=text-align:left colspan=4>
-                                                                        Other &nbsp;@FormatUtilities.formatPercent(appData.FamilyData.ActualOtherAllocation * 100.0)
+                                                                        Other &nbsp;@FormatUtilities.formatPercent(appData.FamilyData.ActualOtherAllocation)
                                                                     </td>
                                                                 </tr>
                                                             }
@@ -503,21 +503,21 @@
                                                                             alternateRow = false;
                                                                             <div style=margin-left:8px;background-color:DimGray>
                                                                                 @lastInvestmentCategory
-                                                                                <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation*appData.FamilyData.ActualInternationalStockAllocation*100.0) [@FormatUtilities.formatPercent(appData.FamilyData.ActualInternationalStockAllocation*100.0)]</span>
+                                                                                <span title='percentage of all Stock'>@FormatUtilities.formatPercent((appData.FamilyData.ActualStockAllocation/100.0*appData.FamilyData.ActualInternationalStockAllocation/100.0)*100.0) [@FormatUtilities.formatPercent(appData.FamilyData.ActualInternationalStockAllocation)]</span>
                                                                             </div>
                                                                             break;
                                                                         case "Bonds":
                                                                             alternateRow = false;
                                                                             <div style=margin-left:8px;background-color:DimGray>
                                                                                 @lastInvestmentCategory
-                                                                                <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualBondAllocation*100.0)</span>
+                                                                                <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualBondAllocation)</span>
                                                                             </div>
                                                                             break;
                                                                         case "Cash":
                                                                             alternateRow = false;
                                                                             <div style=margin-left:8px;background-color:DimGray>
                                                                                 @lastInvestmentCategory
-                                                                                <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualCashAllocation*100.0)</span>
+                                                                                <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualCashAllocation)</span>
                                                                             </div>
                                                                             break;
                                                                         default:
