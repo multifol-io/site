@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 public class FamilyData : INotifyPropertyChanged
 {
-    protected void OnPropertyChanged([CallerMemberName] string name = null)
+    protected void OnPropertyChanged([CallerMemberName] string? name = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
@@ -389,33 +389,36 @@ public string estimatePortfolio()
         }
     }
 
-    private Investment GetGroup(Dictionary<string, Investment> _GroupedInvestments, Investment investment, string? key, AssetType? assetType) {
-        Investment? matchingInvestment;
-        if (_GroupedInvestments.ContainsKey(key: key))
+    private Investment? GetGroup(Dictionary<string, Investment> _GroupedInvestments, Investment investment, string? key, AssetType? assetType) {
+        Investment? matchingInvestment = null;
+        if (key != null)
         {
-            matchingInvestment = _GroupedInvestments[key];
-        }
-        else
-        {
-            matchingInvestment = new Investment(PIN) { Name = investment.Name, AssetType = assetType == null ? investment.AssetType : assetType, Ticker = key, PercentChange = investment.PercentChange, LastUpdated = investment.LastUpdated, SharesPIN = null, Price = investment.GetPrice(assetType, investment.Price), PreviousClose = investment.GetPrice(assetType, investment.PreviousClose), ValuePIN = 0.0 };
-            _GroupedInvestments.Add(key, matchingInvestment);
-        }
-
-        if (investment.SharesPIN != null)
-        {
-            if (matchingInvestment.SharesPIN == null)
+            if (_GroupedInvestments.ContainsKey(key: key))
             {
-                matchingInvestment.SharesPIN = investment.SharesPIN;
+                matchingInvestment = _GroupedInvestments[key];
             }
             else
             {
-                matchingInvestment.SharesPIN += investment.SharesPIN;
+                matchingInvestment = new Investment(PIN) { Name = investment.Name, AssetType = assetType == null ? investment.AssetType : assetType, Ticker = key, PercentChange = investment.PercentChange, LastUpdated = investment.LastUpdated, SharesPIN = null, Price = investment.GetPrice(assetType, investment.Price), PreviousClose = investment.GetPrice(assetType, investment.PreviousClose), ValuePIN = 0.0 };
+                _GroupedInvestments.Add(key, matchingInvestment);
             }
-        }
 
-        if (investment.ValuePIN != null)
-        {
-            matchingInvestment.ValuePIN += investment.ValuePIN;
+            if (investment.SharesPIN != null)
+            {
+                if (matchingInvestment.SharesPIN == null)
+                {
+                    matchingInvestment.SharesPIN = investment.SharesPIN;
+                }
+                else
+                {
+                    matchingInvestment.SharesPIN += investment.SharesPIN;
+                }
+            }
+
+            if (investment.ValuePIN != null)
+            {
+                matchingInvestment.ValuePIN += investment.ValuePIN;
+            }
         }
 
         return matchingInvestment;
@@ -577,7 +580,7 @@ public string estimatePortfolio()
     }
 
     [JsonIgnore]
-    public SortedDictionary<string,List<Investment>> TickersToUpdate;
+    public SortedDictionary<string,List<Investment>>? TickersToUpdate;
 
     public async Task RefreshPrices(HttpClient http) {
         TickersToUpdate = new();

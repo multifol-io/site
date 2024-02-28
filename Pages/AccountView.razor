@@ -343,9 +343,11 @@
                             } else {
                                 bgColor = alternateRow2 ? "white" : "lightgray";;
                             }
-                            var value = transaction.CustomValue(account.FindInvestment(investment.Ticker));
-                            @* if (value != 0.0)  *@
+                            var foundInvestment = account.FindInvestment(investment.Ticker ?? "EMPTYTICKER");
+                            if (foundInvestment != null)
                             {
+                                var value = transaction.CustomValue(foundInvestment);
+                            
                                 <tr style=background-color:@bgColor  @onclick='@(e=>chooseTransaction(e,accBuffer,invBuffer, transactionBuffer))'>
                                     
                                     <td colspan=3 style=padding-left:16px>
@@ -619,17 +621,16 @@
             <br/><br/>
         }
     </div>
-} else if (appData.FamilyData == null) {
+} else if (appData?.FamilyData == null) {
     Navigation.NavigateTo("/portfolio-tracker");
 }
 
 @code {
-    bool editingAccountInfo = false;
     async void editAccountInfo(MouseEventArgs e, Account account) {
         account.Edit = !account.Edit;
         if (!account.Edit)
         {
-            await appData.FamilyData.UpdatePercentagesAsync();
+            await appData.FamilyData!.UpdatePercentagesAsync();
             await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         }
     }
@@ -837,7 +838,6 @@
         }
     }
 
-    bool showEditAccountHelpers = false;
     string refreshButtonText = "🔃 Prices";
     bool refreshButtonDisabled = false;
     bool assetAllocationEditing = false;

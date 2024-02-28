@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 public class Investment : INotifyPropertyChanged
 {
-    protected void OnPropertyChanged([CallerMemberName] string name = null)
+    protected void OnPropertyChanged([CallerMemberName] string? name = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
@@ -20,7 +20,7 @@ public class Investment : INotifyPropertyChanged
     }
 
     [JsonIgnore]
-    public Transaction SelectedTransaction { get; set; }
+    public Transaction? SelectedTransaction { get; set; }
 
     [JsonIgnore]
     public bool Selected { get; set; }
@@ -149,7 +149,7 @@ public class Investment : INotifyPropertyChanged
         }
     }
 
-    private void AutoComplete(Fund fund) {
+    private void AutoComplete(Fund? fund) {
         if (fund == null) {
             Name = null;
             ExpenseRatio = null;
@@ -342,7 +342,7 @@ public class Investment : INotifyPropertyChanged
     }
 
     [JsonIgnore]
-    public RSUGrant GrantToUpdateQuote { get; set; }
+    public RSUGrant? GrantToUpdateQuote { get; set; }
 
     [JsonIgnore]
     public double? ValuePIN {

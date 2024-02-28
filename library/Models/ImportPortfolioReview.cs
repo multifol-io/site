@@ -263,13 +263,19 @@ public static class ImportPortfolioReview {
                 } else if (!assetParsing.HasValue && afterPortfolioSize && StartsWithNumber(tLine)) {
                     importedFamilyData.Title += "|9";
                     account = ParseAccountLine(lastLine!, importedFamilyData);
-                    try {
-                        investment = ParseInvestmentLine(line, portfolioSize ?? 100.0, debug:debug, funds, importedFamilyData);
-                        account?.Investments.Add(investment);
-                        importedFamilyData.Accounts.Add(account);
-                        assetParsing = true;
-                    } catch (Exception ex) {
-                        Console.WriteLine(ex.ToString());
+                    if (account != null)
+                    {
+                        try
+                        {
+                            investment = ParseInvestmentLine(line, portfolioSize ?? 100.0, debug: debug, funds, importedFamilyData);
+                            account.Investments.Add(investment);
+                            importedFamilyData.Accounts.Add(account);
+                            assetParsing = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.ToString());
+                        }
                     }
                 } else {
                     importedFamilyData.Title += "|10";

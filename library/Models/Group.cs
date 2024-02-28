@@ -21,8 +21,12 @@ public class Group<T, U> : List<U> where U : class
         var propInfo = typeof(T).GetProperty(itemsPropertyName);
         foreach (var outerObject in collection)
         {
-            var group = new Group<T, U>(outerObject, (List<U>)propInfo.GetValue(outerObject));
-            groups.Add(group);
+            var value = propInfo!.GetValue(outerObject) as List<U>;
+            if (value != null)
+            {
+                var group = new Group<T, U>(outerObject, value);
+                groups.Add(group);
+            }
         }
 
         return groups;
@@ -31,7 +35,11 @@ public class Group<T, U> : List<U> where U : class
 
 public class HoldingGroupInfo
 {
-    public string InvestmentOrderCategory { get; set; }
+    public HoldingGroupInfo(string investmentOrderCategory)
+    {
+        InvestmentOrderCategory = investmentOrderCategory;
+    }
+    public string InvestmentOrderCategory { get; private set; }
     public double? Value { get; set; }
 }
 

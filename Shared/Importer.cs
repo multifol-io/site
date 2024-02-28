@@ -761,7 +761,7 @@ public class Importer {
 
             // Find the sheet with the supplied name, and then use that to retrieve a reference to the first worksheet.
             Sheet theSheet = wbPart.Workbook.Descendants<Sheet>().Where(s => s?.Name == "Holdings Ungrouped").FirstOrDefault() ?? throw new ArgumentException("sheetName");
-            WorksheetPart wsPart = (WorksheetPart)wbPart.GetPartById(theSheet.Id);
+            WorksheetPart wsPart = (WorksheetPart)wbPart.GetPartById(theSheet.Id!);
             // For shared strings, look up the value in the shared strings table.
             var stringTable = 
                 wbPart.GetPartsOfType<SharedStringTablePart>()

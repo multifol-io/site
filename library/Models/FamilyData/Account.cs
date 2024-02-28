@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 public class Account : INotifyPropertyChanged
 {
-    protected void OnPropertyChanged([CallerMemberName] string name = null)
+    protected void OnPropertyChanged([CallerMemberName] string? name = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
@@ -175,7 +175,14 @@ public class Account : INotifyPropertyChanged
             UpdateInvestmentCategoryTotals(investment, familyData);
             foreach (var transaction in investment.Transactions)
             {
-                UpdateInvestmentCategoryTotals(investment, familyData, overrideValue:transaction.CustomValue(this.FindInvestment(transaction.HostTicker)));
+                if (transaction.HostTicker != null)
+                {
+                    var foundInvestment = FindInvestment(transaction.HostTicker);
+                    if (foundInvestment != null)
+                    {
+                        UpdateInvestmentCategoryTotals(investment, familyData, overrideValue: transaction.CustomValue(foundInvestment));
+                    }
+                }
             }
 
             if (investment.ExpenseRatio.HasValue && investment.Value.HasValue) {
