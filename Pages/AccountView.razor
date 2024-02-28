@@ -8,7 +8,7 @@
 @using System.Text.Json.Serialization
 
 <PageTitle>
-@pageHeading - bogle.tools
+    @pageHeading - bogle.tools
 </PageTitle>
 
 <style>
@@ -16,35 +16,40 @@
         border-collapse: collapse;
         border-top: 1px solid rgba(0,0,0,0.2);
     }
-    .mainTable thead tr th{
-        border-bottom: 1px solid #000000;
-    }
-    .mainTable th, .mainTable td {
-        border-left: 1px solid rgba(0,0,0,0.2);
-        border-right: 1px solid rgba(0,0,0,0.2);
-    }
-    .mainTable th, .mainTable td{ /* Added padding for better layout after collapsing */
-        padding: 4px 8px;
-    }
+
+        .mainTable thead tr th {
+            border-bottom: 1px solid #000000;
+        }
+
+        .mainTable th, .mainTable td {
+            border-left: 1px solid rgba(0,0,0,0.2);
+            border-right: 1px solid rgba(0,0,0,0.2);
+        }
+
+        .mainTable th, .mainTable td { /* Added padding for better layout after collapsing */
+            padding: 4px 8px;
+        }
 
     .btn {
         color: white;
         padding: 10px 10px;
         text-decoration: none;
-        display:inline-block;
-        text-align:center;
-        width:60px;
+        display: inline-block;
+        text-align: center;
+        width: 60px;
         border-radius: 10px;
     }
+
     .dollar {
         width: 100px;
     }
+
     .percent {
         width: 50px;
     }
+
     .article a[href^="http"]::after,
-    .article a[href^="https://"]::after
-    {
+    .article a[href^="https://"]::after {
         content: "";
         width: 11px;
         height: 11px;
@@ -59,126 +64,160 @@
 @if (appData is null && !loaded!)
 {
     <p>
-        @if(appData == null || appData.CurrentProfileName==null){<em>No active <a href=/profiles>profile</a>.</em>} 
-        else {<em>Loading...</em>}
+        @if (appData == null || appData.CurrentProfileName == null)
+        {
+            <em>No active <a href=/profiles>profile</a>.</em>
+        }
+        else
+        {
+            <em>Loading...</em>
+        }
     </p>
-    <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
-        @if(appData!.CurrentProfileName==null){<span>choose a</span>}else {<span>@appData.CurrentProfileName</span>}</a> profile
+    <div style=float:left;margin-left:50px>
+        <a href=/profiles title="profile name" @onclick=navWithBackStack @onclick:preventDefault>
+            @if (appData!.CurrentProfileName == null)
+            {
+                <span>choose a</span>
+            }
+            else
+            {
+                <span>@appData.CurrentProfileName</span>
+            }
+        </a> profile
     </div>
-} else if (loaded && appData.FamilyData is not null) {
-    if (appData.FamilyData.TaxFilingStatus == TaxFilingStatus.ChoiceNeeded) {
-        taxFilingStatusEditing = true;
-    }
-
+}
+else if (loaded && appData?.FamilyData is not null)
+{
     <div style=float:left>
         <h4 style="max-width:450px">
             @pageHeading <h6 style=display:inline>for @appData.CurrentProfileName profile</h6>
         </h4>
     </div>
-    <div style=clear:left;margin-left:1.5in><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault >(manage profiles)</a></div>
+    <div style=clear:left;margin-left:1.5in><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault>(manage profiles)</a></div>
 
-    <div style=clear:left><a href=/portfolio-tracker @onclick=navToAccounts @onclick:preventDefault >Portfolio</a> > @Query</div>
+    <div style=clear:left><a href=/portfolio-tracker @onclick=navToAccounts @onclick:preventDefault>Portfolio</a> > @Query</div>
 
     <div style=clear:left>
         @{
             int accountsMatchingFilter = 0;
-        }   
-
-        @if (Query == "editor") {
-            <br/>
-            <span>Track another account:&nbsp;</span><button @onclick=addAccountInline>➕ account</button>
-            <br/><br/>
         }
 
-        <button @onclick=@refreshPrices title=Refresh style=min-width:80px; @bind-disabled:event=onchange @bind-disabled=@refreshButtonDisabled>@refreshButtonText</button><br/>
+        @if (Query == "editor")
+        {
+            <br />
+            <span>Track another account:&nbsp;</span>
+
+            <button @onclick=addAccountInline>➕ account</button>
+            <br />
+
+            <br />
+        }
+
+        <button @onclick=@refreshPrices title=Refresh style=min-width:80px; @bind-disabled:event=onchange @bind-disabled=@refreshButtonDisabled>@refreshButtonText</button><br />
 
         @{
             var accountIndex = 0;
             accountsMatchingFilter = 0;
         }
-        @foreach (var account in appData.FamilyData.Accounts) {
+        @foreach (var account in appData.FamilyData.Accounts)
+        {
             int accBuffer = accountIndex;
             accountIndex++;
-            if (Query.StartsWith("ticker:"))
+            if (Query != null)
             {
-                bool found = false;
-                var tickerToFind = Query.Substring(7);
-                foreach (var investment in account.Investments)
+                if (Query.StartsWith("ticker:"))
                 {
-                    if (investment.Ticker == tickerToFind)
+                    bool found = false;
+                    var tickerToFind = Query.Substring(7);
+                    foreach (var investment in account.Investments)
                     {
-                        found = true;
+                        if (investment.Ticker == tickerToFind)
+                        {
+                            found = true;
+                        }
+                    }
+
+                    account.View = found;
+                    if (found)
+                    {
+                        accountsMatchingFilter++;
                     }
                 }
+                else if (Query.StartsWith("editor"))
+                {
+                    account.View = true;
+                    accountsMatchingFilter++;
+                }
+                else if (Query.StartsWith("account:"))
+                {
+                    string accountToFind;
+                    if (Query.Length > 8)
+                    {
+                        accountToFind = Query.Substring(8);
+                    }
+                    else
+                    {
+                        accountToFind = "";
+                    }
 
-                account.View = found;
-                if (found)
-                {
-                    accountsMatchingFilter++;
+                    bool accountFound = account.Title == accountToFind;
+                    account.View = accountFound;
+                    if (accountFound)
+                    {
+                        accountsMatchingFilter++;
+                    }
                 }
-            } else if (Query.StartsWith("editor")) {
-                account.View = true;
-                accountsMatchingFilter++;
-            } else if (Query.StartsWith("account:")) {
-                string accountToFind;
-                if (Query.Length > 8)
+                else if (Query.StartsWith("custodian:"))
                 {
-                    accountToFind = Query.Substring(8);
-                }
-                else
-                {
-                    accountToFind = "";
-                }
-
-                bool accountFound = account.Title == accountToFind;
-                account.View = accountFound;
-                if (accountFound)
-                {
-                    accountsMatchingFilter++;
-                }
-            } else if (Query.StartsWith("custodian:")) {
-                var custodianToFind = Query.Substring(10);
-                bool accountFound = account.Custodian == custodianToFind;
-                account.View = accountFound;
-                if (accountFound)
-                {
-                    accountsMatchingFilter++;
+                    var custodianToFind = Query.Substring(10);
+                    bool accountFound = account.Custodian == custodianToFind;
+                    account.View = accountFound;
+                    if (accountFound)
+                    {
+                        accountsMatchingFilter++;
+                    }
                 }
             }
 
-            if (account.View) {
-                bool isTreasuryDirect = account.Custodian?.ToLowerInvariant() == "treasury direct"  || account.Custodian?.ToLowerInvariant() == "treasurydirect";
+            if (account.View)
+            {
+                bool isTreasuryDirect = account.Custodian?.ToLowerInvariant() == "treasury direct" || account.Custodian?.ToLowerInvariant() == "treasurydirect";
                 bool alternateRow2 = false;
                 if (account.Investments.Count == 0 && account.AccountType == null && account.Custodian == null && account.Note == null)
                 {
                     account.Edit = true;
                 }
 
-                @if(account.Edit) {
+                @if (account.Edit)
+                {
                     @((MarkupString)FormatUtilities.Bold("Edit Account Info:", ShowMarkup))
                 }
 
-                <br/>
+                <br />
                 <table class=mainTable>
                     <tr style=color:white;background:black; @onclick='@(e=>editAccountInfo(e,account))'>
                         <td colspan=3>
                             @account.Title
                         </td>
                         <td style=text-align:right;padding-left:8px>
-                            @FormatUtilities.formatMoney(account.Value, decimalPlaces:0)
-                            <a style=margin:0px;padding:0px;width:20px class="m-0 btn" >✏️</a>
+                            @FormatUtilities.formatMoney(account.Value, decimalPlaces: 0)
+                            <a style=margin:0px;padding:0px;width:20px class="m-0 btn">✏️</a>
                         </td>
                     </tr>
-                    @if (account.Edit) {
+                    @if (account.Edit)
+                    {
                         <tr style=color:white;background:black;padding-left:8px>
                             <td colspan=4>
-                                @if (appData.FamilyData.PersonCount == 2) {
+                                @if (appData.FamilyData.PersonCount == 2)
+                                {
                                     <label style=padding-left:8px>Owner:</label>
                                     <select style=margin-left:4px @bind=account.Identifier>
-                                        @if(account.TaxType == "Taxable" || account.TaxType == "Other") {
+                                        @if (account.TaxType == "Taxable" || account.TaxType == "Other")
+                                        {
                                             <option>our</option>
                                         }
-                                        @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
+                                        @for (int p = 0; p < appData.FamilyData.PersonCount; p++)
+                                        {
                                             <option>@appData.FamilyData.People[p].PossessiveID</option>
                                         }
                                     </select>
@@ -209,7 +248,7 @@
                                     <option>Solo 401(k)</option>
                                     <option>Taxable</option>
                                     <option>Traditional IRA</option>
-                                </select> 
+                                </select>
                             </td>
                         </tr>
                         <tr style=color:white;background:black;padding-left:8px>
@@ -217,7 +256,8 @@
                                 <label style=padding-left:8px>at</label> <input style="width:140px" type=text @bind-Value=account.Custodian @bind-Value:event=oninput placeholder='custodian' />
                             </td>
                         </tr>
-                        @if (account.TaxType == "Pre-Tax(work)") {
+                        @if (account.TaxType == "Pre-Tax(work)")
+                        {
                             <tr style=color:white;background:black;>
                                 <td colspan=3>
                                     <EditForm Model="account">
@@ -225,21 +265,30 @@
                                         <InputRadioGroup @bind-Value="account.CurrentOrPrevious">
                                             @foreach (var option in Account.CurrentOrPreviousOptions)
                                             {
-                                                <InputRadio Value="option" /> 
-                                                @if(option!="previous") {<span>&nbsp;@option&nbsp;|&nbsp;</span>} else {<span>&nbsp;@option</span>}
+                                                <InputRadio Value="option" />
+                                                @if (option != "previous")
+                                                {
+                                                    <span>&nbsp;@option&nbsp;|&nbsp;</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>&nbsp;@option</span>
+                                                }
                                             }
                                         </InputRadioGroup>
                                     </EditForm>
                                 </td>
                                 <td colspan="2">
-                                    @if (appData.AllowAfterTaxPercentage) {
+                                    @if (appData.AllowAfterTaxPercentage)
+                                    {
                                         <label style=padding-left:8px>After Tax %:</label> <input type=text id=currentEmployer style=margin-left:8px;width:60px @bind-Value=account.AfterTaxPercentage @bind-Value:event=onchange />
                                     }
                                 </td>
                             </tr>
                         }
-                        <tr style=color:white;background:black;><td colspan=4>
-                            <label style=padding-left:8px>Note: </label><input type=text @bind-value=account.Note @bind-value:event=oninput placeholder='account note'/>
+                        <tr style=color:white;background:black;>
+                            <td colspan=4>
+                                <label style=padding-left:8px>Note: </label><input type=text @bind-value=account.Note @bind-value:event=oninput placeholder='account note' />
                             </td>
                         </tr>
                         <tr style=color:white;background:black;>
@@ -252,14 +301,15 @@
                         </tr>
                     }
                     <tr style=height:15px;background:white></tr>
-                    </table>
-                    <table style=margin-left:.25in>
+                </table>
+                <table style=margin-left:.25in>
                     @{
                         var investmentIndex = 0;
                         string bgColor;
                         bool headerShown = false;
                     }
-                    @foreach (var investment in account.Investments) {
+                    @foreach (var investment in account.Investments)
+                    {
                         if (!headerShown)
                         {
                             if (!isTreasuryDirect && investment.Ticker != "IBOND")
@@ -270,11 +320,13 @@
                                     <th style=padding-left:8px;text-align:center>Price</th>
                                     <th style=padding-left:8px;text-align:center>Balance</th>
                                 </tr>
-                            } else {
+                            }
+                            else
+                            {
                                 <tr style=vertical-align:bottom>
                                     <th style=padding-left:8px>Holding</th>
-                                    <th style=padding-left:8px;text-align:center>'Fixed'<br/>Rate</th>
-                                    <th style=padding-left:8px;text-align:center>Current<br/>Rate</th>
+                                    <th style=padding-left:8px;text-align:center>'Fixed'<br />Rate</th>
+                                    <th style=padding-left:8px;text-align:center>Current<br />Rate</th>
                                     <th style=padding-left:8px;text-align:center>Balance</th>
                                 </tr>
                             }
@@ -285,33 +337,53 @@
                         var advice = Advisor.Advise(investment, account, appData);
                         int invBuffer = investmentIndex;
                         investmentIndex++;
-                        if (investment.Selected && (investment.SelectedTransaction == null || investment.SelectedTransaction.Type == "Edit")) {
+                        if (investment.Selected && (investment.SelectedTransaction == null || investment.SelectedTransaction.Type == "Edit"))
+                        {
                             bgColor = "yellow";
-                        } else {
+                        }
+                        else
+                        {
                             bgColor = alternateRow2 ? "white" : "lightgray";
                         }
 
                         <tr style=background-color:@bgColor @onclick='@(e=>chooseInvestment(e,accBuffer,invBuffer))'>
                             <td style=padding-left:8px;height:30px; title=@investment.Name>
                                 @(investment.Ticker != null ? investment.Ticker : investment.Name)
-                                @if (investment.IsAssetTypeUnknown) { <span style=color:red>*</span> }
-                                @if (investment.IsBalancedFund && !investment.DoesBalancedFundEqual100) { <span style=color:red>^</span> }
-                                @if (account.TaxType == "Taxable" && investment.MissingCostBasis && !investment.IsCash) { <span style=color:red>~</span> }
-                                @if ((investment.IsFund || investment.IsETF) && investment.ExpenseRatio == null) { <span style=color:red>#</span> }
-                                @if (investment.IsIBond) {
-                                    <span>&nbsp;</span>@FormatUtilities.formatMonthPlus2DigitYear(investment.PurchaseDate)
+                                @if (investment.IsAssetTypeUnknown)
+                                {
+                                    <span style=color:red>*</span>
+                                }
+                                @if (investment.IsBalancedFund && !investment.DoesBalancedFundEqual100)
+                                {
+                                    <span style=color:red>^</span>
+                                }
+                                @if (account.TaxType == "Taxable" && investment.MissingCostBasis && !investment.IsCash)
+                                {
+                                    <span style=color:red>~</span>
+                                }
+                                @if ((investment.IsFund || investment.IsETF) && investment.ExpenseRatio == null)
+                                {
+                                    <span style=color:red>#</span>
+                                }
+                                @if (investment.IsIBond)
+                                {
+                                    <span>&nbsp;</span>
+
+                                    @FormatUtilities.formatMonthPlus2DigitYear(investment.PurchaseDate)
                                 }
                             </td>
-                            @if (investment.IsIBond) 
+                            @if (investment.IsIBond)
                             {
-                                <td style=text-align:right>@FormatUtilities.formatPercent3(investment.InterestRate*100.0)</td>
-                                <td style=text-align:right>@FormatUtilities.formatPercent3(investment.CurrentRate*100.0)</td>
-                            } else {
+                                <td style=text-align:right>@FormatUtilities.formatPercent3(investment.InterestRate * 100.0)</td>
+                                <td style=text-align:right>@FormatUtilities.formatPercent3(investment.CurrentRate * 100.0)</td>
+                            }
+                            else
+                            {
                                 <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleTwoDecimal(investment.SharesPIN)</td>
                                 <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(investment.Price)</td>
                             }
                             <td style=text-align:right;padding-left:8px>
-                                @FormatUtilities.formatMoney(investment.ValuePIN, decimalPlaces:0)
+                                @FormatUtilities.formatMoney(investment.ValuePIN, decimalPlaces: 0)
                             </td>
                         </tr>
                         @if (investment.IsIBond && investment.NextRate.HasValue)
@@ -321,13 +393,14 @@
                                     as of @FormatUtilities.formatMonthPlus2DigitYear(@investment.NextRateStart):
                                 </td>
                                 <td style=text-align:right>
-                                    @FormatUtilities.formatPercent3(investment.NextRate*100.0)
+                                    @FormatUtilities.formatPercent3(investment.NextRate * 100.0)
                                 </td>
                                 <td></td>
                             </tr>
                         }
 
-                        @foreach (var adviceItem in advice) {
+                        @foreach (var adviceItem in advice)
+                        {
                             <tr style=background-color:@bgColor>
                                 <td colspan=4 style=padding-left:16px>
                                     <span style=background-color:yellow>@adviceItem</span>
@@ -336,32 +409,36 @@
                         }
 
                         var transactionIndex = 0;
-                        @foreach (var transaction in investment.Transactions) {
+                        @foreach (var transaction in investment.Transactions)
+                        {
                             var transactionBuffer = transactionIndex;
-                            if (transaction.Selected && investment.SelectedTransaction == transaction) {
+                            if (transaction.Selected && investment.SelectedTransaction == transaction)
+                            {
                                 bgColor = "yellow";
-                            } else {
-                                bgColor = alternateRow2 ? "white" : "lightgray";;
+                            }
+                            else
+                            {
+                                bgColor = alternateRow2 ? "white" : "lightgray"; ;
                             }
                             var foundInvestment = account.FindInvestment(investment.Ticker ?? "EMPTYTICKER");
                             if (foundInvestment != null)
                             {
                                 var value = transaction.CustomValue(foundInvestment);
-                            
-                                <tr style=background-color:@bgColor  @onclick='@(e=>chooseTransaction(e,accBuffer,invBuffer, transactionBuffer))'>
-                                    
+
+                                <tr style=background-color:@bgColor @onclick='@(e=>chooseTransaction(e,accBuffer,invBuffer, transactionBuffer))'>
+
                                     <td colspan=3 style=padding-left:16px>
                                         @if (transaction.HostTicker == investment.Ticker)
                                         {
                                             <span>..future @transaction.Type @transaction.HostTicker</span>
                                         }
-                                        else 
+                                        else
                                         {
                                             <span>..future @transaction.Type @transaction.HostTicker</span>
                                         }
                                     </td>
                                     <td style=text-align:right;padding-left:8px>
-                                        @FormatUtilities.formatMoney(value, decimalPlaces:0)
+                                        @FormatUtilities.formatMoney(value, decimalPlaces: 0)
                                     </td>
                                 </tr>
                             }
@@ -379,254 +456,342 @@
                                 <button title="add ibond" @onclick='@(e=>addIBOND(e,accBuffer))' style=margin-left:8px>➕ IBOND</button>
                             }
                         </td>
-                        
+
                     </tr>
                     <tr>
                         <td colspan=4 style=text-align:right;font-size:9pt;font-style:italic>
-                            @if(account.Investments.Count > 0 && account.SelectedInvestment == null) {
+                            @if (account.Investments.Count > 0 && account.SelectedInvestment == null)
+                            {
                                 @((MarkupString)FormatUtilities.Bold("Select a Holding to Change", ShowMarkup))
                             }
                         </td>
                     </tr>
                 </table>
-                <br/>
+                <br />
 
-                @if (account.SelectedInvestment != null) {
+                @if (account.SelectedInvestment != null)
+                {
                     var investment = account.SelectedInvestment;
                     if (investment.IsAssetTypeUnknown)
                     {
-                        <span><span style=color:red>*</span> - Asset type is unknown. Please edit, and choose asset type.</span><br/><br/>
+                        <span><span style=color:red>*</span> - Asset type is unknown. Please edit, and choose asset type.</span>
+
+                        <br />
+
+                        <br />
                     }
-                    
+
                     if (investment.IsBalancedFund && !investment.DoesBalancedFundEqual100)
-                    { 
-                        <span><span style=color:red>^</span> - Stock and Bond fund components don't total 100%. Please edit.</span><br/><br/>
+                    {
+                        <span><span style=color:red>^</span> - Stock and Bond fund components don't total 100%. Please edit.</span>
+
+                        <br />
+
+                        <br />
                     }
 
-                    if (account.TaxType == "Taxable" && investment.MissingCostBasis && !investment.IsCash) { 
-                        <span><span style=color:red>~</span> - Missing CostBasis. Please edit.</span><br/><br/>
+                    if (account.TaxType == "Taxable" && investment.MissingCostBasis && !investment.IsCash)
+                    {
+                        <span><span style=color:red>~</span> - Missing CostBasis. Please edit.</span>
+
+                        <br />
+
+                        <br />
                     }
 
-                    if ((investment.IsFund || investment.IsETF) && investment.ExpenseRatio == null) { 
-                        <span><span style=color:red>#</span> - Missing ExpenseRatio. Please edit.</span><br/><br/>
+                    if ((investment.IsFund || investment.IsETF) && investment.ExpenseRatio == null)
+                    {
+                        <span><span style=color:red>#</span> - Missing ExpenseRatio. Please edit.</span>
+
+                        <br />
+
+                        <br />
                     }
 
-                    switch (investment.SelectedTransaction?.Type) {
+                    Transaction? selectedTransaction = account?.SelectedInvestment?.SelectedTransaction;
+                    Investment? selectedInvestment = account?.SelectedInvestment;
+                    switch (selectedTransaction?.Type)
+                    {
                         case null:
-                            @((MarkupString)FormatUtilities.Bold("Actions:", ShowMarkup))<br/>
-                            <button @onclick='@(e=>edit(e,account.SelectedInvestment))'>Edit @account.SelectedInvestment.Ticker</button>
-                            <button @onclick='@(e=>deleteSelectedInvestment(e,account.SelectedInvestment))' title='delete investment'>Delete @account.SelectedInvestment.Ticker</button>
-                            @if (account.SelectedInvestment.Ticker?.ToUpper() == "IBOND")
+                            if (selectedInvestment != null)
                             {
-                                var ebURL = "https://eyebonds.info/ibonds/" + investment.CostBasis.ToString() + "/ib_" + investment.PurchaseDate?.Year + "_" + investment.PurchaseDate?.Month.ToString("D2") + ".html";
-                                <span style='border:1.5pt solid;padding:3pt 2pt;margin:2pt'>&nbsp;<a href=@ebURL target=_new>eyebonds.info</a>&nbsp;↗️</span><br/>
-                            }
+                                @((MarkupString)FormatUtilities.Bold("Actions:", ShowMarkup))
 
-                            <br/><br/>
-                            @* @((MarkupString)FormatUtilities.Bold("Record Transaction:"))<br/>
-                            <button @onclick='@(e=>buy(e,account,account.SelectedInvestment))'>Buy @account.SelectedInvestment.Ticker</button>
-                            <button @onclick='@(e=>sell(e,account,account.SelectedInvestment))'>Sell @account.SelectedInvestment.Ticker</button>
-                            <br/><br/>
-                            <button @onclick='@(e=>dividend(e,account,account.SelectedInvestment))'>@account.SelectedInvestment.Ticker Cash Dividend</button>
-                            <button @onclick='@(e=>reinvestDividend(e,account,account.SelectedInvestment))'>@account.SelectedInvestment.Ticker Reinvest Dividend</button>
-                            <br/><br/> *@
+                                <br />
+                                <button @onclick='@(e=>edit(e,selectedInvestment))'>Edit @selectedInvestment.Ticker</button>
+                                <button @onclick='@(e=>deleteSelectedInvestment(e,selectedInvestment))' title='delete investment'>Delete @selectedInvestment.Ticker</button>
+                                @if (selectedInvestment.Ticker?.ToUpper() == "IBOND")
+                                {
+                                    var ebURL = "https://eyebonds.info/ibonds/" + selectedInvestment.CostBasis.ToString() + "/ib_" + selectedInvestment.PurchaseDate?.Year + "_" + selectedInvestment.PurchaseDate?.Month.ToString("D2") + ".html";
+                                    <span style='border:1.5pt solid;padding:3pt 2pt;margin:2pt'>&nbsp;<a href=@ebURL target=_new>eyebonds.info</a>&nbsp;↗️</span>
+
+                                    <br />
+                                }
+
+                                <br />
+
+                                <br />
+                            }
                             break;
                         case "Buy":
                         case "Sale":
-                            @((MarkupString)FormatUtilities.Bold("Record " + account.SelectedInvestment.SelectedTransaction.Type + " of " + account.SelectedInvestment.Ticker + ":", ShowMarkup))<br/>
-                            <span><input style=text-align:right;width:80px type=text @bind-Value=account.SelectedInvestment.SelectedTransaction.Shares @bind-Value:event=onchange /> shares</span>
-                            <span>@@ $ <input style=text-align:right;width:80px type=text @bind-Value=account.SelectedInvestment.SelectedTransaction.Price @bind-Value:event=onchange /> / share</span><br/>
-                            <span>= $ <input style=text-align:right;width:80px type=text @bind-Value=account.SelectedInvestment.SelectedTransaction.Value @bind-Value:event=onchange /></span><br/>
-                            <span>money transfered @(account.SelectedInvestment.SelectedTransaction.Type == "Sale" ? "to" : "from"):&nbsp;<span/>
-                            @account.SelectedInvestment.SelectedTransaction?.OtherTicker
-                            </span><br/>
-                            @if(account.SelectedInvestment.SelectedTransaction.IsDraft)
+                            if (account != null && selectedInvestment != null && selectedTransaction != null)
                             {
-                                <button @onclick='@(e=>cancel(e,account.SelectedInvestment))'>Cancel</button>
+                                @((MarkupString)FormatUtilities.Bold("Record " + selectedTransaction.Type + " of " + selectedInvestment.Ticker + ":", ShowMarkup))
+
+                                <br />
+                                <span><input style=text-align:right;width:80px type=text @bind-Value=selectedTransaction.Shares @bind-Value:event=onchange /> shares</span>
+                                <span>@@ $ <input style=text-align:right;width:80px type=text @bind-Value=selectedTransaction.Price @bind-Value:event=onchange /> / share</span>
+
+                                <br />
+                                <span>= $ <input style=text-align:right;width:80px type=text @bind-Value=selectedTransaction.Value @bind-Value:event=onchange /></span>
+
+                                <br />
+                                <span>
+                                    money transfered @(selectedTransaction.Type == "Sale" ? "to" : "from"):&nbsp;<span />
+                                    @selectedTransaction?.OtherTicker
+                                </span>
+
+                                <br />
+                                @if (selectedTransaction!.IsDraft)
+                                {
+                                    <button @onclick='@(e=>cancel(e,selectedInvestment))'>Cancel</button>
+                                }
+                                else
+                                {
+                                    <button @onclick='@(e=>deleteTransaction(e,account,selectedInvestment,selectedTransaction))'>Delete</button>
+                                }
+                                <span>&nbsp;</span>
+                                <button @onclick='@(e=>plan(e,account,selectedInvestment))'>Plan</button> <button @onclick='@(e=>commit(e,account,account.SelectedInvestment))'>Commit</button>
+
+                                <br />
                             }
-                            else
-                            {
-                                <button @onclick='@(e=>deleteTransaction(e,account,account.SelectedInvestment,account.SelectedInvestment.SelectedTransaction))'>Delete</button>
-                            }
-                            <span>&nbsp;</span>
-                            <button @onclick='@(e=>plan(e,account,account.SelectedInvestment))'>Plan</button> <button @onclick='@(e=>commit(e,account,account.SelectedInvestment))'>Commit</button><br/>
                             break;
                         case "Dividend":
-                            @((MarkupString)FormatUtilities.Bold("Record " + account.SelectedInvestment.SelectedTransaction.Type + " of " + account.SelectedInvestment.Ticker + ":", ShowMarkup))<br/>
-                            <span>$ <input style=text-align:right;width:100px type=text @bind-Value=account.SelectedInvestment.SelectedTransaction.Value @bind-Value:event=oninput /></span><br/>
-                            <span>money transferred to:&nbsp;@account.SelectedInvestment.SelectedTransaction?.OtherTicker</span><br/><br/>
-                            @if(account.SelectedInvestment.SelectedTransaction.IsDraft)
+                            if (account != null && selectedInvestment != null && selectedTransaction != null)
                             {
-                                <button @onclick='@(e=>cancel(e,account.SelectedInvestment))'>Cancel</button>
+                                @((MarkupString)FormatUtilities.Bold("Record " + selectedTransaction.Type + " of " + selectedInvestment.Ticker + ":", ShowMarkup))
+
+                                <br />
+                                <span>$ <input style=text-align:right;width:100px type=text @bind-Value=selectedTransaction.Value @bind-Value:event=oninput /></span>
+
+                                <br />
+                                <span>money transferred to:&nbsp;@selectedTransaction?.OtherTicker</span>
+
+                                <br />
+
+                                <br />
+                                @if (selectedTransaction!.IsDraft)
+                                {
+                                    <button @onclick='@(e=>cancel(e,selectedInvestment))'>Cancel</button>
+                                }
+                                else
+                                {
+                                    <button @onclick='@(e=>deleteTransaction(e,account,selectedInvestment,selectedTransaction))'>Delete</button>
+                                }
+                                <span>&nbsp;</span>
+                                <button @onclick='@(e=>plan(e,account,selectedInvestment))'>Plan</button> <button @onclick='@(e=>commit(e,account,selectedInvestment))'>Commit</button>
+
+                                <br />
                             }
-                            else
-                            {
-                                <button @onclick='@(e=>deleteTransaction(e,account,account.SelectedInvestment,account.SelectedInvestment.SelectedTransaction))'>Delete</button>
-                            }
-                            <span>&nbsp;</span>
-                            <button @onclick='@(e=>plan(e,account,account.SelectedInvestment))'>Plan</button> <button @onclick='@(e=>commit(e,account,account.SelectedInvestment))'>Commit</button><br/>
                             break;
                         case "Reinvest Dividend":
-                            @((MarkupString)FormatUtilities.Bold("Record " + account.SelectedInvestment.SelectedTransaction.Type + " of " + account.SelectedInvestment.Ticker + ":", ShowMarkup))<br/>
-                            <span><input type=text style=text-align:right;width:80px @bind-Value=account.SelectedInvestment.SelectedTransaction.Shares @bind-Value:event=onchange/> shares</span>
-                            <span>@@&nbsp;&nbsp;$ <input style=text-align:right;width:80px type=text @bind-Value=account.SelectedInvestment.SelectedTransaction.Price @bind-Value:event=onchange /> / share</span><br/>
-                            <span>= $ <input style=text-align:right;width:100px type=text @bind-Value=account.SelectedInvestment.SelectedTransaction.Value @bind-Value:event=onchange /> total</span><br/><br/>
-                            @if(account.SelectedInvestment.SelectedTransaction.IsDraft)
+                            if (account != null && selectedInvestment != null && selectedTransaction != null)
                             {
-                                <button @onclick='@(e=>cancel(e,account.SelectedInvestment))'>Cancel</button>
+                                @((MarkupString)FormatUtilities.Bold("Record " + selectedTransaction.Type + " of " + selectedInvestment.Ticker + ":", ShowMarkup))
+
+                                <br />
+                                <span><input type=text style=text-align:right;width:80px @bind-Value=selectedTransaction.Shares @bind-Value:event=onchange /> shares</span>
+                                <span>@@&nbsp;&nbsp;$ <input style=text-align:right;width:80px type=text @bind-Value=selectedTransaction.Price @bind-Value:event=onchange /> / share</span>
+
+                                <br />
+                                <span>= $ <input style=text-align:right;width:100px type=text @bind-Value=selectedTransaction.Value @bind-Value:event=onchange /> total</span>
+
+                                <br />
+
+                                <br />
+                                @if (selectedTransaction.IsDraft)
+                                {
+                                    <button @onclick='@(e=>cancel(e,account.SelectedInvestment))'>Cancel</button>
+                                }
+                                else
+                                {
+                                    <button @onclick='@(e=>deleteTransaction(e,account,selectedInvestment,selectedTransaction))'>Delete</button>
+                                }
+                                <span>&nbsp;</span>
+                                <button @onclick='@(e=>plan(e,account,selectedInvestment))'>Plan</button> <button @onclick='@(e=>commit(e,account,selectedInvestment))'>Commit</button>
+
+                                <br />
                             }
-                            else
-                            {
-                                <button @onclick='@(e=>deleteTransaction(e,account,account.SelectedInvestment,account.SelectedInvestment.SelectedTransaction))'>Delete</button>
-                            }
-                            <span>&nbsp;</span>
-                            <button @onclick='@(e=>plan(e,account,account.SelectedInvestment))'>Plan</button> <button @onclick='@(e=>commit(e,account,account.SelectedInvestment))'>Commit</button><br/>
                             break;
                         case "Edit":
-                            <span>@((MarkupString)FormatUtilities.Bold("Edit:", ShowMarkup))</span><br/>
-                            <table>
-                                <tr>
-                                    <td style=text-align:right>
-                                        <label>Ticker: </label>
-                                    </td>
-                                    <td style=padding-left:8px>
-                                        <input type=text style=width:70px @bind-Value=account.SelectedInvestment.Ticker @bind-Value:event=oninput placeholder='ticker'/>
-                                    </td>
-                                </tr>
-                                @if (account.SelectedInvestment.IsIBond)
-                                {
-                                    <tr>
-                                        <td style=text-align:right>
-                                            <label>Purchase Date: </label>
-                                        </td>
-                                        <td style=padding-left:8px>
-                                            <input type=text style=width:100px @bind-Value=account.SelectedInvestment.PurchaseDate @bind-Value:event=oninput placeholder='m/yyyy'/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style=text-align:right>
-                                            <label>Cost Basis: </label>
-                                        </td>
-                                        <td style=padding-left:8px colspan=3>
-                                            $<input type=text style=width:100px;text-align:right @bind-Value=account.SelectedInvestment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
-                                        </td>
-                                        <td></td>
-                                    </tr>
-                                } else {
-                                    <tr>
-                                        <td style=text-align:right>
-                                            <label>Quantity: </label>
-                                        </td>
-                                        <td style=padding-left:8px>
-                                            <input type=text style=width:100px;text-align:right @bind-Value=account.SelectedInvestment.SharesPIN @bind-Value:event=onchange placeholder='shares'/></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td style=text-align:right>
-                                            <label>Price: </label>
-                                        </td>                                    
-                                        <td style=text-align:left;padding-left:8px>
-                                            $<input type=text style=width:80px;text-align:right @bind-Value=account.SelectedInvestment.Price @bind-Value:event=onchange placeholder='price'/>
-                                        </td>
-                                        <td>
-                                            <button @onclick=@refreshPrices title="fetch prices">fetch</button>
-                                        </td>
-                                    </tr>
-                                }
+                            if (account != null && selectedInvestment != null)
+                            {
+                                <span>@((MarkupString)FormatUtilities.Bold("Edit:", ShowMarkup))</span>
 
-                                <tr>
-                                    <td style=text-align:right>
-                                        <label>Balance: </label>
-                                    </td>
-                                    <td style=padding-left:8px colspan=1>
-                                        $<input type=text style=width:100px;text-align:right @bind-Value=account.SelectedInvestment.ValuePIN @bind-Value:event=onchange placeholder='value'/>
-                                    </td>
-                                    @if (account.SelectedInvestment.IsIBond)
-                                    {
-                                        <td>
-                                            <button @onclick='@(e=>account.SelectedInvestment.CalculateIBondValue())'>calculate</button>
-                                        </td>
-                                    }
-                                </tr>
-                                @if (!account.SelectedInvestment.IsIBond)
-                                {
+                                <br />
+                                <table>
                                     <tr>
                                         <td style=text-align:right>
-                                            <label>Cost Basis: </label>
+                                            <label>Ticker: </label>
                                         </td>
-                                        <td style=padding-left:8px colspan=3>
-                                            $<input type=text style=width:100px;text-align:right @bind-Value=account.SelectedInvestment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
+                                        <td style=padding-left:8px>
+                                            <input type=text style=width:70px @bind-Value=selectedInvestment.Ticker @bind-Value:event=oninput placeholder='ticker' />
                                         </td>
-                                        <td></td>
                                     </tr>
-                                }
-                                
-                                <tr>
-                                    <td style=text-align:right>
-                                        <label>Name:</label>
-                                    </td>
-                                    <td colspan=3><input type=text style=width:300px @bind-Value=account.SelectedInvestment.Name @bind-Value:event=oninput placeholder='name'/></td>
-                                </tr>
-                                <tr>
-                                    <td style=text-align:right>
-                                        <label>Asset Type:</label>
-                                    </td>
-                                    <td colspan=3>
-                                        <select @bind=account.SelectedInvestment.AssetType>
-                                            @foreach (AssetType assetType in (AssetType[]) Enum.GetValues(typeof(AssetType))) {
-                                                <option>@assetType</option>
-                                            }
-                                        </select>
-                                        <span style=color:red>&nbsp;*</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style=text-align:right>
-                                        <label style=padding-left:16px>Expense Ratio:</label>
-                                    </td>
-                                    <td colspan=3>
-                                        <input width= type=text style=width:100px;text-align:right @bind-Value=account.SelectedInvestment.ExpenseRatio @bind-Value:event=oninput placeholder='exp. ratio'/>%
-                                    </td>
-                                </tr>
-                                @if (account.SelectedInvestment.AssetType == global::AssetType.StocksAndBonds_ETF || account.SelectedInvestment.AssetType == global::AssetType.StocksAndBonds_Fund) {
+                                    @if (selectedInvestment.IsIBond)
+                                    {
+                                        <tr>
+                                            <td style=text-align:right>
+                                                <label>Purchase Date: </label>
+                                            </td>
+                                            <td style=padding-left:8px>
+                                                <input type=text style=width:100px @bind-Value=selectedInvestment.PurchaseDate @bind-Value:event=oninput placeholder='m/yyyy' />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style=text-align:right>
+                                                <label>Cost Basis: </label>
+                                            </td>
+                                            <td style=padding-left:8px colspan=3>
+                                                $<input type=text style=width:100px;text-align:right @bind-Value=selectedInvestment.CostBasis @bind-Value:event=oninput placeholder='cost basis' />
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td style=text-align:right>
+                                                <label>Quantity: </label>
+                                            </td>
+                                            <td style=padding-left:8px>
+                                                <input type=text style=width:100px;text-align:right @bind-Value=selectedInvestment.SharesPIN @bind-Value:event=onchange placeholder='shares' />
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td style=text-align:right>
+                                                <label>Price: </label>
+                                            </td>
+                                            <td style=text-align:left;padding-left:8px>
+                                                $<input type=text style=width:80px;text-align:right @bind-Value=selectedInvestment.Price @bind-Value:event=onchange placeholder='price' />
+                                            </td>
+                                            <td>
+                                                <button @onclick=@refreshPrices title="fetch prices">fetch</button>
+                                            </td>
+                                        </tr>
+                                    }
+
                                     <tr>
-                                        <td colspan=4 style=text-align:right>
-                                            <div style=margin-right:50px><label>US Stock:</label> <input type=text style=width:60px @bind-Value=account.SelectedInvestment.USStockPercent @bind-Value:event=oninput />%</div>
-                                            <div style=margin-right:50px><label>International Stock:</label> <input type=text style=width:60px @bind-Value=account.SelectedInvestment.InternationalStockPercent @bind-Value:event=oninput />%</div>
-                                            <div style=margin-right:50px><label>US Bonds:</label> <input type=text style=width:60px @bind-Value=account.SelectedInvestment.USBondsPercent @bind-Value:event=oninput />%</div>
-                                            <div style=margin-right:50px><label>International Bonds:</label> <input type=text style=width:60px @bind-Value=account.SelectedInvestment.InternationalBondsPercent @bind-Value:event=oninput />%</div>
-                                            <div style=margin-right:50px><label>Cash:</label> <input type=text style=width:60px @bind-Value=account.SelectedInvestment.CashPercent @bind-Value:event=oninput />%</div>
-                                            <div style=margin-right:50px><label><b>Total:</b></label>
-                                                <span style=text-align:left;width:60px;display:inline-block>
-                                                    @(account.SelectedInvestment.TotalPercent)%
-                                                    @if (investment.IsBalancedFund && !investment.DoesBalancedFundEqual100) { <span style=color:red>^</span> }
-                                                </span>
-                                            </div>
+                                        <td style=text-align:right>
+                                            <label>Balance: </label>
+                                        </td>
+                                        <td style=padding-left:8px colspan=1>
+                                            $<input type=text style=width:100px;text-align:right @bind-Value=selectedInvestment.ValuePIN @bind-Value:event=onchange placeholder='value' />
+                                        </td>
+                                        @if (selectedInvestment.IsIBond)
+                                        {
+                                            <td>
+                                                <button @onclick='@(e=>selectedInvestment.CalculateIBondValue())'>calculate</button>
+                                            </td>
+                                        }
+                                    </tr>
+                                    @if (!selectedInvestment.IsIBond)
+                                    {
+                                        <tr>
+                                            <td style=text-align:right>
+                                                <label>Cost Basis: </label>
+                                            </td>
+                                            <td style=padding-left:8px colspan=3>
+                                                $<input type=text style=width:100px;text-align:right @bind-Value=selectedInvestment.CostBasis @bind-Value:event=oninput placeholder='cost basis' />
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    }
+
+                                    <tr>
+                                        <td style=text-align:right>
+                                            <label>Name:</label>
+                                        </td>
+                                        <td colspan=3><input type=text style=width:300px @bind-Value=selectedInvestment.Name @bind-Value:event=oninput placeholder='name' /></td>
+                                    </tr>
+                                    <tr>
+                                        <td style=text-align:right>
+                                            <label>Asset Type:</label>
+                                        </td>
+                                        <td colspan=3>
+                                            <select @bind=selectedInvestment.AssetType>
+                                                @foreach (AssetType assetType in (AssetType[])Enum.GetValues(typeof(AssetType)))
+                                                {
+                                                    <option>@assetType</option>
+                                                }
+                                            </select>
+                                            <span style=color:red>&nbsp;*</span>
                                         </td>
                                     </tr>
-                                }
-                            </table>
-                            <button @onclick='@(e=>commit(e,account,account.SelectedInvestment))'>Save</button><br/>
+                                    <tr>
+                                        <td style=text-align:right>
+                                            <label style=padding-left:16px>Expense Ratio:</label>
+                                        </td>
+                                        <td colspan=3>
+                                            <input width= type=text style=width:100px;text-align:right @bind-Value=selectedInvestment.ExpenseRatio @bind-Value:event=oninput placeholder='exp. ratio' />%
+                                        </td>
+                                    </tr>
+                                    @if (selectedInvestment.AssetType == global::AssetType.StocksAndBonds_ETF || selectedInvestment.AssetType == global::AssetType.StocksAndBonds_Fund)
+                                    {
+                                        <tr>
+                                            <td colspan=4 style=text-align:right>
+                                                <div style=margin-right:50px><label>US Stock:</label> <input type=text style=width:60px @bind-Value=selectedInvestment.USStockPercent @bind-Value:event=oninput />%</div>
+                                                <div style=margin-right:50px><label>International Stock:</label> <input type=text style=width:60px @bind-Value=selectedInvestment.InternationalStockPercent @bind-Value:event=oninput />%</div>
+                                                <div style=margin-right:50px><label>US Bonds:</label> <input type=text style=width:60px @bind-Value=selectedInvestment.USBondsPercent @bind-Value:event=oninput />%</div>
+                                                <div style=margin-right:50px><label>International Bonds:</label> <input type=text style=width:60px @bind-Value=selectedInvestment.InternationalBondsPercent @bind-Value:event=oninput />%</div>
+                                                <div style=margin-right:50px><label>Cash:</label> <input type=text style=width:60px @bind-Value=selectedInvestment.CashPercent @bind-Value:event=oninput />%</div>
+                                                <div style=margin-right:50px>
+                                                    <label><b>Total:</b></label>
+                                                    <span style=text-align:left;width:60px;display:inline-block>
+                                                        @(selectedInvestment.TotalPercent)%
+                                                        @if (investment.IsBalancedFund && !investment.DoesBalancedFundEqual100)
+                                                        {
+                                                            <span style=color:red>^</span>
+                                                        }
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                                <button @onclick='@(e=>commit(e,account,selectedInvestment))'>Save</button>
+
+                                <br />
+                            }
                             break;
                     }
                 }
             }
         }
 
-        
+
         @if (accountsMatchingFilter == 0 && Query == "ticker:IBOND")
         {
-            <br/>
-            <span>Track a Treasury Direct account:&nbsp;</span><button @onclick=addTreasuryDirectAccount>➕ account</button>
-            <br/><br/>
+            <br />
+            <span>Track a Treasury Direct account:&nbsp;</span>
+
+            <button @onclick=addTreasuryDirectAccount>➕ account</button>
+            <br />
+
+            <br />
         }
     </div>
-} else if (appData?.FamilyData == null) {
+}
+else if (appData?.FamilyData == null)
+{
     Navigation.NavigateTo("/portfolio-tracker");
 }
 
 @code {
-    async void editAccountInfo(MouseEventArgs e, Account account) {
+    async void editAccountInfo(MouseEventArgs e, Account account)
+    {
         account.Edit = !account.Edit;
         if (!account.Edit)
         {
@@ -634,17 +799,17 @@
             await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         }
     }
-    
+
     void buy(MouseEventArgs e, Account account, Investment selectedInvestment)
     {
         selectedInvestment.SelectedTransaction = new Transaction() { Type = "Buy", IsDraft = true, OtherTicker = account.SettlementInvestment?.Ticker };
     }
-    
+
     void sell(MouseEventArgs e, Account account, Investment selectedInvestment)
     {
         selectedInvestment.SelectedTransaction = new Transaction() { Type = "Sale", IsDraft = true, OtherTicker = account.SettlementInvestment?.Ticker };
     }
-    
+
     void dividend(MouseEventArgs e, Account account, Investment selectedInvestment)
     {
         selectedInvestment.SelectedTransaction = new Transaction() { Type = "Dividend", IsDraft = true, OtherTicker = account.SettlementInvestment?.Ticker };
@@ -663,49 +828,56 @@
     void plan(MouseEventArgs e, Account account, Investment selectedInvestment)
     {
         var selectedTransaction = selectedInvestment.SelectedTransaction;
-        if (selectedTransaction.IsDraft)
+        if (selectedTransaction != null)
         {
-            selectedInvestment.Transactions.Add(selectedInvestment.SelectedTransaction);
-            if (selectedInvestment.SelectedTransaction.OtherTicker != null)
+            if (selectedTransaction.IsDraft)
             {
-                account.FindInvestment(selectedInvestment.SelectedTransaction.OtherTicker).Transactions.Add(selectedInvestment.SelectedTransaction);
+                selectedInvestment.Transactions.Add(selectedTransaction);
+                if (selectedTransaction.OtherTicker != null)
+                {
+                    var foundInvestment = account.FindInvestment(selectedTransaction.OtherTicker);
+                    if (foundInvestment != null)
+                    {
+                        foundInvestment.Transactions.Add(selectedTransaction);
+                    }
+                }
+
+                selectedTransaction.IsDraft = false;
             }
 
-            selectedInvestment.SelectedTransaction.IsDraft = false;        
+            switch (selectedTransaction.Type)
+            {
+                case "Buy":
+                    selectedTransaction.HostTicker = selectedInvestment.Ticker;
+                    if (account.SettlementInvestment != null)
+                    {
+                        selectedTransaction.OtherTicker = account.SettlementInvestment.Ticker;
+                    }
+
+                    break;
+                case "Sale":
+                    selectedTransaction.HostTicker = selectedInvestment.Ticker;
+                    if (account.SettlementInvestment != null)
+                    {
+                        selectedTransaction.OtherTicker = account.SettlementInvestment.Ticker;
+                    }
+
+                    break;
+                case "Dividend":
+                    selectedTransaction.HostTicker = selectedInvestment.Ticker;
+                    break;
+                case "Reinvest Dividend":
+                    selectedTransaction.HostTicker = selectedInvestment.Ticker;
+                    if (account.SettlementInvestment != null)
+                    {
+                        selectedTransaction.OtherTicker = account.SettlementInvestment.Ticker;
+                    }
+
+                    break;
+            }
+
+            selectedInvestment.SelectedTransaction = null;
         }
-
-        switch (selectedTransaction.Type) 
-        {
-            case "Buy":
-                selectedTransaction.HostTicker = selectedInvestment.Ticker;
-                if (account.SettlementInvestment != null)
-                {
-                    selectedTransaction.OtherTicker = account.SettlementInvestment.Ticker;
-                }
-
-                break;
-            case "Sale":
-                selectedTransaction.HostTicker = selectedInvestment.Ticker;
-                if (account.SettlementInvestment != null)
-                {
-                    selectedTransaction.OtherTicker = account.SettlementInvestment.Ticker;
-                }
-
-                break;
-            case "Dividend":
-                selectedTransaction.HostTicker = selectedInvestment.Ticker;
-                break;
-            case "Reinvest Dividend":
-                selectedTransaction.HostTicker = selectedInvestment.Ticker;
-                if (account.SettlementInvestment != null)
-                {
-                    selectedTransaction.OtherTicker = account.SettlementInvestment.Ticker;
-                }
-                
-                break;
-        }
-
-        selectedInvestment.SelectedTransaction = null;
     }
 
     async void commit(MouseEventArgs e, Account account, Investment selectedInvestment)
@@ -716,7 +888,7 @@
             await selectedInvestment.CalculateIBondValue();
         }
 
-        await appData.FamilyData.UpdatePercentagesAsync();
+        await appData.FamilyData!.UpdatePercentagesAsync();
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
     }
 
@@ -728,14 +900,22 @@
     void deleteTransaction(MouseEventArgs e, Account account, Investment selectedInvestment, Transaction selectedTransaction)
     {
         selectedInvestment.Transactions.Remove(selectedTransaction);
-        if (selectedTransaction.OtherTicker != selectedInvestment.Ticker && selectedTransaction.OtherTicker != null) 
+        if (selectedTransaction.OtherTicker != selectedInvestment.Ticker && selectedTransaction.OtherTicker != null)
         {
-            account.FindInvestment(selectedTransaction.OtherTicker).Transactions.Remove(selectedTransaction);
+            var foundInvestment = account.FindInvestment(selectedTransaction.OtherTicker);
+            if (foundInvestment != null)
+            {
+                foundInvestment.Transactions.Remove(selectedTransaction);
+            }
         }
-        
-        if (selectedTransaction.HostTicker != selectedInvestment.Ticker)
+
+        if (selectedTransaction.HostTicker != selectedInvestment.Ticker && selectedTransaction.HostTicker != null)
         {
-            account.FindInvestment(selectedTransaction.HostTicker).Transactions.Remove(selectedTransaction);
+            var foundInvestment = account.FindInvestment(selectedTransaction.HostTicker);
+            if (foundInvestment != null)
+            {
+                foundInvestment.Transactions.Remove(selectedTransaction);
+            }
         }
 
         selectedInvestment.SelectedTransaction = null;
@@ -743,11 +923,12 @@
 
     private async void deleteSelectedInvestment(MouseEventArgs e, Investment selectedInvestment)
     {
-        if (appData.FamilyData is not null) {
+        if (appData.FamilyData is not null)
+        {
             var accounts = appData.FamilyData.Accounts;
-            foreach (var account in accounts) 
+            foreach (var account in accounts)
             {
-                if (account.View) 
+                if (account.View)
                 {
                     account.Investments.Remove(selectedInvestment);
                     account.SelectedInvestment = null;
@@ -760,24 +941,26 @@
 
     void chooseTransaction(MouseEventArgs e, int accIndex, int invIndex, int transIndex)
     {
-        if (appData.FamilyData is not null) {
+        if (appData.FamilyData is not null)
+        {
             var accounts = appData.FamilyData.Accounts;
             var accountIndex = 0;
             foreach (var account in accounts)
             {
                 var investmentIndex = 0;
-                foreach (var investment in account.Investments) {
+                foreach (var investment in account.Investments)
+                {
                     if (invIndex == investmentIndex && accIndex == accountIndex)
                     {
                         investment.Selected = !investment.Selected;
                         investment.SelectedTransaction = null;
-                        if (account.SelectedInvestment != null) 
+                        if (account.SelectedInvestment != null)
                         {
                             account.SelectedInvestment.Selected = false;
                             account.SelectedInvestment = null;
                         }
 
-                        if (investment.Selected) 
+                        if (investment.Selected)
                         {
                             account.SelectedInvestment = investment;
                         }
@@ -807,24 +990,26 @@
 
     void chooseInvestment(MouseEventArgs e, int accIndex, int index)
     {
-        if (appData.FamilyData is not null) {
+        if (appData.FamilyData is not null)
+        {
             var accounts = appData.FamilyData.Accounts;
             var accountIndex = 0;
             foreach (var account in accounts)
             {
                 var investmentIndex = 0;
-                foreach (var investment in account.Investments) {
+                foreach (var investment in account.Investments)
+                {
                     if (index == investmentIndex && accIndex == accountIndex)
                     {
                         investment.Selected = !investment.Selected;
                         investment.SelectedTransaction = null;
-                        if (account.SelectedInvestment != null) 
+                        if (account.SelectedInvestment != null)
                         {
                             account.SelectedInvestment.Selected = false;
                             account.SelectedInvestment = null;
                         }
 
-                        if (investment.Selected) 
+                        if (investment.Selected)
                         {
                             account.SelectedInvestment = investment;
                         }
@@ -840,10 +1025,8 @@
 
     string refreshButtonText = "🔃 Prices";
     bool refreshButtonDisabled = false;
-    bool assetAllocationEditing = false;
-    bool taxFilingStatusEditing = false;
-    int? accountIndexViewing = null;
-    public enum Mode {
+    public enum Mode
+    {
         normal = 0,
         href,
         text,
@@ -851,14 +1034,18 @@
     public bool pastTotal = false;
     public int runningTotal = 0;
 
-    public string checkTotal(int? itemTotal) {
-        if (appData.FamilyData is not null) {
+    public string checkTotal(int? itemTotal)
+    {
+        if (appData.FamilyData is not null)
+        {
             runningTotal += itemTotal ?? 0;
-            if (!pastTotal) {
+            if (!pastTotal)
+            {
                 pastTotal = appData.FamilyData.PlannedSavings <= runningTotal;
 
-                if (pastTotal) {
-                    return "<div>-------<br/><div>Planned savings " + (appData.FamilyData.PlannedSavings==runningTotal?"met":"exceeded") + " after " + FormatUtilities.formatMoney(itemTotal+(appData.FamilyData.PlannedSavings-runningTotal)) + " towards previous step</div>-------<br/></div>";
+                if (pastTotal)
+                {
+                    return "<div>-------<br/><div>Planned savings " + (appData.FamilyData.PlannedSavings == runningTotal ? "met" : "exceeded") + " after " + FormatUtilities.formatMoney(itemTotal + (appData.FamilyData.PlannedSavings - runningTotal)) + " towards previous step</div>-------<br/></div>";
                 }
             }
         }
@@ -873,7 +1060,8 @@
 
     public string getPronoun(Person person, bool inParanthesis)
     {
-        if (person?.FamilyData != null && person.FamilyData.PersonCount > 1 && person.Identifier != null && person.Identifier != "None") {
+        if (person?.FamilyData != null && person.FamilyData.PersonCount > 1 && person.Identifier != null && person.Identifier != "None")
+        {
             if (inParanthesis) { return "(" + person.Identifier + ")"; }
             else { return "\"" + person.Identifier + "\""; }
         }
@@ -895,6 +1083,7 @@
     private const string folderName = pagePath + "/";
     private const string pageHeading = "Portfolio Editor";
 
+#pragma warning disable 1998
     protected override async Task OnInitializedAsync()
     {
         loaded = true;
@@ -902,7 +1091,8 @@
         base.OnInitialized();
     }
 
-    private void ShowImport() {
+    private void ShowImport()
+    {
         @* showImport = !showImport;
         if (!showImport) {
             showError = false;
@@ -910,7 +1100,8 @@
         Navigation.NavigateTo("/import");
     }
 
-    private void showOpenBH() {
+    private void showOpenBH()
+    {
         @* showImport = !showImport;
         if (!showImport) {
             showError = false;
@@ -920,7 +1111,8 @@
 
     private void addIBOND(MouseEventArgs e, int accountIndex)
     {
-        if (appData.FamilyData is not null) {
+        if (appData.FamilyData is not null)
+        {
             var account = appData.FamilyData.Accounts[accountIndex];
             if (account.SelectedInvestment != null)
             {
@@ -934,8 +1126,10 @@
         }
     }
 
-    private void addInvestment2(MouseEventArgs e, int accountIndex) {
-        if (appData.FamilyData is not null) {
+    private void addInvestment2(MouseEventArgs e, int accountIndex)
+    {
+        if (appData.FamilyData is not null)
+        {
             var account = appData.FamilyData.Accounts[accountIndex];
             if (account.SelectedInvestment != null)
             {
@@ -951,35 +1145,37 @@
 
     void addAccountInline()
     {
-        if (appData.FamilyData is not null) {
+        if (appData.FamilyData is not null)
+        {
             var newAccount = new Account(appData.FamilyData.PIN);
             newAccount.View = true;
             newAccount.Edit = true;
-            appData.FamilyData?.Accounts.Insert(0,newAccount);
+            appData.FamilyData?.Accounts.Insert(0, newAccount);
         }
     }
 
     void addTreasuryDirectAccount()
     {
-        var newAccount = new Account(appData.FamilyData.PIN) { Custodian = "Treasury Direct", AccountType = "Taxable" };
+        var newAccount = new Account(appData.FamilyData!.PIN) { Custodian = "Treasury Direct", AccountType = "Taxable" };
         newAccount.View = true;
-        appData.FamilyData?.Accounts.Insert(0,newAccount);
+        appData.FamilyData?.Accounts.Insert(0, newAccount);
         newAccount.Investments.Add(new Investment() { Ticker = "IBOND", AssetType = AssetType.IBond, Name = "I Bonds", ExpenseRatio = 0.0 });
     }
 
     private async void deleteAccount(MouseEventArgs e, int accountIndex)
     {
-        if (appData.FamilyData is not null) {
+        if (appData.FamilyData is not null)
+        {
             var accountToDelete = appData.FamilyData.Accounts[accountIndex];
             appData.FamilyData.Accounts.Remove(accountToDelete);
-            accountIndexViewing = null;
             await appData.FamilyData.UpdatePercentagesAsync();
             await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         }
     }
 
-    private async Task LoadPortfolioForTopic(string topicStr) {
-        var options = new JsonSerializerOptions() 
+    private async Task LoadPortfolioForTopic(string topicStr)
+    {
+        var options = new JsonSerializerOptions()
             {
                 Converters =
                     {
@@ -994,34 +1190,39 @@
     private async Task CopyTextToClipboard()
     {
         var text = await JS.InvokeAsync<string>("getTableInnerText");
-        text = text.Replace("\n✏️\t","");
-        text = text.Replace("✏️\t","");
+        text = text.Replace("\n✏️\t", "");
+        text = text.Replace("✏️\t", "");
         text = text.Replace("Show Portfolio Analysis\n", "");
         await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
     }
 
-    private async Task refreshPrices() {
+    private async Task refreshPrices()
+    {
         refreshButtonText = "Updating...";
         refreshButtonDisabled = true;
-        await appData.FamilyData.RefreshPrices(Http);
-        await appData.FamilyData.UpdatePercentagesAsync();
+        await appData.FamilyData!.RefreshPrices(Http);
+        await appData.FamilyData!.UpdatePercentagesAsync();
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         refreshButtonText = "🔃 Prices";
         refreshButtonDisabled = false;
     }
 
     private int? PINEntry { get; set; }
-    private void setPIN() {
-        if (appData.FamilyData is not null) {
-            if (PINEntry != null) {
+    private void setPIN()
+    {
+        if (appData.FamilyData is not null)
+        {
+            if (PINEntry != null)
+            {
                 appData.FamilyData.PIN = PINEntry;
             }
         }
     }
 
-    private (double? change, double? percentChange) portfolioChange() 
+    private (double? change, double? percentChange) portfolioChange()
     {
-        if (appData.FamilyData is not null) {
+        if (appData.FamilyData is not null)
+        {
             double? change = 0.0;
             double? total = 0.0;
             foreach (var investment in appData.FamilyData.GroupedInvestments)
@@ -1034,9 +1235,9 @@
             }
 
             var startOfDayTotal = total - change;
-            return change == 0.0 ? (null, null) : (change, change/startOfDayTotal * 100.0);
+            return change == 0.0 ? (null, null) : (change, change / startOfDayTotal * 100.0);
         }
-        else 
+        else
         {
             return (null, null);
         }
@@ -1056,9 +1257,12 @@
 
     async void LocationChanged(object? sender, LocationChangedEventArgs e)
     {
-        if (appData != null && appData.FamilyData != null) {
-            foreach (var account in appData.FamilyData.Accounts) {
-                if (account.View) {
+        if (appData != null && appData.FamilyData != null)
+        {
+            foreach (var account in appData.FamilyData.Accounts)
+            {
+                if (account.View)
+                {
                     account.View = false;
                     account.SelectedInvestment = null;
                     foreach (var investment in account.Investments)

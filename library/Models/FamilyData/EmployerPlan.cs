@@ -8,8 +8,8 @@ public class EmployerPlan : INotifyPropertyChanged {
     public Person? person { get; set; }
 
     private IRS.Employer401k Employer401k {
-        get { return this.person!.FamilyData.AppData.IRSData.RetirementData.Employer401k; }
-        set { this.person!.FamilyData.AppData.IRSData.RetirementData.Employer401k = value; }
+        get { return person!.FamilyData.AppData.IRSData!.RetirementData.Employer401k!; }
+        set { person!.FamilyData.AppData.IRSData!.RetirementData!.Employer401k = value; }
     }
 
     public TriState Eligible {
@@ -146,7 +146,7 @@ public class EmployerPlan : INotifyPropertyChanged {
             if (Eligible == TriState.True)
             {
                 return Employer401k.ContributionLimit
-                    + (person.FiftyOrOver ? Employer401k.CatchUpContributionLimit : 0);
+                    + (person!.FiftyOrOver ? Employer401k.CatchUpContributionLimit : 0);
             }
             else
             {

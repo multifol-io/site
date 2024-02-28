@@ -4,17 +4,17 @@ public class IRA
 {
     // back pointer
     [JsonIgnore]
-    public Person person { get; set; }
+    public Person? person { get; set; }
 
     private IRS.IRA? iraVariables
     {
         get
         {
-            return person.FamilyData.AppData.IRSData.RetirementData.IRA;
+            return person!.FamilyData.AppData.IRSData!.RetirementData.IRA;
         }
         set
         {
-            person.FamilyData.AppData.IRSData.RetirementData.IRA = value;
+            person!.FamilyData.AppData.IRSData!.RetirementData.IRA = value;
         }
     }
 
@@ -24,7 +24,7 @@ public class IRA
     {
         get
         {
-            if (person.FamilyData.PersonCount > person.PersonIndex && person.FamilyData.AdjustedGrossIncome != null)
+            if (person!.FamilyData.PersonCount > person.PersonIndex && person.FamilyData.AdjustedGrossIncome != null)
             {
                 return iraVariables?.ContributionLimit
                     + (person.FiftyOrOver ? iraVariables?.CatchUpContributionLimit : 0);
@@ -134,7 +134,7 @@ public class IRA
     {
         get
         {
-            return CalculateDeduction(person.FamilyData.AdjustedGrossIncome, person.FamilyData.TaxFilingStatus, person);
+            return CalculateDeduction(person!.FamilyData.AdjustedGrossIncome, person.FamilyData.TaxFilingStatus, person);
         }
     }
     public int? AmountToSave

@@ -8,7 +8,7 @@ public static class ProfileUtilities
     public static string Value { get; set; } = "";
     public static string storedJson { get; set; } = "";
 
-    public static LocalStorageAccessor LocalStorageAccessor { get; set; }
+    public static LocalStorageAccessor? LocalStorageAccessor { get; set; }
 
     public static async Task Save(string? key, FamilyData? familyData)
     {
@@ -33,14 +33,14 @@ public static class ProfileUtilities
     public static async Task Save(string? key, string familyDataJson)
     {
         if (key is not null) {
-            await LocalStorageAccessor.SetValueAsync(key, familyDataJson);
+            await LocalStorageAccessor!.SetValueAsync(key, familyDataJson);
         }
     }
 
 
     public static async Task<string> GetProfileData(string profileName)
     {
-        var profileData = await LocalStorageAccessor.GetValueAsync<string>(profileName);
+        var profileData = await LocalStorageAccessor!.GetValueAsync<string>(profileName);
         return profileData;
     }
 
@@ -56,7 +56,7 @@ public static class ProfileUtilities
             throw new ArgumentNullException("appData.CurrentProfileName");
         }
         
-        storedJson = await LocalStorageAccessor.GetValueAsync<string>(appData.CurrentProfileName);
+        storedJson = await LocalStorageAccessor!.GetValueAsync<string>(appData.CurrentProfileName);
         var options = new JsonSerializerOptions() 
         {
             Converters =
@@ -92,13 +92,13 @@ public static class ProfileUtilities
 
     public static async Task ClearAllAsync()
     {
-        await LocalStorageAccessor.Clear();
+        await LocalStorageAccessor!.Clear();
     }
 
     public static async Task<List<String>> GetProfileNames()
     {
         var keys = new List<string>();
-        var keysJsonElement = await LocalStorageAccessor.GetKeys();
+        var keysJsonElement = await LocalStorageAccessor!.GetKeys();
         foreach (var el in keysJsonElement.EnumerateArray())
         {
             string? value = el.GetString();

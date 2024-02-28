@@ -812,7 +812,16 @@ public class Importer {
     }
     
     private static Cell GetCell(WorksheetPart wsPart, string cellReference) {
-        return wsPart.Worksheet.Descendants<Cell>().Where(c => c.CellReference.Value == cellReference)?.FirstOrDefault();
+        var worksheet = wsPart.Worksheet;
+        var cell = worksheet.Descendants<Cell>().Where(c => c.CellReference?.Value == cellReference).FirstOrDefault();
+        if (cell != null)
+        {
+            return cell;
+        }
+        else
+        {
+            throw new Exception("unable to find Cell in worksheet");
+        }
     }
 
     // TODO: testing ETrade scenarios, i don't think this routine works well...a string split with commas, and no spaces, returns a list with 1 item.

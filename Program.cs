@@ -17,12 +17,10 @@ builder.Services.AddScoped<LocalStorageAccessor>();
 var lsa = builder.Services.BuildServiceProvider().GetService<LocalStorageAccessor>();
 string? CurrentProfileName = null;
 string? EODHistoricalDataApiKey = null;
-try {
+if (lsa != null)
+{
     CurrentProfileName = await lsa.GetValueAsync<string>("CurrentProfileName");
     EODHistoricalDataApiKey = await lsa.GetValueAsync<string>("EODHistoricalDataApiKey");
-}
-catch (Exception ex) {
-    Console.WriteLine(ex.GetType().Name + " " +ex.Message + " " + ex.StackTrace);
 }
 
 IRSData? irsData = await IRSData.Create(httpClient);

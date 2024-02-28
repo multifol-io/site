@@ -65,7 +65,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
             pastTotal = false;
             int? runningTotal = 0;
             int itemTotal = 0;
-            var required = (appData.FamilyData.TaxFilingStatus == TaxFilingStatus.ChoiceNeeded) ? "visibility:visible;color:red" : "visibility:hidden";
+            var required = (appData.FamilyData!.TaxFilingStatus == TaxFilingStatus.ChoiceNeeded) ? "visibility:visible;color:red" : "visibility:hidden";
 
             <div style=float:left>
                 <h4 style="max-width:450px">

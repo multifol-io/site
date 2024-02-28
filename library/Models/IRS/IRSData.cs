@@ -35,7 +35,7 @@ namespace IRS {
         public int YearIndex 
         {
             get {
-                return AppData.FamilyData.Year - 2023;
+                return AppData!.FamilyData!.Year - 2023;
             }
         }
 

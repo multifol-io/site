@@ -3,11 +3,11 @@ using System.Text.Json.Serialization;
 public class HealthSavingsAccount {
     // back pointer
     [JsonIgnore]
-    public Person person { get; set; }
+    public Person? person { get; set; }
     
     public IRS.HSA? HSAVariables {
         get {
-            if (person?.FamilyData?.AppData.IRSData != null) {
+            if (person!.FamilyData?.AppData.IRSData != null) {
                 return person.FamilyData.AppData.IRSData.RetirementData.HSA;
             }
 
@@ -21,7 +21,7 @@ public class HealthSavingsAccount {
             switch (EmployerOffersHSA) {
                 case TriState.ChoiceNeeded:
                 case TriState.False:
-                    if (person.EmployerPlan.AnnualSalary != 0)
+                    if (person!.EmployerPlan.AnnualSalary != 0)
                         return true;
                     else
                         return false;
@@ -35,15 +35,15 @@ public class HealthSavingsAccount {
     public bool EligibleForHSA {
         get {
             return (
-                (person?.EmployerBenefits != null && person.EmployerBenefits.HSA.HighDeductibleHealthPlanAvailable == TriState.True)
-                 || (person?.HealthSavingsAccount != null && person.HealthSavingsAccount.HasExternalHDHP)
+                (person!.EmployerBenefits != null && person.EmployerBenefits.HSA.HighDeductibleHealthPlanAvailable == TriState.True)
+                 || (person.HealthSavingsAccount != null && person.HealthSavingsAccount.HasExternalHDHP)
                 );
         }
     }
 
     public bool EligibleForHSACatchUpOnly {
         get {
-            return (!EligibleForHSA && person != null && person.FiftyFiveOrOver && person?.OtherPerson != null && person.OtherPerson.HealthSavingsAccount.EligibleForHSA);
+            return (!EligibleForHSA && person!.FiftyFiveOrOver && person.OtherPerson != null && person.OtherPerson.HealthSavingsAccount.EligibleForHSA);
         }
     }
 
@@ -74,10 +74,10 @@ public class HealthSavingsAccount {
                 switch (Family)
                 {
                     case EmployeeFamily.Family:
-                        contributionLimit = HSAVariables?.ContributionLimit?.Family + (person.FiftyFiveOrOver ? HSAVariables?.ContributionLimit?.CatchUp : 0);
+                        contributionLimit = HSAVariables?.ContributionLimit?.Family + (person!.FiftyFiveOrOver ? HSAVariables?.ContributionLimit?.CatchUp : 0);
                         break;
                     case EmployeeFamily.Individual:
-                        contributionLimit = HSAVariables?.ContributionLimit?.SelfOnly + (person.FiftyFiveOrOver ? HSAVariables?.ContributionLimit?.CatchUp : 0);
+                        contributionLimit = HSAVariables?.ContributionLimit?.SelfOnly + (person!.FiftyFiveOrOver ? HSAVariables?.ContributionLimit?.CatchUp : 0);
                         break;
                     case EmployeeFamily.CatchUp:
                         contributionLimit = HSAVariables?.ContributionLimit?.CatchUp;

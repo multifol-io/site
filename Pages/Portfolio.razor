@@ -868,12 +868,12 @@
 @code {
     void updateFund(MouseEventArgs e, List<Investment> investments, DateTime lastUpdated)
     {
-        appData.FamilyData.UpdateInvestmentsPrice(investments, investments[0].Price, null, null, lastUpdated);
+        appData.FamilyData!.UpdateInvestmentsPrice(investments, investments[0].Price, null, null, lastUpdated);
     }
 
     void updateNonFund(MouseEventArgs e, List<Investment> investments, DateTime lastUpdated)
     {
-        appData.FamilyData.UpdateInvestmentsPrice(investments, investments[0].Price, null, null, lastUpdated);
+        appData.FamilyData!.UpdateInvestmentsPrice(investments, investments[0].Price, null, null, lastUpdated);
     }
 
     void selectInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
@@ -1080,7 +1080,7 @@
 
     void addAccountThenEdit()
     {
-        var newAccount = new Account(appData.FamilyData.PIN) { };
+        var newAccount = new Account(appData.FamilyData!.PIN) { };
         newAccount.Edit = true;
         newAccount.View = true;
         appData.FamilyData?.Accounts.Insert(0, newAccount);
@@ -1103,12 +1103,12 @@
     private async Task refreshPrices() {
         refreshButtonText = "Updating...";
         refreshButtonDisabled = true;
-        await appData.FamilyData.RefreshPrices(Http);
+        await appData.FamilyData!.RefreshPrices(Http);
         await appData.FamilyData.UpdatePercentagesAsync();
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         refreshButtonDisabled = false;
         refreshButtonText = "🔃 Prices";
-        if (appData.FamilyData.TickersToUpdate.Count > 0)
+        if (appData?.FamilyData?.TickersToUpdate?.Count > 0)
         {
             Navigation.NavigateTo("/portfolio-tracker/refresh-prices");
         }

@@ -3,23 +3,23 @@ using System.Text.Json.Serialization;
 public class RothIRA {
     // back pointer
     [JsonIgnore]
-    public Person person { get; set; }
+    public Person? person { get; set; }
 
     private IRS.RothIRA rothIraVariables {
-        get { return this.person.FamilyData.AppData.IRSData.RetirementData.RothIRA; }
+        get { return person!.FamilyData.AppData.IRSData!.RetirementData.RothIRA!; }
     }
 
     public int MaximumContributionByAge { 
         get
         {
             return rothIraVariables.ContributionLimit
-                + (person.FiftyOrOver ? rothIraVariables.CatchUpContributionLimit : 0);
+                + (person!.FiftyOrOver ? rothIraVariables.CatchUpContributionLimit : 0);
         }
     }
 
     public int? ContributionAllowed {
         get { 
-            if (person.FamilyData.PersonCount > person.PersonIndex && person.FamilyData.AdjustedGrossIncome != null) {
+            if (person!.FamilyData.PersonCount > person.PersonIndex && person.FamilyData.AdjustedGrossIncome != null) {
                 return CalculateAllowedContribution(person.FamilyData.AdjustedGrossIncome, person.FamilyData.TaxFilingStatus, person);
             } else {
                 return null;
@@ -40,7 +40,7 @@ public class RothIRA {
                                     rothIraVariables.ContributionPhaseOutRange.MarriedFilingJointly.End,
                                     person.FamilyData.AdjustedGrossIncome, MaximumContributionByAge);
                 case TaxFilingStatus.MarriedFilingSeperately: 
-                    if (this.person.FamilyData.TaxFilingStatusLivingSeperately) {
+                    if (person.FamilyData.TaxFilingStatusLivingSeperately) {
                         return ApplyRange(rothIraVariables.ContributionPhaseOutRange.Single!.Start,
                                     rothIraVariables.ContributionPhaseOutRange.Single.End,
                                     person.FamilyData.AdjustedGrossIncome, MaximumContributionByAge);

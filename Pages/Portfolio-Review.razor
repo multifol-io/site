@@ -11,7 +11,7 @@
 @using System.Text.Json.Serialization
 
 <PageTitle>
-Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tools
+    Portfolio Review@(stepPath == null ? "" : ": " + stepPath.Replace('-', ' ')) - bogle.tools
 </PageTitle>
 
 <style>
@@ -19,20 +19,22 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
         color: white;
         padding: 10px 10px;
         text-decoration: none;
-        display:inline-block;
-        text-align:center;
-        width:60px;
+        display: inline-block;
+        text-align: center;
+        width: 60px;
         border-radius: 10px;
     }
+
     .dollar {
         width: 100px;
     }
+
     .percent {
         width: 50px;
     }
+
     .article a[href^="http"]::after,
-    .article a[href^="https://"]::after
-    {
+    .article a[href^="https://"]::after {
         content: "";
         width: 11px;
         height: 11px;
@@ -44,676 +46,954 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
         display: inline-block;
     }
 </style>
-    @if (new Uri(Navigation.Uri).PathAndQuery == "/portfolio-review/reload")
-    {
-        // reload is a workaround where the correct data seemed to be deleted, but i needed to navigate away and then back to retirement-assets
-        Navigation.NavigateTo("/portfolio-review/retirement-assets");
-    }
-    @if (steps == null || appData is null)
-    {
-        <p>
-            @if(appData?.CurrentProfileName==null){<em>No active <a href=/profiles>profile</a>.</em>} 
-            else {<em>Loading...</em>}
-        </p>
-        <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
-            @if(appData?.CurrentProfileName==null){<span>choose a</span>}else {<span>@appData?.CurrentProfileName</span>}</a> profile
-        </div>    
-    } else {
-        if (appData is not null && appData?.FamilyData is not null) {
-            if (stepPath == null) {
-                var prevStep = steps[steps.Length - 1];
-                var nextStep = steps[0];
-                string prevPage = folderName + prevStep?.step;
-                string nextPage = folderName + nextStep?.step;
-                
-                <div style=float:left>
-                    <h4 style="max-width:450px">
-                        @pageHeading <h6 style=display:inline>for @appData.CurrentProfileName profile</h6>
-                    </h4>
-                </div>
-                <div style=clear:left;margin-left:1.5in><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault >(manage profiles)</a></div>
-
-                <p style=clear:left>
-                    Bogleheads.org forum enables you to <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Ask Portfolio Questions</a> ↗️.
-                    This tool helps collect background info, on top of your <a href=/portfolio-tracker>Portfolio Tracker</a> and <a href=/savings-planner>Savings Planner</a>, and helps format your review.
-                </p>
-                <p style=font-size:smaller>When ready to post to the forum, ensure that the inline formatting markup is shown. Rich text formatting like bold and underline help readability of your post!<br/>
-                    <InputCheckbox id=showMarkup style=margin-left:20px @bind-Value=ShowMarkup /> <label for=showMarkup>Show inline formatting markup: [b]bold text[/b]</label> <button style=margin-left:20px @onclick=CopyTextToClipboard>Copy content to clipboard</button>
-                </p>
-
-                <hr/>
-                <div>
-                    <p ><b>Press edit (✏️) to complete each step:</b></p>
-
-                    <table id=_reviewTable>
-                        @foreach (var step in steps) {
-                            var href = folderName + @step.step;
-                            <tr>
-                                <td style=vertical-align:top>
-                                    <span>
-                                        <a href="@href" style="background:blue" class="m-1 btn" >✏️</a>
-                                    </span>
-                                </td>
-                                @switch (step.step) {
-                                    case "age": 
-                                        <td>
-                                            @((MarkupString)FormatUtilities.Bold("Age:", ShowMarkup))
-                                            @if(appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].Age != null) {
-                                                <span>&nbsp;@appData.FamilyData.People[0].Age @getPronoun(appData.FamilyData.People[0])</span>
-                                            }
-                                            @if(appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].Age != null) {
-                                                <span>&nbsp;and @appData.FamilyData.People[1].Age @getPronoun(appData.FamilyData.People[1])</span>
-                                            }
-                                            <br/><br/>
-                                        </td>
-                                    break;
-                                    case "emergency-fund":
-                                    <td style=text-align:left>
-                                            @((MarkupString)FormatUtilities.Bold("Emergency funds:", ShowMarkup))
-                                            <span>@appData.FamilyData.EmergencyFund.Answer</span>
-                                            <br/><br/>
-                                    </td>
-                                    break;
-                                    case "debts":
-                                        <td style=text-align:left>
-                                            @((MarkupString)FormatUtilities.Bold("Debt:", ShowMarkup))
-                                            @if (appData.FamilyData.Debts.Count == 0 && appData.FamilyData.DebtsComplete) { <span>&nbsp;no debts</span> } 
-                                            else if (appData.FamilyData.Debts.Count >= 1) { 
-                                                <br/>
-                                                @foreach (var debt in appData.FamilyData.Debts)
-                                                {
-                                                    <span>&nbsp;&nbsp;@debt.Name: @FormatUtilities.formatMoney(debt.Total) @@ @(debt.Rate == null ? "unknown" : debt.Rate)%</span><br/> 
-                                                }
-                                            }
-                                            <br/>
-                                            <br/>
-                                        </td>
-                                        break;
-                                    case "tax-status":
-                                        <td>
-                                            <span>
-                                                @((MarkupString)FormatUtilities.Bold("Tax Filing Status:", ShowMarkup))
-                                                @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@appData.FamilyData.TaxFilingString</span> }
-                                                <br/><br/>
-                                                @((MarkupString)FormatUtilities.Bold("Tax Rate:", ShowMarkup))
-                                                @if (appData.FamilyData.FederalMarginalTaxBracket != null) { <span>&nbsp;@appData.FamilyData.FederalMarginalTaxBracket Federal, @appData.FamilyData.StateTaxRate% State</span> }
-                                                <br/><br/>
-                                                @((MarkupString)FormatUtilities.Bold("State of Residence:", ShowMarkup))
-                                                <span>&nbsp;@appData.FamilyData.StateOfResidence</span>
-                                            </span>
-                                            <br/><br/>
-                                        </td>
-                                        break;
-                                    case "asset-allocation":
-                                        <td>
-                                            @((MarkupString)FormatUtilities.Bold("Desired Asset allocation:", ShowMarkup))
-                                            @if (appData.FamilyData.Stocks != null && appData.FamilyData.Bonds != null) {
-                                                <span>&nbsp;@appData.FamilyData.Stocks% stocks / @appData.FamilyData.Bonds% bonds</span><br/>
-                                            } else {
-                                                <br/>
-                                            }
-                                            @if (appData.FamilyData.International != null) {
-                                                <span>&nbsp;&nbsp;Desired International allocation: </span>
-                                                <span>@appData.FamilyData.International%</span><br/>
-                                            }
-                                            @if (appData.FamilyData.NotSureNeedHelpWithAssetAllocation) {
-                                                <span>&nbsp;&nbsp;Not sure, need help</span>
-                                            }
-                                            <br/><br/>
-                                        </td>
-                                        break;
-                                    case "retirement-assets":
-                                        <td>
-                                            @((MarkupString)FormatUtilities.Bold("Portfolio Size:", ShowMarkup))&nbsp;@(appData.FamilyData.ValueStyle==0?FormatUtilities.formatMoneyThousands(appData.FamilyData.Value):(appData.FamilyData.ValueStyle==1?appData.FamilyData.estimatePortfolio():FormatUtilities.formatMoney(appData.FamilyData.Value)))<br/>
-                                            <br/>
-                                            @((MarkupString)FormatUtilities.BoldUnderline("Current Retirement Assets:", ShowMarkup))<br/>
-                                            @foreach (var account in appData.FamilyData.Accounts.OrderBy(a=>a.PortfolioReviewOrder).ThenByDescending(a=>a.Value)) {
-                                                <br/>
-                                                @if (account.TaxType == "Pre-Tax(work)" && account.CurrentEmployerString == "")
-                                                {
-                                                    <span>Following account should be classified as from 'current' employer or 'previous' employer using <a href=/portfolio-tracker/view/editor>Edit Accounts/Holdings</a>:</span>
-                                                    <br/>
-                                                }
-                                                @((MarkupString)FormatUtilities.Bold((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "")
-                                                    + (account.TaxType == "Pre-Tax(work)" ? "<span>"+account.CurrentEmployerString+"&nbsp;</span>" : "") 
-                                                    + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + " (" + FormatUtilities.formatPercent(account.Percentage) + ")" , ShowMarkup))
-                                                <br/>
-                                                @foreach (var investment in account.Investments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.ValuePIN)) {
-                                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;@FormatUtilities.formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@(investment.ExpenseRatio!=null?investment.ExpenseRatio:"??")%)</span><br/>
-                                                }
-                                            }
-                                            <br/>
-                                        </td>
-                                        break;
-                                    case "available-funds":
-                                        <td>
-                                            @((MarkupString)FormatUtilities.BoldUnderline("Available funds:", ShowMarkup))<br/>
-                                                @foreach (var account in appData.FamilyData.Accounts) {
-                                                    @if (account.AvailableFunds.Count > 0) {
-                                                        <br/>
-                                                            @((MarkupString)FormatUtilities.Bold("Funds available in " + account.FullName, ShowMarkup))<br/>
-                                                        <br/>
-                                                        @foreach (var investment in account.AvailableFunds) {
-                                                            <span>&nbsp;&nbsp;&nbsp;&nbsp;@investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span><br/>
-                                                        }
-                                                    }
-                                                }
-                                                <br/>
-                                        </td>
-                                        break;
-                                    case "additional-background":
-                                        @((MarkupString)FormatUtilities.BoldUnderline("Additional Background:", ShowMarkup))<br/>
-                                        @appData.FamilyData.AdditionalBackground
-                                        <br/>
-                                        break;
-                                    case "questions":
-                                        <td>
-                                            @((MarkupString)FormatUtilities.BoldUnderline("Questions:", ShowMarkup))<br/>
-                                            @for (int i = 0; i < appData.FamilyData.Questions.Count; i++) {
-                                                var question = appData.FamilyData.Questions[i];
-                                                @(i+1 + ".") @question
-                                                <br/><br/>
-                                            }
-                                        </td>
-                                        break;
-                                    case "contributions":
-                                        runningTotal = 0;
-                                        pastTotal = false;
-
-                                        <td>
-                                            <span>
-                                                @((MarkupString)FormatUtilities.BoldUnderline("Contributions:", ShowMarkup))
-                                            </span><br/>
-                                            @if (appData.FamilyData.PlannedSavings > 0) {
-                                                <span>Planned savings: @FormatUtilities.formatMoney(appData.FamilyData.PlannedSavings)</span><br/><br/>
-                                            }
-
-                                            <span>Prioritized Investments:</span><br/>
-
-                                            @if (appData.FamilyData.EmergencyFund.AmountToSave > 0) {
-                                                <span>@FormatUtilities.formatMoney(appData.FamilyData.EmergencyFund.AmountToSave) in Emergency Fund</span><br/>
-                                                @((MarkupString)checkTotal(appData.FamilyData.EmergencyFund.AmountToSave))
-                                            }
-                                            @if (appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch > 0) {
-                                                <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch) in @appData.FamilyData.People[0].PossessiveID 401(k) (Match: @FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerPlan.MatchAmount))</span><br/>
-                                                @((MarkupString)checkTotal(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch))
-                                            }
-                                            @if (appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch > 0) {
-                                                <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch) in @appData.FamilyData.People[1].PossessiveID 401(k) (Match: @FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerPlan.MatchAmount))</span><br/>
-                                                @((MarkupString)checkTotal(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch))
-                                            }
-                                            @if (appData.FamilyData.HighDebts > 0) {
-                                                <span>@appData.FamilyData.HighDebts in High Debts</span><br/>
-                                                @((MarkupString)checkTotal(appData.FamilyData.HighDebts))
-                                            }
-                                            @if (appData.FamilyData.PersonCount > 0  && (appData.FamilyData.People[0].EmployerBenefits.Complete || appData.FamilyData.People[0].EmployerPlan.AnnualSalary == 0 || appData.FamilyData.People[0].HealthSavingsAccount.EligibleForHSA  || appData.FamilyData.People[0].HealthSavingsAccount.EligibleForHSACatchUpOnly) && appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave > 0) {
-                                                <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave) in @appData.FamilyData.People[0].PossessiveID HSA (Employer: @FormatUtilities.formatMoney(appData.FamilyData.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
-                                                @((MarkupString)checkTotal(appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave))
-                                            }
-                                            @if (appData.FamilyData.PersonCount > 1  && (appData.FamilyData.People[1].EmployerBenefits.Complete || appData.FamilyData.People[1].EmployerPlan.AnnualSalary == 0 || appData.FamilyData.People[1].HealthSavingsAccount.EligibleForHSA  || appData.FamilyData.People[1].HealthSavingsAccount.EligibleForHSACatchUpOnly) && appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave > 0) {
-                                                <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave) in @appData.FamilyData.People[1].PossessiveID HSA (Employer: @FormatUtilities.formatMoney(appData.FamilyData.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
-                                                @((MarkupString)checkTotal(appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave))
-                                            }
-                                            @if (appData.FamilyData.AdjustedGrossIncome != null) {
-                                                if (appData.FamilyData.PersonCount > 0) {
-                                                    <span>@((MarkupString)GetRecommendedIRAMarkup(appData.FamilyData.People[0]))</span><br/>
-                                                    @((MarkupString)checkTotal(GetRecommdedIRAAmount(appData.FamilyData.People[0])))
-                                                }
-                                                if(appData.FamilyData.PersonCount > 1) {
-                                                    <span>@((MarkupString)GetRecommendedIRAMarkup(appData.FamilyData.People[1]))</span><br/>
-                                                    @((MarkupString)checkTotal(GetRecommdedIRAAmount(appData.FamilyData.People[1])))
-                                                }
-                                            }
-                                            @if (appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched > 0) {
-                                                <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched) in @appData.FamilyData.People[0].PossessiveID 401(k)</span><br/>
-                                                @((MarkupString)checkTotal(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched))
-                                            }
-                                            @if (appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched > 0) {
-                                                <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched) in @appData.FamilyData.People[1].PossessiveID 401(k)</span><br/>
-                                                @((MarkupString)checkTotal(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched))
-                                            }
-                                            @if (appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
-                                                <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @appData.FamilyData.People[0].PossessiveID mega backdoor roth</span><br/>
-                                                @((MarkupString)checkTotal(appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
-                                            }
-                                            @if (appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
-                                                <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @appData.FamilyData.People[1].PossessiveID mega backdoor roth</span><br/>
-                                                @((MarkupString)checkTotal(appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
-                                            }
-                                            @if (appData.FamilyData.MediumDebts > 0) {
-                                                <span>@FormatUtilities.formatMoney(appData.FamilyData.MediumDebts) in Medium Debts</span><br/>
-                                                @((MarkupString)checkTotal(appData.FamilyData.MediumDebts))
-                                            }
-                                            @if (appData.FamilyData.PlannedSavings > runningTotal) {
-                                                <span>@FormatUtilities.formatMoney(appData.FamilyData.PlannedSavings-runningTotal) in Taxable</span><br/>
-                                                @((MarkupString)checkTotal(appData.FamilyData.PlannedSavings-runningTotal))
-                                            } else {
-                                                <span>@FormatUtilities.formatMoney(0) in Taxable</span><br/>
-                                            }
-                                            @if (appData.FamilyData.LowDebts > 0) {
-                                                <span>@FormatUtilities.formatMoney(appData.FamilyData.LowDebts) in Low Debts</span><br/>
-                                                @((MarkupString)checkTotal(appData.FamilyData.LowDebts))
-                                            }
-                                            <br/>
-                                        </td>
-                                        break;
-                                    default:
-                                        <td style=text-align:center>NYI</td><td></td>
-                                        break;
-                                }
-                            </tr>
-                        }          
-                    </table>
-                    <br/>
-                </div>
-                
-                <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
-
-                <p>"Consider looking at an analysis of your portfolio in <a href="/portfolio">Portfolio Tracker</a>: actual asset allocation & annual expense ratio fee total."</p>
+@if (new Uri(Navigation.Uri).PathAndQuery == "/portfolio-review/reload")
+{
+    // reload is a workaround where the correct data seemed to be deleted, but i needed to navigate away and then back to retirement-assets
+    Navigation.NavigateTo("/portfolio-review/retirement-assets");
+}
+@if (steps == null || appData is null)
+{
+    <p>
+        @if (appData?.CurrentProfileName == null)
+        {
+            <em>No active <a href=/profiles>profile</a>.</em>
+        }
+        else
+        {
+            <em>Loading...</em>
+        }
+    </p>
+    <div style=float:left;margin-left:50px>
+        <a href=/profiles title="profile name" @onclick=navWithBackStack @onclick:preventDefault>
+            @if (appData?.CurrentProfileName == null)
+            {
+                <span>choose a</span>
             }
             else
             {
-                @foreach (var step in steps) {
-                    @if (step.step == stepPath && appData is not null) {
-                        var firstStepIndex = 0;
-                        var lastStepIndex = steps.Length-1;
-                        var prevStep = step.number - 2 >= firstStepIndex ? steps[step.number - 2] : null;
-                        var nextStep = step.number <= lastStepIndex ? steps[step.number] : null;
-                        string prevPage = folderName + prevStep?.step;
-                        string nextPage = folderName + nextStep?.step;
+                <span>@appData?.CurrentProfileName</span>
+            }
+        </a> profile
+    </div>
+}
+else
+{
+    if (appData is not null && appData?.FamilyData is not null)
+    {
+        if (stepPath == null)
+        {
+            var prevStep = steps[steps.Length - 1];
+            var nextStep = steps[0];
+            string prevPage = folderName + prevStep?.step;
+            string nextPage = folderName + nextStep?.step;
 
-                        <div style=float:left>
-                            <h4 style="max-width:450px">
-                                <NavLink href=@pagePath>@pageHeading</NavLink> <h6 style=display:inline>for @appData.CurrentProfileName profile</h6>
-                            </h4>
-                        </div>
-                        <div style=clear:left;margin-left:1.5in><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault >(manage profiles)</a></div>
+            <div style=float:left>
+                <h4 style="max-width:450px">
+                    @pageHeading <h6 style=display:inline>for @appData.CurrentProfileName profile</h6>
+                </h4>
+            </div>
+            <div style=clear:left;margin-left:1.5in><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault>(manage profiles)</a></div>
 
-                        <div style=clear:left>
-                            <h4>@step.title (@step.number)</h4>
-                            <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
-                            <hr/>
-                        </div>
+            <p style=clear:left>
+                Bogleheads.org forum enables you to <a target=_blank href="https://www.bogleheads.org/forum/viewtopic.php?t=6212">Ask Portfolio Questions</a> ↗️.
+                This tool helps collect background info, on top of your <a href=/portfolio-tracker>Portfolio Tracker</a> and <a href=/savings-planner>Savings Planner</a>, and helps format your review.
+            </p>
+            <p style=font-size:smaller>
+                When ready to post to the forum, ensure that the inline formatting markup is shown. Rich text formatting like bold and underline help readability of your post!<br />
+                <InputCheckbox id=showMarkup style=margin-left:20px @bind-Value=ShowMarkup /> <label for=showMarkup>Show inline formatting markup: [b]bold text[/b]</label> <button style=margin-left:20px @onclick=CopyTextToClipboard>Copy content to clipboard</button>
+            </p>
 
-                        <h4 style=clear:left>@((MarkupString)FormatUtilities.Markupize(step.priority))</h4>
+            <hr />
+            <div>
+                <p><b>Press edit (✏️) to complete each step:</b></p>
 
-                        <p class="article">@((MarkupString)FormatUtilities.Markupize(step.summary))</p>
-
-                            @switch (step.step) {
+                <table id=_reviewTable>
+                    @foreach (var step in steps)
+                    {
+                        var href = folderName + @step.step;
+                        <tr>
+                            <td style=vertical-align:top>
+                                <span>
+                                    <a href="@href" style="background:blue" class="m-1 btn">✏️</a>
+                                </span>
+                            </td>
+                            @switch (step.step)
+                            {
+                                case "age":
+                                    <td>
+                                        @((MarkupString)FormatUtilities.Bold("Age:", ShowMarkup))
+                                        @if (appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].Age != null)
+                                        {
+                                            <span>&nbsp;@appData.FamilyData.People[0].Age @getPronoun(appData.FamilyData.People[0])</span>
+                                        }
+                                        @if (appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].Age != null)
+                                        {
+                                            <span>&nbsp;and @appData.FamilyData.People[1].Age @getPronoun(appData.FamilyData.People[1])</span>
+                                        }
+                                        <br /><br />
+                                    </td>
+                                    break;
                                 case "emergency-fund":
-                                    var months = "months";
-                                    var dollars = "dollars";
-                                    var freeform = "freeform";
-                                    if (appData.FamilyData.EmergencyFund.AnswerType == null) { appData.FamilyData.EmergencyFund.AnswerType = "months"; }
-
-                                    <p><b>Worksheet:</b> </p>
-
-                                    <EditForm Model="appData.FamilyData" style=margin-left:25px>
-                                        <InputRadioGroup @bind-Value=appData.FamilyData.EmergencyFund.AnswerType>
-                                            <span>(preferred)&nbsp;</span><InputRadio Value="months" />
-                                            <span style=text-align:right;width:275px>
-                                                <label>Current Emergency Fund:</label> <span>$</span><input class=dollar type=text @bind-Value="appData.FamilyData.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/>
-                                                <label>➗ Monthly Expenses:</label> <span>$</span><input class=dollar type=text @bind-Value="appData.FamilyData.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /> 🟰 @if (appData.FamilyData.EmergencyFund.CurrentMonths != null)
-                                                { <span>"@appData.FamilyData.EmergencyFund.CurrentMonths months"</span> } else { <span>'missing data'</span>}
-                                            </span>
-                                            <br/>
-                                            <InputRadio style="margin-left:80px" Value="dollars" />
-                                            <label>Current Emergency Fund:</label> <span>$</span><input class=dollar type=text @bind-Value="appData.FamilyData.EmergencyFund.CurrentBalance" @bind-Value:event="oninput"/>
-                                            <br/>
-                                            <InputRadio style="margin-left:80px" Value="freeform" /> <label for=freeFormEF>Other answer:</label> <input type=text @bind-Value=appData.FamilyData.EmergencyFund.FreeformAnswer @bind-Value:event="oninput" />
-                                        </InputRadioGroup>
-                                    </EditForm><br/>
-
-                                    <label>Use this answer for review:</label><br/>
-                                    <span style=padding-left:20px>
-                                        @appData.FamilyData.EmergencyFund.Answer
-                                    </span>
+                                    <td style=text-align:left>
+                                        @((MarkupString)FormatUtilities.Bold("Emergency funds:", ShowMarkup))
+                                        <span>@appData.FamilyData.EmergencyFund.Answer</span>
+                                        <br /><br />
+                                    </td>
                                     break;
                                 case "debts":
-                                    <p><b>Worksheet:</b> </p>
-                                    <div>
-                                        <i>list of debts (all interest rates):</i><br/><br/>
-
-                                        @if (appData.FamilyData.DebtFree == TriState.ChoiceNeeded || appData.FamilyData.DebtFree == TriState.True) {
-                                            <label style="display:inline" for=debtFree>Debt free:</label> <InputSelect @bind-Value=appData.FamilyData.DebtFree id=debtFree>
-                                            @foreach (var option in Enum.GetValues<TriState>()) {
-                                                <option value="@option">@option</option>
-                                            }
-                                            </InputSelect><br/>
-                                            <br/>
+                                    <td style=text-align:left>
+                                        @((MarkupString)FormatUtilities.Bold("Debt:", ShowMarkup))
+                                        @if (appData.FamilyData.Debts.Count == 0 && appData.FamilyData.DebtsComplete)
+                                        {
+                                            <span>&nbsp;no debts</span>
                                         }
+                                        else if (appData.FamilyData.Debts.Count >= 1)
+                                        {
+                                            <br />
+                                            @foreach (var debt in appData.FamilyData.Debts)
+                                            {
+                                                <span>&nbsp;&nbsp;@debt.Name: @FormatUtilities.formatMoney(debt.Total) @@ @(debt.Rate == null ? "unknown" : debt.Rate)%</span>
 
-                                        <EditForm Model="appData.FamilyData">
-
-                                            <table>
-                                                <thead>
-                                                <th style="width:150px"><label>name</label></th>
-                                                <th style="width:150px"><label>total $</label></th>
-                                                <th style="width:100px"><label>interest %</label></th>
-                                                <th>rate</th>
-                                                <th><label></label></th>
-                                                </thead>
-                                                @for (var i=0;i<appData.FamilyData.Debts.Count;i++) {
-                                                    var debt = appData.FamilyData.Debts[i];
-                                                    int debtBuffer = i;
-                                                    <tr>
-                                                    <td><input style=width:100% type=text class=dollar @bind-Value=debt.Name @bind-Value:event=oninput placeholder='description'/></td>
-                                                    <td><input style=width:100% type=text class=dollar @bind-Value=debt.Total @bind-Value:event=oninput placeholder='amount owed'/></td>
-                                                    <td><input style=width:100% type=text class=dollar @bind-Value=debt.Rate @bind-Value:event=oninput placeholder='rate'/></td>
-                                                    <td><span>@debt.Category</span></td>
-                                                    <td><button @onclick=@(e=>RemoveDebt(e, debtBuffer))>❌ Debt</button></td>
-                                                    </tr>
-                                                }
-                                            </table>
-                                            <br/>
-                                            <button @onclick=addDebt>➕ Debt</button>
-
-                                            <br/><br/>
-                                            <label>Amounts to Pay-Off (@step.title):</label><br/><br/>
-                                            High Interest: @FormatUtilities.formatMoney(appData.FamilyData.HighDebts)<br/>
-                                            Medium Interest: @FormatUtilities.formatMoney(appData.FamilyData.MediumDebts)<br/>
-                                            Low Interest: @FormatUtilities.formatMoney(appData.FamilyData.LowDebts)<br/>
-                                            Unknown Interest: @FormatUtilities.formatMoney(appData.FamilyData.UnknownDebts)<br/>
-                                            <br/>
-                                        </EditForm>
-                                    </div>
+                                                <br />
+                                            }
+                                        }
+                                        <br />
+                                        <br />
+                                    </td>
                                     break;
                                 case "tax-status":
-                                    <p ><b>Worksheet:</b></p>
-                                    <EditForm Model="appData.FamilyData" style=margin-left:25px>
-                                        <label>Tax Filing Status:</label>
-                                        <select @bind=appData.FamilyData.TaxFilingStatus>
-                                            <option value="ChoiceNeeded">ChoiceNeeded</option>
-                                            <option>Single</option>
-                                            <option value=MarriedFilingJointly>Married filing jointly</option>
-                                            <option value=MarriedFilingSeperately>Married filing separately</option>
-                                            <option value=HeadOfHousehold>Head of Household</option>
-                                        </select> <br/>
-                                        <br/>
-        
-                                        <label>Target Year:</label> <select @bind=appData.FamilyData.Year><option>2023</option><option>2024</option></select><br/>
+                                    <td>
+                                        <span>
+                                            @((MarkupString)FormatUtilities.Bold("Tax Filing Status:", ShowMarkup))
+                                            @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded)
+                                            {
+                                                <span>&nbsp;@appData.FamilyData.TaxFilingString</span>
+                                            }
+                                            <br /><br />
+                                            @((MarkupString)FormatUtilities.Bold("Tax Rate:", ShowMarkup))
+                                            @if (appData.FamilyData.FederalMarginalTaxBracket != null)
+                                            {
+                                                <span>&nbsp;@appData.FamilyData.FederalMarginalTaxBracket Federal, @appData.FamilyData.StateTaxRate% State</span>
+                                            }
+                                            <br /><br />
+                                            @((MarkupString)FormatUtilities.Bold("State of Residence:", ShowMarkup))
+                                            <span>&nbsp;@appData.FamilyData.StateOfResidence</span>
+                                        </span>
+                                        <br /><br />
+                                    </td>
+                                    break;
+                                case "asset-allocation":
+                                    <td>
+                                        @((MarkupString)FormatUtilities.Bold("Desired Asset allocation:", ShowMarkup))
+                                        @if (appData.FamilyData.Stocks != null && appData.FamilyData.Bonds != null)
+                                        {
+                                            <span>&nbsp;@appData.FamilyData.Stocks% stocks / @appData.FamilyData.Bonds% bonds</span>
 
-                                        @if (appData?.IRSData?.TaxRateData?.TaxData?.TaxFilers != null) {
-                                            foreach (var taxFiler in appData?.IRSData?.TaxRateData.TaxData.TaxFilers) {
-                                                bool isMatch = false;
-                                                Console.WriteLine(appData.FamilyData.TaxFilingString.ToString());
+                                            <br />
+                                        }
+                                        else
+                                        {
+                                            <br />
+                                        }
+                                        @if (appData.FamilyData.International != null)
+                                        {
+                                            <span>&nbsp;&nbsp;Desired International allocation: </span>
+                                            <span>@appData.FamilyData.International%</span>
 
-                                                switch (appData.FamilyData.TaxFilingStatus.ToString())
+                                            <br />
+                                        }
+                                        @if (appData.FamilyData.NotSureNeedHelpWithAssetAllocation)
+                                        {
+                                            <span>&nbsp;&nbsp;Not sure, need help</span>
+                                        }
+                                        <br /><br />
+                                    </td>
+                                    break;
+                                case "retirement-assets":
+                                    <td>
+                                        @((MarkupString)FormatUtilities.Bold("Portfolio Size:", ShowMarkup))&nbsp;@(appData.FamilyData.ValueStyle == 0 ? FormatUtilities.formatMoneyThousands(appData.FamilyData.Value) : (appData.FamilyData.ValueStyle == 1 ? appData.FamilyData.estimatePortfolio() : FormatUtilities.formatMoney(appData.FamilyData.Value)))<br />
+                                        <br />
+                                        @((MarkupString)FormatUtilities.BoldUnderline("Current Retirement Assets:", ShowMarkup))<br />
+                                        @foreach (var account in appData.FamilyData.Accounts.OrderBy(a => a.PortfolioReviewOrder).ThenByDescending(a => a.Value))
+                                        {
+                                            <br />
+                                            @if (account.TaxType == "Pre-Tax(work)" && account.CurrentEmployerString == "")
+                                            {
+                                                <span>Following account should be classified as from 'current' employer or 'previous' employer using <a href=/portfolio-tracker/view/editor>Edit Accounts/Holdings</a>:</span>
+                                                <br />
+                                            }
+                                            @((MarkupString)FormatUtilities.Bold((account.Identifier != null ? "<span>" + account.Identifier + "&nbsp;</span>" : "")
+                                                + (account.TaxType == "Pre-Tax(work)" ? "<span>" + account.CurrentEmployerString + "&nbsp;</span>" : "")
+                                                + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + " (" + FormatUtilities.formatPercent(account.Percentage) + ")", ShowMarkup))
+                                            <br />
+                                            @foreach (var investment in account.Investments.OrderBy(i => i.InvestmentOrder).ThenByDescending(i => i.ValuePIN))
+                                            {
+                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;@FormatUtilities.formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@(investment.ExpenseRatio != null ? investment.ExpenseRatio : "??")%)</span>
+
+                                                <br />
+                                            }
+                                        }
+                                        <br />
+                                    </td>
+                                    break;
+                                case "available-funds":
+                                    <td>
+                                        @((MarkupString)FormatUtilities.BoldUnderline("Available funds:", ShowMarkup))<br />
+                                        @foreach (var account in appData.FamilyData.Accounts)
+                                        {
+                                            @if (account.AvailableFunds.Count > 0)
+                                            {
+                                                <br />
+                                                @((MarkupString)FormatUtilities.Bold("Funds available in " + account.FullName, ShowMarkup))
+
+                                                <br />
+                                                <br />
+                                                @foreach (var investment in account.AvailableFunds)
                                                 {
-                                                    case "MarriedFilingSeperatelyAndLivingApart":
-                                                        isMatch = taxFiler.TaxFilingStatus == "MarriedFilingSeperately";
-                                                        break;
-                                                    default:
-                                                        isMatch = taxFiler.TaxFilingStatus == appData.FamilyData.TaxFilingStatus.ToString();
-                                                        break;
+                                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;@investment.Name (@investment.Ticker) (@investment.ExpenseRatio%)</span>
+
+                                                    <br />
                                                 }
-                                                if (isMatch)
-                                                {
-                                                    string? lastBracket = null;
-                                                    int? lastStartAmount = null;
+                                            }
+                                        }
+                                        <br />
+                                    </td>
+                                    break;
+                                case "additional-background":
+                                    @((MarkupString)FormatUtilities.BoldUnderline("Additional Background:", ShowMarkup))
+                                    <br />
+                                    @appData.FamilyData.AdditionalBackground
+                                    <br />
+                                    break;
+                                case "questions":
+                                    <td>
+                                        @((MarkupString)FormatUtilities.BoldUnderline("Questions:", ShowMarkup))<br />
+                                        @for (int i = 0; i < appData.FamilyData.Questions.Count; i++)
+                                        {
+                                            var question = appData.FamilyData.Questions[i];
+                                            @(i + 1 + ".") @question
+                                            <br />
 
-                                                    <br/>
-                                                    <InputRadioGroup @bind-Value=appData.FamilyData.FederalMarginalTaxBracket>
-                                                        <label>Tax Bracket (@appData.FamilyData.TaxFilingString):</label><br/>
-                                                        <table style="margin-left:20px">
-                                                            <tr><th>Bracket</th><th style=padding-left:30px>Taxable Income<sub>1</sub></th></tr>
+                                            <br />
+                                        }
+                                    </td>
+                                    break;
+                                case "contributions":
+                                    runningTotal = 0;
+                                    pastTotal = false;
+
+                                    <td>
+                                        <span>
+                                            @((MarkupString)FormatUtilities.BoldUnderline("Contributions:", ShowMarkup))
+                                        </span><br />
+                                        @if (appData.FamilyData.PlannedSavings > 0)
+                                        {
+                                            <span>Planned savings: @FormatUtilities.formatMoney(appData.FamilyData.PlannedSavings)</span>
+
+                                            <br />
+
+                                            <br />
+                                        }
+
+                                        <span>Prioritized Investments:</span><br />
+
+                                        @if (appData.FamilyData.EmergencyFund.AmountToSave > 0)
+                                        {
+                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.EmergencyFund.AmountToSave) in Emergency Fund</span>
+
+                                            <br />
+                                            @((MarkupString)checkTotal(appData.FamilyData.EmergencyFund.AmountToSave))
+                                        }
+                                        @if (appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch > 0)
+                                        {
+                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch) in @appData.FamilyData.People[0].PossessiveID 401(k) (Match: @FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerPlan.MatchAmount))</span>
+
+                                            <br />
+                                            @((MarkupString)checkTotal(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch))
+                                        }
+                                        @if (appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch > 0)
+                                        {
+                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch) in @appData.FamilyData.People[1].PossessiveID 401(k) (Match: @FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerPlan.MatchAmount))</span>
+
+                                            <br />
+                                            @((MarkupString)checkTotal(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch))
+                                        }
+                                        @if (appData.FamilyData.HighDebts > 0)
+                                        {
+                                            <span>@appData.FamilyData.HighDebts in High Debts</span>
+
+                                            <br />
+                                            @((MarkupString)checkTotal(appData.FamilyData.HighDebts))
+                                        }
+                                        @if (appData.FamilyData.PersonCount > 0 && (appData.FamilyData.People[0].EmployerBenefits.Complete || appData.FamilyData.People[0].EmployerPlan.AnnualSalary == 0 || appData.FamilyData.People[0].HealthSavingsAccount.EligibleForHSA || appData.FamilyData.People[0].HealthSavingsAccount.EligibleForHSACatchUpOnly) && appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave > 0)
+                                        {
+                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave) in @appData.FamilyData.People[0].PossessiveID HSA (Employer: @FormatUtilities.formatMoney(appData.FamilyData.People[0].HealthSavingsAccount.EmployerContribution))</span>
+
+                                            <br />
+                                            @((MarkupString)checkTotal(appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave))
+                                        }
+                                        @if (appData.FamilyData.PersonCount > 1 && (appData.FamilyData.People[1].EmployerBenefits.Complete || appData.FamilyData.People[1].EmployerPlan.AnnualSalary == 0 || appData.FamilyData.People[1].HealthSavingsAccount.EligibleForHSA || appData.FamilyData.People[1].HealthSavingsAccount.EligibleForHSACatchUpOnly) && appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave > 0)
+                                        {
+                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave) in @appData.FamilyData.People[1].PossessiveID HSA (Employer: @FormatUtilities.formatMoney(appData.FamilyData.People[1].HealthSavingsAccount.EmployerContribution))</span>
+
+                                            <br />
+                                            @((MarkupString)checkTotal(appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave))
+                                        }
+                                        @if (appData.FamilyData.AdjustedGrossIncome != null)
+                                        {
+                                            if (appData.FamilyData.PersonCount > 0)
+                                            {
+                                                <span>@((MarkupString)GetRecommendedIRAMarkup(appData.FamilyData.People[0]))</span>
+
+                                                <br />
+                                                @((MarkupString)checkTotal(GetRecommdedIRAAmount(appData.FamilyData.People[0])))
+                                            }
+                                            if (appData.FamilyData.PersonCount > 1)
+                                            {
+                                                <span>@((MarkupString)GetRecommendedIRAMarkup(appData.FamilyData.People[1]))</span>
+
+                                                <br />
+                                                @((MarkupString)checkTotal(GetRecommdedIRAAmount(appData.FamilyData.People[1])))
+                                            }
+                                        }
+                                        @if (appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched > 0)
+                                        {
+                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched) in @appData.FamilyData.People[0].PossessiveID 401(k)</span>
+
+                                            <br />
+                                            @((MarkupString)checkTotal(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched))
+                                        }
+                                        @if (appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched > 0)
+                                        {
+                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched) in @appData.FamilyData.People[1].PossessiveID 401(k)</span>
+
+                                            <br />
+                                            @((MarkupString)checkTotal(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched))
+                                        }
+                                        @if (appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0)
+                                        {
+                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @appData.FamilyData.People[0].PossessiveID mega backdoor roth</span>
+
+                                            <br />
+                                            @((MarkupString)checkTotal(appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
+                                        }
+                                        @if (appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0)
+                                        {
+                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @appData.FamilyData.People[1].PossessiveID mega backdoor roth</span>
+
+                                            <br />
+                                            @((MarkupString)checkTotal(appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
+                                        }
+                                        @if (appData.FamilyData.MediumDebts > 0)
+                                        {
+                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.MediumDebts) in Medium Debts</span>
+
+                                            <br />
+                                            @((MarkupString)checkTotal(appData.FamilyData.MediumDebts))
+                                        }
+                                        @if (appData.FamilyData.PlannedSavings > runningTotal)
+                                        {
+                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.PlannedSavings - runningTotal) in Taxable</span>
+
+                                            <br />
+                                            @((MarkupString)checkTotal(appData.FamilyData.PlannedSavings - runningTotal))
+                                        }
+                                        else
+                                        {
+                                            <span>@FormatUtilities.formatMoney(0) in Taxable</span>
+
+                                            <br />
+                                        }
+                                        @if (appData.FamilyData.LowDebts > 0)
+                                        {
+                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.LowDebts) in Low Debts</span>
+
+                                            <br />
+                                            @((MarkupString)checkTotal(appData.FamilyData.LowDebts))
+                                        }
+                                        <br />
+                                    </td>
+                                    break;
+                                default:
+                                    <td style=text-align:center>NYI</td>
+                                    <td></td>
+                                    break;
+                            }
+                        </tr>
+                    }
+                </table>
+                <br />
+            </div>
+
+            <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
+            <br />
+
+            <p>"Consider looking at an analysis of your portfolio in <a href="/portfolio">Portfolio Tracker</a>: actual asset allocation & annual expense ratio fee total."</p>
+        }
+        else
+        {
+            @foreach (var step in steps)
+            {
+                @if (step.step == stepPath && appData is not null)
+                {
+                    var firstStepIndex = 0;
+                    var lastStepIndex = steps.Length - 1;
+                    var prevStep = step.number - 2 >= firstStepIndex ? steps[step.number - 2] : null;
+                    var nextStep = step.number <= lastStepIndex ? steps[step.number] : null;
+                    string prevPage = folderName + prevStep?.step;
+                    string nextPage = folderName + nextStep?.step;
+
+                    <div style=float:left>
+                        <h4 style="max-width:450px">
+                            <NavLink href=@pagePath>@pageHeading</NavLink> <h6 style=display:inline>for @appData.CurrentProfileName profile</h6>
+                        </h4>
+                    </div>
+                    <div style=clear:left;margin-left:1.5in><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault>(manage profiles)</a></div>
+
+                    <div style=clear:left>
+                        <h4>@step.title (@step.number)</h4>
+                        <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
+                        <hr />
+                    </div>
+
+                    <h4 style=clear:left>@((MarkupString)FormatUtilities.Markupize(step.priority))</h4>
+
+                    <p class="article">@((MarkupString)FormatUtilities.Markupize(step.summary))</p>
+
+                    @switch (step.step)
+                    {
+                        case "emergency-fund":
+                            var months = "months";
+                            var dollars = "dollars";
+                            var freeform = "freeform";
+                            if (appData.FamilyData.EmergencyFund.AnswerType == null) { appData.FamilyData.EmergencyFund.AnswerType = "months"; }
+
+                            <p><b>Worksheet:</b> </p>
+
+                            <EditForm Model="appData.FamilyData" style=margin-left:25px>
+                                <InputRadioGroup @bind-Value=appData.FamilyData.EmergencyFund.AnswerType>
+                                    <span>(preferred)&nbsp;</span><InputRadio Value="months" />
+                                    <span style=text-align:right;width:275px>
+                                        <label>Current Emergency Fund:</label> <span>$</span><input class=dollar type=text @bind-Value="appData.FamilyData.EmergencyFund.CurrentBalance" @bind-Value:event="oninput" />
+                                        <label>➗ Monthly Expenses:</label> <span>$</span><input class=dollar type=text @bind-Value="appData.FamilyData.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /> 🟰 @if (appData.FamilyData.EmergencyFund.CurrentMonths != null)
+                                        {
+                                            <span>"@appData.FamilyData.EmergencyFund.CurrentMonths months"</span>
+                                        }
+                                        else
+                                        {
+                                            <span>'missing data'</span>
+                                        }
+                                    </span>
+                                    <br />
+                                    <InputRadio style="margin-left:80px" Value="dollars" />
+                                    <label>Current Emergency Fund:</label> <span>$</span><input class=dollar type=text @bind-Value="appData.FamilyData.EmergencyFund.CurrentBalance" @bind-Value:event="oninput" />
+                                    <br />
+                                    <InputRadio style="margin-left:80px" Value="freeform" /> <label for=freeFormEF>Other answer:</label> <input type=text @bind-Value=appData.FamilyData.EmergencyFund.FreeformAnswer @bind-Value:event="oninput" />
+                                </InputRadioGroup>
+                            </EditForm>
+                            <br />
+
+                            <label>Use this answer for review:</label>
+                            <br />
+                            <span style=padding-left:20px>
+                                @appData.FamilyData.EmergencyFund.Answer
+                            </span>
+                            break;
+                        case "debts":
+                            <p><b>Worksheet:</b> </p>
+                            <div>
+                                <i>list of debts (all interest rates):</i><br /><br />
+
+                                @if (appData.FamilyData.DebtFree == TriState.ChoiceNeeded || appData.FamilyData.DebtFree == TriState.True)
+                                {
+                                    <label style="display:inline" for=debtFree>Debt free:</label> <InputSelect @bind-Value=appData.FamilyData.DebtFree id=debtFree>
+                                        @foreach (var option in Enum.GetValues<TriState>())
+                                        {
+                                            <option value="@option">@option</option>
+                                        }
+                                    </InputSelect>
+
+                                    <br />
+                                    <br />
+                                }
+
+                                <EditForm Model="appData.FamilyData">
+
+                                    <table>
+                                        <thead>
+                                        <th style="width:150px"><label>name</label></th>
+                                        <th style="width:150px"><label>total $</label></th>
+                                        <th style="width:100px"><label>interest %</label></th>
+                                        <th>rate</th>
+                                        <th><label></label></th>
+                                        </thead>
+                                        @for (var i = 0; i < appData.FamilyData.Debts.Count; i++)
+                                        {
+                                            var debt = appData.FamilyData.Debts[i];
+                                            int debtBuffer = i;
+                                            <tr>
+                                                <td><input style=width:100% type=text class=dollar @bind-Value=debt.Name @bind-Value:event=oninput placeholder='description' /></td>
+                                                <td><input style=width:100% type=text class=dollar @bind-Value=debt.Total @bind-Value:event=oninput placeholder='amount owed' /></td>
+                                                <td><input style=width:100% type=text class=dollar @bind-Value=debt.Rate @bind-Value:event=oninput placeholder='rate' /></td>
+                                                <td><span>@debt.Category</span></td>
+                                                <td><button @onclick=@(e=>RemoveDebt(e, debtBuffer))>❌ Debt</button></td>
+                                            </tr>
+                                        }
+                                    </table>
+                                    <br />
+                                    <button @onclick=addDebt>➕ Debt</button>
+
+                                    <br /><br />
+                                    <label>Amounts to Pay-Off (@step.title):</label><br /><br />
+                                    High Interest: @FormatUtilities.formatMoney(appData.FamilyData.HighDebts)<br />
+                                    Medium Interest: @FormatUtilities.formatMoney(appData.FamilyData.MediumDebts)<br />
+                                    Low Interest: @FormatUtilities.formatMoney(appData.FamilyData.LowDebts)<br />
+                                    Unknown Interest: @FormatUtilities.formatMoney(appData.FamilyData.UnknownDebts)<br />
+                                    <br />
+                                </EditForm>
+                            </div>
+                            break;
+                        case "tax-status":
+                            <p><b>Worksheet:</b></p>
+                            <EditForm Model="appData.FamilyData" style=margin-left:25px>
+                                <label>Tax Filing Status:</label>
+                                <select @bind=appData.FamilyData.TaxFilingStatus>
+                                    <option value="ChoiceNeeded">ChoiceNeeded</option>
+                                    <option>Single</option>
+                                    <option value=MarriedFilingJointly>Married filing jointly</option>
+                                    <option value=MarriedFilingSeperately>Married filing separately</option>
+                                    <option value=HeadOfHousehold>Head of Household</option>
+                                </select> <br />
+                                <br />
+
+                                <label>Target Year:</label>
+                                <select @bind=appData.FamilyData.Year><option>2023</option><option>2024</option></select><br />
+
+                                @{
+                                    var taxFilers = appData?.IRSData?.TaxRateData?.TaxData?.TaxFilers;
+                                    if (taxFilers != null && appData?.FamilyData != null)
+                                    {
+                                        foreach (var taxFiler in taxFilers)
+                                        {
+                                            bool isMatch = false;
+
+                                            switch (appData.FamilyData.TaxFilingStatus.ToString())
+                                            {
+                                                case "MarriedFilingSeperatelyAndLivingApart":
+                                                    isMatch = taxFiler.TaxFilingStatus == "MarriedFilingSeperately";
+                                                    break;
+                                                default:
+                                                    isMatch = taxFiler.TaxFilingStatus == appData.FamilyData.TaxFilingStatus.ToString();
+                                                    break;
+                                            }
+
+                                            if (isMatch)
+                                            {
+                                                string? lastBracket = null;
+                                                int? lastStartAmount = null;
+
+                                                <br />
+                                                <InputRadioGroup @bind-Value=appData.FamilyData.FederalMarginalTaxBracket>
+                                                    <label>Tax Bracket (@appData.FamilyData.TaxFilingString):</label><br />
+                                                    <table style="margin-left:20px">
+                                                        <tr><th>Bracket</th><th style=padding-left:30px>Taxable Income<sub>1</sub></th></tr>
                                                         @foreach (var taxBracket in taxFiler.TaxBrackets)
                                                         {
-                                                            if (lastBracket != null) {
-                                                                var elName = "bracket"+lastBracket.Substring(0,lastBracket.Length-2);
-                                                                <tr><td><InputRadio id=@elName Value='@lastBracket'/>&nbsp;<label for=@elName>@lastBracket</label></td><td style=padding-left:30px>@(lastStartAmount==1?"Up":FormatUtilities.formatMoney(lastStartAmount)) to @FormatUtilities.formatMoney(taxBracket.StartAmount)</td></tr>
+                                                            if (lastBracket != null)
+                                                            {
+                                                                var elName = "bracket" + lastBracket.Substring(0, lastBracket.Length - 2);
+                                                                <tr><td><InputRadio id=@elName Value='@lastBracket' />&nbsp;<label for=@elName>@lastBracket</label></td><td style=padding-left:30px>@(lastStartAmount == 1 ? "Up" : FormatUtilities.formatMoney(lastStartAmount)) to @FormatUtilities.formatMoney(taxBracket.StartAmount)</td></tr>
                                                             }
                                                             lastBracket = taxBracket.Rate;
                                                             lastStartAmount = taxBracket.StartAmount + 1;
                                                         }
-                                                            <tr><td><InputRadio Value='@lastBracket'/>&nbsp;@lastBracket</td><td style=padding-left:30px>Over @FormatUtilities.formatMoney(lastStartAmount-1)</td></tr>
-                                                        </table>
-                                                        <br/>
-                                                        <p><sub>1</sub> Brackets for ordinary income are based on taxable income, which is line 15 on your 1040 for most people. If you have a lot of long term capital gains or qualified dividends, the tax bracket for your ordinary income tax bracket may be lower. - <a target=_blank href=https://www.bogleheads.org/wiki/Progressive_tax#Taxable_income>more details on Taxable Income</a>↗️</p>
-                                                    </InputRadioGroup>
-                                                }
+                                                        <tr><td><InputRadio Value='@lastBracket' />&nbsp;@lastBracket</td><td style=padding-left:30px>Over @FormatUtilities.formatMoney(lastStartAmount - 1)</td></tr>
+                                                    </table>
+                                                    <br />
+                                                    <p><sub>1</sub> Brackets for ordinary income are based on taxable income, which is line 15 on your 1040 for most people. If you have a lot of long term capital gains or qualified dividends, the tax bracket for your ordinary income tax bracket may be lower. - <a target=_blank href=https://www.bogleheads.org/wiki/Progressive_tax#Taxable_income>more details on Taxable Income</a>↗️</p>
+                                                </InputRadioGroup>
                                             }
                                         }
+                                    }
+                                }
 
-                                        <br/><label>State of Residence:</label>
-                                        <select @bind=appData.FamilyData.StateOfResidence>
-                                            <option value="ChoiceNeeded">ChoiceNeeded...</option><option value="AL">Alabama (AL)</option><option value="AK">Alaska (AK)</option><option value="AS">American Samoa (AS)</option><option value="AZ">Arizona (AZ)</option><option value="AR">Arkansas (AR)</option><option value="CA">California (CA)</option><option value="CO">Colorado (CO)</option><option value="CT">Connecticut (CT)</option><option value="DE">Delaware (DE)</option><option value="DC">District of Columbia (DC)</option><option value="FL">Florida (FL)</option><option value="GA">Georgia (GA)</option><option value="GU">Guam (GU)</option><option value="HI">Hawaii (HI)</option><option value="ID">Idaho (ID)</option><option value="IL">Illinois (IL)</option><option value="IN">Indiana (IN)</option><option value="IA">Iowa (IA)</option><option value="KS">Kansas (KS)</option><option value="KY">Kentucky (KY)</option><option value="LA">Louisiana (LA)</option><option value="ME">Maine (ME)</option><option value="MD">Maryland (MD)</option><option value="MA">Massachusetts (MA)</option><option value="MI">Michigan (MI)</option><option value="MN">Minnesota (MN)</option><option value="MS">Mississippi (MS)</option><option value="MO">Missouri (MO)</option><option value="MT">Montana (MT)</option><option value="NE">Nebraska (NE)</option><option value="NV">Nevada (NV)</option><option value="NH">New Hampshire (NH)</option><option value="NJ">New Jersey (NJ)</option><option value="NM">New Mexico (NM)</option><option value="NY">New York (NY)</option><option value="NC">North Carolina (NC)</option><option value="ND">North Dakota (ND)</option><option value="CM">Northern Mariana Islands (CM)</option><option value="OH">Ohio (OH)</option><option value="OK">Oklahoma (OK)</option><option value="OR">Oregon (OR)</option><option value="PA">Pennsylvania (PA)</option><option value="PR">Puerto Rico (PR)</option><option value="RI">Rhode Island (RI)</option><option value="SC">South Carolina (SC)</option><option value="SD">South Dakota (SD)</option><option value="TN">Tennessee (TN)</option><option value="TX">Texas (TX)</option><option value="VI">U.S. Virgin Islands (VI)</option><option value="UT">Utah (UT)</option><option value="VT">Vermont (VT)</option><option value="VA">Virginia (VA)</option><option value="WA">Washington (WA)</option><option value="WV">West Virginia (WV)</option><option value="WI">Wisconsin (WI)</option><option value="WY">Wyoming (WY)</option>
-                                        </select>
-                                        <br/><br/>
+                                <br /><label>State of Residence:</label>
+                                <select @bind=appData!.FamilyData.StateOfResidence>
+                                    <option value="ChoiceNeeded">ChoiceNeeded...</option>
+                                    <option value="AL">Alabama (AL)</option>
+                                    <option value="AK">Alaska (AK)</option>
+                                    <option value="AS">American Samoa (AS)</option>
+                                    <option value="AZ">Arizona (AZ)</option>
+                                    <option value="AR">Arkansas (AR)</option>
+                                    <option value="CA">California (CA)</option>
+                                    <option value="CO">Colorado (CO)</option>
+                                    <option value="CT">Connecticut (CT)</option>
+                                    <option value="DE">Delaware (DE)</option>
+                                    <option value="DC">District of Columbia (DC)</option>
+                                    <option value="FL">Florida (FL)</option>
+                                    <option value="GA">Georgia (GA)</option>
+                                    <option value="GU">Guam (GU)</option>
+                                    <option value="HI">Hawaii (HI)</option>
+                                    <option value="ID">Idaho (ID)</option>
+                                    <option value="IL">Illinois (IL)</option>
+                                    <option value="IN">Indiana (IN)</option>
+                                    <option value="IA">Iowa (IA)</option>
+                                    <option value="KS">Kansas (KS)</option>
+                                    <option value="KY">Kentucky (KY)</option>
+                                    <option value="LA">Louisiana (LA)</option>
+                                    <option value="ME">Maine (ME)</option>
+                                    <option value="MD">Maryland (MD)</option>
+                                    <option value="MA">Massachusetts (MA)</option>
+                                    <option value="MI">Michigan (MI)</option>
+                                    <option value="MN">Minnesota (MN)</option>
+                                    <option value="MS">Mississippi (MS)</option>
+                                    <option value="MO">Missouri (MO)</option>
+                                    <option value="MT">Montana (MT)</option>
+                                    <option value="NE">Nebraska (NE)</option>
+                                    <option value="NV">Nevada (NV)</option>
+                                    <option value="NH">New Hampshire (NH)</option>
+                                    <option value="NJ">New Jersey (NJ)</option>
+                                    <option value="NM">New Mexico (NM)</option>
+                                    <option value="NY">New York (NY)</option>
+                                    <option value="NC">North Carolina (NC)</option>
+                                    <option value="ND">North Dakota (ND)</option>
+                                    <option value="CM">Northern Mariana Islands (CM)</option>
+                                    <option value="OH">Ohio (OH)</option>
+                                    <option value="OK">Oklahoma (OK)</option>
+                                    <option value="OR">Oregon (OR)</option>
+                                    <option value="PA">Pennsylvania (PA)</option>
+                                    <option value="PR">Puerto Rico (PR)</option>
+                                    <option value="RI">Rhode Island (RI)</option>
+                                    <option value="SC">South Carolina (SC)</option>
+                                    <option value="SD">South Dakota (SD)</option>
+                                    <option value="TN">Tennessee (TN)</option>
+                                    <option value="TX">Texas (TX)</option>
+                                    <option value="VI">U.S. Virgin Islands (VI)</option>
+                                    <option value="UT">Utah (UT)</option>
+                                    <option value="VT">Vermont (VT)</option>
+                                    <option value="VA">Virginia (VA)</option>
+                                    <option value="WA">Washington (WA)</option>
+                                    <option value="WV">West Virginia (WV)</option>
+                                    <option value="WI">Wisconsin (WI)</option>
+                                    <option value="WY">Wyoming (WY)</option>
+                                </select>
+                                <br /><br />
 
-                                        <label>State Income Tax Rate:</label> <input style=width:50px;text-align:right class=dollar type=text @bind-Value="appData.FamilyData.StateTaxRate" @bind-Value:event="oninput"/>%<br/><br/>
-                                        <br/><br/>
+                                <label>State Income Tax Rate:</label> <input style=width:50px;text-align:right class=dollar type=text @bind-Value="appData.FamilyData.StateTaxRate" @bind-Value:event="oninput" />%<br /><br />
+                                <br /><br />
+                            </EditForm>
+                            <br />
+                            break;
+                        case "age":
+                            var required = (appData.FamilyData.TaxFilingStatus == TaxFilingStatus.ChoiceNeeded) ? "visibility:visible;color:red" : "visibility:hidden";
+                            <p><b>Prerequisities:</b></p>
+                            <label>Tax Filing Status:</label>
+                            <select @bind=appData.FamilyData.TaxFilingStatus>
+                                <option value="ChoiceNeeded">ChoiceNeeded</option>
+                                <option>Single</option>
+                                <option value=MarriedFilingJointly>Married filing jointly</option>
+                                <option value=MarriedFilingSeperately>Married filing separately</option>
+                                <option value=HeadOfHousehold>Head of Household</option>
+                            </select> <span style=@required>*</span>
+                            <br />
+                            <br />
+
+                            <p><b>Worksheet:</b> </p>
+                            @for (int i = 0; i < appData.FamilyData.PersonCount; i++)
+                            {
+                                var person = appData.FamilyData.People[i];
+                                if (person is not null)
+                                {
+                                    int personIndex = i + 1;
+                                    <p><b>Person @personIndex:</b> </p>
+
+                                    <EditForm Model="person" style=margin-left:25px>
+                                        <label>Age:</label> <input style=width:60px type=number min=0 max=125 @bind-Value=person.Age @bind-Value:event=oninput /> (on this year's birthday)<br />
+
+                                        @if (person?.FamilyData?.PersonCount > 1)
+                                        {
+                                            <label>Pronoun/Unique identifier:</label>
+                                            <select @bind=person.Identifier>
+                                                <option value="ChoiceNeeded">ChoiceNeeded</option>
+                                                <option>person @personIndex</option>
+                                                <option>him</option>
+                                                <option>her</option>
+                                                <option>me</option>
+                                                <option>them</option>
+                                            </select>
+
+                                            <br />
+                                        }
+
+                                        <br />
                                     </EditForm>
-                                    <br/>
-                                    break;
-                                case "age":
-                                    var required = (appData.FamilyData.TaxFilingStatus == TaxFilingStatus.ChoiceNeeded) ? "visibility:visible;color:red" : "visibility:hidden";
-                                    <p ><b>Prerequisities:</b></p>
-                                    <label>Tax Filing Status:</label>
-                                    <select @bind=appData.FamilyData.TaxFilingStatus>
-                                        <option value="ChoiceNeeded">ChoiceNeeded</option>
-                                        <option>Single</option>
-                                        <option value=MarriedFilingJointly>Married filing jointly</option>
-                                        <option value=MarriedFilingSeperately>Married filing separately</option>
-                                        <option value=HeadOfHousehold>Head of Household</option>
-                                    </select> <span style=@required>*</span><br/><br/>
-                                    
-                                    <p><b>Worksheet:</b> </p>
-                                    @for (int i = 0; i < appData.FamilyData.PersonCount; i++) {
-                                        var person = appData.FamilyData.People[i];
-                                        if (person is not null) {
-                                            int personIndex = i + 1;
-                                            <p><b>Person @personIndex:</b> </p>
-
-                                            <EditForm Model="person" style=margin-left:25px>
-                                                <label>Age:</label> <input style=width:60px type=number min=0 max=125 @bind-Value=person.Age @bind-Value:event=oninput /> (on this year's birthday)<br/>
-
-                                                @if(person?.FamilyData?.PersonCount>1){<label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
-                                                    <option value="ChoiceNeeded">ChoiceNeeded</option>
-                                                    <option>person @personIndex</option>
-                                                    <option>him</option>
-                                                    <option>her</option>
-                                                    <option>me</option>
-                                                    <option>them</option>
-                                                </select><br/>}
-                                                
-                                                <br/>
-                                            </EditForm><br/>
-                                        }
-                                    }
-                                    break;
-                                case "asset-allocation":
-                                    <p><b>Worksheet:</b> </p>
-
-                                    <EditForm Model="appData.FamilyData" style=margin-left:25px>
-                                        <label>Desired Asset Allocation:</label> <br/>
-                                        <label style=padding-left:20px>Stocks:</label> <input style=width:50px;text-align:right type=text @bind=appData.FamilyData.Stocks />%<br/>
-                                        <label style=padding-left:20px>Bonds:</label> <input style=width:50px;text-align:right type=text @bind=appData.FamilyData.Bonds />%<br/>
-                                        @if (appData.FamilyData.AssetAllocationError) { <span style=background-color:yellow>&nbsp;Stocks + Bonds should total over 100%</span><br/> }
-                                        <hr/>
-                                        <label style=padding-left:20px>Desired International allocation (% of Stock):</label><br/>
-                                        <label style=padding-left:40px>International:</label> <input style=width:50px;text-align:right type=text @bind-Value=appData.FamilyData.International @bind-Value:event=oninput />%<br/>
-                                        <br/>
-                                        <InputCheckbox @bind-Value=appData.FamilyData.NotSureNeedHelpWithAssetAllocation /> <label>Do not know, need help</label><br/>
-                                    </EditForm><br/>
-                                    break;
-                                case "available-funds":
-                                    <td>
-                                        <label>Account</label>
-                                        <select @bind=currentAccountIndex>
-                                            <option>Choose Account...</option>
-                                            @for (int i=0;i<appData.FamilyData.Accounts.Count;i++) {
-                                                var account = appData.FamilyData.Accounts[i];
-                                                <option value=@i>
-                                                    @account.FullName
-                                                </option>
-                                            }
-                                        </select>
-                                        <br/>
-
-                                        @if(currentAccountIndex != null && currentAccountIndex != "Choose Account...") {
-                                            int index = int.Parse(currentAccountIndex);
-                                            var currentAccount = appData.FamilyData.Accounts[index];
-                                            for (int i=0;i < currentAccount.AvailableFunds.Count; i++) {
-                                                var investment = currentAccount.AvailableFunds[i];
-                                                int invBuffer = i;
-                                                <div style=margin-top:10px;margin-left:80px;padding-left:3em;text-indent:-3em;>
-                                                    <button @onclick='@(e=>deleteAvailableFund(e,currentAccount,invBuffer))'>❌</button>
-                                                    <input style="width:70px;text-transform: uppercase;" type=text @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker'/>
-                                                </div>
-                                                <div style=margin-left:85px>
-                                                    <input type=text @bind-Value=investment.Name @bind-Value:event=oninput placeholder='investment fullname' />
-                                                    &nbsp;(
-                                                        <input style="width:70px" type=text @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput placeholder='expense ratio'/>
-                                                    %)
-                                                </div>
-                                            }
-                                            <br/>
-                                            <button style=margin-left:80px @onclick='@(e=>addAvailableFund(e,currentAccount))'>➕</button>
-                                        }
-                                    </td>
-                                    break;
-                                case "additional-background":
-                                    <td>
-                                        <textarea style=width:600px;height:300px @bind-Value=appData.FamilyData.AdditionalBackground @bind-Value:event=oninput placeholder='additional background information'>
-                                            @appData.FamilyData.AdditionalBackground
-                                        </textarea>
-                                    </td>
-                                    break;
-                                case "questions":
-                                    <td>
-                                        @for (int i = 0; i < appData.FamilyData.Questions.Count; i++) {
-                                            int iBuffer = i;
-                                            <label >@(i+1 + ". ")</label> 
-                                            <textarea style=width:500px;vertical-align:top @bind-Value=appData.FamilyData.Questions[iBuffer] @bind-Value:event="oninput" placeholder="ask question">
-                                                @appData.FamilyData.Questions[iBuffer]
-                                            </textarea>
-                                            <br/>
-                                            <br/>
-                                        }
-                                        <br/>
-                                            <button style=margin-left:80px @onclick=addQuestion>➕ Question</button>
-                                        <br/>
-                                        @code {
-                                            void addQuestion() {
-                                                if (appData?.FamilyData is not null) {
-                                                    appData.FamilyData.Questions.Add("");
-                                                }
-                                            }
-                                        }
-                                    </td>
-                                    break;                                
-                                case "retirement-assets":
-                                    <p>         
-                                        Enter/edit your portfolio details at: <a href="/portfolio-tracker/accounts">Portfolio Tracker</a>, then return here to <a href=/portfolio-review>Portfolio Review</a> to address all the needed information.<br/>
-                                        <br/>
-                                    </p>
-
-                                    @if(appData?.FamilyData is not null && appData.FamilyData.Value > 0) {
-                                        <div>Preferred technique to represent the approximate size of your total portfolio (in <NavLink href="/portfolio-review">portfolio review</NavLink>):</div>
-                                        <InputRadioGroup @bind-Value=appData.FamilyData.ValueStyle>
-                                            <InputRadio id=rounded Value='0' /> <label for=rounded>@FormatUtilities.formatMoneyThousands(appData.FamilyData.Value)</label> <br/>
-                                            <InputRadio id=estimate Value='1' /> <label for=estimate>@appData.FamilyData.estimatePortfolio()</label> <br/>
-                                            <InputRadio id=dollar Value='2' /> <label for=dollar>@FormatUtilities.formatMoney(appData.FamilyData.Value)</label> <br/>
-                                        </InputRadioGroup>
-                                    }
-                                    break;
-                                case "contributions":
-                                    <div>
-                                        Enter/edit your Savings Contribution at: <a href="/savings-planner">Savings Planner</a>, then return here to <a href=/portfolio-review>Portfolio Review</a> to address all the needed information.<br/><br/>
-
-                                        <span>
-                                            @((MarkupString)FormatUtilities.BoldUnderline("Contributions:", ShowMarkup))
-                                        </span><br/>
-                                        @if (appData.FamilyData.PlannedSavings > 0) {
-                                            <span>Planned savings: @FormatUtilities.formatMoney(appData.FamilyData.PlannedSavings)</span><br/><br/>
-                                        }
-
-                                        <span>Prioritized Investments:</span><br/>
-
-                                        @if (appData.FamilyData.EmergencyFund.AmountToSave > 0) {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.EmergencyFund.AmountToSave) in Emergency Fund</span><br/>
-                                            @((MarkupString)checkTotal(appData.FamilyData.EmergencyFund.AmountToSave))
-                                        }
-                                        @if (appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch > 0) {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch) in @appData.FamilyData.People[0].PossessiveID 401(k) (Match: @FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerPlan.MatchAmount))</span><br/>
-                                            @((MarkupString)checkTotal(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch))
-                                        }
-                                        @if (appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch > 0) {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch) in @appData.FamilyData.People[1].PossessiveID 401(k) (Match: @FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerPlan.MatchAmount))</span><br/>
-                                            @((MarkupString)checkTotal(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch))
-                                        }
-                                        @if (appData.FamilyData.HighDebts > 0) {
-                                            <span>@appData.FamilyData.HighDebts in High Debts</span><br/>
-                                            @((MarkupString)checkTotal(appData.FamilyData.HighDebts))
-                                        }
-                                        @if (appData.FamilyData.PersonCount > 0  && (appData.FamilyData.People[0].EmployerBenefits.Complete || appData.FamilyData.People[0].EmployerPlan.AnnualSalary == 0 || appData.FamilyData.People[0].HealthSavingsAccount.EligibleForHSA  || appData.FamilyData.People[0].HealthSavingsAccount.EligibleForHSACatchUpOnly) && appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave > 0) {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave) in @appData.FamilyData.People[0].PossessiveID HSA (Employer: @FormatUtilities.formatMoney(appData.FamilyData.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
-                                            @((MarkupString)checkTotal(appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave))
-                                        }
-                                        @if (appData.FamilyData.PersonCount > 1  && (appData.FamilyData.People[1].EmployerBenefits.Complete || appData.FamilyData.People[1].EmployerPlan.AnnualSalary == 0 || appData.FamilyData.People[1].HealthSavingsAccount.EligibleForHSA  || appData.FamilyData.People[1].HealthSavingsAccount.EligibleForHSACatchUpOnly) && appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave > 0) {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave) in @appData.FamilyData.People[1].PossessiveID HSA (Employer: @FormatUtilities.formatMoney(appData.FamilyData.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
-                                            @((MarkupString)checkTotal(appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave))
-                                        }
-                                        @if (appData.FamilyData.AdjustedGrossIncome != null) {
-                                            if (appData.FamilyData.PersonCount > 0) {
-                                                <span>@((MarkupString)GetRecommendedIRAMarkup(appData.FamilyData.People[0]))</span><br/>
-                                                @((MarkupString)checkTotal(GetRecommdedIRAAmount(appData.FamilyData.People[0])))
-                                            }
-                                            if(appData.FamilyData.PersonCount > 1) {
-                                                <span>@((MarkupString)GetRecommendedIRAMarkup(appData.FamilyData.People[1]))</span><br/>
-                                                @((MarkupString)checkTotal(GetRecommdedIRAAmount(appData.FamilyData.People[1])))
-                                            }
-                                        }
-                                        @if (appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched > 0) {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched) in @appData.FamilyData.People[0].PossessiveID 401(k)</span><br/>
-                                            @((MarkupString)checkTotal(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched))
-                                        }
-                                        @if (appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched > 0) {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched) in @appData.FamilyData.People[1].PossessiveID 401(k)</span><br/>
-                                            @((MarkupString)checkTotal(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched))
-                                        }
-                                        @if (appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @appData.FamilyData.People[0].PossessiveID mega backdoor roth</span><br/>
-                                            @((MarkupString)checkTotal(appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
-                                        }
-                                        @if (appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @appData.FamilyData.People[1].PossessiveID mega backdoor roth</span><br/>
-                                            @((MarkupString)checkTotal(appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
-                                        }
-                                        @if (appData.FamilyData.MediumDebts > 0) {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.MediumDebts) in Medium Debts</span><br/>
-                                            @((MarkupString)checkTotal(appData.FamilyData.MediumDebts))
-                                        }
-                                        @if (appData.FamilyData.PlannedSavings > runningTotal) {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.PlannedSavings-runningTotal) in Taxable</span><br/>
-                                            @((MarkupString)checkTotal(appData.FamilyData.PlannedSavings-runningTotal))
-                                        } else {
-                                            <span>@FormatUtilities.formatMoney(0) in Taxable</span><br/>
-                                        }
-                                        @if (appData.FamilyData.LowDebts > 0) {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.LowDebts) in Low Debts</span><br/>
-                                            @((MarkupString)checkTotal(appData.FamilyData.LowDebts))
-                                        }
-                                        <br/>
-                                    </div>
-                                    break;
+                                    <br />
+                                }
                             }
-                        <p>
-                            @if(step.description != "") {
-                                <b>Details:</b> <span>@((MarkupString)FormatUtilities.Markupize(step.description))</span>
-                            }
-                        </p>
+                            break;
+                        case "asset-allocation":
+                            <p><b>Worksheet:</b> </p>
 
-                        <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a><br/>
+                            <EditForm Model="appData.FamilyData" style=margin-left:25px>
+                                <label>Desired Asset Allocation:</label> <br />
+                                <label style=padding-left:20px>Stocks:</label> <input style=width:50px;text-align:right type=text @bind=appData.FamilyData.Stocks />%<br />
+                                <label style=padding-left:20px>Bonds:</label> <input style=width:50px;text-align:right type=text @bind=appData.FamilyData.Bonds />%<br />
+                                @if (appData.FamilyData.AssetAllocationError)
+                                {
+                                    <span style=background-color:yellow>&nbsp;Stocks + Bonds should total over 100%</span>
+
+                                    <br />
+                                }
+                                <hr />
+                                <label style=padding-left:20px>Desired International allocation (% of Stock):</label><br />
+                                <label style=padding-left:40px>International:</label> <input style=width:50px;text-align:right type=text @bind-Value=appData.FamilyData.International @bind-Value:event=oninput />%<br />
+                                <br />
+                                <InputCheckbox @bind-Value=appData.FamilyData.NotSureNeedHelpWithAssetAllocation /> <label>Do not know, need help</label><br />
+                            </EditForm>
+                            <br />
+                            break;
+                        case "available-funds":
+                            <td>
+                                <label>Account</label>
+                                <select @bind=currentAccountIndex>
+                                    <option>Choose Account...</option>
+                                    @for (int i = 0; i < appData.FamilyData.Accounts.Count; i++)
+                                    {
+                                        var account = appData.FamilyData.Accounts[i];
+                                        <option value=@i>
+                                            @account.FullName
+                                        </option>
+                                    }
+                                </select>
+                                <br />
+
+                                @if (currentAccountIndex != null && currentAccountIndex != "Choose Account...")
+                                {
+                                    int index = int.Parse(currentAccountIndex);
+                                    var currentAccount = appData.FamilyData.Accounts[index];
+                                    for (int i = 0; i < currentAccount.AvailableFunds.Count; i++)
+                                    {
+                                        var investment = currentAccount.AvailableFunds[i];
+                                        int invBuffer = i;
+                                        <div style=margin-top:10px;margin-left:80px;padding-left:3em;text-indent:-3em;>
+                                            <button @onclick='@(e=>deleteAvailableFund(e,currentAccount,invBuffer))'>❌</button>
+                                            <input style="width:70px;text-transform: uppercase;" type=text @bind-Value=investment.Ticker @bind-Value:event=oninput placeholder='ticker' />
+                                        </div>
+                                        <div style=margin-left:85px>
+                                            <input type=text @bind-Value=investment.Name @bind-Value:event=oninput placeholder='investment fullname' />
+                                            &nbsp;(
+                                            <input style="width:70px" type=text @bind-Value=investment.ExpenseRatio @bind-Value:event=oninput placeholder='expense ratio' />
+                                            %)
+                                        </div>
+                                    }
+                                    <br />
+                                    <button style=margin-left:80px @onclick='@(e=>addAvailableFund(e,currentAccount))'>➕</button>
+                                }
+                            </td>
+                            break;
+                        case "additional-background":
+                            <td>
+                                <textarea style=width:600px;height:300px @bind-Value=appData.FamilyData.AdditionalBackground @bind-Value:event=oninput placeholder='additional background information'>
+                                    @appData.FamilyData.AdditionalBackground
+                                                                    </textarea>
+                            </td>
+                            break;
+                        case "questions":
+                            <td>
+                                @for (int i = 0; i < appData.FamilyData.Questions.Count; i++)
+                                {
+                                    int iBuffer = i;
+                                    <label>@(i + 1 + ". ")</label>
+                                    <textarea style=width:500px;vertical-align:top @bind-Value=appData.FamilyData.Questions[iBuffer] @bind-Value:event="oninput" placeholder="ask question">
+                                        @appData.FamilyData.Questions[iBuffer]
+                                                                            </textarea>
+                                    <br />
+                                    <br />
+                                }
+                                <br />
+                                <button style=margin-left:80px @onclick=addQuestion>➕ Question</button>
+                                <br />
+                                @code {
+        void addQuestion()
+        {
+            if (appData?.FamilyData is not null)
+            {
+                appData.FamilyData.Questions.Add("");
+            }
+        }
+    }
+</td>
+                            break;
+                        case "retirement-assets":
+                            <p>
+                                Enter/edit your portfolio details at: <a href="/portfolio-tracker/accounts">Portfolio Tracker</a>, then return here to <a href=/portfolio-review>Portfolio Review</a> to address all the needed information.<br />
+                                <br />
+                            </p>
+
+                            @if (appData?.FamilyData is not null && appData.FamilyData.Value > 0)
+                            {
+                                <div>Preferred technique to represent the approximate size of your total portfolio (in <NavLink href="/portfolio-review">portfolio review</NavLink>):</div>
+                                <InputRadioGroup @bind-Value=appData.FamilyData.ValueStyle>
+                                    <InputRadio id=rounded Value='0' /> <label for=rounded>@FormatUtilities.formatMoneyThousands(appData.FamilyData.Value)</label> <br />
+                                    <InputRadio id=estimate Value='1' /> <label for=estimate>@appData.FamilyData.estimatePortfolio()</label> <br />
+                                    <InputRadio id=dollar Value='2' /> <label for=dollar>@FormatUtilities.formatMoney(appData.FamilyData.Value)</label> <br />
+                                </InputRadioGroup>
+                            }
+                            break;
+                        case "contributions":
+                            <div>
+                                Enter/edit your Savings Contribution at: <a href="/savings-planner">Savings Planner</a>, then return here to <a href=/portfolio-review>Portfolio Review</a> to address all the needed information.<br /><br />
+
+                                <span>
+                                    @((MarkupString)FormatUtilities.BoldUnderline("Contributions:", ShowMarkup))
+                                </span><br />
+                                @if (appData.FamilyData.PlannedSavings > 0)
+                                {
+                                    <span>Planned savings: @FormatUtilities.formatMoney(appData.FamilyData.PlannedSavings)</span>
+
+                                    <br />
+
+                                    <br />
+                                }
+
+                                <span>Prioritized Investments:</span><br />
+
+                                @if (appData.FamilyData.EmergencyFund.AmountToSave > 0)
+                                {
+                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.EmergencyFund.AmountToSave) in Emergency Fund</span>
+
+                                    <br />
+                                    @((MarkupString)checkTotal(appData.FamilyData.EmergencyFund.AmountToSave))
+                                }
+                                @if (appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch > 0)
+                                {
+                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch) in @appData.FamilyData.People[0].PossessiveID 401(k) (Match: @FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerPlan.MatchAmount))</span>
+
+                                    <br />
+                                    @((MarkupString)checkTotal(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch))
+                                }
+                                @if (appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch > 0)
+                                {
+                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch) in @appData.FamilyData.People[1].PossessiveID 401(k) (Match: @FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerPlan.MatchAmount))</span>
+
+                                    <br />
+                                    @((MarkupString)checkTotal(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch))
+                                }
+                                @if (appData.FamilyData.HighDebts > 0)
+                                {
+                                    <span>@appData.FamilyData.HighDebts in High Debts</span>
+
+                                    <br />
+                                    @((MarkupString)checkTotal(appData.FamilyData.HighDebts))
+                                }
+                                @if (appData.FamilyData.PersonCount > 0 && (appData.FamilyData.People[0].EmployerBenefits.Complete || appData.FamilyData.People[0].EmployerPlan.AnnualSalary == 0 || appData.FamilyData.People[0].HealthSavingsAccount.EligibleForHSA || appData.FamilyData.People[0].HealthSavingsAccount.EligibleForHSACatchUpOnly) && appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave > 0)
+                                {
+                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave) in @appData.FamilyData.People[0].PossessiveID HSA (Employer: @FormatUtilities.formatMoney(appData.FamilyData.People[0].HealthSavingsAccount.EmployerContribution))</span>
+
+                                    <br />
+                                    @((MarkupString)checkTotal(appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave))
+                                }
+                                @if (appData.FamilyData.PersonCount > 1 && (appData.FamilyData.People[1].EmployerBenefits.Complete || appData.FamilyData.People[1].EmployerPlan.AnnualSalary == 0 || appData.FamilyData.People[1].HealthSavingsAccount.EligibleForHSA || appData.FamilyData.People[1].HealthSavingsAccount.EligibleForHSACatchUpOnly) && appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave > 0)
+                                {
+                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave) in @appData.FamilyData.People[1].PossessiveID HSA (Employer: @FormatUtilities.formatMoney(appData.FamilyData.People[1].HealthSavingsAccount.EmployerContribution))</span>
+
+                                    <br />
+                                    @((MarkupString)checkTotal(appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave))
+                                }
+                                @if (appData.FamilyData.AdjustedGrossIncome != null)
+                                {
+                                    if (appData.FamilyData.PersonCount > 0)
+                                    {
+                                        <span>@((MarkupString)GetRecommendedIRAMarkup(appData.FamilyData.People[0]))</span>
+
+                                        <br />
+                                        @((MarkupString)checkTotal(GetRecommdedIRAAmount(appData.FamilyData.People[0])))
+                                    }
+                                    if (appData.FamilyData.PersonCount > 1)
+                                    {
+                                        <span>@((MarkupString)GetRecommendedIRAMarkup(appData.FamilyData.People[1]))</span>
+
+                                        <br />
+                                        @((MarkupString)checkTotal(GetRecommdedIRAAmount(appData.FamilyData.People[1])))
+                                    }
+                                }
+                                @if (appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched > 0)
+                                {
+                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched) in @appData.FamilyData.People[0].PossessiveID 401(k)</span>
+
+                                    <br />
+                                    @((MarkupString)checkTotal(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched))
+                                }
+                                @if (appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched > 0)
+                                {
+                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched) in @appData.FamilyData.People[1].PossessiveID 401(k)</span>
+
+                                    <br />
+                                    @((MarkupString)checkTotal(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched))
+                                }
+                                @if (appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0)
+                                {
+                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @appData.FamilyData.People[0].PossessiveID mega backdoor roth</span>
+
+                                    <br />
+                                    @((MarkupString)checkTotal(appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
+                                }
+                                @if (appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0)
+                                {
+                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @appData.FamilyData.People[1].PossessiveID mega backdoor roth</span>
+
+                                    <br />
+                                    @((MarkupString)checkTotal(appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
+                                }
+                                @if (appData.FamilyData.MediumDebts > 0)
+                                {
+                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.MediumDebts) in Medium Debts</span>
+
+                                    <br />
+                                    @((MarkupString)checkTotal(appData.FamilyData.MediumDebts))
+                                }
+                                @if (appData.FamilyData.PlannedSavings > runningTotal)
+                                {
+                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.PlannedSavings - runningTotal) in Taxable</span>
+
+                                    <br />
+                                    @((MarkupString)checkTotal(appData.FamilyData.PlannedSavings - runningTotal))
+                                }
+                                else
+                                {
+                                    <span>@FormatUtilities.formatMoney(0) in Taxable</span>
+
+                                    <br />
+                                }
+                                @if (appData.FamilyData.LowDebts > 0)
+                                {
+                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.LowDebts) in Low Debts</span>
+
+                                    <br />
+                                    @((MarkupString)checkTotal(appData.FamilyData.LowDebts))
+                                }
+                                <br />
+                            </div>
+                            break;
                     }
+                    <p>
+                        @if (step.description != "")
+                        {
+                            <b>Details:</b> <span>@((MarkupString)FormatUtilities.Markupize(step.description))</span>
+                        }
+                    </p>
+
+                    <a style='font-size:24pt' href="@nextPage"><span class="oi oi-arrow-right m-2 aria-hidden="true"></span></a>
+                    <br />
                 }
             }
         }
     }
+}
 
 @code {
-    public enum Mode {
+    public enum Mode
+    {
         normal = 0,
         href,
         text,
@@ -721,36 +1001,45 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
     public bool pastTotal = false;
     public int runningTotal = 0;
 
-    void RemoveDebt(MouseEventArgs e, int debtIndex) {
-        if (appData?.FamilyData is not null) {
+    void RemoveDebt(MouseEventArgs e, int debtIndex)
+    {
+        if (appData?.FamilyData is not null)
+        {
             appData.FamilyData.Debts.RemoveAt(debtIndex);
         }
     }
 
     void addDebt()
     {
-        if (appData?.FamilyData is not null) {
+        if (appData?.FamilyData is not null)
+        {
             appData.FamilyData?.Debts.Add(new Debt());
         }
     }
 
-    public string checkTotal(int? itemTotal) {
-        if (appData?.FamilyData is not null) {
+    public string checkTotal(int? itemTotal)
+    {
+        if (appData?.FamilyData is not null)
+        {
             runningTotal += itemTotal ?? 0;
-            if (!pastTotal) {
+            if (!pastTotal)
+            {
                 pastTotal = appData.FamilyData.PlannedSavings <= runningTotal;
 
-                if (pastTotal) {
-                    return "<div>-------<br/><div>Planned savings " + (appData.FamilyData.PlannedSavings==runningTotal?"met":"exceeded") + " after " + FormatUtilities.formatMoney(itemTotal+(appData.FamilyData.PlannedSavings-runningTotal)) + " towards previous step</div>-------<br/></div>";
+                if (pastTotal)
+                {
+                    return "<div>-------<br/><div>Planned savings " + (appData.FamilyData.PlannedSavings == runningTotal ? "met" : "exceeded") + " after " + FormatUtilities.formatMoney(itemTotal + (appData.FamilyData.PlannedSavings - runningTotal)) + " towards previous step</div>-------<br/></div>";
                 }
             }
         }
-        
+
         return "";
     }
 
-    public int? GetRecommdedIRAAmount(Person person) {
-        switch(person.IRATypeRecommendation) {
+    public int? GetRecommdedIRAAmount(Person person)
+    {
+        switch (person.IRATypeRecommendation)
+        {
             case IRAType.DeductibleIRAThenBackdoorRoth:
             case IRAType.DeductibleIRA:
                 return person.IRA.AmountToSave;
@@ -764,8 +1053,10 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
         }
     }
 
-    public string GetRecommendedIRAMarkup(Person person) {
-        switch(person.IRATypeRecommendation) {
+    public string GetRecommendedIRAMarkup(Person person)
+    {
+        switch (person.IRATypeRecommendation)
+        {
             case IRAType.DeductibleIRAThenBackdoorRoth:
                 return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.formatMoney(person.IRA.DeductionAllowed) + " Deductible), then backdoor roth</span>";
             case IRAType.DeductibleIRA:
@@ -781,8 +1072,10 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
         }
     }
 
-    public string getPronoun(Person person) {
-        if (person?.FamilyData != null && person.FamilyData.PersonCount > 1 && person.Identifier != null && person.Identifier != "None") {
+    public string getPronoun(Person person)
+    {
+        if (person?.FamilyData != null && person.FamilyData.PersonCount > 1 && person.Identifier != null && person.Identifier != "None")
+        {
             return "(" + person.Identifier + ")";
         }
         else
@@ -805,11 +1098,13 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
     private const string pagePath = "/portfolio-review";
     private const string folderName = pagePath + "/";
     private const string pageHeading = "Portfolio Review";
-    
-    protected override async Task OnInitializedAsync() {
+
+    protected override async Task OnInitializedAsync()
+    {
         steps = await Http.GetFromJsonAsync<Step[]>("data/portfolio-review-steps.json");
 
-        if (!string.IsNullOrEmpty(TopicValue)) {
+        if (!string.IsNullOrEmpty(TopicValue))
+        {
             await LoadPortfolioForTopic(TopicValue);
         }
 
@@ -817,11 +1112,14 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
         base.OnInitialized();
     }
 
-    private async Task UpdatePrice(MouseEventArgs e, Investment investment) {
-        if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey)) {
+    private async Task UpdatePrice(MouseEventArgs e, Investment investment)
+    {
+        if (!string.IsNullOrEmpty(appData.EODHistoricalDataApiKey))
+        {
             var quoteDataJson = await Http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={investment.Ticker}&apikey={appData.EODHistoricalDataApiKey}");
             var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
-            if (quoteData?.Close != null) {
+            if (quoteData?.Close != null)
+            {
                 investment.Price = quoteData.Close;
                 investment.UpdateValue();
             }
@@ -830,11 +1128,13 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
 
     private ImportResult? ImportResult = null;
 
-    private async Task OnDataFilesImport(InputFileChangeEventArgs e) {
-        if (appData?.FamilyData is not null) {
+    private async Task OnDataFilesImport(InputFileChangeEventArgs e)
+    {
+        if (appData?.FamilyData is not null)
+        {
             var files = e.GetMultipleFiles();
             ImportResult = await Importer.ImportDataFiles(files, Funds, appData.FamilyData.Accounts, appData.FamilyData.PIN);
-            foreach (var account in ImportResult.ImportedAccounts) 
+            foreach (var account in ImportResult.ImportedAccounts)
             {
                 account.Import = true;
             }
@@ -845,8 +1145,10 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
         }
     }
 
-    private void finishImport() {
-        if (appData?.FamilyData is not null) {
+    private void finishImport()
+    {
+        if (appData?.FamilyData is not null)
+        {
             if (ImportResult == null) { return; }
 
             foreach (var updatedAccount in ImportResult.UpdatedAccounts)
@@ -870,36 +1172,45 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
         }
     }
 
-    private void cancelImport() {
+    private void cancelImport()
+    {
         ImportResult = null;
     }
 
-    private void addInvestment(MouseEventArgs e, int accountIndex) {
-        if (appData?.FamilyData is not null) {
+    private void addInvestment(MouseEventArgs e, int accountIndex)
+    {
+        if (appData?.FamilyData is not null)
+        {
             var newInvestment = new Investment() { funds = Funds };
             appData.FamilyData.Accounts[accountIndex].Investments.Add(newInvestment);
         }
     }
 
-    async void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex) {
-        if (appData?.FamilyData is not null) {
+    async void deleteInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
+    {
+        if (appData?.FamilyData is not null)
+        {
             appData.FamilyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
             Navigation.NavigateTo("/portfolio-review/reload");
             await appData.FamilyData.UpdatePercentagesAsync();
         }
     }
 
-    void addAvailableFund(MouseEventArgs e, Account account) {
+    void addAvailableFund(MouseEventArgs e, Account account)
+    {
         var newFund = new Investment() { funds = Funds };
         account.AvailableFunds.Add(newFund);
     }
 
-    void deleteAvailableFund(MouseEventArgs e, Account account, int investmentIndex) {
+    void deleteAvailableFund(MouseEventArgs e, Account account, int investmentIndex)
+    {
         account.AvailableFunds.RemoveAt(investmentIndex);
     }
-    
-    void addAccount() {
-        if (appData?.FamilyData is not null) {
+
+    void addAccount()
+    {
+        if (appData?.FamilyData is not null)
+        {
             var newAccount = new Account();
             var newInvestment = new Investment() { funds = Funds };
             newAccount.Investments.Add(newInvestment);
@@ -907,17 +1218,21 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
         }
     }
 
-    async void deleteAccount(MouseEventArgs e, int accountIndex) {
-        if (appData?.FamilyData is not null) {
+    async void deleteAccount(MouseEventArgs e, int accountIndex)
+    {
+        if (appData?.FamilyData is not null)
+        {
             appData.FamilyData.Accounts.RemoveAt(accountIndex);
             Navigation.NavigateTo("/portfolio-review/reload");
             await appData.FamilyData.UpdatePercentagesAsync();
         }
     }
 
-    private async Task LoadPortfolioForTopic(string topicStr) {
-        if (appData is not null) {
-            var options = new JsonSerializerOptions() 
+    private async Task LoadPortfolioForTopic(string topicStr)
+    {
+        if (appData is not null)
+        {
+            var options = new JsonSerializerOptions()
                 {
                     Converters =
                         {
@@ -930,23 +1245,27 @@ Portfolio Review@(stepPath==null?"":": "+stepPath.Replace('-',' ')) - bogle.tool
         }
     }
 
-    private async Task CopyTextToClipboard() {
+    private async Task CopyTextToClipboard()
+    {
         var text = await JS.InvokeAsync<string>("getTableInnerText");
-        text = text.Replace("\n✏️\t","");
-        text = text.Replace("✏️\t","");
+        text = text.Replace("\n✏️\t", "");
+        text = text.Replace("✏️\t", "");
         text = text.Replace("Show Portfolio Analysis\n", "");
         await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
     }
 
-    private void navWithBackStack() {
-        if (appData is not null) {
+    private void navWithBackStack()
+    {
+        if (appData is not null)
+        {
             appData.LastPageUri = Navigation.Uri;
         }
-    
+
         Navigation.NavigateTo("/profiles");
     }
 
-    async void LocationChanged(object? sender, LocationChangedEventArgs e) {
+    async void LocationChanged(object? sender, LocationChangedEventArgs e)
+    {
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
     }
 }

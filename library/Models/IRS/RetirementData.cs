@@ -73,7 +73,7 @@ namespace IRS
         public HSA? HSA { get; set; }
         public IRA? IRA { get; set; }
         public RothIRA? RothIRA { get; set; }
-        public Employer401k Employer401k { get; set; }
+        public Employer401k? Employer401k { get; set; }
     }
 
     public class RothIRA

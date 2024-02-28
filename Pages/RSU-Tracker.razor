@@ -466,11 +466,11 @@
 
     private async Task refreshPrices() {
         refreshButtonText = "Updating...";
-        await appData.FamilyData.RefreshPrices(Http);
+        await appData.FamilyData!.RefreshPrices(Http);
         await appData.FamilyData.UpdatePercentagesAsync();
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
 
-        if (appData.FamilyData.TickersToUpdate.Count > 0)
+        if (appData?.FamilyData?.TickersToUpdate?.Count > 0)
         {
             Navigation.NavigateTo("/portfolio-tracker/refresh-prices");
         }
