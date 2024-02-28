@@ -1,5 +1,7 @@
 using System.Text.Json.Serialization;
 
+namespace Models;
+
 public class Fund
 {
     [JsonPropertyName("ticker")]
@@ -9,7 +11,7 @@ public class Fund
     [JsonPropertyName("expenseRatio")]
     public double? ExpenseRatio { get; set; }
     [JsonPropertyName("assetType")]
-    public AssetType? AssetType { get; set; }
+    public AssetTypes? AssetType { get; set; }
     [JsonPropertyName("vanguardFundId")]
     public string? VanguardFundId { get; set;  }
 

@@ -1,7 +1,9 @@
+using Models;
 using System.Text.Json;
 
-namespace IRS {
-    public class IRSData 
+namespace IRS
+{
+    public class IRSData(RetirementData retirementDataY1, RetirementData retirementDataY2, TaxRateData taxRatesY1, TaxRateData taxRatesY2)
     {
         public async static Task<IRSData?> Create(HttpClient httpClient) 
         {
@@ -23,14 +25,6 @@ namespace IRS {
         }
 
         public IAppData? AppData { get; set; }
-
-        public IRSData(RetirementData retirementDataY1, RetirementData retirementDataY2, TaxRateData taxRatesY1, TaxRateData taxRatesY2)
-        {
-            RetirementDataY1 = retirementDataY1;
-            RetirementDataY2 = retirementDataY2;
-            TaxRateDataY1 = taxRatesY1;
-            TaxRateDataY2 = taxRatesY2;
-        }
 
         public int YearIndex 
         {
@@ -64,9 +58,9 @@ namespace IRS {
             }
         }
 
-        public RetirementData RetirementDataY1 { get; private set; }
-        public RetirementData RetirementDataY2 { get; private set; }
-        public TaxRateData TaxRateDataY1 { get; private set; }
-        public TaxRateData TaxRateDataY2 { get; private set; }
+        public RetirementData RetirementDataY1 { get; private set; } = retirementDataY1;
+        public RetirementData RetirementDataY2 { get; private set; } = retirementDataY2;
+        public TaxRateData TaxRateDataY1 { get; private set; } = taxRatesY1;
+        public TaxRateData TaxRateDataY2 { get; private set; } = taxRatesY2;
     }
 }

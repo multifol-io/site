@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
+namespace Models;
+
 public class EmergencyFund {
     [Required]
     public int? CurrentBalance { get; set; }
@@ -41,7 +43,7 @@ public class EmergencyFund {
                         return $"missing data";
                     }
                 case "dollars":
-                    return FormatUtilities.formatMoney(CurrentBalance);
+                    return FormatUtilities.FormatMoney(CurrentBalance);
                 case "freeform":
                     return FreeformAnswer;
                 default:

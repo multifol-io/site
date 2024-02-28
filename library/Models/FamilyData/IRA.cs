@@ -1,20 +1,22 @@
 using System.Text.Json.Serialization;
 
+namespace Models;
+
 public class IRA
 {
     // back pointer
     [JsonIgnore]
-    public Person? person { get; set; }
+    public Person? Person { get; set; }
 
-    private IRS.IRA? iraVariables
+    private IRS.IRA? IraVariables
     {
         get
         {
-            return person!.FamilyData.AppData.IRSData!.RetirementData.IRA;
+            return Person!.FamilyData.AppData.IRSData!.RetirementData.IRA;
         }
         set
         {
-            person!.FamilyData.AppData.IRSData!.RetirementData.IRA = value;
+            Person!.FamilyData.AppData.IRSData!.RetirementData.IRA = value;
         }
     }
 
@@ -24,10 +26,10 @@ public class IRA
     {
         get
         {
-            if (person!.FamilyData.PersonCount > person.PersonIndex && person.FamilyData.AdjustedGrossIncome != null)
+            if (Person!.FamilyData.PersonCount > Person.PersonIndex && Person.FamilyData.AdjustedGrossIncome != null)
             {
-                return iraVariables?.ContributionLimit
-                    + (person.FiftyOrOver ? iraVariables?.CatchUpContributionLimit : 0);
+                return IraVariables?.ContributionLimit
+                    + (Person.FiftyOrOver ? IraVariables?.CatchUpContributionLimit : 0);
             }
             else
             {
@@ -36,16 +38,16 @@ public class IRA
         }
     }
 
-    public int? CalculateDeduction(int? income, TaxFilingStatus taxFilingStatus, Person person)
+    public int? CalculateDeduction(TaxFilingStatus taxFilingStatus, Person person)
     {
         switch (taxFilingStatus)
         {
             case TaxFilingStatus.Single:
-                if (iraVariables?.DeductabilityPhaseOutRange?.Single == null) return null;
+                if (IraVariables?.DeductabilityPhaseOutRange?.Single == null) return null;
                 if (person.EmployerPlan.Eligible == TriState.True)
                 {
-                    return ApplyRange(iraVariables.DeductabilityPhaseOutRange.Single.Start,
-                                      iraVariables.DeductabilityPhaseOutRange.Single.End,
+                    return ApplyRange(IraVariables.DeductabilityPhaseOutRange.Single.Start,
+                                      IraVariables.DeductabilityPhaseOutRange.Single.End,
                                       person.FamilyData.AdjustedGrossIncome, ContributionAllowed);
                 }
                 else
@@ -54,21 +56,21 @@ public class IRA
                 }
             case TaxFilingStatus.MarriedFilingJointly:
                 if (person.Spouse == null
-                    || iraVariables?.DeductabilityPhaseOutRange?.ActiveParticipant_MarriedFilingJointly == null
-                    || iraVariables?.DeductabilityPhaseOutRange?.InactiveParticipant_MarriedFilingJointly == null)
+                    || IraVariables?.DeductabilityPhaseOutRange?.ActiveParticipant_MarriedFilingJointly == null
+                    || IraVariables?.DeductabilityPhaseOutRange?.InactiveParticipant_MarriedFilingJointly == null)
                     return null;
                 if (person.Spouse.EmployerPlan.Eligible == TriState.True)
                 {
                     if (person.EmployerPlan.Eligible == TriState.True)
                     {
-                        return ApplyRange(iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFilingJointly.Start,
-                                  iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFilingJointly.End,
+                        return ApplyRange(IraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFilingJointly.Start,
+                                  IraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFilingJointly.End,
                                   person.FamilyData.AdjustedGrossIncome, ContributionAllowed);
                     }
                     else
                     {
-                        return ApplyRange(iraVariables.DeductabilityPhaseOutRange.InactiveParticipant_MarriedFilingJointly.Start,
-                                  iraVariables.DeductabilityPhaseOutRange.InactiveParticipant_MarriedFilingJointly.End,
+                        return ApplyRange(IraVariables.DeductabilityPhaseOutRange.InactiveParticipant_MarriedFilingJointly.Start,
+                                  IraVariables.DeductabilityPhaseOutRange.InactiveParticipant_MarriedFilingJointly.End,
                                   person.FamilyData.AdjustedGrossIncome, ContributionAllowed);
                     }
                 }
@@ -76,8 +78,8 @@ public class IRA
                 {
                     if (person.EmployerPlan.Eligible == TriState.True)
                     {
-                        return ApplyRange(iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFilingJointly.Start,
-                                  iraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFilingJointly.End,
+                        return ApplyRange(IraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFilingJointly.Start,
+                                  IraVariables.DeductabilityPhaseOutRange.ActiveParticipant_MarriedFilingJointly.End,
                                   person.FamilyData.AdjustedGrossIncome, ContributionAllowed);
                     }
                     else
@@ -87,20 +89,20 @@ public class IRA
                 }
             case TaxFilingStatus.MarriedFilingSeperately:
                 if (person.Spouse == null
-                    || iraVariables?.DeductabilityPhaseOutRange?.MarriedFilingSeparately == null)
+                    || IraVariables?.DeductabilityPhaseOutRange?.MarriedFilingSeparately == null)
                     return null;
                 if (person.Spouse.EmployerPlan.Eligible == TriState.True)
                 {
                     if (person.EmployerPlan.Eligible == TriState.True)
                     {
-                        return ApplyRange(iraVariables.DeductabilityPhaseOutRange.MarriedFilingSeparately.Start,
-                                  iraVariables.DeductabilityPhaseOutRange.MarriedFilingSeparately.End,
+                        return ApplyRange(IraVariables.DeductabilityPhaseOutRange.MarriedFilingSeparately.Start,
+                                  IraVariables.DeductabilityPhaseOutRange.MarriedFilingSeparately.End,
                                   person.FamilyData.AdjustedGrossIncome, ContributionAllowed);
                     }
                     else
                     {
-                        return ApplyRange(iraVariables.DeductabilityPhaseOutRange.MarriedFilingSeparately.Start,
-                                  iraVariables.DeductabilityPhaseOutRange.MarriedFilingSeparately.End,
+                        return ApplyRange(IraVariables.DeductabilityPhaseOutRange.MarriedFilingSeparately.Start,
+                                  IraVariables.DeductabilityPhaseOutRange.MarriedFilingSeparately.End,
                                   person.FamilyData.AdjustedGrossIncome, ContributionAllowed);
                     }
                 }
@@ -108,8 +110,8 @@ public class IRA
                 {
                     if (person.EmployerPlan.Eligible == TriState.True)
                     {
-                        return ApplyRange(iraVariables.DeductabilityPhaseOutRange.MarriedFilingSeparately.Start,
-                                  iraVariables.DeductabilityPhaseOutRange.MarriedFilingSeparately.End,
+                        return ApplyRange(IraVariables.DeductabilityPhaseOutRange.MarriedFilingSeparately.Start,
+                                  IraVariables.DeductabilityPhaseOutRange.MarriedFilingSeparately.End,
                                   person.FamilyData.AdjustedGrossIncome, ContributionAllowed);
                     }
                     else
@@ -123,7 +125,7 @@ public class IRA
         }
     }
 
-    private int? ApplyRange(int low, int high, int? income, int? contributionAllowed)
+    private static int? ApplyRange(int low, int high, int? income, int? contributionAllowed)
     {
         if (income <= low) return contributionAllowed;
         if (income >= high) return 0;
@@ -134,7 +136,7 @@ public class IRA
     {
         get
         {
-            return CalculateDeduction(person!.FamilyData.AdjustedGrossIncome, person.FamilyData.TaxFilingStatus, person);
+            return CalculateDeduction(Person!.FamilyData.TaxFilingStatus, Person);
         }
     }
     public int? AmountToSave

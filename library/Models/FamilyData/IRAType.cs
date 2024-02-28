@@ -1,3 +1,5 @@
+namespace Models;
+
 public enum IRAType 
 {
     DeductibleIRAThenBackdoorRoth,

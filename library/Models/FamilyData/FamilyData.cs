@@ -4,6 +4,8 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+namespace Models;
+
 public class FamilyData : INotifyPropertyChanged
 {
     protected void OnPropertyChanged([CallerMemberName] string? name = null)
@@ -16,10 +18,10 @@ public class FamilyData : INotifyPropertyChanged
         AppData = appData;
         Year = DateTime.Now.Year;
 
-        Debts = new();
-        Accounts = new();
-        People = new();
-        Questions = new();
+        Debts = [];
+        Accounts = [];
+        People = [];
+        Questions = [];
         RetirementData = new();
         
         People.Add(new Person() { Identifier = "person 1", FamilyData = this, PersonIndex = 0 });
@@ -213,6 +215,7 @@ public class FamilyData : INotifyPropertyChanged
     }
 
     private double _ActualStockAllocation;
+    [JsonIgnore] // added in 2/2024...but want to stop now.
     public double ActualStockAllocation {
         get {
             return _ActualStockAllocation;
@@ -224,6 +227,7 @@ public class FamilyData : INotifyPropertyChanged
     }
 
     private double _ActualBondAllocation;
+    [JsonIgnore] // added in 2/2024...but want to stop now.
     public double ActualBondAllocation
     {
         get {
@@ -236,6 +240,7 @@ public class FamilyData : INotifyPropertyChanged
     }
 
     private double _ActualInternationalStockAllocation;
+    [JsonIgnore] // added in 2/2024...but want to stop now.
     public double ActualInternationalStockAllocation
     {
         get {
@@ -248,6 +253,7 @@ public class FamilyData : INotifyPropertyChanged
     }
 
     private double _ActualCashAllocation;
+    [JsonIgnore] // added in 2/2024...but want to stop now.
     public double ActualCashAllocation
     {
         get {
@@ -260,6 +266,7 @@ public class FamilyData : INotifyPropertyChanged
     }
 
     private double _ActualOtherAllocation;
+    [JsonIgnore] // added in 2/2024...but want to stop now.
     public double ActualOtherAllocation
     {
         get {
@@ -298,27 +305,27 @@ public class FamilyData : INotifyPropertyChanged
     [JsonIgnore]
     public List<Investment> GroupedInvestments { 
         get {
-            Dictionary<string,Investment> _GroupedInvestments = new();
+            Dictionary<string,Investment> _GroupedInvestments = [];
             foreach (var account in Accounts) 
             {
                 foreach (var investment in account.Investments)
                 {
                     var key = string.IsNullOrEmpty(investment.Ticker) ? investment.Name ?? "missing ticker and name" : investment.Ticker;
-                    if (investment.AssetType == AssetType.StocksAndBonds_ETF || investment.AssetType == AssetType.StocksAndBonds_Fund) {
-                        if (investment.GetPercentage(AssetType.USStock) > 0.0) {
-                            GetGroup(_GroupedInvestments, investment, key+"-S", assetType:AssetType.USStock);
+                    if (investment.AssetType == AssetTypes.StocksAndBonds_ETF || investment.AssetType == AssetTypes.StocksAndBonds_Fund) {
+                        if (investment.GetPercentage(AssetTypes.USStock) > 0.0) {
+                            GetGroup(_GroupedInvestments, investment, key+"-S", assetType:AssetTypes.USStock);
                         }
-                        if (investment.GetPercentage(AssetType.InternationalStock) > 0.0) {
-                            GetGroup(_GroupedInvestments, investment, key+"-IS", assetType:AssetType.InternationalStock);
+                        if (investment.GetPercentage(AssetTypes.InternationalStock) > 0.0) {
+                            GetGroup(_GroupedInvestments, investment, key+"-IS", assetType:AssetTypes.InternationalStock);
                         }
-                        if (investment.GetPercentage(AssetType.Bond) > 0.0) {
-                            GetGroup(_GroupedInvestments, investment, key+"-B", assetType:AssetType.Bond);
+                        if (investment.GetPercentage(AssetTypes.Bond) > 0.0) {
+                            GetGroup(_GroupedInvestments, investment, key+"-B", assetType:AssetTypes.Bond);
                         }
-                        if (investment.GetPercentage(AssetType.InternationalBond) > 0.0) {
-                            GetGroup(_GroupedInvestments, investment, key+"-IB", assetType:AssetType.InternationalBond);
+                        if (investment.GetPercentage(AssetTypes.InternationalBond) > 0.0) {
+                            GetGroup(_GroupedInvestments, investment, key+"-IB", assetType:AssetTypes.InternationalBond);
                         }
-                        if (investment.GetPercentage(AssetType.Cash) > 0.0) {
-                            GetGroup(_GroupedInvestments, investment, key+"-C", assetType:AssetType.Cash);
+                        if (investment.GetPercentage(AssetTypes.Cash) > 0.0) {
+                            GetGroup(_GroupedInvestments, investment, key+"-C", assetType:AssetTypes.Cash);
                         }
                     } else {
                         var matchingInvestment = GetGroup(_GroupedInvestments, investment, key, assetType:null);
@@ -343,11 +350,11 @@ public class FamilyData : INotifyPropertyChanged
                 listInvestments.Add(investment);
             }
             
-            return listInvestments.OrderByDescending(i=>i.Value).ToList();
+            return [.. listInvestments.OrderByDescending(i=>i.Value)];
         }
     }
 
-public string estimatePortfolio() 
+public string EstimatePortfolio() 
     {
         if (Value >= 10000000) {
             return "8-figures";
@@ -378,13 +385,13 @@ public string estimatePortfolio()
         }
     }
 
-    private Investment? GetGroup(Dictionary<string, Investment> _GroupedInvestments, Investment investment, string? key, AssetType? assetType) {
+    private static Investment? GetGroup(Dictionary<string, Investment> _GroupedInvestments, Investment investment, string? key, AssetTypes? assetType) {
         Investment? matchingInvestment = null;
         if (key != null)
         {
-            if (_GroupedInvestments.ContainsKey(key: key))
+            if (_GroupedInvestments.TryGetValue(key: key, out Investment? value))
             {
-                matchingInvestment = _GroupedInvestments[key];
+                matchingInvestment = value;
             }
             else
             {
@@ -456,40 +463,37 @@ public string estimatePortfolio()
     }
 
     public async Task UpdatePercentagesAsync()
-    {
-        await Task.Run(() =>
+    {        
+        StockBalance = 0.0;
+        InternationalStockBalance = 0.0;
+        BondBalance = 0.0;
+        CashBalance = 0.0;
+        OtherBalance = 0.0;
+        OverallER = 0.0;
+        InvestmentsMissingER = 0;
+        ExpensesTotal = 0;
+
+        double totalValue = 0.0;
+        foreach (var account in Accounts)
         {
-            StockBalance = 0.0;
-            InternationalStockBalance = 0.0;
-            BondBalance = 0.0;
-            CashBalance = 0.0;
-            OtherBalance = 0.0;
-            OverallER = 0.0;
-            InvestmentsMissingER = 0;
-            ExpensesTotal = 0;
-
-            double totalValue = 0.0;
-            foreach (var account in Accounts)
+            double accountValue = 0.0;
+            foreach (var investment in account.Investments)
             {
-                double accountValue = 0.0;
-                foreach (var investment in account.Investments)
-                {
-                    accountValue += investment.Value ?? 0.0;
-                }
-
-                account.Value = accountValue;
-                totalValue += accountValue;
-            }
-            Value = totalValue;
-
-            foreach (var account in Accounts)
-            {
-                account.Percentage = account.Value / totalValue * 100;
-                account.UpdatePercentages(totalValue, this);
+                accountValue += investment.Value ?? 0.0;
             }
 
-            UpdateAllocations();
-        });
+            account.Value = accountValue;
+            totalValue += accountValue;
+        }
+        Value = totalValue;
+
+        foreach (var account in Accounts)
+        {
+            account.Percentage = account.Value / totalValue * 100;
+            await account.UpdatePercentagesAsync(totalValue, this);
+        }
+
+        UpdateAllocations();
     }
 
     public int YearIndex 
@@ -501,37 +505,15 @@ public string estimatePortfolio()
 
     public int PersonCount {
         get {
-            switch (TaxFilingStatus) {
-                case TaxFilingStatus.Single:
-                case TaxFilingStatus.HeadOfHousehold:
-                case TaxFilingStatus.MarriedFilingSeperately:
-                    return 1;
-                case TaxFilingStatus.MarriedFilingJointly:
-                    return 2;
-                case TaxFilingStatus.ChoiceNeeded:
-                default:
-                    return 0;
-            }
+            return TaxFilingStatus switch
+            {
+                TaxFilingStatus.Single or TaxFilingStatus.HeadOfHousehold or TaxFilingStatus.MarriedFilingSeperately => 1,
+                TaxFilingStatus.MarriedFilingJointly => 2,
+                _ => 0,
+            };
         } 
     }
 
-    public string SaveToJson()
-    {
-        var options = new JsonSerializerOptions() 
-        {
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
-            IgnoreReadOnlyProperties = true,
-            WriteIndented = true,
-            Converters =
-            {
-                new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-            }
-        };
-
-        var jsonOut = JsonSerializer.Serialize(this, options);
-
-        return jsonOut;
-    }
     public static FamilyData? LoadFromJson(IAppData appData, string json, JsonSerializerOptions options) {
         var loadedData = JsonSerializer.Deserialize<FamilyData>(json, options);
         if (loadedData != null) {
@@ -572,7 +554,7 @@ public string estimatePortfolio()
     public SortedDictionary<string,List<Investment>>? TickersToUpdate;
 
     public async Task RefreshPrices(HttpClient http) {
-        TickersToUpdate = new();
+        TickersToUpdate = [];
 
         var now = DateTime.Now.Date;
         var previousMarketClose = PreviousMarketClose(now).ToLocalTime();
@@ -596,11 +578,10 @@ public string estimatePortfolio()
                     var ticker = string.IsNullOrEmpty(investment.Ticker) ? investment.Name : investment.Ticker;
                     if (ticker != null)
                     {
-                        if (!TickersToUpdate.ContainsKey(ticker)) {
-                            Console.WriteLine(ticker + " " + investment.Shares);
-                            TickersToUpdate.Add(ticker, new List<Investment> () { investment });
+                        if (!TickersToUpdate.TryGetValue(ticker, out List<Investment>? value)) {
+                            TickersToUpdate.Add(ticker, [investment]);
                         } else {
-                            var investments = TickersToUpdate[ticker];
+                            var investments = value;
                             investments.Add(investment);
                         }
                     }
@@ -608,17 +589,16 @@ public string estimatePortfolio()
             }
         }
 
-        List<string> rsuTickers = new();
         for(int p=0;p<this.PersonCount;p++) {
             var person = this.People[p];
             foreach (var rsuGrant in person.RSUGrants) {
                 if (!string.IsNullOrEmpty(rsuGrant.Ticker)) {
                     var ticker = rsuGrant.Ticker.ToUpper();
                     var grantInvestment = new Investment() { Ticker = ticker, GrantToUpdateQuote = rsuGrant };
-                    if (!TickersToUpdate.ContainsKey(ticker)) {
-                        TickersToUpdate.Add(ticker, new List<Investment> () { grantInvestment });
+                    if (!TickersToUpdate.TryGetValue(ticker, out List<Investment>? value)) {
+                        TickersToUpdate.Add(ticker, [grantInvestment]);
                     } else {
-                        var investments = TickersToUpdate[ticker];
+                        var investments = value;
                         investments.Add(grantInvestment);
                     }
                 }
@@ -652,7 +632,7 @@ public string estimatePortfolio()
         }
     }
 
-    public void UpdateInvestmentsPrice(List<Investment> investments, double? price, double? previousClose, double? percentChange, DateTime? lastUpdated) 
+    public static void UpdateInvestmentsPrice(List<Investment> investments, double? price, double? previousClose, double? percentChange, DateTime? lastUpdated) 
     {
         foreach (var investment in investments)
         {
@@ -669,7 +649,7 @@ public string estimatePortfolio()
     {
         if (!unixTimeStamp.HasValue) return null;
         // Unix timestamp is seconds past epoch
-        DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+        var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
         dateTime = dateTime.AddSeconds( unixTimeStamp ?? 0 ).ToLocalTime();
         return dateTime;
     }
@@ -678,7 +658,7 @@ public string estimatePortfolio()
         return MarketClose(dateTime, -1);
     }
 
-    private DateTime NextMarketClose(DateTime dateTime) {
+    private static DateTime NextMarketClose(DateTime dateTime) {
         return MarketClose(dateTime, 1);
     }
     
@@ -727,24 +707,37 @@ public string estimatePortfolio()
         WeekEnd
     }
 
-    static DateTime[] holidays = {
-        new DateTime(2023, 1, 2),
-        new DateTime(2023, 1 , 16 ),
-        new DateTime(2023, 2, 20),
-        new DateTime(2023, 4, 7),
-        new DateTime(2023, 5, 29),
-        new DateTime(2023, 6, 19),
-        new DateTime(2023, 7, 4),
-        new DateTime(2023, 9, 4),
-        new DateTime(2023, 11, 23),
-        new DateTime(2023, 12, 25),
-    };
+    static readonly DateTime[] holidays = [
+        new(2024, 1, 1),
+        new(2024, 1 , 15),
+        new(2024, 2, 19),
+        new(2024, 3, 29),
+        new(2024, 5, 27),
+        new(2024, 6, 19),
+        new(2024, 7, 4),
+        new(2024, 9, 2),
+        new(2024, 11, 28),
+        new(2024, 12, 25),
+        new(2025, 1, 1),
+        new(2025, 1 , 20),
+        new(2025, 2, 17),
+        new(2025, 4, 18),
+        new(2025, 5, 26),
+        new(2025, 6, 19),
+        new(2025, 7, 4),
+        new(2025, 9, 1),
+        new(2025, 11, 27),
+        new(2025, 12, 25),
+    ];
 
-    static DateTime[] halfDays = {
-        new DateTime(2023, 7, 3),
-        new DateTime(2023, 11, 24),
-        new DateTime(2023, 12, 24),
-    };
+    static readonly DateTime[] halfDays = [
+        new(2024, 7, 3),
+        new(2024, 11, 27),
+        new(2024, 12, 24),
+        new(2025, 7, 3),
+        new(2025, 11, 26),
+        new(2025, 12, 24),
+    ];
 
     private static MarketDay GetMarketDay(DateTime dateTime) {
         switch (dateTime.DayOfWeek) {

@@ -1,3 +1,5 @@
+namespace Models;
+
 public class RSUVestEvent {
     public DateOnly Date { get; set; }
     public int Shares { get; set; }

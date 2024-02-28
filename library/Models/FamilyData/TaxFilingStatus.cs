@@ -1,3 +1,5 @@
+namespace Models;
+
 public enum TaxFilingStatus {
     ChoiceNeeded = 0,
     Single,

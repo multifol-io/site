@@ -6,6 +6,7 @@
 @inject NavigationManager Navigation
 @inject IList<Fund> Funds
 @using System.Text.Json.Serialization
+@using Models
 
 <PageTitle>
     @pageHeading - bogle.tools
@@ -200,7 +201,7 @@ else if (loaded && appData?.FamilyData is not null)
                             @account.Title
                         </td>
                         <td style=text-align:right;padding-left:8px>
-                            @FormatUtilities.formatMoney(account.Value, decimalPlaces: 0)
+                            @FormatUtilities.FormatMoney(account.Value, decimalPlaces: 0)
                             <a style=margin:0px;padding:0px;width:20px class="m-0 btn">✏️</a>
                         </td>
                     </tr>
@@ -369,31 +370,31 @@ else if (loaded && appData?.FamilyData is not null)
                                 {
                                     <span>&nbsp;</span>
 
-                                    @FormatUtilities.formatMonthPlus2DigitYear(investment.PurchaseDate)
+                                    @FormatUtilities.FormatMonthPlus2DigitYear(investment.PurchaseDate)
                                 }
                             </td>
                             @if (investment.IsIBond)
                             {
-                                <td style=text-align:right>@FormatUtilities.formatPercent3(investment.InterestRate * 100.0)</td>
-                                <td style=text-align:right>@FormatUtilities.formatPercent3(investment.CurrentRate * 100.0)</td>
+                                <td style=text-align:right>@FormatUtilities.FormatPercent3(investment.InterestRate * 100.0)</td>
+                                <td style=text-align:right>@FormatUtilities.FormatPercent3(investment.CurrentRate * 100.0)</td>
                             }
                             else
                             {
-                                <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleTwoDecimal(investment.Shares)</td>
-                                <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(investment.Price)</td>
+                                <td style=text-align:right;padding-left:8px>@FormatUtilities.FormatDoubleTwoDecimal(investment.Shares)</td>
+                                <td style=text-align:right;padding-left:8px>@FormatUtilities.FormatMoney(investment.Price)</td>
                             }
                             <td style=text-align:right;padding-left:8px>
-                                @FormatUtilities.formatMoney(investment.Value, decimalPlaces: 0)
+                                @FormatUtilities.FormatMoney(investment.Value, decimalPlaces: 0)
                             </td>
                         </tr>
                         @if (investment.IsIBond && investment.NextRate.HasValue)
                         {
                             <tr style=background-color:@bgColor @onclick='@(e=>chooseInvestment(e,accBuffer,invBuffer))'>
                                 <td colspan=2 style=text-align:right>
-                                    as of @FormatUtilities.formatMonthPlus2DigitYear(@investment.NextRateStart):
+                                    as of @FormatUtilities.FormatMonthPlus2DigitYear(@investment.NextRateStart):
                                 </td>
                                 <td style=text-align:right>
-                                    @FormatUtilities.formatPercent3(investment.NextRate * 100.0)
+                                    @FormatUtilities.FormatPercent3(investment.NextRate * 100.0)
                                 </td>
                                 <td></td>
                             </tr>
@@ -438,7 +439,7 @@ else if (loaded && appData?.FamilyData is not null)
                                         }
                                     </td>
                                     <td style=text-align:right;padding-left:8px>
-                                        @FormatUtilities.formatMoney(value, decimalPlaces: 0)
+                                        @FormatUtilities.FormatMoney(value, decimalPlaces: 0)
                                     </td>
                                 </tr>
                             }
@@ -722,7 +723,7 @@ else if (loaded && appData?.FamilyData is not null)
                                         </td>
                                         <td colspan=3>
                                             <select @bind=selectedInvestment.AssetType>
-                                                @foreach (AssetType assetType in (AssetType[])Enum.GetValues(typeof(AssetType)))
+                                                @foreach (AssetTypes assetType in (AssetTypes[])Enum.GetValues(typeof(AssetTypes)))
                                                 {
                                                     <option>@assetType</option>
                                                 }
@@ -738,7 +739,7 @@ else if (loaded && appData?.FamilyData is not null)
                                             <input width= type=text style=width:100px;text-align:right @bind-Value=selectedInvestment.ExpenseRatio @bind-Value:event=oninput placeholder='exp. ratio' />%
                                         </td>
                                     </tr>
-                                    @if (selectedInvestment.AssetType == global::AssetType.StocksAndBonds_ETF || selectedInvestment.AssetType == global::AssetType.StocksAndBonds_Fund)
+                                    @if (selectedInvestment.AssetType == AssetTypes.StocksAndBonds_ETF || selectedInvestment.AssetType == AssetTypes.StocksAndBonds_Fund)
                                     {
                                         <tr>
                                             <td colspan=4 style=text-align:right>
@@ -883,7 +884,7 @@ else if (appData?.FamilyData == null)
     async void commit(MouseEventArgs e, Account account, Investment selectedInvestment)
     {
         plan(e, account, selectedInvestment);
-        if (selectedInvestment.CostBasis != null && selectedInvestment.PurchaseDate.HasValue && selectedInvestment.AssetType == global::AssetType.IBond)
+        if (selectedInvestment.CostBasis != null && selectedInvestment.PurchaseDate.HasValue && selectedInvestment.AssetType == AssetTypes.IBond)
         {
             await selectedInvestment.CalculateIBondValue();
         }
@@ -1045,7 +1046,7 @@ else if (appData?.FamilyData == null)
 
                 if (pastTotal)
                 {
-                    return "<div>-------<br/><div>Planned savings " + (appData.FamilyData.PlannedSavings == runningTotal ? "met" : "exceeded") + " after " + FormatUtilities.formatMoney(itemTotal + (appData.FamilyData.PlannedSavings - runningTotal)) + " towards previous step</div>-------<br/></div>";
+                    return "<div>-------<br/><div>Planned savings " + (appData.FamilyData.PlannedSavings == runningTotal ? "met" : "exceeded") + " after " + FormatUtilities.FormatMoney(itemTotal + (appData.FamilyData.PlannedSavings - runningTotal)) + " towards previous step</div>-------<br/></div>";
                 }
             }
         }
@@ -1119,7 +1120,7 @@ else if (appData?.FamilyData == null)
                 account.SelectedInvestment.Selected = false;
             }
 
-            account.SelectedInvestment = new Investment() { funds = Funds, Selected = true, Ticker = "IBOND" };
+            account.SelectedInvestment = new Investment() { Funds = Funds, Selected = true, Ticker = "IBOND" };
             account.Investments.Add(account.SelectedInvestment);
 
             account.SelectedInvestment.SelectedTransaction = new Transaction() { Type = "Edit" };
@@ -1136,7 +1137,7 @@ else if (appData?.FamilyData == null)
                 account.SelectedInvestment.Selected = false;
             }
 
-            account.SelectedInvestment = new Investment() { funds = Funds, Selected = true };
+            account.SelectedInvestment = new Investment() { Funds = Funds, Selected = true };
             account.Investments.Add(account.SelectedInvestment);
 
             account.SelectedInvestment.SelectedTransaction = new Transaction() { Type = "Edit" };
@@ -1159,7 +1160,7 @@ else if (appData?.FamilyData == null)
         var newAccount = new Account() { Custodian = "Treasury Direct", AccountType = "Taxable" };
         newAccount.View = true;
         appData.FamilyData?.Accounts.Insert(0, newAccount);
-        newAccount.Investments.Add(new Investment() { Ticker = "IBOND", AssetType = AssetType.IBond, Name = "I Bonds", ExpenseRatio = 0.0 });
+        newAccount.Investments.Add(new Investment() { Ticker = "IBOND", AssetType = AssetTypes.IBond, Name = "I Bonds", ExpenseRatio = 0.0 });
     }
 
     private async void deleteAccount(MouseEventArgs e, int accountIndex)

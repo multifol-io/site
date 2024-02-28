@@ -2,6 +2,8 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
+namespace Models;
+
 public class Investment : INotifyPropertyChanged
 {
     protected void OnPropertyChanged([CallerMemberName] string? name = null)
@@ -11,7 +13,7 @@ public class Investment : INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public Investment() {
-        Transactions = new();
+        Transactions = [];
     }
 
     [JsonIgnore]
@@ -21,7 +23,7 @@ public class Investment : INotifyPropertyChanged
     public bool Selected { get; set; }
     
     [JsonIgnore]
-    public IList<Fund>? funds { get; set; }
+    public IList<Fund>? Funds { get; set; }
 
     private string? _Name;
     public string? Name { 
@@ -49,16 +51,13 @@ public class Investment : INotifyPropertyChanged
         set {
             if (value == null) { _Ticker = value; return; }
             _Ticker = value?.ToUpperInvariant().Trim();
-            if (funds != null) {
+            if (Funds != null) {
                 bool found = false;
-                foreach (var fund in funds)
+                foreach (var fund in Funds)
                 {
                     if (_Ticker == fund.Ticker)
                     {
-                        if (fund.AssetType == null)
-                        {
-                            fund.AssetType = global::AssetType.USStock;
-                        }
+                        fund.AssetType ??= AssetTypes.USStock;
                     
                         AutoComplete(fund);
                         found = true;
@@ -74,17 +73,17 @@ public class Investment : INotifyPropertyChanged
         }
     }
 
-    public double? GetPrice(AssetType? assetType, double? price) {
+    public double? GetPrice(AssetTypes? assetType, double? price) {
         if (assetType == null) { return price; }
         else {
             return assetType switch
             {
-                global::AssetType.USStock or 
-                global::AssetType.InternationalStock or
-                global::AssetType.Bond or
-                global::AssetType.InternationalBond or
-                global::AssetType.Cash => price * GetPercentage(assetType),
-                _ => throw new ArgumentException("unexpected " + assetType.ToString()),
+                AssetTypes.USStock or 
+                AssetTypes.InternationalStock or
+                AssetTypes.Bond or
+                AssetTypes.InternationalBond or
+                AssetTypes.Cash => price * GetPercentage(assetType),
+                _ => throw new ArgumentException("unexpected " + AssetType.ToString()),
             };
         }
     }
@@ -93,7 +92,7 @@ public class Investment : INotifyPropertyChanged
     public bool IsAssetTypeUnknown
     {
         get {
-            return AssetType == global::AssetType.Unknown;
+            return AssetType == AssetTypes.Unknown;
         }
     }
 
@@ -101,7 +100,7 @@ public class Investment : INotifyPropertyChanged
     public bool IsBalancedFund
     {
         get {
-            return (AssetType == global::AssetType.StocksAndBonds_ETF || AssetType == global::AssetType.StocksAndBonds_Fund);
+            return (AssetType == AssetTypes.StocksAndBonds_ETF || AssetType == AssetTypes.StocksAndBonds_Fund);
         }
     }
 
@@ -129,17 +128,17 @@ public class Investment : INotifyPropertyChanged
         }
     }
 
-    public double? GetPercentage(AssetType? assetType) {
+    public double? GetPercentage(AssetTypes? assetType) {
         if (assetType == null) { return 100.0 / 100.0; }
         else {
             return assetType switch
             {
-                global::AssetType.USStock => (USStockPercent ?? 0.0) / 100.0,
-                global::AssetType.InternationalStock => (InternationalStockPercent ?? 0.0) / 100.0,
-                global::AssetType.Bond => (USBondsPercent ?? 0.0) / 100.0,
-                global::AssetType.InternationalBond => (InternationalBondsPercent ?? 0.0) / 100.0,
-                global::AssetType.Cash => (CashPercent ?? 0.0) / 100.0,
-                _ => throw new ArgumentException("unexpected " + assetType.ToString()),
+                AssetTypes.USStock => (USStockPercent ?? 0.0) / 100.0,
+                AssetTypes.InternationalStock => (InternationalStockPercent ?? 0.0) / 100.0,
+                AssetTypes.Bond => (USBondsPercent ?? 0.0) / 100.0,
+                AssetTypes.InternationalBond => (InternationalBondsPercent ?? 0.0) / 100.0,
+                AssetTypes.Cash => (CashPercent ?? 0.0) / 100.0,
+                _ => throw new ArgumentException("unexpected " + AssetType.ToString()),
             };
         }
     }
@@ -148,7 +147,7 @@ public class Investment : INotifyPropertyChanged
         if (fund == null) {
             Name = null;
             ExpenseRatio = null;
-            AssetType = global::AssetType.Unknown;
+            AssetType = AssetTypes.Unknown;
             VanguardFundId = null;
             AutoCompleted = false;
         }
@@ -171,10 +170,10 @@ public class Investment : INotifyPropertyChanged
     [JsonIgnore]
     public bool IsETF {
         get {
-            var assetType = AssetType ?? global::AssetType.Unknown;
+            var assetType = AssetType ?? AssetTypes.Unknown;
             return assetType switch
             {
-                global::AssetType.USStock_ETF or global::AssetType.InternationalStock_ETF or global::AssetType.Bond_ETF or global::AssetType.InternationalBond_ETF or global::AssetType.StocksAndBonds_ETF => true,
+                AssetTypes.USStock_ETF or AssetTypes.InternationalStock_ETF or AssetTypes.Bond_ETF or AssetTypes.InternationalBond_ETF or AssetTypes.StocksAndBonds_ETF => true,
                 _ => false,
             };
         }
@@ -185,7 +184,7 @@ public class Investment : INotifyPropertyChanged
         get {
             return AssetType switch
             {
-                global::AssetType.IBond => true,
+                AssetTypes.IBond => true,
                 _ => false,
             };
         }
@@ -196,7 +195,7 @@ public class Investment : INotifyPropertyChanged
         get {
             return AssetType switch
             {
-                global::AssetType.USStock or global::AssetType.InternationalStock => true,
+                AssetTypes.USStock or AssetTypes.InternationalStock => true,
                 _ => false,
             };
         }
@@ -207,7 +206,7 @@ public class Investment : INotifyPropertyChanged
         get {
             return AssetType switch
             {
-                global::AssetType.USStock_Fund or global::AssetType.InternationalStock_Fund or global::AssetType.Bond_Fund or global::AssetType.InternationalBond_Fund or global::AssetType.StocksAndBonds_Fund => true,
+                AssetTypes.USStock_Fund or AssetTypes.InternationalStock_Fund or AssetTypes.Bond_Fund or AssetTypes.InternationalBond_Fund or AssetTypes.StocksAndBonds_Fund => true,
                 _ => false,
             };
         }
@@ -218,7 +217,7 @@ public class Investment : INotifyPropertyChanged
         get {
             return AssetType switch
             {
-                global::AssetType.Cash or global::AssetType.Cash_BankAccount or global::AssetType.Cash_MoneyMarket => true,
+                AssetTypes.Cash or AssetTypes.Cash_BankAccount or AssetTypes.Cash_MoneyMarket => true,
                 _ => false,
             };
         }
@@ -226,27 +225,27 @@ public class Investment : INotifyPropertyChanged
 
     [JsonIgnore]
     [JsonPropertyName("AssetType")]
-    private AssetType _TransitionAssetType; 
+    private AssetTypes _TransitionAssetType; 
     public string TransitionAssetType {
         get { return _TransitionAssetType.ToString(); }
         set { 
             switch (value) {
-                case "Unknown": _TransitionAssetType = global::AssetType.Unknown; break;
+                case "Unknown": _TransitionAssetType = AssetTypes.Unknown; break;
                 case "Stock": // move to *USStock
-                case "USStock": _TransitionAssetType = global::AssetType.USStock; break;
-                case "InternationalStock": _TransitionAssetType = global::AssetType.InternationalStock; break;
-                case "Bond": _TransitionAssetType = global::AssetType.Bond; break;
-                case "Cash": _TransitionAssetType = global::AssetType.Cash; break;
-                case "MoneyMarket": _TransitionAssetType = global::AssetType.Cash_MoneyMarket; break;
-                case "BankAccount": _TransitionAssetType = global::AssetType.Cash_BankAccount; break;
-                case "Fund_USStock": _TransitionAssetType = global::AssetType.USStock_Fund; break;
-                case "Fund_Bond": _TransitionAssetType = global::AssetType.Bond_Fund; break;
-                case "Fund_InternationalStock": _TransitionAssetType = global::AssetType.InternationalStock_Fund; break;
-                case "Fund_Mixed": _TransitionAssetType = global::AssetType.StocksAndBonds_Fund; break;
-                case "ETF_USStock": _TransitionAssetType = global::AssetType.USStock_ETF; break;
-                case "ETF_InternationalStock": _TransitionAssetType = global::AssetType.InternationalStock_ETF; break;
-                case "ETF_Bond": _TransitionAssetType = global::AssetType.Bond_ETF; break;
-                case "ETF_Mixed": _TransitionAssetType = global::AssetType.StocksAndBonds_ETF; break;
+                case "USStock": _TransitionAssetType = AssetTypes.USStock; break;
+                case "InternationalStock": _TransitionAssetType = AssetTypes.InternationalStock; break;
+                case "Bond": _TransitionAssetType = AssetTypes.Bond; break;
+                case "Cash": _TransitionAssetType = AssetTypes.Cash; break;
+                case "MoneyMarket": _TransitionAssetType = AssetTypes.Cash_MoneyMarket; break;
+                case "BankAccount": _TransitionAssetType = AssetTypes.Cash_BankAccount; break;
+                case "Fund_USStock": _TransitionAssetType = AssetTypes.USStock_Fund; break;
+                case "Fund_Bond": _TransitionAssetType = AssetTypes.Bond_Fund; break;
+                case "Fund_InternationalStock": _TransitionAssetType = AssetTypes.InternationalStock_Fund; break;
+                case "Fund_Mixed": _TransitionAssetType = AssetTypes.StocksAndBonds_Fund; break;
+                case "ETF_USStock": _TransitionAssetType = AssetTypes.USStock_ETF; break;
+                case "ETF_InternationalStock": _TransitionAssetType = AssetTypes.InternationalStock_ETF; break;
+                case "ETF_Bond": _TransitionAssetType = AssetTypes.Bond_ETF; break;
+                case "ETF_Mixed": _TransitionAssetType = AssetTypes.StocksAndBonds_ETF; break;
             }
 
             AssetType = _TransitionAssetType;
@@ -259,9 +258,9 @@ public class Investment : INotifyPropertyChanged
     public double? InternationalBondsPercent { get; set; }
     public double? CashPercent { get; set; }
 
-    private AssetType? _AssetType;
+    private AssetTypes? _AssetType;
     [JsonPropertyName("AssetType2")]
-    public AssetType? AssetType {
+    public AssetTypes? AssetType {
         get { return _AssetType; }
         set {
             _AssetType = value;
@@ -270,13 +269,13 @@ public class Investment : INotifyPropertyChanged
 
     public int InvestmentOrder {
         get {
-            return (AssetType ?? global::AssetType.Unknown) switch
+            return (AssetType ?? AssetTypes.Unknown) switch
             {
-                global::AssetType.USStock or global::AssetType.USStock_ETF or global::AssetType.USStock_Fund or global::AssetType.Stock=> 1,
-                global::AssetType.InternationalStock or global::AssetType.InternationalStock_ETF or global::AssetType.InternationalStock_Fund => 2,
-                global::AssetType.Bond or global::AssetType.IBond or global::AssetType.Bond_ETF or global::AssetType.Bond_Fund or global::AssetType.InternationalBond or global::AssetType.InternationalBond_ETF or global::AssetType.InternationalBond_Fund => 3,
-                global::AssetType.StocksAndBonds_ETF or global::AssetType.StocksAndBonds_Fund => 4,
-                global::AssetType.Cash or global::AssetType.Cash_BankAccount or global::AssetType.Cash_MoneyMarket => 5,
+                AssetTypes.USStock or AssetTypes.USStock_ETF or AssetTypes.USStock_Fund or AssetTypes.Stock=> 1,
+                AssetTypes.InternationalStock or AssetTypes.InternationalStock_ETF or AssetTypes.InternationalStock_Fund => 2,
+                AssetTypes.Bond or AssetTypes.IBond or AssetTypes.Bond_ETF or AssetTypes.Bond_Fund or AssetTypes.InternationalBond or AssetTypes.InternationalBond_ETF or AssetTypes.InternationalBond_Fund => 3,
+                AssetTypes.StocksAndBonds_ETF or AssetTypes.StocksAndBonds_Fund => 4,
+                AssetTypes.Cash or AssetTypes.Cash_BankAccount or AssetTypes.Cash_MoneyMarket => 5,
                 _ => 6,
             };
         }
@@ -351,9 +350,9 @@ public class Investment : INotifyPropertyChanged
  
     public void UpdateValue() {
         if (Price != null && Shares != null) {
-            switch (AssetType ?? global::AssetType.Unknown) {
-                case global::AssetType.Unknown:
-                case global::AssetType.Bond:
+            switch (AssetType ?? AssetTypes.Unknown) {
+                case AssetTypes.Unknown:
+                case AssetTypes.Bond:
                     break;
                 default:
                     Value = Price * Shares;
@@ -373,7 +372,7 @@ public class Investment : INotifyPropertyChanged
     
     public static async Task LoadIBondRates() {
         if (IBondRates == null) {
-            IBondRates = new();
+            IBondRates = [];
             var ibondsUri = new Uri("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/treasury-direct/i-bond-rate-chart.csv");
             var httpClient = new HttpClient();
             var ibondsCsv = await httpClient.GetAsync(ibondsUri.AbsoluteUri);
@@ -387,7 +386,7 @@ public class Investment : INotifyPropertyChanged
                 string[] chunks = RowEnumerator.Current;
                 int chunkNum = 0;
                 string? date = null;
-                List<double> rates = new();
+                List<double> rates = [];
                 foreach (var chunk in chunks)
                 {
                     switch (chunkNum) 
@@ -428,12 +427,12 @@ public class Investment : INotifyPropertyChanged
     static string GetRateDate(int month, int year) 
     {
         if (month < 5) {
-            return "11/" + (year-1).ToString().Substring(2);
+            return "11/" + (year-1).ToString()[2..];
         }
         else if (month < 11) {
-            return "05/" + (year).ToString().Substring(2);
+            return "05/" + (year).ToString()[2..];
         } else {
-            return "11/" + (year).ToString().Substring(2);
+            return "11/" + (year).ToString()[2..];
         }
     }
 

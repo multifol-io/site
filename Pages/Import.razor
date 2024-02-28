@@ -5,6 +5,7 @@
 @inject NavigationManager Navigation
 @inject IList<Fund> Funds
 @inject HttpClient Http
+@using Models
 
 @if (Custodian == null) {
     <PageTitle>@pageHeading</PageTitle>
@@ -248,16 +249,16 @@
                         @foreach (var account in appData.ImportResult.UpdatedAccounts)
                         {
                             alternateRow = false;
-                            <div style=margin-left:8px;background-color:black;color:white;margin-left:8px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)</div>
+                            <div style=margin-left:8px;background-color:black;color:white;margin-left:8px><InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.FormatMoney(account.Value)</div>
                             @foreach (var investment in account.Investments)
                             {
                                 string bgColor = alternateRow ? "white" : "lightgray";
                                 alternateRow = !alternateRow;
                                 <div style=margin-left:16px;background-color:@bgColor>
                                     @investment.Name (@investment.Ticker
-                                        <span>&nbsp;</span>@FormatUtilities.formatMonthPlus2DigitYear(investment.PurchaseDate)
-                                    ) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)<br/>
-                                    @if(account?.ReplaceAccount?.AccountType == "Taxable" && investment.AssetType != AssetType.Cash_MoneyMarket) {
+                                        <span>&nbsp;</span>@FormatUtilities.FormatMonthPlus2DigitYear(investment.PurchaseDate)
+                                    ) @(investment.Shares) shares =&gt; @FormatUtilities.FormatMoney(investment.Value)<br/>
+                                    @if(account?.ReplaceAccount?.AccountType == "Taxable" && investment.AssetType != AssetTypes.Cash_MoneyMarket) {
                                         <div>@account.AccountType
                                             &nbsp;<label>Cost Basis: </label>
                                             <span>$</span>
@@ -265,9 +266,9 @@
                                         </div>
                                     }
                                     <label style=padding-left:16px>Asset Type:</label>
-                                    @if(investment.AssetType == AssetType.Unknown || investment.AssetType == null) {
+                                    @if(investment.AssetType == AssetTypes.Unknown || investment.AssetType == null) {
                                         <select @bind=investment.AssetType>
-                                            @foreach (AssetType assetType in (AssetType[]) Enum.GetValues(typeof(AssetType))) {
+                                            @foreach (AssetTypes assetType in (AssetTypes[]) Enum.GetValues(typeof(AssetTypes))) {
                                                 <option>@assetType</option>
                                             }
                                         </select>
@@ -290,11 +291,11 @@
                     {
                         alternateRow = false;
                         <div style=margin-left:8px;background-color:black;color:white>
-                            <InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.formatMoney(account.Value)
+                            <InputCheckbox @bind-Value=account.Import /> <u>@account.Custodian @account.Note</u> =&gt; @FormatUtilities.FormatMoney(account.Value)
                             <br/>
                             @if (appData.FamilyData.PersonCount == 2) {
                                 <label>Account Owner(s):</label>
-                                <select style=margin-left:8px@bind=account.Identifier>
+                                <select style=margin-left:8px @bind=account.Identifier>
                                     <option>our</option>
                                     @for(int p=0;p<appData.FamilyData.PersonCount;p++) {
                                         <option>@appData.FamilyData.People[p].PossessiveID</option>
@@ -347,18 +348,18 @@
                             <div style=margin-left:16px;background-color:@bgColor>
                                 @investment.Name (@investment.Ticker
                                 @if (investment.IsIBond) {
-                                    <span>&nbsp;@FormatUtilities.formatMonthPlus2DigitYear(investment.PurchaseDate))</span><br/>
+                                    <span>&nbsp;@FormatUtilities.FormatMonthPlus2DigitYear(investment.PurchaseDate))</span><br/>
                                 } else {
-                                    <span>) @(investment.Shares) shares =&gt; @FormatUtilities.formatMoney(investment.Value)</span><br/>
+                                    <span>) @(investment.Shares) shares =&gt; @FormatUtilities.FormatMoney(investment.Value)</span><br/>
                                 }
-                            @if(account.AccountType == "Taxable" && investment.AssetType != AssetType.Cash_MoneyMarket) {
+                            @if(account.AccountType == "Taxable" && investment.AssetType != AssetTypes.Cash_MoneyMarket) {
                                 <label>Cost Basis: </label>
                                 <span>$</span><input type=text style=width:100px;text-align:right @bind-Value=investment.CostBasis @bind-Value:event=oninput placeholder='cost basis'/>
                             }
-                            @if(investment.AssetType == AssetType.Unknown || investment.AssetType == null) {
+                            @if(investment.AssetType == AssetTypes.Unknown || investment.AssetType == null) {
                                 <label style=padding-left:16px>Asset Type:</label>
                                 <select @bind=investment.AssetType>
-                                    @foreach (AssetType assetType in (AssetType[]) Enum.GetValues(typeof(AssetType))) {
+                                    @foreach (AssetTypes assetType in (AssetTypes[]) Enum.GetValues(typeof(AssetTypes))) {
                                         <option>@assetType</option>
                                     }
                                 </select>
@@ -383,7 +384,7 @@
         ImportResult importResult = new();
         if (bhContent is not null) {
             var lines = bhContent.Split('\n');
-            (var importedFamilyData, var links) = ImportPortfolioReview.ParsePortfolioReview(lines, debug:false, appData, Funds);
+            (var importedFamilyData, var links) = ImportPortfolioReview.ParsePortfolioReview(lines, appData, Funds);
             if (importedFamilyData.Accounts.Count > 0) {
                 importResult.NewAccounts.AddRange(importedFamilyData.Accounts);
                 appData.ImportResult = importResult;
@@ -411,7 +412,7 @@
 
                 if (purchasedDate.HasValue && costBasis.HasValue)
                 {
-                    var investment = new Investment() { Ticker = "IBOND", AssetType = global::AssetType.IBond, PurchaseDate = purchasedDate, CostBasis = costBasis };
+                    var investment = new Investment() { Ticker = "IBOND", AssetType = AssetTypes.IBond, PurchaseDate = purchasedDate, CostBasis = costBasis };
                     newAccount.Investments.Add(investment);
                     await investment.CalculateIBondValue();
                     purchasedDate = null;

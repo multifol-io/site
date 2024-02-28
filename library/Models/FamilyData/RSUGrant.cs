@@ -1,5 +1,7 @@
 using System.Text.Json.Serialization;
 
+namespace Models;
+
 public class RSUGrant {
     public DateOnly? Date { get; set; }
     public string? Ticker { get; set; }
@@ -34,7 +36,7 @@ public class RSUGrant {
     }
 
     [JsonIgnore]
-    public List<RSUVestEvent> VestEvents { get; set; } = new();
+    public List<RSUVestEvent> VestEvents { get; set; } = [];
     public void CalculateShares() {
         if (Price != null) {
             Shares = (int)(Amount/Price);

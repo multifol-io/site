@@ -1,14 +1,15 @@
+namespace Models;
 
 public static class Advisor {
     public static List<string> Advise(Investment investment, Account account, IAppData appData) {
-        List<string> adviceItems = new();
+        List<string> adviceItems = [];
         switch (account.TaxType) {
             case "Pre-Tax(work)":                
             case "Pre-Tax(other)":                
                 switch (investment.AssetType) {
-                    case AssetType.InternationalStock:
-                    case AssetType.InternationalStock_ETF:
-                    case AssetType.InternationalStock_Fund:
+                    case AssetTypes.InternationalStock:
+                    case AssetTypes.InternationalStock_ETF:
+                    case AssetTypes.InternationalStock_Fund:
                         if (appData.ApplyTaxEfficientPlacementRules) {
                             adviceItems.Add("2nd: international->taxable");
                         }
@@ -17,9 +18,9 @@ public static class Advisor {
                 break;
             case "Taxable":
                 switch (investment.AssetType) {
-                    case AssetType.Bond:
-                    case AssetType.Bond_ETF:
-                    case AssetType.Bond_Fund:
+                    case AssetTypes.Bond:
+                    case AssetTypes.Bond_ETF:
+                    case AssetTypes.Bond_Fund:
                         if (appData.ApplyTaxEfficientPlacementRules) {
                             adviceItems.Add("1st: bonds->pre-tax");
                         }
@@ -30,17 +31,17 @@ public static class Advisor {
                 break;
             case "Post-Tax":
                 switch (investment.AssetType) {
-                    case AssetType.InternationalStock:
-                    case AssetType.InternationalStock_ETF:
-                    case AssetType.InternationalStock_Fund:
+                    case AssetTypes.InternationalStock:
+                    case AssetTypes.InternationalStock_ETF:
+                    case AssetTypes.InternationalStock_Fund:
                         if (appData.ApplyTaxEfficientPlacementRules) {
                             adviceItems.Add("2nd: international->taxable");
                         }
                         break;                    
-                    case AssetType.IBond:
-                    case AssetType.Bond:
-                    case AssetType.Bond_ETF:
-                    case AssetType.Bond_Fund:
+                    case AssetTypes.IBond:
+                    case AssetTypes.Bond:
+                    case AssetTypes.Bond_ETF:
+                    case AssetTypes.Bond_Fund:
                         if (appData.ApplyTaxEfficientPlacementRules) {
                             adviceItems.Add("1st: bonds->pre-tax");
                         }

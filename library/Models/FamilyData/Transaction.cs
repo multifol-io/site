@@ -1,5 +1,7 @@
 using System.Text.Json.Serialization;
 
+namespace Models;
+
 public class Transaction
 {
     public string? HostTicker { get; set; }
@@ -21,7 +23,7 @@ public class Transaction
         switch (Type) 
         {
             case "Dividend":
-                if (investment.AssetType == AssetType.Bond || investment.AssetType == AssetType.Bond_ETF || investment.AssetType == AssetType.Bond_Fund)
+                if (investment.AssetType == AssetTypes.Bond || investment.AssetType == AssetTypes.Bond_ETF || investment.AssetType == AssetTypes.Bond_Fund)
                 {
                     return HostTicker == ticker ? 0 : -Value;
                 }

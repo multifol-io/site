@@ -1,6 +1,8 @@
 using IRS;
 using System.Text.Json.Serialization;
 
+namespace Models;
+
 public class AppData : IAppData
 {
     public FamilyData? FamilyData { get; set; }

@@ -5,15 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+namespace Models;
 
-public class Group<T, U> : List<U> where U : class
+public class Group<T, U>(T groupInfo, List<U> items) : List<U>(items) where U : class
 {
-    public T GroupInfo { get; private set; }
-
-    public Group(T groupInfo, List<U> items) : base(items)
-    {
-        GroupInfo = groupInfo;
-    }
+    public T GroupInfo { get; private set; } = groupInfo;
 
     public static List<Group<T, U>> Create(IEnumerable<T> collection, string itemsPropertyName)
     {
@@ -33,13 +29,9 @@ public class Group<T, U> : List<U> where U : class
     }
 }
 
-public class HoldingGroupInfo
+public class HoldingGroupInfo(string investmentOrderCategory)
 {
-    public HoldingGroupInfo(string investmentOrderCategory)
-    {
-        InvestmentOrderCategory = investmentOrderCategory;
-    }
-    public string InvestmentOrderCategory { get; private set; }
+    public string InvestmentOrderCategory { get; private set; } = investmentOrderCategory;
     public double? Value { get; set; }
 }
 

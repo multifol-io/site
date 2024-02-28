@@ -9,9 +9,10 @@
 @inject NavigationManager Navigation
 @inject IList<Fund> Funds
 @using System.Text.Json.Serialization
+@using Models
 
 <PageTitle>
-@pageHeading - bogle.tools
+    @pageHeading - bogle.tools
 </PageTitle>
 
 <style>
@@ -19,35 +20,40 @@
         border-collapse: collapse;
         border-top: 1px solid rgba(0,0,0,0.2);
     }
-    .mainTable thead tr th{
-        border-bottom: 1px solid #000000;
-    }
-    .mainTable th, .mainTable td {
-        border-left: 1px solid rgba(0,0,0,0.2);
-        border-right: 1px solid rgba(0,0,0,0.2);
-    }
-    .mainTable th, .mainTable td{ /* Added padding for better layout after collapsing */
-        padding: 4px 8px;
-    }
+
+        .mainTable thead tr th {
+            border-bottom: 1px solid #000000;
+        }
+
+        .mainTable th, .mainTable td {
+            border-left: 1px solid rgba(0,0,0,0.2);
+            border-right: 1px solid rgba(0,0,0,0.2);
+        }
+
+        .mainTable th, .mainTable td { /* Added padding for better layout after collapsing */
+            padding: 4px 8px;
+        }
 
     .btn {
         color: white;
         padding: 10px 10px;
         text-decoration: none;
-        display:inline-block;
-        text-align:center;
-        width:60px;
+        display: inline-block;
+        text-align: center;
+        width: 60px;
         border-radius: 10px;
     }
+
     .dollar {
         width: 100px;
     }
+
     .percent {
         width: 50px;
     }
+
     .article a[href^="http"]::after,
-    .article a[href^="https://"]::after
-    {
+    .article a[href^="https://"]::after {
         content: "";
         width: 11px;
         height: 11px;
@@ -59,244 +65,317 @@
         display: inline-block;
     }
 </style>
-    @if (steps is null || appData is null)
-    {
-        <p>
-            @if(appData == null || appData.CurrentProfileName==null){<em>No active <a href=/profiles>profile</a>.</em>} 
-            else {<em>Loading...</em>}
-        </p>
-        <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
-            @if(appData?.CurrentProfileName==null){<span>choose a</span>}else {<span>@appData.CurrentProfileName</span>}</a> profile
-        </div>
-    } else if (appData is not null && appData.FamilyData is not null) {
-        if (appData.FamilyData.TaxFilingStatus == TaxFilingStatus.ChoiceNeeded) {
-            taxFilingStatusEditing = true;
+@if (steps is null || appData is null)
+{
+    <p>
+        @if (appData == null || appData.CurrentProfileName == null)
+        {
+            <em>No active <a href=/profiles>profile</a>.</em>
         }
+        else
+        {
+            <em>Loading...</em>
+        }
+    </p>
+    <div style=float:left;margin-left:50px>
+        <a href=/profiles title="profile name" @onclick=navWithBackStack @onclick:preventDefault>
+            @if (appData?.CurrentProfileName == null)
+            {
+                <span>choose a</span>
+            }
+            else
+            {
+                <span>@appData.CurrentProfileName</span>
+            }
+        </a> profile
+    </div>
+}
+else if (appData is not null && appData.FamilyData is not null)
+{
+    if (appData.FamilyData.TaxFilingStatus == TaxFilingStatus.ChoiceNeeded)
+    {
+        taxFilingStatusEditing = true;
+    }
 
-        var prevStep = steps[steps.Length - 1];
-        var nextStep = steps[0];
-        string prevPage = folderName + prevStep?.step;
-        string nextPage = folderName + nextStep?.step;
-        
-        <div style=float:left>
-            <h4 style="max-width:450px">
-                @pageHeading <h6 style=display:inline>for @appData.CurrentProfileName profile</h6>
-            </h4>
-        </div>
-        <div style=clear:left;margin-left:1.5in><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault >(manage profiles)</a></div>
+    var prevStep = steps[steps.Length - 1];
+    var nextStep = steps[0];
+    string prevPage = folderName + prevStep?.step;
+    string nextPage = folderName + nextStep?.step;
 
-        <div style=clear:left>
-            <table id=_reviewTable>
-                @foreach (var step in steps) {
-                    var href = folderName + @step.step;
-                    var required = (appData.FamilyData.TaxFilingStatus == TaxFilingStatus.ChoiceNeeded) ? "visibility:visible;color:red" : "visibility:hidden";
-                    <tr>
-                        @switch (step.step) {
-                            case "people": 
-                                <td>
-                                    @if (!taxFilingStatusEditing)
+    <div style=float:left>
+        <h4 style="max-width:450px">
+            @pageHeading <h6 style=display:inline>for @appData.CurrentProfileName profile</h6>
+        </h4>
+    </div>
+    <div style=clear:left;margin-left:1.5in><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault>(manage profiles)</a></div>
+
+    <div style=clear:left>
+        <table id=_reviewTable>
+            @foreach (var step in steps)
+            {
+                var href = folderName + @step.step;
+                var required = (appData.FamilyData.TaxFilingStatus == TaxFilingStatus.ChoiceNeeded) ? "visibility:visible;color:red" : "visibility:hidden";
+                <tr>
+                    @switch (step.step)
+                    {
+                        case "people":
+                            <td>
+                                @if (!taxFilingStatusEditing)
+                                {
+                                    <a @onclick=toggleTaxFilingStatusEditing style=margin:0px;padding:0px;width:20px class="m-0 btn">✏️</a>
+
+                                    <span>&nbsp;</span>
+                                }
+
+                                @((MarkupString)FormatUtilities.Bold("Tax Filing Status:", ShowMarkup))
+                                @if (!taxFilingStatusEditing)
+                                {
+                                    @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded)
                                     {
-                                        <a @onclick=toggleTaxFilingStatusEditing style=margin:0px;padding:0px;width:20px class="m-0 btn" >✏️</a><span>&nbsp;</span>
+                                        <span>&nbsp;@appData.FamilyData.TaxFilingString</span>
                                     }
-                                    
-                                    @((MarkupString)FormatUtilities.Bold("Tax Filing Status:", ShowMarkup))
-                                    @if (!taxFilingStatusEditing) {
-                                        @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) { <span>&nbsp;@appData.FamilyData.TaxFilingString</span> }
-                                        @if(appData.FamilyData.PersonCount > 0) {
-                                            <span>&nbsp;@getPronoun(appData.FamilyData.People[0], false)</span>
-                                        }
-                                        @if(appData.FamilyData.PersonCount > 1) {
-                                            <span>&nbsp;and @getPronoun(appData.FamilyData.People[1], false)</span>
-                                        }
-                                        
-                                        <br/><hr/>
-                                    } else {
-                                        <select @bind=appData.FamilyData.TaxFilingStatus>
-                                            <option value="ChoiceNeeded">ChoiceNeeded</option>
-                                            <option>Single</option>
-                                            <option value=MarriedFilingJointly>Married filing jointly</option>
-                                            <option value=MarriedFilingSeperately>Married filing separately</option>
-                                            <option value=HeadOfHousehold>Head of Household</option>
-                                        </select> <span style=@required>*</span><br/>
-                                        
-                                        <EditForm Model="appData.FamilyData" style=margin-left:25px>
-                                            @for (int i = 0; i < appData.FamilyData.PersonCount; i++) {
-                                                var person = appData.FamilyData.People[i];
-                                                int personIndex = i + 1;
-
-                                                    @if(person?.FamilyData?.PersonCount>1){
-                                                        <b>Person @personIndex:</b><br/>
-                                                        <label>Pronoun/Unique identifier:</label> <select @bind=person.Identifier>
-                                                        <option value="ChoiceNeeded">ChoiceNeeded</option>
-                                                        <option>person @personIndex</option>
-                                                        <option>him</option>
-                                                        <option>her</option>
-                                                        <option>me</option>
-                                                        <option>them</option>
-                                                    </select><br/>}
-                                            }
-                                            <button @onclick=@toggleTaxFilingStatusEditing>save</button>
-
-                                        </EditForm>
-
-                                        <br/>
-                                        <br/>
+                                    @if (appData.FamilyData.PersonCount > 0)
+                                    {
+                                        <span>&nbsp;@getPronoun(appData.FamilyData.People[0], false)</span>
                                     }
-                                </td>
-                                break;
-                            case "asset-allocation":
-                                @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) {
-                                    <td>
-                                        @((MarkupString)FormatUtilities.Bold("Desired Asset Allocation:&nbsp;", ShowMarkup))<a @onclick=toggleAssetAllocationEditing style=margin:0px;padding:0px;width:20px class="m-0 btn" >✏️</a><br/>
-                                        @if(!assetAllocationEditing) { 
-                                            if (appData.FamilyData.Stocks != null && appData.FamilyData.Bonds != null) {
-                                                <span style=margin-left:.5in>&nbsp;@appData.FamilyData.Stocks% stocks / @appData.FamilyData.Bonds% fixed assets</span>
+                                    @if (appData.FamilyData.PersonCount > 1)
+                                    {
+                                        <span>&nbsp;and @getPronoun(appData.FamilyData.People[1], false)</span>
+                                    }
+
+                                    <br />
+
+                                    <hr />
+                                }
+                                else
+                                {
+                                    <select @bind=appData.FamilyData.TaxFilingStatus>
+                                        <option value="ChoiceNeeded">ChoiceNeeded</option>
+                                        <option>Single</option>
+                                        <option value=MarriedFilingJointly>Married filing jointly</option>
+                                        <option value=MarriedFilingSeperately>Married filing separately</option>
+                                        <option value=HeadOfHousehold>Head of Household</option>
+                                    </select> <span style=@required>*</span>
+
+                                    <br />
+
+                                    <EditForm Model="appData.FamilyData" style=margin-left:25px>
+                                        @for (int i = 0; i < appData.FamilyData.PersonCount; i++)
+                                        {
+                                            var person = appData.FamilyData.People[i];
+                                            int personIndex = i + 1;
+
+                                            @if (person?.FamilyData?.PersonCount > 1)
+                                            {
+                                                <b>Person @personIndex:</b>
+
+                                                <br />
+                                                <label>Pronoun/Unique identifier:</label>
+                                                <select @bind=person.Identifier>
+                                                    <option value="ChoiceNeeded">ChoiceNeeded</option>
+                                                    <option>person @personIndex</option>
+                                                    <option>him</option>
+                                                    <option>her</option>
+                                                    <option>me</option>
+                                                    <option>them</option>
+                                                </select>
+
+                                                <br />
                                             }
-                                            <br/>
-                                            @if (appData.FamilyData.International != null) {
-                                                <span style=margin-left:.5in;>% stocks are international: </span>
-                                                <span>@appData.FamilyData.International%</span>
-                                            }
-                                        } else {
-                                            <span>
-                                                <input style=margin-left:.5in;width:50px;text-align:right type=text @bind-Value=appData.FamilyData.Stocks @bind-Value:event=oninput />% stocks
-                                                /
-                                                <input style=width:50px;text-align:right type=text @bind-Value=appData.FamilyData.Bonds @bind-Value:event=oninput />% fixed assets
-                                            </span>
-                                            <br/>
-                                            <span style=margin-left:.5in;>% stocks are international: </span>
-                                            <span><input style=width:50px;text-align:right type=text @bind-Value=appData.FamilyData.International @bind-Value:event=oninput />%</span>
                                         }
-                                        <br/>
-                                        @((MarkupString)FormatUtilities.Bold("Actual Asset Allocation:", ShowMarkup))<br/>
-                                        <span style=margin-left:.5in>&nbsp;@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation) stocks / @FormatUtilities.formatPercent(appData.FamilyData.ActualBondAllocation + appData.FamilyData.ActualCashAllocation) fixed assets</span><br/>
-                                        <span style=margin-left:.5in;>% stocks are International: </span>
-                                        <span>@FormatUtilities.formatPercent(appData.FamilyData.ActualInternationalStockAllocation)</span><br/>
-                                        <hr/>
-                                    </td>
+                                        <button @onclick=@toggleTaxFilingStatusEditing>save</button>
+
+                                    </EditForm>
+
+                                    <br />
+                                    <br />
                                 }
-                                break;
-                            case "advice-settings":
-                                @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) {
-                                    @((MarkupString)FormatUtilities.Bold("Advanced Portfolio Settings:", ShowMarkup))<span>&nbsp;(experimental)</span><br/>
-                                    <InputCheckbox id=stockSizeRules style=margin-left:20px @bind-Value=appData.ApplyStockSizeRules /> <label style=display:inline for=stockSizeRules>&nbsp;Show warning if &gt; 5% concentration of an individual stock (in <a href="/portfolio-tracker/accounts">accounts view</a>)</label><br/>
-                                    <InputCheckbox id=taxEfficientRules style=margin-left:20px @bind-Value=appData.ApplyTaxEfficientPlacementRules  /> <label style=display:inline for=taxEfficientRules>&nbsp;Show advice for tax efficient placement (in <a href="/portfolio-tracker/accounts">accounts view</a>)</label><br/> 
-                                    <InputCheckbox id=allowAfterTaxPercentage style=margin-left:20px @bind-Value=appData.AllowAfterTaxPercentage  /> <label style=display:inline for=allowAfterTaxPercentage>&nbsp;Track After-Tax Percentage for Account that might have Pre and Post-Tax contributions</label><br/> 
-                                    <br/>
-                                }
-                                break;
-                            case "retirement-assets":
-                                @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) {
+                            </td>
+                            break;
+                        case "asset-allocation":
+                            @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded)
+                            {
                                 <td>
-                                    <a @onclick=editor style=margin:0px;padding:0px;width:20px class="m-0 btn" >✏️</a>
+                                    @((MarkupString)FormatUtilities.Bold("Desired Asset Allocation:&nbsp;", ShowMarkup))<a @onclick=toggleAssetAllocationEditing style=margin:0px;padding:0px;width:20px class="m-0 btn">✏️</a><br />
+                                    @if (!assetAllocationEditing)
+                                    {
+                                        if (appData.FamilyData.Stocks != null && appData.FamilyData.Bonds != null)
+                                        {
+                                            <span style=margin-left:.5in>&nbsp;@appData.FamilyData.Stocks% stocks / @appData.FamilyData.Bonds% fixed assets</span>
+                                        }
+                                        <br />
+                                        @if (appData.FamilyData.International != null)
+                                        {
+                                            <span style=margin-left:.5in;>% stocks are international: </span>
+                                            <span>@appData.FamilyData.International%</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            <input style=margin-left:.5in;width:50px;text-align:right type=text @bind-Value=appData.FamilyData.Stocks @bind-Value:event=oninput />% stocks
+                                            /
+                                            <input style=width:50px;text-align:right type=text @bind-Value=appData.FamilyData.Bonds @bind-Value:event=oninput />% fixed assets
+                                        </span>
+                                        <br />
+                                        <span style=margin-left:.5in;>% stocks are international: </span>
+                                        <span><input style=width:50px;text-align:right type=text @bind-Value=appData.FamilyData.International @bind-Value:event=oninput />%</span>
+                                    }
+                                    <br />
+                                    @((MarkupString)FormatUtilities.Bold("Actual Asset Allocation:", ShowMarkup))<br />
+                                    <span style=margin-left:.5in>&nbsp;@FormatUtilities.FormatPercent(appData.FamilyData.ActualStockAllocation) stocks / @FormatUtilities.FormatPercent(appData.FamilyData.ActualBondAllocation + appData.FamilyData.ActualCashAllocation) fixed assets</span><br />
+                                    <span style=margin-left:.5in;>% stocks are International: </span>
+                                    <span>@FormatUtilities.FormatPercent(appData.FamilyData.ActualInternationalStockAllocation)</span><br />
+                                    <hr />
+                                </td>
+                            }
+                            break;
+                        case "advice-settings":
+                            @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded)
+                            {
+                                <td>
+                                    @((MarkupString)FormatUtilities.Bold("Advanced Portfolio Settings:", ShowMarkup))
+                                    <span>&nbsp;(experimental)</span>
+                                    <br />
+                                    <InputCheckbox id=stockSizeRules style=margin-left:20px @bind-Value=appData.ApplyStockSizeRules />
+                                    <label style=display:inline for=stockSizeRules>&nbsp;Show warning if &gt; 5% concentration of an individual stock (in <a href="/portfolio-tracker/accounts">accounts view</a>)</label>
+                                    <br />
+                                    <InputCheckbox id=taxEfficientRules style=margin-left:20px @bind-Value=appData.ApplyTaxEfficientPlacementRules />
+                                    <label style=display:inline for=taxEfficientRules>&nbsp;Show advice for tax efficient placement (in <a href="/portfolio-tracker/accounts">accounts view</a>)</label>
+                                    <br />
+                                    <InputCheckbox id=allowAfterTaxPercentage style=margin-left:20px @bind-Value=appData.AllowAfterTaxPercentage />
+                                    <label style=display:inline for=allowAfterTaxPercentage>&nbsp;Track After-Tax Percentage for Account that might have Pre and Post-Tax contributions</label>
+                                    <br />
+                                    <br />
+                                </td>
+                            }
+                            break;
+                        case "retirement-assets":
+                            @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded)
+                            {
+                                <td>
+                                    <a @onclick=editor style=margin:0px;padding:0px;width:20px class="m-0 btn">✏️</a>
                                     @((MarkupString)FormatUtilities.Bold("Investable Assets", ShowMarkup))
-                                    @if (appData.FamilyData.Accounts.Count > 0) {
-                                        if (View == null) {
+                                    @if (appData.FamilyData.Accounts.Count > 0)
+                                    {
+                                        if (View == null)
+                                        {
                                             View = "holdings";
                                         }
-                                        
-                                        var holdingsBold = (View == "holdings") ? ";font-weight:bold" : ""; 
-                                        var accountsBold = (View == "accounts") ? ";font-weight:bold" : "";
-                                        var bogleheadsBold = (View == "bogleheads") ? ";font-weight:bold" : "";
-                                        var custodiansBold = (View == "custodians") ? ";font-weight:bold" : "";
-                                        var taxTypesBold = (View == "tax-types") ? ";font-weight:bold" : "";
-                                    
+
+                                        var holdingsBold = (View == "holdings") ? "font-weight:bold" : "";
+                                        var accountsBold = (View == "accounts") ? "font-weight:bold" : "";
+                                        var bogleheadsBold = (View == "bogleheads") ? "font-weight:bold" : "";
+                                        var custodiansBold = (View == "custodians") ? "font-weight:bold" : "";
+                                        var taxTypesBold = (View == "tax-types") ? "font-weight:bold" : "";
+
                                         <label>&nbsp;by</label>
                                         <span>
                                             <a style="@holdingsBold" href=/portfolio-tracker>holdings</a> |
-                                            <a style="@accountsBold" href=/portfolio-tracker/accounts>accounts</a> | 
-                                            <a style="@taxTypesBold" href=/portfolio-tracker/tax-types>tax-types</a> | 
-                                            <a style="@custodiansBold" href=/portfolio-tracker/custodians>custodians</a> | 
+                                            <a style="@accountsBold" href=/portfolio-tracker/accounts>accounts</a> |
+                                            <a style="@taxTypesBold" href=/portfolio-tracker/tax-types>tax-types</a> |
+                                            <a style="@custodiansBold" href=/portfolio-tracker/custodians>custodians</a> |
                                             <a title="Bogleheads.org style" style="@bogleheadsBold" href=/portfolio-tracker/bogleheads>accounts(bh)</a>
-                                        </span><br/>
+                                        </span>
 
-                                        @switch (View) {
+                                        <br />
+
+                                        @switch (View)
+                                        {
                                             case "refresh-prices":
                                                 var tickersToUpdate = appData.FamilyData.TickersToUpdate;
                                                 if (tickersToUpdate != null)
                                                 {
                                                     <b>Manual entry of price updates:</b>
                                                     <table>
-                                                    @foreach (var tickerToUpdate in tickersToUpdate)
-                                                    {
-                                                        var investments = tickerToUpdate.Value;
-                                                        var investment = investments[0];
-                                                        <tr style='border-top:1pt solid'>
-                                                            <td colspan=4>
-                                                                @investment.Ticker&nbsp;&nbsp;
-                                                                @investment.Name
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td></td>
-                                                            <td style=text-align:right>
-                                                                Last Price:
-                                                            </td>
-                                                            <td style=text-align:right;width:120px>
-                                                                @FormatUtilities.formatMoney(investment.Price, decimalPlaces:2)
-                                                            </td>
-                                                            <td>
-                                                                @if (investment.IsFund) {
-                                                                    <span title=@investment.LastUpdated>
-                                                                        on @investment.LastUpdated?.ToString("ddd MM/dd")
-                                                                    </span>
-                                                                } else {
-                                                                    <span title=@investment.LastUpdated>
-                                                                        at @investment.LastUpdated?.ToShortTimeString()
-                                                                    </span>
-                                                                }
-                                                            </td>
-                                                        </tr>
-                                                        @if (!investment.IsFund)
+                                                        @foreach (var tickerToUpdate in tickersToUpdate)
                                                         {
-                                                            var now = DateTime.Now;
-                                                            var currentLocalTime = now.ToLocalTime();
+                                                            var investments = tickerToUpdate.Value;
+                                                            var investment = investments[0];
+                                                            <tr style='border-top:1pt solid'>
+                                                                <td colspan=4>
+                                                                    @investment.Ticker&nbsp;&nbsp;
+                                                                    @investment.Name
+                                                                </td>
+                                                            </tr>
                                                             <tr>
                                                                 <td></td>
                                                                 <td style=text-align:right>
                                                                     Last Price:
                                                                 </td>
-                                                                <td style=width:120px>
-                                                                    $<input style=text-align:right;width:100px type=text @bind-Value=investment.Price @bind-Value:event=oninput placeholder='price' />
+                                                                <td style=text-align:right;width:120px>
+                                                                    @FormatUtilities.FormatMoney(investment.Price, decimalPlaces: 2)
                                                                 </td>
                                                                 <td>
-                                                                    <span title=@investment.LastUpdated>
-                                                                        at @currentLocalTime.ToShortTimeString()
-                                                                    </span>
-                                                                    <button @onclick=@(e=>updateNonFund(e, investments, currentLocalTime))>Update</button>
+                                                                    @if (investment.IsFund)
+                                                                    {
+                                                                        <span title=@investment.LastUpdated>
+                                                                            on @investment.LastUpdated?.ToString("ddd MM/dd")
+                                                                        </span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span title=@investment.LastUpdated>
+                                                                            at @investment.LastUpdated?.ToShortTimeString()
+                                                                        </span>
+                                                                    }
                                                                 </td>
                                                             </tr>
+                                                            @if (!investment.IsFund)
+                                                            {
+                                                                var now = DateTime.Now;
+                                                                var currentLocalTime = now.ToLocalTime();
+                                                                <tr>
+                                                                    <td></td>
+                                                                    <td style=text-align:right>
+                                                                        Last Price:
+                                                                    </td>
+                                                                    <td style=width:120px>
+                                                                        $<input style=text-align:right;width:100px type=text @bind-Value=investment.Price @bind-Value:event=oninput placeholder='price' />
+                                                                    </td>
+                                                                    <td>
+                                                                        <span title=@investment.LastUpdated>
+                                                                            at @currentLocalTime.ToShortTimeString()
+                                                                        </span>
+                                                                        <button @onclick=@(e=>updateNonFund(e, investments, currentLocalTime))>Update</button>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                            @if (investment.IsFund)
+                                                            {
+                                                                var now = DateTime.Now.Date;
+                                                                var previousMarketClose = FamilyData.PreviousMarketClose(now).ToLocalTime();
+                                                                <tr style='border-bottom:1pt solid;'>
+                                                                    <td></td>
+                                                                    <td style=text-align:right>
+                                                                        Last Close:
+                                                                    </td>
+                                                                    <td style=width:120px>
+                                                                        $<input style=text-align:right;width:100px type=text @bind-Value=investment.Price @bind-Value:event=oninput placeholder='price' />
+                                                                    </td>
+                                                                    <td>
+                                                                        <span title=@investment.LastUpdated>
+                                                                            on @previousMarketClose.ToString("ddd MM/dd")
+                                                                        </span>
+                                                                        <button @onclick=@(e=>updateFund(e, investments, previousMarketClose))>Update</button>
+                                                                    </td>
+                                                                </tr>
+                                                            }
                                                         }
-                                                        @if (investment.IsFund)
-                                                        {
-                                                            var now = DateTime.Now.Date;
-                                                            var previousMarketClose = FamilyData.PreviousMarketClose(now).ToLocalTime();
-                                                            <tr style='border-bottom:1pt solid;'>
-                                                                <td></td>
-                                                                <td style=text-align:right>
-                                                                    Last Close:
-                                                                </td>
-                                                                <td style=width:120px>
-                                                                    $<input style=text-align:right;width:100px type=text @bind-Value=investment.Price @bind-Value:event=oninput placeholder='price' />
-                                                                </td>
-                                                                <td>
-                                                                    <span title=@investment.LastUpdated>
-                                                                        on @previousMarketClose.ToString("ddd MM/dd")
-                                                                    </span>
-                                                                    <button @onclick=@(e=>updateFund(e, investments, previousMarketClose))>Update</button>
-                                                                </td>
-                                                            </tr>
-                                                        }                                                        
-                                                    }
                                                     </table>
-                                                    <br/>
-                                                    <span><b>Automated quotes:</b> Get 20 quotes per day for free - <a href=https://eodhd.com/register>register for eodhd.com account</a> (each 100k additional quotes cost $5)</span><br/>
-                                                    <span>To use it, copy API Token <a href=https://eodhd.com/cp/settings>from control panel of eodhd.com</a> to here: <input type=text @bind-Value=appData.EODHistoricalDataApiKey @bind-Value:event=oninput placeholder='apikey' /></span><br/>
+                                                    <br />
+                                                    <span><b>Automated quotes:</b> Get 20 quotes per day for free - <a href=https://eodhd.com/register>register for eodhd.com account</a> (each 100k additional quotes cost $5)</span>
+
+                                                    <br />
+                                                    <span>To use it, copy API Token <a href=https://eodhd.com/cp/settings>from control panel of eodhd.com</a> to here: <input type=text @bind-Value=appData.EODHistoricalDataApiKey @bind-Value:event=oninput placeholder='apikey' /></span>
+
+                                                    <br />
                                                 }
                                                 break;
                                             case "accounts":
                                                 <table class=mainTable>
-                                                    @if (appData.FamilyData.Accounts.Count > 0) {
+                                                    @if (appData.FamilyData.Accounts.Count > 0)
+                                                    {
                                                         <tr style=vertical-align:bottom>
                                                             <th style=padding-left:8px>Holding</th>
                                                             <th style=padding-left:8px;text-align:center>Quantity</th>
@@ -304,9 +383,12 @@
                                                             <th style=padding-left:8px;text-align:center>Balance</th>
                                                         </tr>
                                                     }
-                                                    @{var accountIndex = 0;}
-                                                    @foreach (var account in appData.FamilyData.Accounts) {
-                                                        bool isTreasuryDirect = account.Custodian?.ToLowerInvariant() == "treasury direct"  || account.Custodian?.ToLowerInvariant() == "treasurydirect";
+                                                    @{
+                                                        var accountIndex = 0;
+                                                    }
+                                                    @foreach (var account in appData.FamilyData.Accounts)
+                                                    {
+                                                        bool isTreasuryDirect = account.Custodian?.ToLowerInvariant() == "treasury direct" || account.Custodian?.ToLowerInvariant() == "treasurydirect";
                                                         bool alternateRow2 = false;
                                                         int accBuffer = accountIndex;
                                                         accountIndex++;
@@ -316,18 +398,20 @@
                                                                 @account.Title
                                                             </td>
                                                             <td style=text-align:right;padding-left:8px>
-                                                                @FormatUtilities.formatMoney(account.Value, decimalPlaces:0)
+                                                                @FormatUtilities.FormatMoney(account.Value, decimalPlaces: 0)
                                                             </td>
                                                         </tr>
                                                         bool ibondHeaderShown = false;
                                                         var investmentIndex = 0;
-                                                        foreach (var investment in account.Investments) {
-                                                            if (investment.Ticker == "IBOND" && !ibondHeaderShown) {
+                                                        foreach (var investment in account.Investments)
+                                                        {
+                                                            if (investment.Ticker == "IBOND" && !ibondHeaderShown)
+                                                            {
                                                                 ibondHeaderShown = true;
                                                                 <tr style=vertical-align:bottom>
                                                                     <td style=padding-left:8px>Holding</td>
-                                                                    <td style=padding-left:8px;text-align:center>'Fixed'<br/>Rate</td>
-                                                                    <td style=padding-left:8px;text-align:center>Current<br/>Rate</td>
+                                                                    <td style=padding-left:8px;text-align:center>'Fixed'<br />Rate</td>
+                                                                    <td style=padding-left:8px;text-align:center>Current<br />Rate</td>
                                                                     <td style=padding-left:8px;text-align:center>Balance</td>
                                                                 </tr>
                                                             }
@@ -336,44 +420,62 @@
                                                             investmentIndex++;
                                                             string bgColor = alternateRow2 ? "white" : "lightgray";
 
-                                                            var tickerQuery = "ticker:"+investment.Ticker;
+                                                            var tickerQuery = "ticker:" + investment.Ticker;
                                                             <tr style=background-color:@bgColor @onclick='@(e=>editAccount(e,-1,-1, tickerQuery))'>
                                                                 <td style=padding-left:8px title=@investment.Name>
                                                                     @(investment.Ticker != null ? investment.Ticker : investment.Name)
-                                                                    @if (investment.IsAssetTypeUnknown) { <span style=color:red>*</span> }
-                                                                    @if (investment.IsBalancedFund && !investment.DoesBalancedFundEqual100) { <span style=color:red>^</span> }
-                                                                    @if (account.TaxType == "Taxable" && investment.MissingCostBasis && !investment.IsCash) { <span style=color:red>~</span> }
-                                                                    @if ((investment.IsFund || investment.IsETF) && investment.ExpenseRatio == null) { <span style=color:red>#</span> }
-                                                                    @if (investment.IsIBond) { 
-                                                                        <span>&nbsp;</span>@FormatUtilities.formatMonthPlus2DigitYear(investment.PurchaseDate)
+                                                                    @if (investment.IsAssetTypeUnknown)
+                                                                    {
+                                                                        <span style=color:red>*</span>
+                                                                    }
+                                                                    @if (investment.IsBalancedFund && !investment.DoesBalancedFundEqual100)
+                                                                    {
+                                                                        <span style=color:red>^</span>
+                                                                    }
+                                                                    @if (account.TaxType == "Taxable" && investment.MissingCostBasis && !investment.IsCash)
+                                                                    {
+                                                                        <span style=color:red>~</span>
+                                                                    }
+                                                                    @if ((investment.IsFund || investment.IsETF) && investment.ExpenseRatio == null)
+                                                                    {
+                                                                        <span style=color:red>#</span>
+                                                                    }
+                                                                    @if (investment.IsIBond)
+                                                                    {
+                                                                        <span>&nbsp;</span>
+
+                                                                        @FormatUtilities.FormatMonthPlus2DigitYear(investment.PurchaseDate)
                                                                     }
                                                                 </td>
-                                                                @if (investment.IsIBond) 
+                                                                @if (investment.IsIBond)
                                                                 {
-                                                                    <td style=text-align:right>@FormatUtilities.formatPercent3(investment.InterestRate*100.0)</td>
-                                                                    <td style=text-align:right>@FormatUtilities.formatPercent3(investment.CurrentRate*100.0)</td>
-                                                                } else {
-                                                                    <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleTwoDecimal(investment.Shares)</td>
-                                                                    <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(investment.Price)</td>
+                                                                    <td style=text-align:right>@FormatUtilities.FormatPercent3(investment.InterestRate * 100.0)</td>
+                                                                    <td style=text-align:right>@FormatUtilities.FormatPercent3(investment.CurrentRate * 100.0)</td>
                                                                 }
-                                                                
+                                                                else
+                                                                {
+                                                                    <td style=text-align:right;padding-left:8px>@FormatUtilities.FormatDoubleTwoDecimal(investment.Shares)</td>
+                                                                    <td style=text-align:right;padding-left:8px>@FormatUtilities.FormatMoney(investment.Price)</td>
+                                                                }
+
                                                                 <td style=text-align:right;padding-left:8px>
-                                                                    @FormatUtilities.formatMoney(investment.Value, decimalPlaces:0)
+                                                                    @FormatUtilities.FormatMoney(investment.Value, decimalPlaces: 0)
                                                                 </td>
                                                             </tr>
                                                             if (investment.IsIBond && investment.NextRate.HasValue)
                                                             {
                                                                 <tr style=background-color:@bgColor @onclick='@(e=>editAccount(e,-1,-1, tickerQuery))'>
                                                                     <td colspan=2 style=text-align:right>
-                                                                        as of @FormatUtilities.formatMonthPlus2DigitYear(@investment.NextRateStart):
+                                                                        as of @FormatUtilities.FormatMonthPlus2DigitYear(@investment.NextRateStart):
                                                                     </td>
                                                                     <td style=text-align:right>
-                                                                        @FormatUtilities.formatPercent3(investment.NextRate*100.0)
+                                                                        @FormatUtilities.FormatPercent3(investment.NextRate * 100.0)
                                                                     </td>
                                                                     <td></td>
                                                                 </tr>
                                                             }
-                                                            @foreach (var adviceItem in advice) {
+                                                            @foreach (var adviceItem in advice)
+                                                            {
                                                                 <tr style=background-color:@bgColor>
                                                                     <td colspan=4 style=padding-left:16px>
                                                                         <span style=background-color:yellow>@adviceItem</span>
@@ -381,44 +483,47 @@
                                                                 </tr>
                                                             }
 
-                                                            @foreach (var transaction in investment.Transactions) {
+                                                            @foreach (var transaction in investment.Transactions)
+                                                            {
                                                                 <tr style=background-color:@bgColor>
                                                                     <td colspan=3 style=padding-left:16px>
                                                                         @if (transaction.HostTicker == investment.Ticker)
                                                                         {
-                                                                        <span>..future @transaction.Type @transaction.HostTicker</span>
+                                                                            <span>..future @transaction.Type @transaction.HostTicker</span>
                                                                         }
-                                                                        else 
+                                                                        else
                                                                         {
-                                                                        <span>..future @transaction.Type @transaction.HostTicker</span>
+                                                                            <span>..future @transaction.Type @transaction.HostTicker</span>
                                                                         }
                                                                     </td>
                                                                     <td style=text-align:right;padding-left:8px>
-                                                                        @FormatUtilities.formatMoney(transaction.CustomValue(investment), decimalPlaces:0)
+                                                                        @FormatUtilities.FormatMoney(transaction.CustomValue(investment), decimalPlaces: 0)
                                                                     </td>
                                                                 </tr>
                                                             }
-                                                            
+
                                                             alternateRow2 = !alternateRow2;
                                                         }
-                                                        
+
                                                         <tr style=height:4;background:white;font-size:4pt;><td>&nbsp;</td></tr>
                                                     }
                                                     <tr>
                                                         <td colspan=2>
                                                             <button @onclick=@refreshPrices title=Refresh style=min-width:80px; @bind-disabled:event=onchange @bind-disabled=@refreshButtonDisabled>@refreshButtonText</button>
-                                                            <br/>
-                                                            <label>Accounts: </label><br/>
+                                                            <br />
+                                                            <label>Accounts: </label><br />
                                                             <button @onclick=addAccountThenEdit title='add account'>➕ account</button>
                                                             <button @onclick=ShowImport title='to import Account info from a CSV/XLSX file'>
                                                                 Import Center ⬆️
                                                             </button>
                                                         </td>
                                                         <td style=text-align:right;padding-left:8px colspan=2>
-                                                            <b>@(FormatUtilities.formatMoney(appData.FamilyData.Value))</b>
-                                                            @{var (change2,percentChange2) = portfolioChange();}
-                                                            <br/>change: <i>@((MarkupString)FormatUtilities.formatMoney(change2,true))</i>
-                                                            <br/>% change: <i>@((MarkupString)FormatUtilities.formatPercent3WithColor(percentChange2))</i>
+                                                            <b>@(FormatUtilities.FormatMoney(appData.FamilyData.Value))</b>
+                                                            @{
+                                                                var (change2, percentChange2) = portfolioChange();
+                                                            }
+                                                            <br />change: <i>@((MarkupString)FormatUtilities.FormatMoney(change2, true))</i>
+                                                            <br />% change: <i>@((MarkupString)FormatUtilities.FormatPercent3WithColor(percentChange2))</i>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -426,7 +531,8 @@
                                             case "holdings":
                                                 bool alternateRow = false;
                                                 <table class=mainTable>
-                                                    @if (appData.FamilyData.Accounts.Count > 0) {
+                                                    @if (appData.FamilyData.Accounts.Count > 0)
+                                                    {
                                                         <tr style=vertical-align:bottom>
                                                             <th style=padding-left:8px>Holding</th>
                                                             <th style=padding-left:8px;text-align:center>Quantity</th>
@@ -438,75 +544,86 @@
                                                         string? lastInvestmentCategory = null;
                                                         int groupCategories = 0;
                                                     }
-             
-                                                    @{var groupSize = 0;}
-                                                    @foreach (var investment in appData.FamilyData.GroupedInvestments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.Value)) {
-                                                        if (lastInvestmentCategory != investment.InvestmentOrderCategory) {
-                                                            if (groupSize > 0) {
+
+                                                    @{
+                                                        var groupSize = 0;
+                                                    }
+                                                    @foreach (var investment in appData.FamilyData.GroupedInvestments.OrderBy(i => i.InvestmentOrder).ThenByDescending(i => i.Value))
+                                                    {
+                                                        if (lastInvestmentCategory != investment.InvestmentOrderCategory)
+                                                        {
+                                                            if (groupSize > 0)
+                                                            {
                                                                 groupSize = 0;
                                                                 <tr><td style=font-size:3pt>&nbsp;</td></tr>
                                                             }
-                                                            if (groupCategories == 0) {
+                                                            if (groupCategories == 0)
+                                                            {
                                                                 groupCategories++;
                                                                 <tr style=vertical-align:bottom;color:white;background-Color:black>
                                                                     <td style=text-align:left colspan=4>
-                                                                        Stocks&nbsp;@FormatUtilities.formatPercent(appData.FamilyData.ActualStockAllocation)
-                                                                    </td>
-                                                                </tr> 
-                                                            }
-                                                            if (groupCategories == 1 && (investment.InvestmentOrderCategory == "Bonds" || investment.InvestmentOrderCategory == "Cash" || investment.InvestmentOrderCategory == "Other")) {
-                                                                groupCategories++;
-                                                                <tr style=vertical-align:bottom;color:white;background-Color:black>
-                                                                    <td style=text-align:left colspan=4>
-                                                                        Fixed Assets &nbsp;@FormatUtilities.formatPercent(appData.FamilyData.ActualBondAllocation + appData.FamilyData.ActualCashAllocation)
+                                                                        Stocks&nbsp;@FormatUtilities.FormatPercent(appData.FamilyData.ActualStockAllocation)
                                                                     </td>
                                                                 </tr>
                                                             }
-                                                            if (groupCategories == 2 && investment.InvestmentOrderCategory == "Other") {
+                                                            if (groupCategories == 1 && (investment.InvestmentOrderCategory == "Bonds" || investment.InvestmentOrderCategory == "Cash" || investment.InvestmentOrderCategory == "Other"))
+                                                            {
                                                                 groupCategories++;
                                                                 <tr style=vertical-align:bottom;color:white;background-Color:black>
                                                                     <td style=text-align:left colspan=4>
-                                                                        Other &nbsp;@FormatUtilities.formatPercent(appData.FamilyData.ActualOtherAllocation)
+                                                                        Fixed Assets &nbsp;@FormatUtilities.FormatPercent(appData.FamilyData.ActualBondAllocation + appData.FamilyData.ActualCashAllocation)
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                            if (groupCategories == 2 && investment.InvestmentOrderCategory == "Other")
+                                                            {
+                                                                groupCategories++;
+                                                                <tr style=vertical-align:bottom;color:white;background-Color:black>
+                                                                    <td style=text-align:left colspan=4>
+                                                                        Other &nbsp;@FormatUtilities.FormatPercent(appData.FamilyData.ActualOtherAllocation)
                                                                     </td>
                                                                 </tr>
                                                             }
                                                         }
 
-                                                        if (lastInvestmentCategory != investment.InvestmentOrderCategory) {
+                                                        if (lastInvestmentCategory != investment.InvestmentOrderCategory)
+                                                        {
                                                             lastInvestmentCategory = investment.InvestmentOrderCategory;
-                                                            if (groupSize > 0) {
+                                                            if (groupSize > 0)
+                                                            {
                                                                 groupSize = 0;
                                                                 <tr><td style=font-size:3pt>&nbsp;</td></tr>
                                                             }
                                                             <tr style=vertical-align:bottom;color:white;background-Color:DimGray>
                                                                 <td style=text-align:left colspan=4>
-                                                                    @switch (lastInvestmentCategory) {
+                                                                    @switch (lastInvestmentCategory)
+                                                                    {
                                                                         case "US Stocks":
                                                                             alternateRow = false;
                                                                             <div style=margin-left:8px;background-color:DimGray>
                                                                                 @lastInvestmentCategory
-                                                                                <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualTotalStockAllocation)</span>
+                                                                                <span title='percentage of all Stock'>@FormatUtilities.FormatPercent(appData.FamilyData.ActualTotalStockAllocation)</span>
                                                                             </div>
                                                                             break;
                                                                         case "International Stocks":
                                                                             alternateRow = false;
                                                                             <div style=margin-left:8px;background-color:DimGray>
                                                                                 @lastInvestmentCategory
-                                                                                <span title='percentage of all Stock'>@FormatUtilities.formatPercent((appData.FamilyData.ActualStockAllocation/100.0*appData.FamilyData.ActualInternationalStockAllocation/100.0)*100.0) [@FormatUtilities.formatPercent(appData.FamilyData.ActualInternationalStockAllocation)]</span>
+                                                                                <span title='percentage of all Stock'>@FormatUtilities.FormatPercent((appData.FamilyData.ActualStockAllocation / 100.0 * appData.FamilyData.ActualInternationalStockAllocation / 100.0) * 100.0) [@FormatUtilities.FormatPercent(appData.FamilyData.ActualInternationalStockAllocation)]</span>
                                                                             </div>
                                                                             break;
                                                                         case "Bonds":
                                                                             alternateRow = false;
                                                                             <div style=margin-left:8px;background-color:DimGray>
                                                                                 @lastInvestmentCategory
-                                                                                <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualBondAllocation)</span>
+                                                                                <span title='percentage of all Stock'>@FormatUtilities.FormatPercent(appData.FamilyData.ActualBondAllocation)</span>
                                                                             </div>
                                                                             break;
                                                                         case "Cash":
                                                                             alternateRow = false;
                                                                             <div style=margin-left:8px;background-color:DimGray>
                                                                                 @lastInvestmentCategory
-                                                                                <span title='percentage of all Stock'>@FormatUtilities.formatPercent(appData.FamilyData.ActualCashAllocation)</span>
+                                                                                <span title='percentage of all Stock'>@FormatUtilities.FormatPercent(appData.FamilyData.ActualCashAllocation)</span>
                                                                             </div>
                                                                             break;
                                                                         default:
@@ -520,26 +637,35 @@
                                                         string bgColor = alternateRow ? "white" : "lightgray";
                                                         string ftsize = investment.Ticker?.Length > 5 ? ";font-size:8pt" : "";
                                                         groupSize++;
-                                                        var tickerQuery = "ticker:"+investment.Ticker;
+                                                        var tickerQuery = "ticker:" + investment.Ticker;
                                                         <tr style=background-color:@bgColor>
                                                             <td style=padding-left:8px;vertical-align:text-top;@ftsize title=@investment.Name @onclick='@(e=>editAccount(e,-1,-1,tickerQuery))'>
                                                                 @(investment.Ticker != null ? investment.Ticker : investment.Name)
-                                                                @if (investment.AssetType == global::AssetType.Unknown) { <span style=color:red>*</span> }
-                                                                @if (appData.ApplyStockSizeRules && investment.IsStock && (investment.Value > appData.FamilyData.Value * .05)) {
-                                                                    <sub title='@FormatUtilities.formatMoney(appData.FamilyData.Value*.05) is 5% of portfolio' style=background-color:yellow>&nbsp;&gt;5%</sub>
+                                                                @if (investment.AssetType == AssetTypes.Unknown)
+                                                                {
+                                                                    <span style=color:red>*</span>
+                                                                }
+                                                                @if (appData.ApplyStockSizeRules && investment.IsStock && (investment.Value > appData.FamilyData.Value * .05))
+                                                                {
+                                                                    <sub title='@FormatUtilities.FormatMoney(appData.FamilyData.Value*.05) is 5% of portfolio' style=background-color:yellow>&nbsp;&gt;5%</sub>
                                                                 }
                                                             </td>
-                                                            <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatDoubleTwoDecimal(investment.Shares)</td>
-                                                            <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.Price)<br/>@((MarkupString)FormatUtilities.formatPercent3WithColor(investment.PercentChange))</td>
-                                                            <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.Value)
-                                                                @if(investment.LastUpdated!=null) {
-                                                                    if (investment.IsFund) {
-                                                                        <br/>
+                                                            <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.FormatDoubleTwoDecimal(investment.Shares)</td>
+                                                            <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.FormatMoney(investment.Price)<br />@((MarkupString)FormatUtilities.FormatPercent3WithColor(investment.PercentChange))</td>
+                                                            <td style=text-align:right;padding-left:8px;vertical-align:text-top>
+                                                                @FormatUtilities.FormatMoney(investment.Value)
+                                                                @if (investment.LastUpdated != null)
+                                                                {
+                                                                    if (investment.IsFund)
+                                                                    {
+                                                                        <br />
                                                                         <span title=@investment.LastUpdated>
                                                                             @investment.LastUpdated?.ToString("ddd MM/dd")
                                                                         </span>
-                                                                    } else {
-                                                                        <br/>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <br />
                                                                         <span title=@investment.LastUpdated>
                                                                             @investment.LastUpdated?.ToShortTimeString()
                                                                         </span>
@@ -550,83 +676,99 @@
                                                         alternateRow = !alternateRow;
                                                     }
                                                     <tr>
-                                                        <td colspan=5><hr/></td>
+                                                        <td colspan=5><hr /></td>
                                                     </tr>
                                                     <tr>
                                                         <td colspan=2>
                                                             <button @onclick=@refreshPrices title=Refresh style=min-width:80px; @bind-disabled:event=onchange @bind-disabled=@refreshButtonDisabled>@refreshButtonText</button>
-                                                        </td>                                                            
+                                                        </td>
                                                         <td style=text-align:right;padding-left:8px colspan=2>
-                                                            <b>@(FormatUtilities.formatMoney(appData.FamilyData.Value))</b>
-                                                            @{var (change,percentChange) = portfolioChange();}
-                                                            <br/>change: <i>@((MarkupString)FormatUtilities.formatMoney(change,true))</i>
-                                                            <br/>% change: <i>@((MarkupString)FormatUtilities.formatPercent3WithColor(percentChange))</i>
+                                                            <b>@(FormatUtilities.FormatMoney(appData.FamilyData.Value))</b>
+                                                            @{
+                                                                var (change, percentChange) = portfolioChange();
+                                                            }
+                                                            <br />change: <i>@((MarkupString)FormatUtilities.FormatMoney(change, true))</i>
+                                                            <br />% change: <i>@((MarkupString)FormatUtilities.FormatPercent3WithColor(percentChange))</i>
                                                         </td>
                                                     </tr>
                                                 </table>
                                                 break;
                                             case "bogleheads":
-                                                @foreach (var account in appData.FamilyData.Accounts.OrderBy(a=>a.PortfolioReviewOrder).ThenByDescending(a=>a.Value)) {
+                                                @foreach (var account in appData.FamilyData.Accounts.OrderBy(a => a.PortfolioReviewOrder).ThenByDescending(a => a.Value))
+                                                {
                                                     @if (account.TaxType == "Pre-Tax(work)" && account.CurrentEmployerString == "")
                                                     {
                                                         <span>Following account should be classified as from 'current' employer or 'previous' employer using <a href=/portfolio-tracker/view/editor>Edit Accounts/Holdings</a>:</span>
-                                                        <br/>
+                                                        <br />
                                                     }
-                                                    @((MarkupString)FormatUtilities.Bold((account.Identifier != null ? "<span>"+account.Identifier+"&nbsp;</span>" : "")
-                                                     + (account.TaxType == "Pre-Tax(work)" ? "<span>"+account.CurrentEmployerString+"&nbsp;</span>" : "") 
-                                                     + account.AccountType + (!string.IsNullOrEmpty(account.Custodian) ? " at " + account.Custodian : "") + " (" + FormatUtilities.formatPercent(account.Percentage) + ")" , ShowMarkup))
-                                                    <br/>
-                                                    @foreach (var investment in account.Investments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.Value)) {
+                                                    @((MarkupString)FormatUtilities.Bold((account.Identifier != null ? "<span>" + account.Identifier + "&nbsp;</span>" : "")
+                                                        + (account.TaxType == "Pre-Tax(work)" ? "<span>" + account.CurrentEmployerString + "&nbsp;</span>" : "")
+                                                        + account.AccountType + (!string.IsNullOrEmpty(account.Custodian) ? " at " + account.Custodian : "") + " (" + FormatUtilities.FormatPercent(account.Percentage) + ")", ShowMarkup))
+                                                    <br />
+                                                    @foreach (var investment in account.Investments.OrderBy(i => i.InvestmentOrder).ThenByDescending(i => i.Value))
+                                                    {
                                                         var advice = Advisor.Advise(investment, account, appData);
-                                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;@FormatUtilities.formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@(investment.ExpenseRatio!=null?investment.ExpenseRatio:"??")%)</span><br/>
-                                                        @foreach (var adviceItem in advice) {
-                                                            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=background-color:yellow>
-                                                                @adviceItem
-                                                            </span></span><br/>
+                                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;@FormatUtilities.FormatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@(investment.ExpenseRatio != null ? investment.ExpenseRatio : "??")%)</span>
+
+                                                        <br />
+                                                        @foreach (var adviceItem in advice)
+                                                        {
+                                                            <span>
+                                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=background-color:yellow>
+                                                                    @adviceItem
+                                                                </span>
+                                                            </span>
+
+                                                            <br />
                                                         }
                                                     }
-                                                    <br/>
+                                                    <br />
                                                 }
                                                 break;
                                             case "custodians":
                                                 <table class=mainTable>
-                                                    @if (appData.FamilyData.Accounts.Count > 0) {
+                                                    @if (appData.FamilyData.Accounts.Count > 0)
+                                                    {
                                                         <tr style=vertical-align:bottom>
                                                             <th style=padding-left:8px>Custodian</th>
                                                             <th style=padding-left:8px;text-align:center>Balance</th>
                                                         </tr>
                                                     }
-                                                    @{var groupByCustodian = appData.FamilyData.Accounts
-                                                        .GroupBy(a => a.Custodian)
-                                                        .Select(g => new
-                                                        {
-                                                            Custodian = g.Key,
-                                                            Value = g.Sum(a => a.Value)
-                                                        })
-                                                        .OrderByDescending(g => g.Value);
+                                                    @{
+                                                        var groupByCustodian = appData.FamilyData.Accounts
+                                                    .GroupBy(a => a.Custodian)
+                                                    .Select(g => new
+                                                    {
+                                                        Custodian = g.Key,
+                                                        Value = g.Sum(a => a.Value)
+                                                    })
+                                                    .OrderByDescending(g => g.Value);
                                                     }
-                                                    @foreach (var group in groupByCustodian) {
+                                                    @foreach (var group in groupByCustodian)
+                                                    {
                                                         var custodianQuery = "custodian:" + group.Custodian;
                                                         <tr style=color:white;background:black @onclick='@(e=>editAccount(e,-1,-1,@custodianQuery))'>
                                                             <td>
                                                                 @group.Custodian
                                                             </td>
                                                             <td style=text-align:right;padding-left:8px>
-                                                                @FormatUtilities.formatMoney(group.Value)
+                                                                @FormatUtilities.FormatMoney(group.Value)
                                                             </td>
                                                         </tr>
                                                         bool alternateRow4 = false;
-                                                        @foreach (var account in appData.FamilyData.Accounts.OrderByDescending(a=>a.Value))
+                                                        @foreach (var account in appData.FamilyData.Accounts.OrderByDescending(a => a.Value))
                                                         {
-                                                            if (account.Custodian == group.Custodian) {
+                                                            if (account.Custodian == group.Custodian)
+                                                            {
                                                                 string bgColor = alternateRow4 ? "white" : "lightgray";
                                                                 var accountQuery = "account:" + account.Title;
                                                                 <tr style=background:@bgColor; @onclick='@(e=>editAccount(e,-1,-1,@accountQuery))'>
-                                                                    <td colspan=1>&nbsp;&nbsp;
+                                                                    <td colspan=1>
+                                                                        &nbsp;&nbsp;
                                                                         @account.Title
                                                                     </td>
                                                                     <td style=text-align:right;padding-left:8px>
-                                                                        @FormatUtilities.formatMoney(account.Value)
+                                                                        @FormatUtilities.FormatMoney(account.Value)
                                                                     </td>
                                                                 </tr>
                                                                 alternateRow4 = !alternateRow4;
@@ -636,43 +778,49 @@
                                                     <tr>
                                                         <td>
                                                             <button @onclick=@refreshPrices title=Refresh style=min-width:80px; @bind-disabled:event=onchange @bind-disabled=@refreshButtonDisabled>@refreshButtonText</button>
-                                                         </td>
-                                                        <td style=text-align:right;padding-left:8px><hr/><b>@(FormatUtilities.formatMoney(appData.FamilyData.Value))</b></td>
+                                                        </td>
+                                                        <td style=text-align:right;padding-left:8px><hr /><b>@(FormatUtilities.FormatMoney(appData.FamilyData.Value))</b></td>
                                                     </tr>
                                                     <tr>
                                                         <td colspan=2 style=text-align:right;padding-left:8px>
-                                                            @{var (change4,percentChange4) = portfolioChange();}
-                                                            change: <i>@((MarkupString)FormatUtilities.formatMoney(change4,true))</i>
-                                                            <br/>% change: <i>@((MarkupString)FormatUtilities.formatPercent3WithColor(percentChange4))</i>
+                                                            @{
+                                                                var (change4, percentChange4) = portfolioChange();
+                                                            }
+                                                            change: <i>@((MarkupString)FormatUtilities.FormatMoney(change4, true))</i>
+                                                            <br />% change: <i>@((MarkupString)FormatUtilities.FormatPercent3WithColor(percentChange4))</i>
                                                         </td>
                                                     </tr>
                                                 </table>
-                                                break;                                                    
+                                                break;
                                             case "tax-types":
                                                 var showFootnotes = new bool[4];
                                                 <table class=mainTable>
-                                                    @if (appData.FamilyData.Accounts.Count > 0) {
+                                                    @if (appData.FamilyData.Accounts.Count > 0)
+                                                    {
                                                         <tr style=vertical-align:bottom>
                                                             <th>Tax-Type</th>
-                                                            <th style=padding-left:8px;text-align:center>Unrealized<br/>Earned Income</th>
-                                                            <th style=padding-left:8px;text-align:center>Unrealized<br/>Capital Gains</th>
+                                                            <th style=padding-left:8px;text-align:center>Unrealized<br />Earned Income</th>
+                                                            <th style=padding-left:8px;text-align:center>Unrealized<br />Capital Gains</th>
                                                             <th style=padding-left:8px;text-align:center>Balance</th>
                                                         </tr>
                                                     }
-                                                    @{var groupByTaxType = appData.FamilyData.Accounts
-                                                        .GroupBy(a => a.TaxType2)
-                                                        .Select(g => new
-                                                        {
-                                                            TaxType = g.Key,
-                                                            Value = g.Sum(a => a.Value),
-                                                            CostBasis = g.Sum(a => a.CalculateCostBasis())
-                                                        })
-                                                        .OrderByDescending(g => g.Value);
+                                                    @{
+                                                        var groupByTaxType = appData.FamilyData.Accounts
+                                                    .GroupBy(a => a.TaxType2)
+                                                    .Select(g => new
+                                                    {
+                                                        TaxType = g.Key,
+                                                        Value = g.Sum(a => a.Value),
+                                                        CostBasis = g.Sum(a => a.CalculateCostBasis())
+                                                    })
+                                                    .OrderByDescending(g => g.Value);
                                                     }
-                                                    @foreach (var group in groupByTaxType) {
+                                                    @foreach (var group in groupByTaxType)
+                                                    {
                                                         bool alternateRow3 = false;
                                                         <tr style=color:white;background:black>
-                                                            <td font-size:smaller>@group.TaxType
+                                                            <td font-size:smaller>
+                                                                @group.TaxType
                                                                 @switch (group.TaxType)
                                                                 {
                                                                     case "Pre-Tax":
@@ -697,13 +845,14 @@
                                                                 }
                                                             </td>
                                                             <td style=text-align:right;padding-left:8px>
-                                                                @switch (group.TaxType) {
+                                                                @switch (group.TaxType)
+                                                                {
                                                                     case "Pre-Tax":
-                                                                        <span>@FormatUtilities.formatMoneyNarrow(group.Value)</span>
+                                                                        <span>@FormatUtilities.FormatMoneyNarrow(group.Value)</span>
                                                                         break;
                                                                     case "Taxable":
                                                                     case "Post-Tax":
-                                                                        <span>@FormatUtilities.formatMoneyNarrow(0.0)</span>
+                                                                        <span>@FormatUtilities.FormatMoneyNarrow(0.0)</span>
                                                                         break;
                                                                     default:
                                                                         <span>NYI<sub>4</sub></span>
@@ -712,62 +861,73 @@
                                                                 }
                                                             </td>
                                                             <td style=text-align:right;padding-left:8px>
-                                                                @if (!group.TaxType.EndsWith("-Tax")) {
-                                                                    @FormatUtilities.formatMoneyNarrow(group.Value - group.CostBasis)
-                                                                } else {
-                                                                    @FormatUtilities.formatMoneyNarrow(0.0)
+                                                                @if (!group.TaxType.EndsWith("-Tax"))
+                                                                {
+                                                                    @FormatUtilities.FormatMoneyNarrow(group.Value - group.CostBasis)
+                                                                }
+                                                                else
+                                                                {
+                                                                    @FormatUtilities.FormatMoneyNarrow(0.0)
                                                                 }
                                                             </td>
-                                                            <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoneyNarrow(group.Value)</td>
+                                                            <td style=text-align:right;padding-left:8px>@FormatUtilities.FormatMoneyNarrow(group.Value)</td>
                                                         </tr>
                                                         <tr style=color:white;background:black>
                                                             <td colspan=4>
-                                                                @FormatUtilities.formatPercent(group.Value/appData.FamilyData.Value*100.0)
+                                                                @FormatUtilities.FormatPercent(group.Value / appData.FamilyData.Value * 100.0)
                                                             </td>
                                                         </tr>
                                                         List<Investment> groupInvestments = new();
-                                                        @foreach (var account in appData.FamilyData.Accounts.OrderByDescending(a=>a.Value))
+                                                        @foreach (var account in appData.FamilyData.Accounts.OrderByDescending(a => a.Value))
                                                         {
-                                                            if (account.TaxType2 == group.TaxType) {
+                                                            if (account.TaxType2 == group.TaxType)
+                                                            {
                                                                 string bgColor2 = alternateRow3 ? "white" : "lightgray";
                                                                 var accountQuery = "account:" + account.Title;
                                                                 <tr style=background:@bgColor2; @onclick='@(e=>editAccount(e,-1,-1,@accountQuery))'>
-                                                                    <td colspan=4>&nbsp;&nbsp;
+                                                                    <td colspan=4>
+                                                                        &nbsp;&nbsp;
                                                                         @account.Title
                                                                     </td>
                                                                 </tr>
                                                                 <tr style=background:@bgColor2; @onclick='@(e=>editAccount(e,-1,-1,@accountQuery))'>
                                                                     <td style=text-align:right;padding-left:8px colspan=2>
-                                                                        @switch (group.TaxType) {
+                                                                        @switch (group.TaxType)
+                                                                        {
                                                                             case "Pre-Tax":
-                                                                                <span>@FormatUtilities.formatMoneyNarrow(account.Value)</span>
+                                                                                <span>@FormatUtilities.FormatMoneyNarrow(account.Value)</span>
                                                                                 break;
                                                                             case "Taxable":
                                                                             case "Post-Tax":
-                                                                                <span>@FormatUtilities.formatMoneyNarrow(0.0)</span>
+                                                                                <span>@FormatUtilities.FormatMoneyNarrow(0.0)</span>
                                                                                 break;
                                                                             default:
                                                                                 showFootnotes[3] = true;
                                                                                 <span>NYI<sub>4</sub></span>
                                                                                 break;
                                                                         }
-                                                                    </td>                                                                        
+                                                                    </td>
                                                                     <td style=text-align:right;padding-left:8px>
-                                                                        @if (account.TaxType == "Taxable") {
+                                                                        @if (account.TaxType == "Taxable")
+                                                                        {
                                                                             var costBasis = account.CalculateCostBasis();
                                                                             if (costBasis != null)
                                                                             {
-                                                                                <span>@FormatUtilities.formatMoneyNarrow(account.Value - costBasis)</span>
-                                                                            } else {
-                                                                                <span>missing<br/>cost basis</span>
+                                                                                <span>@FormatUtilities.FormatMoneyNarrow(account.Value - costBasis)</span>
                                                                             }
-                                                                        } else {
-                                                                            <span>@FormatUtilities.formatMoneyNarrow(0.0)</span>
+                                                                            else
+                                                                            {
+                                                                                <span>missing<br />cost basis</span>
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <span>@FormatUtilities.FormatMoneyNarrow(0.0)</span>
                                                                         }
                                                                     </td>
                                                                     <td style=text-align:right;padding-left:8px>
-                                                                        @FormatUtilities.formatMoneyNarrow(account.Value)
-                                                                    </td>                                                                        
+                                                                        @FormatUtilities.FormatMoneyNarrow(account.Value)
+                                                                    </td>
                                                                 </tr>
                                                                 alternateRow3 = !alternateRow3;
                                                             }
@@ -777,36 +937,69 @@
                                                         <td colspan=2>
                                                             <button @onclick=@refreshPrices title=Refresh style=min-width:80px; @bind-disabled:event=onchange @bind-disabled=@refreshButtonDisabled>@refreshButtonText</button>
                                                         </td>
-                                                        <td colspan=2 style=text-align:right;padding-left:8px><hr/><b>@(FormatUtilities.formatMoney(appData.FamilyData.Value))</b></td>
+                                                        <td colspan=2 style=text-align:right;padding-left:8px><hr /><b>@(FormatUtilities.FormatMoney(appData.FamilyData.Value))</b></td>
                                                     </tr>
                                                     <tr>
                                                         <td colspan=4 style=text-align:right;padding-left:8px>
-                                                            @{var (change3,percentChange3) = portfolioChange();}
-                                                            change: <i>@((MarkupString)FormatUtilities.formatMoney(change3,true))</i>
-                                                            <br/>% change: <i>@((MarkupString)FormatUtilities.formatPercent3WithColor(percentChange3))</i>
+                                                            @{
+                                                                var (change3, percentChange3) = portfolioChange();
+                                                            }
+                                                            change: <i>@((MarkupString)FormatUtilities.FormatMoney(change3, true))</i>
+                                                            <br />% change: <i>@((MarkupString)FormatUtilities.FormatPercent3WithColor(percentChange3))</i>
                                                         </td>
                                                     </tr>
-                                                </table><br/>
-                                                    <span>Current Tax law:</span><br/>
-                                                    @if(showFootnotes[0]) {<span><sub>1</sub>- total sale treated as Earned Income</span><br/>}
-                                                    @if(showFootnotes[1]) {<span><sub>2</sub>- profits of sale treated as Capital Gains</span><br/>}
-                                                    @if(showFootnotes[2]) {<span><sub>3</sub>- no taxes on sale</span><br/>}
-                                                    @if(showFootnotes[3]) {<span><sub>4</sub>- description needs to be written</span><br/>}
+                                                </table>
+
+                                                <br />
+                                                <span>Current Tax law:</span>
+
+                                                <br />
+                                                @if (showFootnotes[0])
+                                                {
+                                                    <span><sub>1</sub>- total sale treated as Earned Income</span>
+
+                                                    <br />
+                                                }
+                                                @if (showFootnotes[1])
+                                                {
+                                                    <span><sub>2</sub>- profits of sale treated as Capital Gains</span>
+
+                                                    <br />
+                                                }
+                                                @if (showFootnotes[2])
+                                                {
+                                                    <span><sub>3</sub>- no taxes on sale</span>
+
+                                                    <br />
+                                                }
+                                                @if (showFootnotes[3])
+                                                {
+                                                    <span><sub>4</sub>- description needs to be written</span>
+
+                                                    <br />
+                                                }
                                                 break;
                                             default:
                                                 Navigation.NavigateTo("/portfolio-tracker");
                                                 break;
                                         }
-                                        <br/>
-                                        @if (!Navigation.Uri.EndsWith("/accounts")) {
+                                        <br />
+                                        @if (!Navigation.Uri.EndsWith("/accounts"))
+                                        {
                                             <fieldset>
                                                 @((MarkupString)FormatUtilities.Bold("Weighted Expense Ratio: ", ShowMarkup))
-                                                <span>&nbsp;@FormatUtilities.formatPercent3(appData.FamilyData.OverallER) or @FormatUtilities.formatMoney(appData.FamilyData.ExpensesTotal) /year</span>
-                                                @if (appData.FamilyData.InvestmentsMissingER > 0){<br/><span>&nbsp;(@appData.FamilyData.InvestmentsMissingER investment(s) missing ER, select holdings marked with <span style=color:red>#</span> in accounts view)</span><br/>}
+                                                <span>&nbsp;@FormatUtilities.FormatPercent3(appData.FamilyData.OverallER) or @FormatUtilities.FormatMoney(appData.FamilyData.ExpensesTotal) /year</span>
+                                                @if (appData.FamilyData.InvestmentsMissingER > 0)
+                                                {
+                                                    <br />
+                                                    <span>&nbsp;(@appData.FamilyData.InvestmentsMissingER investment(s) missing ER, select holdings marked with <span style=color:red>#</span> in accounts view)</span>
+                                                    <br />
+                                                }
                                             </fieldset>
                                         }
                                     }
-                                    @if (appData.FamilyData.Accounts.Count == 0) {
+                                    @if (appData.FamilyData.Accounts.Count == 0)
+                                    {
                                         <button style=margin-left:40px @onclick=addAccountThenEdit title='add account'>➕ account</button>
                                         <button @onclick=ShowImport title='import Accounts from a CSV/XLSX file'>
                                             Import Center ⬆️
@@ -815,8 +1008,13 @@
                                             Import(bh)
                                         </button>
                                     }
-                                    @if(showEditAccountHelpers || appData.FamilyData.Accounts.Count == 0) {
-                                        <br/><br/><i>Editing Investable Assets:</i>
+                                    @if (showEditAccountHelpers || appData.FamilyData.Accounts.Count == 0)
+                                    {
+                                        <br />
+
+                                        <br />
+
+                                        <i>Editing Investable Assets:</i>
                                         <ul>
                                             <li>
                                                 To hand enter an account, click the add account button "➕ account" above.
@@ -827,48 +1025,46 @@
                                             <li>
                                                 To import accounts from an existing portfolio review on bogleheads.org, click the "Import(bh)" button above.
                                             </li>
-                                            @if (appData.FamilyData.Accounts.Count > 0) {
+                                            @if (appData.FamilyData.Accounts.Count > 0)
+                                            {
                                                 <li>
                                                     To edit existing accounts/investments, click on it above.
                                                 </li>
                                             }
                                         </ul>
-                                        <br/><span>See <a href="/updating-portfolio">3 ways to update portfolios</a> for more options to update accounts/investments.</span>
-                                        <br/>
-                                        <br/>
+                                        <br />
+
+                                        <span>See <a href="/updating-portfolio">3 ways to update portfolios</a> for more options to update accounts/investments.</span>
+                                        <br />
+                                        <br />
                                     }
-                                    <hr/>
+                                    <hr />
                                 </td>
-                                }
-                                break;                                
-                            default:
-                                break;
-                        }
-                    </tr>
-                }          
-            </table>
-        </div>
-        
-        @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) {
-            <p>"Consider getting a <a href="portfolio-review">Portfolio Review</a> and use the <a href="/savings-planner">Savings Planner</a>!"</p>
-        }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                </tr>
+            }
+        </table>
+    </div>
+
+    @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded)
+    {
+        <p>"Consider getting a <a href="portfolio-review">Portfolio Review</a> and use the <a href="/savings-planner">Savings Planner</a>!"</p>
     }
+}
 
 @code {
     void updateFund(MouseEventArgs e, List<Investment> investments, DateTime lastUpdated)
     {
-        if (appData.FamilyData != null)
-        {
-            appData.FamilyData.UpdateInvestmentsPrice(investments, investments[0].Price, null, null, lastUpdated);
-        }
+        FamilyData.UpdateInvestmentsPrice(investments, investments[0].Price, null, null, lastUpdated);
     }
 
     void updateNonFund(MouseEventArgs e, List<Investment> investments, DateTime lastUpdated)
     {
-        if (appData.FamilyData != null)
-        {
-            appData.FamilyData.UpdateInvestmentsPrice(investments, investments[0].Price, null, null, lastUpdated);
-        }
+        FamilyData.UpdateInvestmentsPrice(investments, investments[0].Price, null, null, lastUpdated);
     }
 
     void selectInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
@@ -877,9 +1073,10 @@
         Investment? fromInvestment = null;
         Investment? toInvestment = null;
         string? toTicker = null;
-        if (appData.FamilyData is not null) {
+        if (appData.FamilyData is not null)
+        {
             var accounts = appData.FamilyData.Accounts;
-            if (fromTicker == null) 
+            if (fromTicker == null)
             {
                 fromTicker = accounts[accountIndex].Investments[investmentIndex].Ticker;
                 fromInvestment = accounts[accountIndex].Investments[investmentIndex];
@@ -921,16 +1118,22 @@
                     }
 
                     account.View = found;
-                } else if (query.StartsWith("account:")) {
+                }
+                else if (query.StartsWith("account:"))
+                {
                     var accountToFind = query.Substring(8);
                     account.View = (account.Title == accountToFind);
-                } else if (query.StartsWith("custodian:")) {
+                }
+                else if (query.StartsWith("custodian:"))
+                {
                     var custodianToFind = query.Substring(10);
                     account.View = (account.Custodian == custodianToFind);
-                } else {
+                }
+                else
+                {
                     bool foundAccount = (accountIndex == accIndex);
                     account.View = foundAccount;
-                    if (foundAccount) 
+                    if (foundAccount)
                     {
                         var investmentIndex = 0;
                         if (invIndex == -1)
@@ -955,19 +1158,22 @@
                 accountIndex++;
             }
 
-            Navigation.NavigateTo("/portfolio-tracker/view/"+query);
+            Navigation.NavigateTo("/portfolio-tracker/view/" + query);
         }
     }
 
-    void editor() {
+    void editor()
+    {
         Navigation.NavigateTo("/portfolio-tracker/view/editor");
     }
 
-    void toggleTaxFilingStatusEditing() {
+    void toggleTaxFilingStatusEditing()
+    {
         taxFilingStatusEditing = !taxFilingStatusEditing;
     }
 
-    void toggleAssetAllocationEditing() {
+    void toggleAssetAllocationEditing()
+    {
         assetAllocationEditing = !assetAllocationEditing;
     }
 
@@ -976,7 +1182,8 @@
     bool refreshButtonDisabled = false;
     bool assetAllocationEditing = false;
     bool taxFilingStatusEditing = false;
-    public enum Mode {
+    public enum Mode
+    {
         normal = 0,
         href,
         text,
@@ -984,14 +1191,18 @@
     public bool pastTotal = false;
     public int runningTotal = 0;
 
-    public string checkTotal(int? itemTotal) {
-        if (appData.FamilyData is not null) {
+    public string checkTotal(int? itemTotal)
+    {
+        if (appData.FamilyData is not null)
+        {
             runningTotal += itemTotal ?? 0;
-            if (!pastTotal) {
+            if (!pastTotal)
+            {
                 pastTotal = appData.FamilyData.PlannedSavings <= runningTotal;
 
-                if (pastTotal) {
-                    return "<div>-------<br/><div>Planned savings " + (appData.FamilyData.PlannedSavings==runningTotal?"met":"exceeded") + " after " + FormatUtilities.formatMoney(itemTotal+(appData.FamilyData.PlannedSavings-runningTotal)) + " towards previous step</div>-------<br/></div>";
+                if (pastTotal)
+                {
+                    return "<div>-------<br/><div>Planned savings " + (appData.FamilyData.PlannedSavings == runningTotal ? "met" : "exceeded") + " after " + FormatUtilities.FormatMoney(itemTotal + (appData.FamilyData.PlannedSavings - runningTotal)) + " towards previous step</div>-------<br/></div>";
                 }
             }
         }
@@ -1006,7 +1217,8 @@
 
     public string getPronoun(Person person, bool inParanthesis)
     {
-        if (person?.FamilyData != null && person.FamilyData.PersonCount > 1 && person.Identifier != null && person.Identifier != "None") {
+        if (person?.FamilyData != null && person.FamilyData.PersonCount > 1 && person.Identifier != null && person.Identifier != "None")
+        {
             if (inParanthesis) { return "(" + person.Identifier + ")"; }
             else { return "\"" + person.Identifier + "\""; }
         }
@@ -1035,17 +1247,20 @@
         base.OnInitialized();
     }
 
-    private void ShowImport() {
+    private void ShowImport()
+    {
         Navigation.NavigateTo("/import");
     }
 
-    private void showOpenBH() {
+    private void showOpenBH()
+    {
         Navigation.NavigateTo("/import-accounts-bh");
     }
 
     private void finishImport()
     {
-        if (appData is not null && appData.FamilyData is not null && appData.ImportResult is not null) {
+        if (appData is not null && appData.FamilyData is not null && appData.ImportResult is not null)
+        {
 
             foreach (var updatedAccount in appData.ImportResult.UpdatedAccounts)
             {
@@ -1082,8 +1297,9 @@
         Navigation.NavigateTo("/portfolio-tracker/view/editor");
     }
 
-    private async Task LoadPortfolioForTopic(string topicStr) {
-        var options = new JsonSerializerOptions() 
+    private async Task LoadPortfolioForTopic(string topicStr)
+    {
+        var options = new JsonSerializerOptions()
             {
                 Converters =
                     {
@@ -1095,7 +1311,8 @@
         appData.FamilyData = await FamilyData.LoadFromJsonStream(appData, stream, options);
     }
 
-    private async Task refreshPrices() {
+    private async Task refreshPrices()
+    {
         refreshButtonText = "Updating...";
         refreshButtonDisabled = true;
         if (appData?.FamilyData != null)
@@ -1112,9 +1329,10 @@
         }
     }
 
-    private (double? change, double? percentChange) portfolioChange() 
+    private (double? change, double? percentChange) portfolioChange()
     {
-        if (appData.FamilyData is not null) {
+        if (appData.FamilyData is not null)
+        {
             double? change = 0.0;
             double? total = 0.0;
             foreach (var investment in appData.FamilyData.GroupedInvestments)
@@ -1127,9 +1345,9 @@
             }
 
             var startOfDayTotal = total - change;
-            return change == 0.0 ? (null, null) : (change, change/startOfDayTotal * 100.0);
+            return change == 0.0 ? (null, null) : (change, change / startOfDayTotal * 100.0);
         }
-        else 
+        else
         {
             return (null, null);
         }

@@ -1,6 +1,8 @@
+namespace Models;
+
 public class Retirement {
     public Retirement() {
-        Pensions = new();
+        Pensions = [];
     }
 
     public int? RetirementAge { get; set; }

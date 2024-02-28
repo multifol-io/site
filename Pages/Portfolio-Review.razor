@@ -9,6 +9,7 @@
 @inject NavigationManager Navigation
 @inject IList<Fund> Funds
 @using System.Text.Json.Serialization
+@using Models
 
 <PageTitle>
     Portfolio Review@(stepPath == null ? "" : ": " + stepPath.Replace('-', ' ')) - bogle.tools
@@ -152,7 +153,7 @@ else
                                             <br />
                                             @foreach (var debt in appData.FamilyData.Debts)
                                             {
-                                                <span>&nbsp;&nbsp;@debt.Name: @FormatUtilities.formatMoney(debt.Total) @@ @(debt.Rate == null ? "unknown" : debt.Rate)%</span>
+                                                <span>&nbsp;&nbsp;@debt.Name: @FormatUtilities.FormatMoney(debt.Total) @@ @(debt.Rate == null ? "unknown" : debt.Rate)%</span>
 
                                                 <br />
                                             }
@@ -211,7 +212,7 @@ else
                                     break;
                                 case "retirement-assets":
                                     <td>
-                                        @((MarkupString)FormatUtilities.Bold("Portfolio Size:", ShowMarkup))&nbsp;@(appData.FamilyData.ValueStyle == 0 ? FormatUtilities.formatMoneyThousands(appData.FamilyData.Value) : (appData.FamilyData.ValueStyle == 1 ? appData.FamilyData.estimatePortfolio() : FormatUtilities.formatMoney(appData.FamilyData.Value)))<br />
+                                        @((MarkupString)FormatUtilities.Bold("Portfolio Size:", ShowMarkup))&nbsp;@(appData.FamilyData.ValueStyle == 0 ? FormatUtilities.FormatMoneyThousands(appData.FamilyData.Value) : (appData.FamilyData.ValueStyle == 1 ? appData.FamilyData.EstimatePortfolio() : FormatUtilities.FormatMoney(appData.FamilyData.Value)))<br />
                                         <br />
                                         @((MarkupString)FormatUtilities.BoldUnderline("Current Retirement Assets:", ShowMarkup))<br />
                                         @foreach (var account in appData.FamilyData.Accounts.OrderBy(a => a.PortfolioReviewOrder).ThenByDescending(a => a.Value))
@@ -224,11 +225,11 @@ else
                                             }
                                             @((MarkupString)FormatUtilities.Bold((account.Identifier != null ? "<span>" + account.Identifier + "&nbsp;</span>" : "")
                                                 + (account.TaxType == "Pre-Tax(work)" ? "<span>" + account.CurrentEmployerString + "&nbsp;</span>" : "")
-                                                + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + " (" + FormatUtilities.formatPercent(account.Percentage) + ")", ShowMarkup))
+                                                + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + " (" + FormatUtilities.FormatPercent(account.Percentage) + ")", ShowMarkup))
                                             <br />
                                             @foreach (var investment in account.Investments.OrderBy(i => i.InvestmentOrder).ThenByDescending(i => i.Value))
                                             {
-                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;@FormatUtilities.formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@(investment.ExpenseRatio != null ? investment.ExpenseRatio : "??")%)</span>
+                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;@FormatUtilities.FormatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@(investment.ExpenseRatio != null ? investment.ExpenseRatio : "??")%)</span>
 
                                                 <br />
                                             }
@@ -260,10 +261,12 @@ else
                                     </td>
                                     break;
                                 case "additional-background":
-                                    @((MarkupString)FormatUtilities.BoldUnderline("Additional Background:", ShowMarkup))
-                                    <br />
-                                    @appData.FamilyData.AdditionalBackground
-                                    <br />
+                                    <td>
+                                        @((MarkupString)FormatUtilities.BoldUnderline("Additional Background:", ShowMarkup))
+                                        <br />
+                                        @appData.FamilyData.AdditionalBackground
+                                        <br />
+                                    </td>
                                     break;
                                 case "questions":
                                     <td>
@@ -288,7 +291,7 @@ else
                                         </span><br />
                                         @if (appData.FamilyData.PlannedSavings > 0)
                                         {
-                                            <span>Planned savings: @FormatUtilities.formatMoney(appData.FamilyData.PlannedSavings)</span>
+                                            <span>Planned savings: @FormatUtilities.FormatMoney(appData.FamilyData.PlannedSavings)</span>
 
                                             <br />
 
@@ -299,21 +302,21 @@ else
 
                                         @if (appData.FamilyData.EmergencyFund.AmountToSave > 0)
                                         {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.EmergencyFund.AmountToSave) in Emergency Fund</span>
+                                            <span>@FormatUtilities.FormatMoney(appData.FamilyData.EmergencyFund.AmountToSave) in Emergency Fund</span>
 
                                             <br />
                                             @((MarkupString)checkTotal(appData.FamilyData.EmergencyFund.AmountToSave))
                                         }
                                         @if (appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch > 0)
                                         {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch) in @appData.FamilyData.People[0].PossessiveID 401(k) (Match: @FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerPlan.MatchAmount))</span>
+                                            <span>@FormatUtilities.FormatMoney(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch) in @appData.FamilyData.People[0].PossessiveID 401(k) (Match: @FormatUtilities.FormatMoney(appData.FamilyData.People[0].EmployerPlan.MatchAmount))</span>
 
                                             <br />
                                             @((MarkupString)checkTotal(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch))
                                         }
                                         @if (appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch > 0)
                                         {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch) in @appData.FamilyData.People[1].PossessiveID 401(k) (Match: @FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerPlan.MatchAmount))</span>
+                                            <span>@FormatUtilities.FormatMoney(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch) in @appData.FamilyData.People[1].PossessiveID 401(k) (Match: @FormatUtilities.FormatMoney(appData.FamilyData.People[1].EmployerPlan.MatchAmount))</span>
 
                                             <br />
                                             @((MarkupString)checkTotal(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch))
@@ -327,14 +330,14 @@ else
                                         }
                                         @if (appData.FamilyData.PersonCount > 0 && (appData.FamilyData.People[0].EmployerBenefits.Complete || appData.FamilyData.People[0].EmployerPlan.AnnualSalary == 0 || appData.FamilyData.People[0].HealthSavingsAccount.EligibleForHSA || appData.FamilyData.People[0].HealthSavingsAccount.EligibleForHSACatchUpOnly) && appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave > 0)
                                         {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave) in @appData.FamilyData.People[0].PossessiveID HSA (Employer: @FormatUtilities.formatMoney(appData.FamilyData.People[0].HealthSavingsAccount.EmployerContribution))</span>
+                                            <span>@FormatUtilities.FormatMoney(appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave) in @appData.FamilyData.People[0].PossessiveID HSA (Employer: @FormatUtilities.FormatMoney(appData.FamilyData.People[0].HealthSavingsAccount.EmployerContribution))</span>
 
                                             <br />
                                             @((MarkupString)checkTotal(appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave))
                                         }
                                         @if (appData.FamilyData.PersonCount > 1 && (appData.FamilyData.People[1].EmployerBenefits.Complete || appData.FamilyData.People[1].EmployerPlan.AnnualSalary == 0 || appData.FamilyData.People[1].HealthSavingsAccount.EligibleForHSA || appData.FamilyData.People[1].HealthSavingsAccount.EligibleForHSACatchUpOnly) && appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave > 0)
                                         {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave) in @appData.FamilyData.People[1].PossessiveID HSA (Employer: @FormatUtilities.formatMoney(appData.FamilyData.People[1].HealthSavingsAccount.EmployerContribution))</span>
+                                            <span>@FormatUtilities.FormatMoney(appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave) in @appData.FamilyData.People[1].PossessiveID HSA (Employer: @FormatUtilities.FormatMoney(appData.FamilyData.People[1].HealthSavingsAccount.EmployerContribution))</span>
 
                                             <br />
                                             @((MarkupString)checkTotal(appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave))
@@ -358,55 +361,55 @@ else
                                         }
                                         @if (appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched > 0)
                                         {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched) in @appData.FamilyData.People[0].PossessiveID 401(k)</span>
+                                            <span>@FormatUtilities.FormatMoney(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched) in @appData.FamilyData.People[0].PossessiveID 401(k)</span>
 
                                             <br />
                                             @((MarkupString)checkTotal(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched))
                                         }
                                         @if (appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched > 0)
                                         {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched) in @appData.FamilyData.People[1].PossessiveID 401(k)</span>
+                                            <span>@FormatUtilities.FormatMoney(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched) in @appData.FamilyData.People[1].PossessiveID 401(k)</span>
 
                                             <br />
                                             @((MarkupString)checkTotal(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched))
                                         }
                                         @if (appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0)
                                         {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @appData.FamilyData.People[0].PossessiveID mega backdoor roth</span>
+                                            <span>@FormatUtilities.FormatMoney(appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @appData.FamilyData.People[0].PossessiveID mega backdoor roth</span>
 
                                             <br />
                                             @((MarkupString)checkTotal(appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
                                         }
                                         @if (appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0)
                                         {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @appData.FamilyData.People[1].PossessiveID mega backdoor roth</span>
+                                            <span>@FormatUtilities.FormatMoney(appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @appData.FamilyData.People[1].PossessiveID mega backdoor roth</span>
 
                                             <br />
                                             @((MarkupString)checkTotal(appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
                                         }
                                         @if (appData.FamilyData.MediumDebts > 0)
                                         {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.MediumDebts) in Medium Debts</span>
+                                            <span>@FormatUtilities.FormatMoney(appData.FamilyData.MediumDebts) in Medium Debts</span>
 
                                             <br />
                                             @((MarkupString)checkTotal(appData.FamilyData.MediumDebts))
                                         }
                                         @if (appData.FamilyData.PlannedSavings > runningTotal)
                                         {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.PlannedSavings - runningTotal) in Taxable</span>
+                                            <span>@FormatUtilities.FormatMoney(appData.FamilyData.PlannedSavings - runningTotal) in Taxable</span>
 
                                             <br />
                                             @((MarkupString)checkTotal(appData.FamilyData.PlannedSavings - runningTotal))
                                         }
                                         else
                                         {
-                                            <span>@FormatUtilities.formatMoney(0) in Taxable</span>
+                                            <span>@FormatUtilities.FormatMoney(0) in Taxable</span>
 
                                             <br />
                                         }
                                         @if (appData.FamilyData.LowDebts > 0)
                                         {
-                                            <span>@FormatUtilities.formatMoney(appData.FamilyData.LowDebts) in Low Debts</span>
+                                            <span>@FormatUtilities.FormatMoney(appData.FamilyData.LowDebts) in Low Debts</span>
 
                                             <br />
                                             @((MarkupString)checkTotal(appData.FamilyData.LowDebts))
@@ -545,10 +548,10 @@ else
 
                                     <br /><br />
                                     <label>Amounts to Pay-Off (@step.title):</label><br /><br />
-                                    High Interest: @FormatUtilities.formatMoney(appData.FamilyData.HighDebts)<br />
-                                    Medium Interest: @FormatUtilities.formatMoney(appData.FamilyData.MediumDebts)<br />
-                                    Low Interest: @FormatUtilities.formatMoney(appData.FamilyData.LowDebts)<br />
-                                    Unknown Interest: @FormatUtilities.formatMoney(appData.FamilyData.UnknownDebts)<br />
+                                    High Interest: @FormatUtilities.FormatMoney(appData.FamilyData.HighDebts)<br />
+                                    Medium Interest: @FormatUtilities.FormatMoney(appData.FamilyData.MediumDebts)<br />
+                                    Low Interest: @FormatUtilities.FormatMoney(appData.FamilyData.LowDebts)<br />
+                                    Unknown Interest: @FormatUtilities.FormatMoney(appData.FamilyData.UnknownDebts)<br />
                                     <br />
                                 </EditForm>
                             </div>
@@ -602,12 +605,12 @@ else
                                                             if (lastBracket != null)
                                                             {
                                                                 var elName = "bracket" + lastBracket.Substring(0, lastBracket.Length - 2);
-                                                                <tr><td><InputRadio id=@elName Value='@lastBracket' />&nbsp;<label for=@elName>@lastBracket</label></td><td style=padding-left:30px>@(lastStartAmount == 1 ? "Up" : FormatUtilities.formatMoney(lastStartAmount)) to @FormatUtilities.formatMoney(taxBracket.StartAmount)</td></tr>
+                                                                <tr><td><InputRadio id=@elName Value='@lastBracket' />&nbsp;<label for=@elName>@lastBracket</label></td><td style=padding-left:30px>@(lastStartAmount == 1 ? "Up" : FormatUtilities.FormatMoney(lastStartAmount)) to @FormatUtilities.FormatMoney(taxBracket.StartAmount)</td></tr>
                                                             }
                                                             lastBracket = taxBracket.Rate;
                                                             lastStartAmount = taxBracket.StartAmount + 1;
                                                         }
-                                                        <tr><td><InputRadio Value='@lastBracket' />&nbsp;@lastBracket</td><td style=padding-left:30px>Over @FormatUtilities.formatMoney(lastStartAmount - 1)</td></tr>
+                                                        <tr><td><InputRadio Value='@lastBracket' />&nbsp;@lastBracket</td><td style=padding-left:30px>Over @FormatUtilities.FormatMoney(lastStartAmount - 1)</td></tr>
                                                     </table>
                                                     <br />
                                                     <p><sub>1</sub> Brackets for ordinary income are based on taxable income, which is line 15 on your 1040 for most people. If you have a lot of long term capital gains or qualified dividends, the tax bracket for your ordinary income tax bracket may be lower. - <a target=_blank href=https://www.bogleheads.org/wiki/Progressive_tax#Taxable_income>more details on Taxable Income</a>↗️</p>
@@ -834,9 +837,9 @@ else
                             {
                                 <div>Preferred technique to represent the approximate size of your total portfolio (in <NavLink href="/portfolio-review">portfolio review</NavLink>):</div>
                                 <InputRadioGroup @bind-Value=appData.FamilyData.ValueStyle>
-                                    <InputRadio id=rounded Value='0' /> <label for=rounded>@FormatUtilities.formatMoneyThousands(appData.FamilyData.Value)</label> <br />
-                                    <InputRadio id=estimate Value='1' /> <label for=estimate>@appData.FamilyData.estimatePortfolio()</label> <br />
-                                    <InputRadio id=dollar Value='2' /> <label for=dollar>@FormatUtilities.formatMoney(appData.FamilyData.Value)</label> <br />
+                                    <InputRadio id=rounded Value='0' /> <label for=rounded>@FormatUtilities.FormatMoneyThousands(appData.FamilyData.Value)</label> <br />
+                                    <InputRadio id=estimate Value='1' /> <label for=estimate>@appData.FamilyData.EstimatePortfolio()</label> <br />
+                                    <InputRadio id=dollar Value='2' /> <label for=dollar>@FormatUtilities.FormatMoney(appData.FamilyData.Value)</label> <br />
                                 </InputRadioGroup>
                             }
                             break;
@@ -849,7 +852,7 @@ else
                                 </span><br />
                                 @if (appData.FamilyData.PlannedSavings > 0)
                                 {
-                                    <span>Planned savings: @FormatUtilities.formatMoney(appData.FamilyData.PlannedSavings)</span>
+                                    <span>Planned savings: @FormatUtilities.FormatMoney(appData.FamilyData.PlannedSavings)</span>
 
                                     <br />
 
@@ -860,21 +863,21 @@ else
 
                                 @if (appData.FamilyData.EmergencyFund.AmountToSave > 0)
                                 {
-                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.EmergencyFund.AmountToSave) in Emergency Fund</span>
+                                    <span>@FormatUtilities.FormatMoney(appData.FamilyData.EmergencyFund.AmountToSave) in Emergency Fund</span>
 
                                     <br />
                                     @((MarkupString)checkTotal(appData.FamilyData.EmergencyFund.AmountToSave))
                                 }
                                 @if (appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch > 0)
                                 {
-                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch) in @appData.FamilyData.People[0].PossessiveID 401(k) (Match: @FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerPlan.MatchAmount))</span>
+                                    <span>@FormatUtilities.FormatMoney(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch) in @appData.FamilyData.People[0].PossessiveID 401(k) (Match: @FormatUtilities.FormatMoney(appData.FamilyData.People[0].EmployerPlan.MatchAmount))</span>
 
                                     <br />
                                     @((MarkupString)checkTotal(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForMatch))
                                 }
                                 @if (appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch > 0)
                                 {
-                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch) in @appData.FamilyData.People[1].PossessiveID 401(k) (Match: @FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerPlan.MatchAmount))</span>
+                                    <span>@FormatUtilities.FormatMoney(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch) in @appData.FamilyData.People[1].PossessiveID 401(k) (Match: @FormatUtilities.FormatMoney(appData.FamilyData.People[1].EmployerPlan.MatchAmount))</span>
 
                                     <br />
                                     @((MarkupString)checkTotal(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForMatch))
@@ -888,14 +891,14 @@ else
                                 }
                                 @if (appData.FamilyData.PersonCount > 0 && (appData.FamilyData.People[0].EmployerBenefits.Complete || appData.FamilyData.People[0].EmployerPlan.AnnualSalary == 0 || appData.FamilyData.People[0].HealthSavingsAccount.EligibleForHSA || appData.FamilyData.People[0].HealthSavingsAccount.EligibleForHSACatchUpOnly) && appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave > 0)
                                 {
-                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave) in @appData.FamilyData.People[0].PossessiveID HSA (Employer: @FormatUtilities.formatMoney(appData.FamilyData.People[0].HealthSavingsAccount.EmployerContribution))</span>
+                                    <span>@FormatUtilities.FormatMoney(appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave) in @appData.FamilyData.People[0].PossessiveID HSA (Employer: @FormatUtilities.FormatMoney(appData.FamilyData.People[0].HealthSavingsAccount.EmployerContribution))</span>
 
                                     <br />
                                     @((MarkupString)checkTotal(appData.FamilyData.People[0].HealthSavingsAccount.AmountToSave))
                                 }
                                 @if (appData.FamilyData.PersonCount > 1 && (appData.FamilyData.People[1].EmployerBenefits.Complete || appData.FamilyData.People[1].EmployerPlan.AnnualSalary == 0 || appData.FamilyData.People[1].HealthSavingsAccount.EligibleForHSA || appData.FamilyData.People[1].HealthSavingsAccount.EligibleForHSACatchUpOnly) && appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave > 0)
                                 {
-                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave) in @appData.FamilyData.People[1].PossessiveID HSA (Employer: @FormatUtilities.formatMoney(appData.FamilyData.People[1].HealthSavingsAccount.EmployerContribution))</span>
+                                    <span>@FormatUtilities.FormatMoney(appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave) in @appData.FamilyData.People[1].PossessiveID HSA (Employer: @FormatUtilities.FormatMoney(appData.FamilyData.People[1].HealthSavingsAccount.EmployerContribution))</span>
 
                                     <br />
                                     @((MarkupString)checkTotal(appData.FamilyData.People[1].HealthSavingsAccount.AmountToSave))
@@ -919,55 +922,55 @@ else
                                 }
                                 @if (appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched > 0)
                                 {
-                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched) in @appData.FamilyData.People[0].PossessiveID 401(k)</span>
+                                    <span>@FormatUtilities.FormatMoney(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched) in @appData.FamilyData.People[0].PossessiveID 401(k)</span>
 
                                     <br />
                                     @((MarkupString)checkTotal(appData.FamilyData.People[0].EmployerPlan.AmountToSaveForNonMatched))
                                 }
                                 @if (appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched > 0)
                                 {
-                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched) in @appData.FamilyData.People[1].PossessiveID 401(k)</span>
+                                    <span>@FormatUtilities.FormatMoney(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched) in @appData.FamilyData.People[1].PossessiveID 401(k)</span>
 
                                     <br />
                                     @((MarkupString)checkTotal(appData.FamilyData.People[1].EmployerPlan.AmountToSaveForNonMatched))
                                 }
                                 @if (appData.FamilyData.PersonCount > 0 && appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0)
                                 {
-                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @appData.FamilyData.People[0].PossessiveID mega backdoor roth</span>
+                                    <span>@FormatUtilities.FormatMoney(appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @appData.FamilyData.People[0].PossessiveID mega backdoor roth</span>
 
                                     <br />
                                     @((MarkupString)checkTotal(appData.FamilyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
                                 }
                                 @if (appData.FamilyData.PersonCount > 1 && appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0)
                                 {
-                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @appData.FamilyData.People[1].PossessiveID mega backdoor roth</span>
+                                    <span>@FormatUtilities.FormatMoney(appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @appData.FamilyData.People[1].PossessiveID mega backdoor roth</span>
 
                                     <br />
                                     @((MarkupString)checkTotal(appData.FamilyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit))
                                 }
                                 @if (appData.FamilyData.MediumDebts > 0)
                                 {
-                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.MediumDebts) in Medium Debts</span>
+                                    <span>@FormatUtilities.FormatMoney(appData.FamilyData.MediumDebts) in Medium Debts</span>
 
                                     <br />
                                     @((MarkupString)checkTotal(appData.FamilyData.MediumDebts))
                                 }
                                 @if (appData.FamilyData.PlannedSavings > runningTotal)
                                 {
-                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.PlannedSavings - runningTotal) in Taxable</span>
+                                    <span>@FormatUtilities.FormatMoney(appData.FamilyData.PlannedSavings - runningTotal) in Taxable</span>
 
                                     <br />
                                     @((MarkupString)checkTotal(appData.FamilyData.PlannedSavings - runningTotal))
                                 }
                                 else
                                 {
-                                    <span>@FormatUtilities.formatMoney(0) in Taxable</span>
+                                    <span>@FormatUtilities.FormatMoney(0) in Taxable</span>
 
                                     <br />
                                 }
                                 @if (appData.FamilyData.LowDebts > 0)
                                 {
-                                    <span>@FormatUtilities.formatMoney(appData.FamilyData.LowDebts) in Low Debts</span>
+                                    <span>@FormatUtilities.FormatMoney(appData.FamilyData.LowDebts) in Low Debts</span>
 
                                     <br />
                                     @((MarkupString)checkTotal(appData.FamilyData.LowDebts))
@@ -1028,7 +1031,7 @@ else
 
                 if (pastTotal)
                 {
-                    return "<div>-------<br/><div>Planned savings " + (appData.FamilyData.PlannedSavings == runningTotal ? "met" : "exceeded") + " after " + FormatUtilities.formatMoney(itemTotal + (appData.FamilyData.PlannedSavings - runningTotal)) + " towards previous step</div>-------<br/></div>";
+                    return "<div>-------<br/><div>Planned savings " + (appData.FamilyData.PlannedSavings == runningTotal ? "met" : "exceeded") + " after " + FormatUtilities.FormatMoney(itemTotal + (appData.FamilyData.PlannedSavings - runningTotal)) + " towards previous step</div>-------<br/></div>";
                 }
             }
         }
@@ -1058,15 +1061,15 @@ else
         switch (person.IRATypeRecommendation)
         {
             case IRAType.DeductibleIRAThenBackdoorRoth:
-                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.formatMoney(person.IRA.DeductionAllowed) + " Deductible), then backdoor roth</span>";
+                return "<span>" + FormatUtilities.FormatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.FormatMoney(person.IRA.DeductionAllowed) + " Deductible), then backdoor roth</span>";
             case IRAType.DeductibleIRA:
-                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.formatMoney(person.IRA.DeductionAllowed) + " Deductible)</span>";
+                return "<span>" + FormatUtilities.FormatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.FormatMoney(person.IRA.DeductionAllowed) + " Deductible)</span>";
             case IRAType.Roth:
-                return "<span>" + FormatUtilities.formatMoney(person.RothIRA.AmountToSave) + " in " + person.PossessiveID + " Roth IRA</span>";
+                return "<span>" + FormatUtilities.FormatMoney(person.RothIRA.AmountToSave) + " in " + person.PossessiveID + " Roth IRA</span>";
             case IRAType.NondeductibleIRAThenBackdoorRoth:
-                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " (nondeductible), then backdoor roth</span>";
+                return "<span>" + FormatUtilities.FormatMoney(person.IRA.AmountToSave) + " (nondeductible), then backdoor roth</span>";
             case IRAType.NondeductibleIRA:
-                return "<span>$" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " (nondeductible)</span>";
+                return "<span>$" + FormatUtilities.FormatMoney(person.IRA.AmountToSave) + " (nondeductible)</span>";
             default:
                 return "<p>do nothing</p>";
         }
@@ -1181,7 +1184,7 @@ else
     {
         if (appData?.FamilyData is not null)
         {
-            var newInvestment = new Investment() { funds = Funds };
+            var newInvestment = new Investment() { Funds = Funds };
             appData.FamilyData.Accounts[accountIndex].Investments.Add(newInvestment);
         }
     }
@@ -1198,7 +1201,7 @@ else
 
     void addAvailableFund(MouseEventArgs e, Account account)
     {
-        var newFund = new Investment() { funds = Funds };
+        var newFund = new Investment() { Funds = Funds };
         account.AvailableFunds.Add(newFund);
     }
 
@@ -1212,7 +1215,7 @@ else
         if (appData?.FamilyData is not null)
         {
             var newAccount = new Account();
-            var newInvestment = new Investment() { funds = Funds };
+            var newInvestment = new Investment() { Funds = Funds };
             newAccount.Investments.Add(newInvestment);
             appData.FamilyData?.Accounts.Add(newAccount);
         }

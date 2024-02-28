@@ -1,9 +1,10 @@
+using IRS;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Models;
+using src;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using src;
-using IRS;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

@@ -1,5 +1,7 @@
+namespace Models;
+
 public static class ImportPortfolioReview {
-     public static (FamilyData,List<Link>) ParsePortfolioReview(string[] lines, bool debug, IAppData appData, IList<Fund> funds) {
+     public static (FamilyData,List<Link>) ParsePortfolioReview(string[] lines, IAppData appData, IList<Fund> funds) {
         double? portfolioSize = null;
         bool? assetParsing = null;
         bool afterAge = false;
@@ -8,7 +10,7 @@ public static class ImportPortfolioReview {
         FamilyData importedFamilyData = new(appData);
         string? lastLine = null;
         bool afterPortfolioSize = false;
-        List<Link> Links = new();
+        List<Link> Links = [];
         foreach (var line in lines) {
             var tLine = line.ToLowerInvariant().Trim();
             try {
@@ -31,9 +33,9 @@ public static class ImportPortfolioReview {
                     ) ) {
                     importedFamilyData.Title += "|5";
 
-                    var colonLoc = tLine.IndexOf(":");
-                    var dashLoc = tLine.IndexOf("-");
-                    var equalsLoc = tLine.IndexOf("=");
+                    var colonLoc = tLine.IndexOf(':');
+                    var dashLoc = tLine.IndexOf('-');
+                    var equalsLoc = tLine.IndexOf('=');
                     var portfolioLoc = tLine.IndexOf("portfolio");
                     int useLoc;
                     if (colonLoc > portfolioLoc) {
@@ -55,7 +57,7 @@ public static class ImportPortfolioReview {
 
                     if (useLoc > -1) {
                         var valueStr = tLine[(useLoc+1)..tLine.Length].Trim();
-                        var spaceLoc = valueStr.IndexOf(" ");
+                        var spaceLoc = valueStr.IndexOf(' ');
                         string? tSize = null;
 
                         importedFamilyData.Title += $"|5.2 {spaceLoc}";
@@ -63,7 +65,7 @@ public static class ImportPortfolioReview {
                         if (spaceLoc > -1) {
                             tSize = valueStr[0..spaceLoc].Trim();
                         } else {
-                            tSize = valueStr.Substring(0).Trim();
+                            tSize = valueStr[..].Trim();
                         }
 
                         if (tSize != null && (tSize == "upper" || tSize == "high" ||tSize == "lower" || tSize == "mid" || tSize == "low"))
@@ -112,7 +114,7 @@ public static class ImportPortfolioReview {
 
                             portfolioSize = multiplier;
                         } else if (tSize != null) {
-                            var nextSpaceLoc = valueStr.IndexOf(" ", spaceLoc+1);
+                            var nextSpaceLoc = valueStr.IndexOf(' ', spaceLoc+1);
                             if (nextSpaceLoc == -1) {
                                 nextSpaceLoc = valueStr.Length;
                             }
@@ -148,19 +150,19 @@ public static class ImportPortfolioReview {
                                 if (tSize.ToLowerInvariant().EndsWith("mm")) {
                                     multiplier = 1000000.0;
                                     tSize = tSize[..^2];
-                                } else if (tSize.ToLowerInvariant().EndsWith("m")) {
+                                } else if (tSize.ToLowerInvariant().EndsWith('m')) {
                                     multiplier = 1000000.0;
                                     tSize = tSize[..^1];
-                                } else if (tSize.ToLowerInvariant().EndsWith("k")) {
+                                } else if (tSize.ToLowerInvariant().EndsWith('k')) {
                                     multiplier = 1000.0;
                                     tSize = tSize[..^1];
                                 }
 
-                                if (tSize.StartsWith("~")) {
-                                    tSize = tSize.Substring(1);
+                                if (tSize.StartsWith('~')) {
+                                    tSize = tSize[1..];
                                 }
 
-                                if (tSize.Length > 1 && tSize.Substring(tSize.Length - 1) == ",") {
+                                if (tSize.Length > 1 && tSize[^1..] == ",") {
                                     tSize = tSize[..^2];
                                 }
 
@@ -174,9 +176,9 @@ public static class ImportPortfolioReview {
                 } else if (importedFamilyData.People[0].Age == null && (tLine.StartsWith("age") || tLine.Contains(" age:") || tLine.StartsWith("my age") || tLine.StartsWith("me:"))) {
                     afterAge = true;
                     importedFamilyData.Title += "|6";
-                    var colonLoc = tLine.IndexOf(":");
-                    var dashLoc = tLine.IndexOf("-");
-                    var equalsLoc = tLine.IndexOf("=");
+                    var colonLoc = tLine.IndexOf(':');
+                    var dashLoc = tLine.IndexOf('-');
+                    var equalsLoc = tLine.IndexOf('=');
                     var portfolioLoc = tLine.IndexOf("portfolio");
                     int useLoc;
                     if (colonLoc > portfolioLoc) {
@@ -244,7 +246,7 @@ public static class ImportPortfolioReview {
                 } else if (assetParsing.HasValue && assetParsing.Value && StartsWithNumber(tLine) && account != null) {
                     importedFamilyData.Title += "|4";
                     try {
-                        investment = ParseInvestmentLine(line, portfolioSize ?? 100.0, debug:debug, funds, importedFamilyData);
+                        investment = ParseInvestmentLine(line, portfolioSize ?? 100.0, funds, importedFamilyData);
                         account?.Investments.Add(investment);
                         assetParsing = true;
                     } catch (Exception ex) {
@@ -267,7 +269,7 @@ public static class ImportPortfolioReview {
                     {
                         try
                         {
-                            investment = ParseInvestmentLine(line, portfolioSize ?? 100.0, debug: debug, funds, importedFamilyData);
+                            investment = ParseInvestmentLine(line, portfolioSize ?? 100.0, funds, importedFamilyData);
                             account.Investments.Add(investment);
                             importedFamilyData.Accounts.Add(account);
                             assetParsing = true;
@@ -309,7 +311,7 @@ public static class ImportPortfolioReview {
         int atIndex = line.IndexOf(" at ");
         int atEndIndex = atIndex + " at ".Length;
         
-        int leftParenIndex = line.IndexOf("(");
+        int leftParenIndex = line.IndexOf('(');
         if (leftParenIndex == -1 || leftParenIndex < atIndex) { 
             leftParenIndex = line.Length;
         }
@@ -342,15 +344,15 @@ public static class ImportPortfolioReview {
     // right: 35% ProShares UltraPro S&P500 (UPRO) (.91%)
     // bad1: 5% VTCLX Vanguard Tax-Managed Capital Appreciation .09er
     // bad2: 10% (VTIVX-Vanguard TR 2045 Fund) (0.08)
-    private static Investment ParseInvestmentLine(string line, double portfolioSize, bool debug, IList<Fund> funds, FamilyData importedFamilyData) {
+    private static Investment ParseInvestmentLine(string line, double portfolioSize, IList<Fund> funds, FamilyData importedFamilyData) {
         line = line.Trim();
         if (line.Length > 1 && line[0] == '(') {
             line = line[1..];
         }
 
         double? percentOfPortfolio = null;
-        int percentIndex = line.IndexOf("%");
-        int firstSpaceLoc = line.IndexOf(" ");
+        int percentIndex = line.IndexOf('%');
+        int firstSpaceLoc = line.IndexOf(' ');
         int firstTabLoc = line.IndexOf('\t');
 
         try {
@@ -375,15 +377,15 @@ public static class ImportPortfolioReview {
             percentOfPortfolio = null;
         }
 
-        if (portfolioSize != 0.0 && line.StartsWith("$")) {
+        if (portfolioSize != 0.0 && line.StartsWith('$')) {
             percentOfPortfolio = percentOfPortfolio! / portfolioSize * 100.0;
         }
 
         importedFamilyData.Title += $"|12 ({percentOfPortfolio}%)";
-        int afterLeftParenIndex = line.IndexOf("(") + 1;
-        int rightParenIndex = line.IndexOf(")");
-        int afterLeftParenIndex2 = line.IndexOf("(",rightParenIndex+1 ) + 1;
-        int rightParenIndex2 = line.IndexOf(")",rightParenIndex+1);
+        int afterLeftParenIndex = line.IndexOf('(') + 1;
+        int rightParenIndex = line.IndexOf(')');
+        int afterLeftParenIndex2 = line.IndexOf('(',rightParenIndex+1 ) + 1;
+        int rightParenIndex2 = line.IndexOf(')',rightParenIndex+1);
         string? ticker = null;
         double? expRatio = null;
 
@@ -399,7 +401,7 @@ public static class ImportPortfolioReview {
                 ticker = line[afterLeftParenIndex..rightParenIndex].ToUpperInvariant();
                 if (ticker.Length > 9)
                 {
-                    if (ticker.IndexOf(" ") < 0)
+                    if (ticker.IndexOf(' ') < 0)
                     {
                         ticker = ticker[..8];
                     }
@@ -428,11 +430,11 @@ public static class ImportPortfolioReview {
             investmentName = line[(percentIndex + 1)..];
         }
 
-        AssetType assetType = AssetType.Unknown;
+        AssetTypes assetType = AssetTypes.Unknown;
         if (!string.IsNullOrEmpty(ticker)) {
             foreach (var fund in funds) {
                 if (fund.Ticker == ticker) {
-                    assetType = fund.AssetType ?? AssetType.Unknown;
+                    assetType = fund.AssetType ?? AssetTypes.Unknown;
                 }
             }
         }

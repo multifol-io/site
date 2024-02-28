@@ -1,4 +1,6 @@
-public enum AssetType
+namespace Models;
+
+public enum AssetTypes
 {
     Unknown = 0,
     Bond,

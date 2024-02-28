@@ -2,39 +2,38 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
+namespace Models;
+
 public class EmployerPlan : INotifyPropertyChanged {
     // back pointer
     [JsonIgnore]
-    public Person? person { get; set; }
+    public Person? Person { get; set; }
 
     private IRS.Employer401k Employer401k {
-        get { return person!.FamilyData.AppData.IRSData!.RetirementData.Employer401k!; }
-        set { person!.FamilyData.AppData.IRSData!.RetirementData!.Employer401k = value; }
+        get { return Person!.FamilyData.AppData.IRSData!.RetirementData.Employer401k!; }
+        set { Person!.FamilyData.AppData.IRSData!.RetirementData!.Employer401k = value; }
     }
 
     public TriState Eligible {
-        get => person!.EmployerBenefits.Employer401k.Offered;
+        get => Person!.EmployerBenefits.Employer401k.Offered;
     }
 
     public bool? NotEligible {
         get {
-            switch (Eligible) {
-                case TriState.ChoiceNeeded:
-                case TriState.False:
-                    return true;
-                case TriState.True:
-                default:
-                    return false;
-            }
+            return Eligible switch
+            {
+                TriState.ChoiceNeeded or TriState.False => true,
+                _ => (bool?)false,
+            };
         }
     }
 
     public int? AnnualSalary { get; set; }
     public int? MatchA { 
         get {
-            if (person?.EmployerBenefits != null) {
-                if (person!.EmployerBenefits.Employer401k.MatchRules.Count >= 1) {
-                    return person!.EmployerBenefits.Employer401k.MatchRules[0].MatchPercentage;
+            if (Person?.EmployerBenefits != null) {
+                if (Person!.EmployerBenefits.Employer401k.MatchRules.Count >= 1) {
+                    return Person!.EmployerBenefits.Employer401k.MatchRules[0].MatchPercentage;
                 }
             }
 
@@ -43,8 +42,8 @@ public class EmployerPlan : INotifyPropertyChanged {
     }
     public int? MatchALimit { 
         get {
-            if (person!.EmployerBenefits.Employer401k.MatchRules.Count >= 1) {
-                return person!.EmployerBenefits.Employer401k.MatchRules[0].ForNextPercent;
+            if (Person!.EmployerBenefits.Employer401k.MatchRules.Count >= 1) {
+                return Person!.EmployerBenefits.Employer401k.MatchRules[0].ForNextPercent;
             } else {
                 return null;
             }
@@ -52,8 +51,8 @@ public class EmployerPlan : INotifyPropertyChanged {
     }
     public int? MatchB { 
         get {
-            if (person!.EmployerBenefits.Employer401k.MatchRules.Count >= 2) {
-                return person!.EmployerBenefits.Employer401k.MatchRules[1].MatchPercentage;
+            if (Person!.EmployerBenefits.Employer401k.MatchRules.Count >= 2) {
+                return Person!.EmployerBenefits.Employer401k.MatchRules[1].MatchPercentage;
             } else {
                 return null;
             }
@@ -61,8 +60,8 @@ public class EmployerPlan : INotifyPropertyChanged {
     }
     public int? MatchBLimit { 
         get {
-            if (person!.EmployerBenefits.Employer401k.MatchRules.Count >= 2) {
-                return person!.EmployerBenefits.Employer401k.MatchRules[1].ForNextPercent;
+            if (Person!.EmployerBenefits.Employer401k.MatchRules.Count >= 2) {
+                return Person!.EmployerBenefits.Employer401k.MatchRules[1].ForNextPercent;
             } else {
                 return null;
             }
@@ -70,7 +69,7 @@ public class EmployerPlan : INotifyPropertyChanged {
     }
     public int? MaxMatch {
         get {
-            return person!.EmployerBenefits.Employer401k.MatchLimit;
+            return Person!.EmployerBenefits.Employer401k.MatchLimit;
         }
     }
 
@@ -114,7 +113,6 @@ public class EmployerPlan : INotifyPropertyChanged {
             }
             if (MatchB != null) {
                 var percentB = (MatchB ?? 0) / 100.0;
-                var matchALimit = (MatchALimit ?? 100.0) / 100.0;
                 var matchBLimit = (MatchBLimit ?? 100.0) / 100.0;
                 match += percentB * AnnualSalary * matchBLimit;
             }
@@ -146,7 +144,7 @@ public class EmployerPlan : INotifyPropertyChanged {
             if (Eligible == TriState.True)
             {
                 return Employer401k.ContributionLimit
-                    + (person!.FiftyOrOver ? Employer401k.CatchUpContributionLimit : 0);
+                    + (Person!.FiftyOrOver ? Employer401k.CatchUpContributionLimit : 0);
             }
             else
             {

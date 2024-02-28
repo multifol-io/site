@@ -1,27 +1,29 @@
 using System.Globalization;
 
+namespace Models;
+
 public static class FormatUtilities
 {
-    public static string formatMoney(int? amount)
+    public static string FormatMoney(int? amount)
     {
         return String.Format("${0:#,0.##}", amount);
     }
 
-    public static string formatMonth(DateOnly? date)
+    public static string FormatMonth(DateOnly? date)
     {
         return date?.ToString("MM/yyyy") ?? "";
     }
 
-    public static string formatMonthPlus2DigitYear(DateOnly? date)
+    public static string FormatMonthPlus2DigitYear(DateOnly? date)
     {
         return date?.ToString("MM/yy") ?? "";
     }
 
-    public static string formatMoney(double? amount, bool withColor = false, int decimalPlaces = 2)
+    public static string FormatMoney(double? amount, bool withColor = false, int decimalPlaces = 2)
     {
         if (decimalPlaces != 2 && decimalPlaces != 0)
         {
-            throw new ArgumentException("only 0 or 2 decimal places is allowed", "decimalPlaces");
+            throw new ArgumentException("only 0 or 2 decimal places is allowed", nameof(decimalPlaces));
         }
 
         if (amount.HasValue)
@@ -50,7 +52,7 @@ public static class FormatUtilities
         }
     }
 
-    public static string formatMoneyThousands(double? amount)
+    public static string FormatMoneyThousands(double? amount)
     {
         if (amount == null) return "";
 
@@ -68,7 +70,7 @@ public static class FormatUtilities
         }
     }
 
-    public static string formatMoneyNarrow(double? amount)
+    public static string FormatMoneyNarrow(double? amount)
     {
         if (amount == null) return "";
 
@@ -90,29 +92,29 @@ public static class FormatUtilities
         }
     }
 
-    public static string formatPercent(double? amount)
+    public static string FormatPercent(double? amount)
     {
         return String.Format("{0:#,0.#}%", amount);
     }
 
-    public static string formatPercent3(double? amount)
+    public static string FormatPercent3(double? amount)
     {
         return String.Format("{0:#,0.###}%", amount);
     }
-    public static string formatPercent3WithColor(double? amount)
+    public static string FormatPercent3WithColor(double? amount)
     {
         return amount.HasValue ? "<span style=color:" + (amount < 0 ? "red>" : "green>") + String.Format("{0:#,0.###}%", amount) + "</span>" : "";
     }
 
-    public static string formatDouble(double? amount)
+    public static string FormatDouble(double? amount)
     {
         return String.Format("{0:#,0}", amount);
     }
-    public static string formatDoubleTwoDecimal(double? amount)
+    public static string FormatDoubleTwoDecimal(double? amount)
     {
         return String.Format("{0:#,0.00}", amount);
     }
-    public static string formatDoubleFourDecimal(double? amount)
+    public static string FormatDoubleFourDecimal(double? amount)
     {
         return String.Format("{0:#,0.0000}", amount);
     }
@@ -124,11 +126,10 @@ public static class FormatUtilities
 
     public static double ParseDouble(string value, bool allowCurrency = false)
     {
-        double doubleValue;
         var numberStyles = (allowCurrency ? currency : numbers);
         double.TryParse(FormatUtilities.TrimQuotes(value), numberStyles,
                         CultureInfo.GetCultureInfoByIetfLanguageTag("en-US"),
-                        out doubleValue);
+                        out double doubleValue);
         return doubleValue;
     }
 
@@ -207,7 +208,7 @@ public static class FormatUtilities
                         if (text == "") { text = href; }
                         if (href.StartsWith("https://bogle.tools/"))
                         {
-                            returnVal += "<a href='" + href.Substring(19) + "'>" + text + "</a>";
+                            returnVal += "<a href='" + href[19..] + "'>" + text + "</a>";
                         }
                         else if (href.StartsWith("https://"))
                         {
@@ -278,6 +279,6 @@ public static class FormatUtilities
         return returnVal;
     }
 
-    private static NumberStyles numbers = NumberStyles.Float | NumberStyles.AllowThousands;
-    private static NumberStyles currency = NumberStyles.AllowCurrencySymbol | numbers;
+    private static readonly NumberStyles numbers = NumberStyles.Float | NumberStyles.AllowThousands;
+    private static readonly NumberStyles currency = NumberStyles.AllowCurrencySymbol | numbers;
 }

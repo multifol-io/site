@@ -1,4 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+
+namespace Models;
+
 public class Debt {
 
     public string? Name { get; set; }

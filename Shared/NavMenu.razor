@@ -2,7 +2,7 @@
 @inject NavigationManager Navigation
 @inject IAppData appData
 @inject LocalStorageAccessor LocalStorageAccessor
-
+@using Models
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
@@ -19,13 +19,13 @@
     <nav class="flex-column">
         <div class="nav-item px-1">
             <NavLink class="nav-link" href="/portfolio-tracker">
-                <span style="margin1;font-Size:24pt">📈</span>&nbsp;Portfolio Tracker
+                <span style="font-Size:24pt">📈</span>&nbsp;Portfolio Tracker
             </NavLink>
         </div>
 
         <div class="nav-item px-1">
             <NavLink class="nav-link" href="/savings-planner">
-                <span style="margin1;font-Size:24pt">💰</span>&nbsp;Savings Planner
+                <span style="font-Size:24pt">💰</span>&nbsp;Savings Planner
             </NavLink>
         </div>
 
@@ -33,24 +33,24 @@
 
         <div class="nav-item px-1">
             <NavLink class="nav-link" href="/portfolio-tracker/view/editor" style="font-size:10pt">
-                <span style="margin1;font-Size:24pt">✏️</span>&nbsp;Edit Accounts / Holdings
+                <span style="font-Size:24pt">✏️</span>&nbsp;Edit Accounts / Holdings
             </NavLink>
         </div>
         <div class="nav-item px-1">
             <NavLink class="nav-link" href="/import">
-                <span style="margin1;font-Size:24pt">⬆️</span>&nbsp;Import Center
+                <span style="font-Size:24pt">⬆️</span>&nbsp;Import Center
             </NavLink>
         </div>
 
         <div class="nav-item px-1">
             <NavLink class="nav-link" href="/profiles">
-                <span style="margin1;font-Size:14pt">🧑‍🦳🧑‍🦰👵</span>&nbsp;Multiple Portfolios
+                <span style="font-Size:14pt">🧑‍🦳🧑‍🦰👵</span>&nbsp;Multiple Portfolios
             </NavLink>
         </div>
 
         <div class="nav-item px-1">
             <NavLink class="nav-link" href="/help">
-                <span style="margin1;font-Size:24pt">🔭</span>&nbsp;Help/FAQ
+                <span style="font-Size:24pt">🔭</span>&nbsp;Help/FAQ
             </NavLink>
         </div>
         
@@ -58,16 +58,16 @@
 
         <div class="nav-item px-1">
             <NavLink class="nav-link" href="/portfolio-review">
-                <span style="margin1;font-Size:24pt">🧐</span>&nbsp;Portfolio Review
+                <span style="font-Size:24pt">🧐</span>&nbsp;Portfolio Review
             </NavLink>
         </div>
         <div class="nav-item px-1">
             <NavLink class="nav-link" href="/rsu-tracker">
-                <span style="margin1;font-Size:24pt">🔮</span>&nbsp;RSU Tracker
+                <span style="font-Size:24pt">🔮</span>&nbsp;RSU Tracker
             </NavLink>
         </div>
         <br/>
-        <div class="nav-item px-1" style="font-style:italic;margin1;font-Size:10pt;color:white;text-align:center">
+        <div class="nav-item px-1" style="font-style:italic;font-Size:10pt;color:white;text-align:center">
             "Take charge of your savings!"
         </div>
     </nav>

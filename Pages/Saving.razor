@@ -9,6 +9,7 @@
 @using Employer
 @inject NavigationManager Navigation
 @using System.Text.Json.Serialization
+@using Models
 
 <PageTitle>
 Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
@@ -125,11 +126,11 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
 
                                         <label>Employer:</label> <input style=width:200px type=text @bind-Value=person.EmployerBenefits!.Company @bind-Value:event=oninput /><br/>
                                         <label>Annual Salary + Bonus:</label> $<input type=text class=dollar @bind-Value=person.EmployerPlan.AnnualSalary @bind-Value:event=oninput /><br/>
-                                        <label><a href=/rsu-tracker>Vesting RSUs</a>:</label> <span>@FormatUtilities.formatMoney(person.VestAmount(),decimalPlaces:0)</span><br/>
+                                        <label><a href=/rsu-tracker>Vesting RSUs</a>:</label> <span>@FormatUtilities.FormatMoney(person.VestAmount(),decimalPlaces:0)</span><br/>
                                     </div>
                                 }
                             }
-                            <b>Total Earned Income:</b> @FormatUtilities.formatMoney(familyData.TotalIncome)<br/>
+                            <b>Total Earned Income:</b> @FormatUtilities.FormatMoney(familyData.TotalIncome)<br/>
                         }
                     </div>
                     @if (appData.FamilyData.TaxFilingStatus != TaxFilingStatus.ChoiceNeeded) {
@@ -137,10 +138,10 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                         <div style=margin-left:25px>
                             <label>Monthly Expenses:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.EmergencyFund.MonthlyExpenses" @bind-Value:event="oninput" /><br/>
                             <label>Annual Income Tax Paid:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.IncomeTaxPaid" @bind-Value:event="oninput" /><br/>
-                            <b>Annual Expenses:</b> @FormatUtilities.formatMoney(familyData.EmergencyFund.MonthlyExpenses*12+familyData.IncomeTaxPaid)<br/>
+                            <b>Annual Expenses:</b> @FormatUtilities.FormatMoney(familyData.EmergencyFund.MonthlyExpenses*12+familyData.IncomeTaxPaid)<br/>
                             <hr/>
                             <label>Money in Taxable Fund, to help invest more:</label> <span>$</span><input class=dollar type=text @bind-Value="familyData.TaxableToInvest" @bind-Value:event="oninput" /><br/>
-                            <b>Planned Savings:</b> <span>@FormatUtilities.formatMoney(familyData.PlannedSavings)</span><br/>
+                            <b>Planned Savings:</b> <span>@FormatUtilities.FormatMoney(familyData.PlannedSavings)</span><br/>
                             <hr/>
                             <label>Estimated Adjusted Gross Income:</label>
                             <span>$</span>
@@ -164,7 +165,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                 if (pastTotal) {
                                     <tr><td colspan=3>
                                         <hr/>
-                                        <div>Planned savings @(familyData.PlannedSavings==runningTotal?"met":"exceeded") after @FormatUtilities.formatMoney(itemTotal+1*(familyData.PlannedSavings-runningTotal)) towards Step @(step.number-1)</div>
+                                        <div>Planned savings @(familyData.PlannedSavings==runningTotal?"met":"exceeded") after @FormatUtilities.FormatMoney(itemTotal+1*(familyData.PlannedSavings-runningTotal)) towards Step @(step.number-1)</div>
                                         <hr/>    
                                     </td></tr>
                                 }
@@ -224,7 +225,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                             @if (familyData.EmergencyFund.AmountToSave != null) {
                                                 runningTotal += addItem(familyData.EmergencyFund.AmountToSave);
                                                 itemTotal += addItem(familyData.EmergencyFund.AmountToSave);
-                                                <span>@FormatUtilities.formatMoney(familyData.EmergencyFund.AmountToSave) in Emergency Fund</span><br/>
+                                                <span>@FormatUtilities.FormatMoney(familyData.EmergencyFund.AmountToSave) in Emergency Fund</span><br/>
                                             } else {
                                                 <b>@step.title</b>
                                             }
@@ -236,11 +237,11 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                 if (familyData.People[0].EmployerPlan.AmountToSaveForMatch > 0 && familyData.People[0].EmployerBenefits.Employer401k.Offered == TriState.True) {
                                                     runningTotal += addItem(familyData.People[0].EmployerPlan.AmountToSaveForMatch);
                                                     itemTotal += addItem(familyData.People[0].EmployerPlan.AmountToSaveForMatch);
-                                                    <span>@FormatUtilities.formatMoney(familyData.People[0].EmployerPlan.AmountToSaveForMatch) in @familyData.People[0].PossessiveID 401(k)</span>
+                                                    <span>@FormatUtilities.FormatMoney(familyData.People[0].EmployerPlan.AmountToSaveForMatch) in @familyData.People[0].PossessiveID 401(k)</span>
                                                     @if (familyData.People[0].EmployerPlan.MatchAmount == null) {
                                                         <br/> <b>Match amount?</b><br/>
                                                     } else { 
-                                                        <span>&nbsp;(Match: @FormatUtilities.formatMoney(familyData.People[0].EmployerPlan.MatchAmount))</span><br/>
+                                                        <span>&nbsp;(Match: @FormatUtilities.FormatMoney(familyData.People[0].EmployerPlan.MatchAmount))</span><br/>
                                                     }
                                                 } else if (familyData.People[0].EmployerBenefits.Employer401k.Offered == TriState.False) {
                                                     <div><del>@familyData.People[0].PossessiveID @step.title</del></div>
@@ -254,11 +255,11 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                 if (familyData.People[1].EmployerPlan.AmountToSaveForMatch > 0 && familyData.People[1].EmployerBenefits.Employer401k.Offered == TriState.True) {
                                                     runningTotal += addItem(familyData.People[1].EmployerPlan.AmountToSaveForMatch);
                                                     itemTotal += addItem(familyData.People[1].EmployerPlan.AmountToSaveForMatch);
-                                                    <span>@FormatUtilities.formatMoney(familyData.People[1].EmployerPlan.AmountToSaveForMatch) in @familyData.People[1].PossessiveID 401(k)</span>
+                                                    <span>@FormatUtilities.FormatMoney(familyData.People[1].EmployerPlan.AmountToSaveForMatch) in @familyData.People[1].PossessiveID 401(k)</span>
                                                     @if (familyData.People[1].EmployerPlan.MatchAmount == null) {
                                                         <br/> <b>Match amount?</b><br/>
                                                     } else { 
-                                                        <span>&nbsp;(Match: @FormatUtilities.formatMoney(familyData.People[1].EmployerPlan.MatchAmount))</span><br/>
+                                                        <span>&nbsp;(Match: @FormatUtilities.FormatMoney(familyData.People[1].EmployerPlan.MatchAmount))</span><br/>
                                                     }
                                                 } else if (familyData.People[1].EmployerBenefits.Employer401k.Offered == TriState.False) {
                                                 
@@ -275,7 +276,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                             @if (familyData.Debts.Count > 0 || familyData.DebtsComplete) {
                                                 runningTotal += addItem(familyData.HighDebts);
                                                 itemTotal += addItem(familyData.HighDebts);
-                                                <span>@FormatUtilities.formatMoney(familyData.HighDebts>0?familyData.HighDebts:0) in High-Interest Debts</span><br/>
+                                                <span>@FormatUtilities.FormatMoney(familyData.HighDebts>0?familyData.HighDebts:0) in High-Interest Debts</span><br/>
                                             } else {
                                                 <b>@step.title</b>
                                             }
@@ -287,7 +288,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                 if ((familyData.People[0].EmployerBenefits.Complete || familyData.People[0].EmployerPlan.AnnualSalary == 0 || familyData.People[0].HealthSavingsAccount.EligibleForHSA || familyData.People[0].HealthSavingsAccount.EligibleForHSACatchUpOnly) && familyData.People[0].HealthSavingsAccount.AmountToSave > 0) {
                                                     runningTotal += addItem(familyData.People[0].HealthSavingsAccount.AmountToSave);
                                                     itemTotal += addItem(familyData.People[0].HealthSavingsAccount.AmountToSave);
-                                                    <span>@FormatUtilities.formatMoney(familyData.People[0].HealthSavingsAccount.AmountToSave) in @familyData.People[0].PossessiveID HSA (Employer: @FormatUtilities.formatMoney(familyData.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
+                                                    <span>@FormatUtilities.FormatMoney(familyData.People[0].HealthSavingsAccount.AmountToSave) in @familyData.People[0].PossessiveID HSA (Employer: @FormatUtilities.FormatMoney(familyData.People[0].HealthSavingsAccount.EmployerContribution))</span><br/>
                                                 } else if (familyData.People[0].EmployerBenefits.HSA.HighDeductibleHealthPlanAvailable == TriState.False) {
                                                     <div><del>@familyData.People[0].PossessiveID @step.title</del></div>
                                                 } else {
@@ -298,7 +299,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                 if ((familyData.People[1].EmployerBenefits.Complete || familyData.People[1].EmployerPlan.AnnualSalary == 0 || familyData.People[1].HealthSavingsAccount.EligibleForHSA  || familyData.People[1].HealthSavingsAccount.EligibleForHSACatchUpOnly) && familyData.People[1].HealthSavingsAccount.AmountToSave > 0) {
                                                     runningTotal += addItem(familyData.People[1].HealthSavingsAccount.AmountToSave);
                                                     itemTotal += addItem(familyData.People[1].HealthSavingsAccount.AmountToSave);
-                                                    <span>@FormatUtilities.formatMoney(familyData.People[1].HealthSavingsAccount.AmountToSave) in @familyData.People[1].PossessiveID HSA (Employer: @FormatUtilities.formatMoney(familyData.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
+                                                    <span>@FormatUtilities.FormatMoney(familyData.People[1].HealthSavingsAccount.AmountToSave) in @familyData.People[1].PossessiveID HSA (Employer: @FormatUtilities.FormatMoney(familyData.People[1].HealthSavingsAccount.EmployerContribution))</span><br/>
                                                 } else if (familyData.People[1].EmployerBenefits.HSA.HighDeductibleHealthPlanAvailable == TriState.False) {
                                                     <div><del>@familyData.People[1].PossessiveID @step.title</del></div>
                                                 } else {
@@ -333,7 +334,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                     && familyData.People[0].EmployerPlan.AmountToSaveForNonMatched > 0) {
                                                     runningTotal += addItem(familyData.People[0].EmployerPlan.AmountToSaveForNonMatched);
                                                     itemTotal += addItem(familyData.People[0].EmployerPlan.AmountToSaveForNonMatched);
-                                                    <span>@FormatUtilities.formatMoney(familyData.People[0].EmployerPlan.AmountToSaveForNonMatched) in @familyData.People[0].PossessiveID 401(k)</span><br/>
+                                                    <span>@FormatUtilities.FormatMoney(familyData.People[0].EmployerPlan.AmountToSaveForNonMatched) in @familyData.People[0].PossessiveID 401(k)</span><br/>
                                                 } else if (familyData.People[0].EmployerBenefits.Employer401k.Offered == TriState.False) {
                                                     <div><del>@familyData.People[0].PossessiveID @step.title</del></div>
                                                 } else if (familyData.People[0].EmployerPlan.AnnualSalary != 0) {
@@ -348,7 +349,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                     && familyData.People[1].EmployerPlan.AmountToSaveForNonMatched > 0) {
                                                     runningTotal += addItem(familyData.People[1].EmployerPlan.AmountToSaveForNonMatched);
                                                     itemTotal += addItem(familyData.People[1].EmployerPlan.AmountToSaveForNonMatched);
-                                                    <span>@FormatUtilities.formatMoney(familyData.People[1].EmployerPlan.AmountToSaveForNonMatched) in @familyData.People[1].PossessiveID 401(k)</span><br/>
+                                                    <span>@FormatUtilities.FormatMoney(familyData.People[1].EmployerPlan.AmountToSaveForNonMatched) in @familyData.People[1].PossessiveID 401(k)</span><br/>
                                                 } else if (familyData.People[1].EmployerBenefits.Employer401k.Offered == TriState.False) {
                                                     <div><del>@familyData.People[1].PossessiveID @step.title</del></div>
                                                 } else if (familyData.People[1].EmployerPlan.AnnualSalary != 0) {
@@ -366,7 +367,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                 if (familyData.People[0].EmployerBenefits.Employer401k.Offered == TriState.True && familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
                                                     runningTotal += addItem(familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit);
                                                     itemTotal += addItem(familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit);
-                                                    <span>@FormatUtilities.formatMoney(familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyData.People[0].PossessiveID mega backdoor roth</span><br/>
+                                                    <span>@FormatUtilities.FormatMoney(familyData.People[0].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyData.People[0].PossessiveID mega backdoor roth</span><br/>
                                                 } else if (familyData.People[0].EmployerBenefits.Employer401k.Offered == TriState.False) {
                                                     <div><del>@familyData.People[0].PossessiveID @step.title</del></div>
                                                 } else if (familyData.People[0].EmployerPlan.AnnualSalary != 0) {
@@ -379,7 +380,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                 if (familyData.People[1].EmployerBenefits.Employer401k.Offered == TriState.True && familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit > 0) {
                                                     runningTotal += addItem(familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit);
                                                     itemTotal += addItem(familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit);
-                                                    <span>@FormatUtilities.formatMoney(familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyData.People[1].PossessiveID mega backdoor roth</span><br/>
+                                                    <span>@FormatUtilities.FormatMoney(familyData.People[1].EmployerBenefits.MegaBackdoorRoth.ContributionLimit) in @familyData.People[1].PossessiveID mega backdoor roth</span><br/>
                                                 } else if (familyData.People[1].EmployerBenefits.Employer401k.Offered == TriState.False) {
                                                     <div><del>@familyData.People[1].PossessiveID @step.title</del></div>
                                                 } else if (familyData.People[1].EmployerPlan.AnnualSalary != 0) {
@@ -395,7 +396,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                             @if (familyData.Debts.Count > 0 || familyData.DebtsComplete) {
                                                 runningTotal += addItem(familyData.MediumDebts);
                                                 itemTotal += addItem(familyData.MediumDebts);
-                                                <span>@FormatUtilities.formatMoney(familyData.MediumDebts>0?familyData.MediumDebts:0) in Medium-Interest Debts</span><br/>
+                                                <span>@FormatUtilities.FormatMoney(familyData.MediumDebts>0?familyData.MediumDebts:0) in Medium-Interest Debts</span><br/>
                                             } else {
                                                 <b>@step.title</b>
                                             }
@@ -407,7 +408,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                             runningTotal += addItem(itemTotal);
                                         }
                                         <td>
-                                            @FormatUtilities.formatMoney(itemTotal) in Taxable
+                                            @FormatUtilities.FormatMoney(itemTotal) in Taxable
                                         </td>
                                         break;                                                                   
                                     case "low-interest-debt":
@@ -415,7 +416,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                             @if (familyData.Debts.Count > 0 || familyData.DebtsComplete) {
                                                 runningTotal += addItem(familyData.LowDebts);
                                                 itemTotal += addItem(familyData.LowDebts);
-                                                <span>@FormatUtilities.formatMoney(familyData.LowDebts>0?familyData.LowDebts:0) in Low-Interest Debts</span><br/>
+                                                <span>@FormatUtilities.FormatMoney(familyData.LowDebts>0?familyData.LowDebts:0) in Low-Interest Debts</span><br/>
                                             } else {
                                                 <b>@step.title</b>
                                             }
@@ -665,14 +666,14 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                     var matchRuleBuffer = matchRuleIndex;
                                                     matchRuleIndex++;
                                                     <div>
-                                                        <label>Match:</label> <span>@FormatUtilities.formatPercent(person.EmployerBenefits.Employer401k.MatchRules[matchRuleBuffer].MatchPercentage)</span><br/>
-                                                        <label margin-left:30px>for next</label> <span>@FormatUtilities.formatPercent(person.EmployerBenefits.Employer401k.MatchRules[matchRuleBuffer].ForNextPercent)</span><br/>
+                                                        <label>Match:</label> <span>@FormatUtilities.FormatPercent(person.EmployerBenefits.Employer401k.MatchRules[matchRuleBuffer].MatchPercentage)</span><br/>
+                                                        <label margin-left:30px>for next</label> <span>@FormatUtilities.FormatPercent(person.EmployerBenefits.Employer401k.MatchRules[matchRuleBuffer].ForNextPercent)</span><br/>
                                                     </div>
                                                 }
                                                 <br/>
-                                                <label>Max Match:</label> <span>@FormatUtilities.formatMoney(person.EmployerBenefits.Employer401k.MatchLimit)</span><br/>
-                                                <label>Contribution required to get maximum match:</label> <span>@FormatUtilities.formatMoney(person.EmployerPlan.AmountToSaveForMatch)</span><br/>
-                                                <label>Match Amount:</label> <span>@FormatUtilities.formatMoney(person.EmployerPlan.MatchAmount)</span><br/>
+                                                <label>Max Match:</label> <span>@FormatUtilities.FormatMoney(person.EmployerBenefits.Employer401k.MatchLimit)</span><br/>
+                                                <label>Contribution required to get maximum match:</label> <span>@FormatUtilities.FormatMoney(person.EmployerPlan.AmountToSaveForMatch)</span><br/>
+                                                <label>Match Amount:</label> <span>@FormatUtilities.FormatMoney(person.EmployerPlan.MatchAmount)</span><br/>
                                             </fieldset>
                                         </EditForm><br/>
                                     }
@@ -727,7 +728,7 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                                 @foreach(var employerContributionLevel in person.EmployerBenefits.HSA.EmployerContributionLevels)
                                                 {
                                                     var employerLevelBuffer = employerContributionLevel;
-                                                    <option value=@employerLevelBuffer.Amount>@(employerLevelBuffer.Description == null?"":@employerLevelBuffer.Description + ": ") @FormatUtilities.formatMoney(employerLevelBuffer.Amount)</option>
+                                                    <option value=@employerLevelBuffer.Amount>@(employerLevelBuffer.Description == null?"":@employerLevelBuffer.Description + ": ") @FormatUtilities.FormatMoney(employerLevelBuffer.Amount)</option>
                                                 }
                                                 </select>
                                         } else {
@@ -750,12 +751,12 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
                                             @if(person.HealthSavingsAccount.EligibleForHSACatchUpOnly){<option value=CatchUp>Catch up only</option>}
                                             </select><br/>
                                             <br/>
-                                            <label>Contribution Limit:</label> @FormatUtilities.formatMoney(person.HealthSavingsAccount.Limit)<br/>
+                                            <label>Contribution Limit:</label> @FormatUtilities.FormatMoney(person.HealthSavingsAccount.Limit)<br/>
                                         </fieldset>
                                         <br/>
                                         <label>Eligible for Catchup Contributions (55 or older):</label> @yesno(person.FiftyFiveOrOver)<br/><br/>
                                         <hr/>
-                                        <label>Amount to Save:</label> @FormatUtilities.formatMoney(person.HealthSavingsAccount.AmountToSave)<br/>
+                                        <label>Amount to Save:</label> @FormatUtilities.FormatMoney(person.HealthSavingsAccount.AmountToSave)<br/>
                                     </EditForm><br/>
                                 }
 
@@ -1006,15 +1007,15 @@ Savings@(stepPath==null?" Planner":": "+stepPath.Replace('-',' ')) - bogle.tools
     public string GetRecommendedIRAMarkup(Person person) {
         switch(person.IRATypeRecommendation) {
             case IRAType.DeductibleIRAThenBackdoorRoth:
-                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.formatMoney(person.IRA.DeductionAllowed) + " Deductible), then backdoor roth</span>";
+                return "<span>" + FormatUtilities.FormatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.FormatMoney(person.IRA.DeductionAllowed) + " Deductible), then backdoor roth</span>";
             case IRAType.DeductibleIRA:
-                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.formatMoney(person.IRA.DeductionAllowed) + " Deductible)</span>";
+                return "<span>" + FormatUtilities.FormatMoney(person.IRA.AmountToSave) + " in " + person.PossessiveID + " IRA (" + FormatUtilities.FormatMoney(person.IRA.DeductionAllowed) + " Deductible)</span>";
             case IRAType.Roth:
-                return "<span>" + FormatUtilities.formatMoney(person.RothIRA.AmountToSave) + " in " + person.PossessiveID + " Roth IRA</span>";
+                return "<span>" + FormatUtilities.FormatMoney(person.RothIRA.AmountToSave) + " in " + person.PossessiveID + " Roth IRA</span>";
             case IRAType.NondeductibleIRAThenBackdoorRoth:
-                return "<span>" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " (nondeductible), then backdoor roth</span>";
+                return "<span>" + FormatUtilities.FormatMoney(person.IRA.AmountToSave) + " (nondeductible), then backdoor roth</span>";
             case IRAType.NondeductibleIRA:
-                return "<span>$" + FormatUtilities.formatMoney(person.IRA.AmountToSave) + " (nondeductible)</span>";
+                return "<span>$" + FormatUtilities.FormatMoney(person.IRA.AmountToSave) + " (nondeductible)</span>";
             default:
                 return "<p>do nothing</p>";
         }

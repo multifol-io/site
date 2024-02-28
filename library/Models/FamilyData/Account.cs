@@ -2,6 +2,8 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
+namespace Models;
+
 public class Account : INotifyPropertyChanged
 {
     protected void OnPropertyChanged([CallerMemberName] string? name = null)
@@ -11,8 +13,8 @@ public class Account : INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public Account() {
-        Investments = new();
-        AvailableFunds = new();
+        Investments = [];
+        AvailableFunds = [];
     }
 
     public string Title {
@@ -32,9 +34,9 @@ public class Account : INotifyPropertyChanged
         get {
             foreach (var investment in this.Investments)
             {
-                if (investment.AssetType == AssetType.Cash_MoneyMarket 
-                    || investment.AssetType == AssetType.Cash_BankAccount 
-                    || investment.AssetType == AssetType.Cash)
+                if (investment.AssetType == AssetTypes.Cash_MoneyMarket 
+                    || investment.AssetType == AssetTypes.Cash_BankAccount 
+                    || investment.AssetType == AssetTypes.Cash)
                 {
                     return investment;
                 }
@@ -124,9 +126,9 @@ public class Account : INotifyPropertyChanged
                     {
                         costBasis += investment.CostBasis.Value;
                     }
-                    else if (investment.AssetType == AssetType.Cash
-                        || investment.AssetType == AssetType.Cash_BankAccount
-                        || investment.AssetType == AssetType.Cash_MoneyMarket)
+                    else if (investment.AssetType == AssetTypes.Cash
+                        || investment.AssetType == AssetTypes.Cash_BankAccount
+                        || investment.AssetType == AssetTypes.Cash_MoneyMarket)
                     {
                         costBasis += investment.Value ?? 0.0;
                     }
@@ -148,38 +150,40 @@ public class Account : INotifyPropertyChanged
         }
     }
 
-    public void UpdatePercentages(double totalValue, FamilyData familyData)
+    public async Task UpdatePercentagesAsync(double totalValue, FamilyData familyData)
     {
-        foreach (var investment in Investments)
-        {
-            investment.Percentage = (investment.Value ?? 0) / totalValue * 100;
-            
-            UpdateInvestmentCategoryTotals(investment, familyData);
-            foreach (var transaction in investment.Transactions)
+        await Task.Run(() => {
+            foreach (var investment in Investments)
             {
-                if (transaction.HostTicker != null)
+                investment.Percentage = (investment.Value ?? 0) / totalValue * 100;
+                
+                UpdateInvestmentCategoryTotals(investment, familyData);
+                foreach (var transaction in investment.Transactions)
                 {
-                    var foundInvestment = FindInvestment(transaction.HostTicker);
-                    if (foundInvestment != null)
+                    if (transaction.HostTicker != null)
                     {
-                        UpdateInvestmentCategoryTotals(investment, familyData, overrideValue: transaction.CustomValue(foundInvestment));
+                        var foundInvestment = FindInvestment(transaction.HostTicker);
+                        if (foundInvestment != null)
+                        {
+                            UpdateInvestmentCategoryTotals(investment, familyData, overrideValue: transaction.CustomValue(foundInvestment));
+                        }
+                    }
+                }
+
+                if (investment.ExpenseRatio.HasValue && investment.Value.HasValue) {
+                    familyData.OverallER += investment.Percentage / 100.0 * investment.ExpenseRatio.Value;
+                    familyData.ExpensesTotal += investment.Value.Value * investment.ExpenseRatio.Value / 100.0;
+                } else {
+                    if (investment.IsETF || investment.IsFund)
+                    {
+                        familyData.InvestmentsMissingER++;
                     }
                 }
             }
-
-            if (investment.ExpenseRatio.HasValue && investment.Value.HasValue) {
-                familyData.OverallER += investment.Percentage / 100.0 * investment.ExpenseRatio.Value;
-                familyData.ExpensesTotal += investment.Value.Value * investment.ExpenseRatio.Value / 100.0;
-            } else {
-                if (investment.IsETF || investment.IsFund)
-                {
-                    familyData.InvestmentsMissingER++;
-                }
-            }
-        }
+        });
     }
 
-    public void UpdateInvestmentCategoryTotals(Investment investment, FamilyData familyData, double? overrideValue = null, bool useNegative = false)
+    public static void UpdateInvestmentCategoryTotals(Investment investment, FamilyData familyData, double? overrideValue = null, bool useNegative = false)
     {
         double? value = (investment.Value ?? 0.0) * (useNegative?-1:1);
         if (overrideValue != null)
@@ -194,40 +198,40 @@ public class Account : INotifyPropertyChanged
         else
         {
             switch (investment.AssetType) {
-                case AssetType.Stock: 
-                case AssetType.USStock:
-                case AssetType.USStock_ETF:
-                case AssetType.USStock_Fund:
+                case AssetTypes.Stock: 
+                case AssetTypes.USStock:
+                case AssetTypes.USStock_ETF:
+                case AssetTypes.USStock_Fund:
                     familyData.StockBalance += value;
                     break;
-                case AssetType.InternationalStock:
-                case AssetType.InternationalStock_ETF:
-                case AssetType.InternationalStock_Fund:
+                case AssetTypes.InternationalStock:
+                case AssetTypes.InternationalStock_ETF:
+                case AssetTypes.InternationalStock_Fund:
                     familyData.InternationalStockBalance += value;
                     break;
-                case AssetType.Bond:
-                case AssetType.Bond_ETF:
-                case AssetType.Bond_Fund:
-                case AssetType.IBond:
-                case AssetType.InternationalBond:
-                case AssetType.InternationalBond_ETF:
-                case AssetType.InternationalBond_Fund:
+                case AssetTypes.Bond:
+                case AssetTypes.Bond_ETF:
+                case AssetTypes.Bond_Fund:
+                case AssetTypes.IBond:
+                case AssetTypes.InternationalBond:
+                case AssetTypes.InternationalBond_ETF:
+                case AssetTypes.InternationalBond_Fund:
                     familyData.BondBalance += value;
                     break;
-                case AssetType.Cash:
-                case AssetType.Cash_BankAccount:
-                case AssetType.Cash_MoneyMarket:
+                case AssetTypes.Cash:
+                case AssetTypes.Cash_BankAccount:
+                case AssetTypes.Cash_MoneyMarket:
                     familyData.CashBalance += value;
                     break;
-                case AssetType.StocksAndBonds_ETF:
-                case AssetType.StocksAndBonds_Fund:
-                    familyData.StockBalance += value * investment.GetPercentage(AssetType.USStock);
-                    familyData.InternationalStockBalance += value * investment.GetPercentage(AssetType.InternationalStock);
-                    familyData.BondBalance += value * investment.GetPercentage(AssetType.Bond);
-                    familyData.BondBalance += value * investment.GetPercentage(AssetType.InternationalBond);
-                    familyData.CashBalance += value * investment.GetPercentage(AssetType.Cash);
+                case AssetTypes.StocksAndBonds_ETF:
+                case AssetTypes.StocksAndBonds_Fund:
+                    familyData.StockBalance += value * investment.GetPercentage(AssetTypes.USStock);
+                    familyData.InternationalStockBalance += value * investment.GetPercentage(AssetTypes.InternationalStock);
+                    familyData.BondBalance += value * investment.GetPercentage(AssetTypes.Bond);
+                    familyData.BondBalance += value * investment.GetPercentage(AssetTypes.InternationalBond);
+                    familyData.CashBalance += value * investment.GetPercentage(AssetTypes.Cash);
                     break;
-                case AssetType.Unknown:
+                case AssetTypes.Unknown:
                     familyData.OtherBalance += value;
                     break;
                 default:
@@ -321,5 +325,6 @@ public class Account : INotifyPropertyChanged
     }
 
     public string CurrentOrPrevious { get; set; } = "";
-    public static List<string> CurrentOrPreviousOptions = new List<string> { "current", "previous" };
+
+    public static readonly List<string> CurrentOrPreviousOptions = ["current", "previous"];
 }

@@ -1,12 +1,12 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using DocumentFormat.OpenXml.Wordprocessing;
-using IRS;
+
+namespace Models;
 
 public static class ProfileUtilities
 {
     public static string Value { get; set; } = "";
-    public static string storedJson { get; set; } = "";
+    public static string StoredJson { get; set; } = "";
 
     public static LocalStorageAccessor? LocalStorageAccessor { get; set; }
 
@@ -46,17 +46,14 @@ public static class ProfileUtilities
 
     public static async Task Load(IAppData appData)
     {
-        if (appData == null)
-        {
-            throw new ArgumentNullException(nameof(appData));
-        }
+        ArgumentNullException.ThrowIfNull(appData);
 
         if (appData.CurrentProfileName == null)
         {
             throw new ArgumentNullException("appData.CurrentProfileName");
         }
         
-        storedJson = await LocalStorageAccessor!.GetValueAsync<string>(appData.CurrentProfileName);
+        StoredJson = await LocalStorageAccessor!.GetValueAsync<string>(appData.CurrentProfileName);
         var options = new JsonSerializerOptions() 
         {
             Converters =
@@ -65,7 +62,7 @@ public static class ProfileUtilities
                 }
         };
         
-        var loadedFamilyData = FamilyData.LoadFromJson(appData, storedJson, options);
+        var loadedFamilyData = FamilyData.LoadFromJson(appData, StoredJson, options);
         if (loadedFamilyData == null) {
             // error loading profile. how should we handle this?
         } else {
@@ -82,12 +79,6 @@ public static class ProfileUtilities
             await loadedFamilyData.UpdatePercentagesAsync();
             appData.FamilyData = loadedFamilyData;
         }
-    }
-
-    public static async Task Clear(IAppData appData, string key, IRSData irsData)
-    {
-        appData.FamilyData = new FamilyData(appData);
-        await ProfileUtilities.Save(key, appData.FamilyData);
     }
 
     public static async Task ClearAllAsync()

@@ -1,6 +1,8 @@
 using Employer;
 using System.Text.Json.Serialization;
 
+namespace Models;
+
 public class Person {
     public Person() {
         this.EmployerPlan = new EmployerPlan();
@@ -9,7 +11,7 @@ public class Person {
         this.RothIRA = new RothIRA();
         this.HealthSavingsAccount = new HealthSavingsAccount();
         this.Retirement = new();
-        this.RSUGrants = new();
+        this.RSUGrants = [];
     }
 
     // set back pointers in person
@@ -17,10 +19,10 @@ public class Person {
     {
         this.FamilyData = familyData;
         this.EmployerBenefits.person = this;
-        this.EmployerPlan.person = this;
-        this.HealthSavingsAccount.person = this;
-        this.IRA.person = this;
-        this.RothIRA.person = this;
+        this.EmployerPlan.Person = this;
+        this.HealthSavingsAccount.Person = this;
+        this.IRA.Person = this;
+        this.RothIRA.Person = this;
     }
 
     // back pointer
@@ -46,25 +48,17 @@ public class Person {
     public string? PossessiveID { 
         get {
             if (FamilyData.PersonCount > 1) {
-                switch (Identifier)
+                return Identifier switch
                 {
-                    case "me":
-                        return "my";
-                    case "them":
-                        return "their";
-                    case "him":
-                        return "his";
-                    case "her":
-                        return "her";
-                    case null:
-                        return null;
-                    case "person 1":
-                        return "person 1's";
-                    case "person 2":
-                        return "person 2's";
-                    default:
-                        return "undefined";
-                }
+                    "me" => "my",
+                    "them" => "their",
+                    "him" => "his",
+                    "her" => "her",
+                    null => null,
+                    "person 1" => "person 1's",
+                    "person 2" => "person 2's",
+                    _ => "undefined",
+                };
             } else {
                 return null;
             }
@@ -87,14 +81,12 @@ public class Person {
             if (FamilyData.TaxFilingStatus == TaxFilingStatus.MarriedFilingJointly 
             || FamilyData.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperately)
             {
-                switch (this.PersonIndex) {
-                    case 0:
-                        return FamilyData.People[1];
-                    case 1:
-                        return FamilyData.People[0];
-                    default:
-                        throw new InvalidDataException("PersonIndex not expected to be " + this.PersonIndex);
-                }
+                return this.PersonIndex switch
+                {
+                    0 => FamilyData.People[1],
+                    1 => FamilyData.People[0],
+                    _ => throw new InvalidDataException("PersonIndex not expected to be " + this.PersonIndex),
+                };
             }
             else
             {

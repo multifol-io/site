@@ -1,6 +1,7 @@
 @page "/employee/{Organization}"
 @inject IAppData appData
 @inject NavigationManager Navigation
+@using Models;
 
 <PageTitle>
 {Organization} employee
@@ -15,26 +16,26 @@
 
 <p>
     <a href='saving'>
-        <span style="margin:3;font-Size:24pt">💰</span>
+        <span style="margin:3px;font-Size:24pt">💰</span>
         Savings Planner</a><br/>
         plan your annual savings
 </p>
 <p>
     <a href='rsu-tracker'>
-        <span style="margin:3;font-Size:24pt">🔮</span>
+        <span style="margin:3px;font-Size:24pt">🔮</span>
         RSU Tracker</a><br/>
         track Restricted Stock Unit grants
 </p>
 
 <p>
     <a href='portfolio'>
-        <span style="margin:3;font-Size:24pt">📈</span>
+        <span style="margin:3px;font-Size:24pt">📈</span>
         Portfolio Tracker</a><br/>
         organize and analyze your portfolio
 </p>
 <p>
     <a href='portfolio-review'>
-        <span style="margin:3;font-Size:24pt">🧐</span>
+        <span style="margin:3px;font-Size:24pt">🧐</span>
         Portfolio Review</a><br/>
         gather more info, and ask questions on bogleheads.org forum
 </p>
