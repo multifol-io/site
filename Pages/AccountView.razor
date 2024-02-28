@@ -379,11 +379,11 @@ else if (loaded && appData?.FamilyData is not null)
                             }
                             else
                             {
-                                <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleTwoDecimal(investment.SharesPIN)</td>
+                                <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleTwoDecimal(investment.Shares)</td>
                                 <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(investment.Price)</td>
                             }
                             <td style=text-align:right;padding-left:8px>
-                                @FormatUtilities.formatMoney(investment.ValuePIN, decimalPlaces: 0)
+                                @FormatUtilities.formatMoney(investment.Value, decimalPlaces: 0)
                             </td>
                         </tr>
                         @if (investment.IsIBond && investment.NextRate.HasValue)
@@ -666,7 +666,7 @@ else if (loaded && appData?.FamilyData is not null)
                                                 <label>Quantity: </label>
                                             </td>
                                             <td style=padding-left:8px>
-                                                <input type=text style=width:100px;text-align:right @bind-Value=selectedInvestment.SharesPIN @bind-Value:event=onchange placeholder='shares' />
+                                                <input type=text style=width:100px;text-align:right @bind-Value=selectedInvestment.Shares @bind-Value:event=onchange placeholder='shares' />
                                             </td>
                                             <td></td>
                                         </tr>
@@ -688,7 +688,7 @@ else if (loaded && appData?.FamilyData is not null)
                                             <label>Balance: </label>
                                         </td>
                                         <td style=padding-left:8px colspan=1>
-                                            $<input type=text style=width:100px;text-align:right @bind-Value=selectedInvestment.ValuePIN @bind-Value:event=onchange placeholder='value' />
+                                            $<input type=text style=width:100px;text-align:right @bind-Value=selectedInvestment.Value @bind-Value:event=onchange placeholder='value' />
                                         </td>
                                         @if (selectedInvestment.IsIBond)
                                         {
@@ -1119,7 +1119,7 @@ else if (appData?.FamilyData == null)
                 account.SelectedInvestment.Selected = false;
             }
 
-            account.SelectedInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds, Selected = true, Ticker = "IBOND" };
+            account.SelectedInvestment = new Investment() { funds = Funds, Selected = true, Ticker = "IBOND" };
             account.Investments.Add(account.SelectedInvestment);
 
             account.SelectedInvestment.SelectedTransaction = new Transaction() { Type = "Edit" };
@@ -1136,7 +1136,7 @@ else if (appData?.FamilyData == null)
                 account.SelectedInvestment.Selected = false;
             }
 
-            account.SelectedInvestment = new Investment(appData.FamilyData.PIN) { funds = Funds, Selected = true };
+            account.SelectedInvestment = new Investment() { funds = Funds, Selected = true };
             account.Investments.Add(account.SelectedInvestment);
 
             account.SelectedInvestment.SelectedTransaction = new Transaction() { Type = "Edit" };
@@ -1147,7 +1147,7 @@ else if (appData?.FamilyData == null)
     {
         if (appData.FamilyData is not null)
         {
-            var newAccount = new Account(appData.FamilyData.PIN);
+            var newAccount = new Account();
             newAccount.View = true;
             newAccount.Edit = true;
             appData.FamilyData?.Accounts.Insert(0, newAccount);
@@ -1156,7 +1156,7 @@ else if (appData?.FamilyData == null)
 
     void addTreasuryDirectAccount()
     {
-        var newAccount = new Account(appData.FamilyData!.PIN) { Custodian = "Treasury Direct", AccountType = "Taxable" };
+        var newAccount = new Account() { Custodian = "Treasury Direct", AccountType = "Taxable" };
         newAccount.View = true;
         appData.FamilyData?.Accounts.Insert(0, newAccount);
         newAccount.Investments.Add(new Investment() { Ticker = "IBOND", AssetType = AssetType.IBond, Name = "I Bonds", ExpenseRatio = 0.0 });
@@ -1207,18 +1207,6 @@ else if (appData?.FamilyData == null)
         refreshButtonDisabled = false;
     }
 
-    private int? PINEntry { get; set; }
-    private void setPIN()
-    {
-        if (appData.FamilyData is not null)
-        {
-            if (PINEntry != null)
-            {
-                appData.FamilyData.PIN = PINEntry;
-            }
-        }
-    }
-
     private (double? change, double? percentChange) portfolioChange()
     {
         if (appData.FamilyData is not null)
@@ -1230,7 +1218,7 @@ else if (appData?.FamilyData == null)
                 total += investment.Value ?? 0.0;
                 if (investment.PercentChange != null)
                 {
-                    change += (investment.Price - investment.PreviousClose) * investment.SharesPIN;
+                    change += (investment.Price - investment.PreviousClose) * investment.Shares;
                 }
             }
 

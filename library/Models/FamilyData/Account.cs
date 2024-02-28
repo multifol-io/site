@@ -15,24 +15,6 @@ public class Account : INotifyPropertyChanged
         AvailableFunds = new();
     }
 
-    public Account(int? pin) : this()
-    {
-        PIN = pin;
-    }
-
-    private int? _PIN;
-
-    [JsonIgnore]
-    public int? PIN {
-        get { return _PIN; }
-        set { 
-            _PIN = value; 
-            foreach (var investment in Investments) {
-                investment.PIN = _PIN;
-            }
-        }
-    }
-
     public string Title {
         get {
             return (Identifier != null ? Identifier + " " : "") + AccountType + (!string.IsNullOrEmpty(Custodian) ? " at " + Custodian : "") + (Note != null ? $" ({Note})":"");

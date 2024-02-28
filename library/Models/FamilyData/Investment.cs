@@ -14,11 +14,6 @@ public class Investment : INotifyPropertyChanged
         Transactions = new();
     }
 
-    public Investment(int? pin) : this()
-    {
-        PIN = pin;
-    }
-
     [JsonIgnore]
     public Transaction? SelectedTransaction { get; set; }
 
@@ -311,25 +306,6 @@ public class Investment : INotifyPropertyChanged
         }
      }
 
-    private int? _PIN;
-    [JsonIgnore]
-    public int? PIN {
-        get { return _PIN; }
-        set { 
-            _PIN = value;
-        }
-    }
-
-    [JsonIgnore]
-    public double? SharesPIN {
-        get {
-            return Shares * (PIN ?? 1);
-        }
-        set {
-            Shares = value / (PIN ?? 1);
-        }
-    }
-
     private double? _Shares;
     public double? Shares {
         get {
@@ -343,16 +319,6 @@ public class Investment : INotifyPropertyChanged
 
     [JsonIgnore]
     public RSUGrant? GrantToUpdateQuote { get; set; }
-
-    [JsonIgnore]
-    public double? ValuePIN {
-        get {
-            return Value * (PIN ?? 1);
-        }
-        set {
-            Value = value / (PIN ?? 1);
-        }
-    }
 
     private double? _Value;
     public double? Value {
@@ -384,13 +350,13 @@ public class Investment : INotifyPropertyChanged
     }
  
     public void UpdateValue() {
-        if (Price != null && SharesPIN != null) {
+        if (Price != null && Shares != null) {
             switch (AssetType ?? global::AssetType.Unknown) {
                 case global::AssetType.Unknown:
                 case global::AssetType.Bond:
                     break;
                 default:
-                    ValuePIN = Price * SharesPIN;
+                    Value = Price * Shares;
                     break;
             }
         }
@@ -540,14 +506,14 @@ public class Investment : INotifyPropertyChanged
                         
                         if (PurchaseDate <= DateOnly.FromDateTime(DateTime.Now))
                         {
-                            ValuePIN = (int)value;
+                            Value = (int)value;
                         }
                         else
                         {
-                            ValuePIN = null;
+                            Value = null;
                         }
                     } else {
-                        ValuePIN = null;
+                        Value = null;
                     }
                 }
                 else
@@ -565,7 +531,7 @@ public class Investment : INotifyPropertyChanged
         {
             return currentValue;
         } else {
-            return ValuePIN;
+            return Value;
         }
     }
 

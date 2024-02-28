@@ -226,7 +226,7 @@ else
                                                 + (account.TaxType == "Pre-Tax(work)" ? "<span>" + account.CurrentEmployerString + "&nbsp;</span>" : "")
                                                 + account.AccountType + (account.Custodian != null ? " at " + account.Custodian : "") + " (" + FormatUtilities.formatPercent(account.Percentage) + ")", ShowMarkup))
                                             <br />
-                                            @foreach (var investment in account.Investments.OrderBy(i => i.InvestmentOrder).ThenByDescending(i => i.ValuePIN))
+                                            @foreach (var investment in account.Investments.OrderBy(i => i.InvestmentOrder).ThenByDescending(i => i.Value))
                                             {
                                                 <span>&nbsp;&nbsp;&nbsp;&nbsp;@FormatUtilities.formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@(investment.ExpenseRatio != null ? investment.ExpenseRatio : "??")%)</span>
 
@@ -1133,7 +1133,7 @@ else
         if (appData?.FamilyData is not null)
         {
             var files = e.GetMultipleFiles();
-            ImportResult = await Importer.ImportDataFiles(files, Funds, appData.FamilyData.Accounts, appData.FamilyData.PIN);
+            ImportResult = await Importer.ImportDataFiles(files, Funds, appData.FamilyData.Accounts);
             foreach (var account in ImportResult.ImportedAccounts)
             {
                 account.Import = true;

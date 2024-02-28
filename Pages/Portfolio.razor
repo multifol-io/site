@@ -66,19 +66,8 @@
             else {<em>Loading...</em>}
         </p>
         <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >
-            @if(appData!.CurrentProfileName==null){<span>choose a</span>}else {<span>@appData.CurrentProfileName</span>}</a> profile
+            @if(appData?.CurrentProfileName==null){<span>choose a</span>}else {<span>@appData.CurrentProfileName</span>}</a> profile
         </div>
-    } else if (appData is not null && appData.FamilyData!.PINProtected && appData.FamilyData.PIN == null) {
-        <div style=float:left>
-            <h4 style="max-width:450px">
-                @pageHeading
-            </h4>
-        </div>
-        <div style=float:left;margin-left:50px><a href=/profiles  title="profile name" @onclick=navWithBackStack @onclick:preventDefault >@appData.CurrentProfileName profile</a></div>
-
-        <p style=clear:left>Need PIN</p>
-        <input style=width:50px;text-align:right type=text @bind-Value=PINEntry @bind-Value:event=oninput />
-        <button @onclick=setPIN>Go</button>
     } else if (appData is not null && appData.FamilyData is not null) {
         if (appData.FamilyData.TaxFilingStatus == TaxFilingStatus.ChoiceNeeded) {
             taxFilingStatusEditing = true;
@@ -364,12 +353,12 @@
                                                                     <td style=text-align:right>@FormatUtilities.formatPercent3(investment.InterestRate*100.0)</td>
                                                                     <td style=text-align:right>@FormatUtilities.formatPercent3(investment.CurrentRate*100.0)</td>
                                                                 } else {
-                                                                    <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleTwoDecimal(investment.SharesPIN)</td>
+                                                                    <td style=text-align:right;padding-left:8px>@FormatUtilities.formatDoubleTwoDecimal(investment.Shares)</td>
                                                                     <td style=text-align:right;padding-left:8px>@FormatUtilities.formatMoney(investment.Price)</td>
                                                                 }
                                                                 
                                                                 <td style=text-align:right;padding-left:8px>
-                                                                    @FormatUtilities.formatMoney(investment.ValuePIN, decimalPlaces:0)
+                                                                    @FormatUtilities.formatMoney(investment.Value, decimalPlaces:0)
                                                                 </td>
                                                             </tr>
                                                             if (investment.IsIBond && investment.NextRate.HasValue)
@@ -451,7 +440,7 @@
                                                     }
              
                                                     @{var groupSize = 0;}
-                                                    @foreach (var investment in appData.FamilyData.GroupedInvestments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.ValuePIN)) {
+                                                    @foreach (var investment in appData.FamilyData.GroupedInvestments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.Value)) {
                                                         if (lastInvestmentCategory != investment.InvestmentOrderCategory) {
                                                             if (groupSize > 0) {
                                                                 groupSize = 0;
@@ -536,13 +525,13 @@
                                                             <td style=padding-left:8px;vertical-align:text-top;@ftsize title=@investment.Name @onclick='@(e=>editAccount(e,-1,-1,tickerQuery))'>
                                                                 @(investment.Ticker != null ? investment.Ticker : investment.Name)
                                                                 @if (investment.AssetType == global::AssetType.Unknown) { <span style=color:red>*</span> }
-                                                                @if (appData.ApplyStockSizeRules && investment.IsStock && (investment.ValuePIN > appData.FamilyData.Value * .05)) {
+                                                                @if (appData.ApplyStockSizeRules && investment.IsStock && (investment.Value > appData.FamilyData.Value * .05)) {
                                                                     <sub title='@FormatUtilities.formatMoney(appData.FamilyData.Value*.05) is 5% of portfolio' style=background-color:yellow>&nbsp;&gt;5%</sub>
                                                                 }
                                                             </td>
-                                                            <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatDoubleTwoDecimal(investment.SharesPIN)</td>
+                                                            <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatDoubleTwoDecimal(investment.Shares)</td>
                                                             <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.Price)<br/>@((MarkupString)FormatUtilities.formatPercent3WithColor(investment.PercentChange))</td>
-                                                            <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.ValuePIN)
+                                                            <td style=text-align:right;padding-left:8px;vertical-align:text-top>@FormatUtilities.formatMoney(investment.Value)
                                                                 @if(investment.LastUpdated!=null) {
                                                                     if (investment.IsFund) {
                                                                         <br/>
@@ -587,7 +576,7 @@
                                                      + (account.TaxType == "Pre-Tax(work)" ? "<span>"+account.CurrentEmployerString+"&nbsp;</span>" : "") 
                                                      + account.AccountType + (!string.IsNullOrEmpty(account.Custodian) ? " at " + account.Custodian : "") + " (" + FormatUtilities.formatPercent(account.Percentage) + ")" , ShowMarkup))
                                                     <br/>
-                                                    @foreach (var investment in account.Investments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.ValuePIN)) {
+                                                    @foreach (var investment in account.Investments.OrderBy(i=>i.InvestmentOrder).ThenByDescending(i=>i.Value)) {
                                                         var advice = Advisor.Advise(investment, account, appData);
                                                         <span>&nbsp;&nbsp;&nbsp;&nbsp;@FormatUtilities.formatPercent(investment.Percentage) @investment.Name (@investment.Ticker) (@(investment.ExpenseRatio!=null?investment.ExpenseRatio:"??")%)</span><br/>
                                                         @foreach (var adviceItem in advice) {
@@ -868,12 +857,18 @@
 @code {
     void updateFund(MouseEventArgs e, List<Investment> investments, DateTime lastUpdated)
     {
-        appData.FamilyData!.UpdateInvestmentsPrice(investments, investments[0].Price, null, null, lastUpdated);
+        if (appData.FamilyData != null)
+        {
+            appData.FamilyData.UpdateInvestmentsPrice(investments, investments[0].Price, null, null, lastUpdated);
+        }
     }
 
     void updateNonFund(MouseEventArgs e, List<Investment> investments, DateTime lastUpdated)
     {
-        appData.FamilyData!.UpdateInvestmentsPrice(investments, investments[0].Price, null, null, lastUpdated);
+        if (appData.FamilyData != null)
+        {
+            appData.FamilyData.UpdateInvestmentsPrice(investments, investments[0].Price, null, null, lastUpdated);
+        }
     }
 
     void selectInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
@@ -942,7 +937,7 @@
                         {
                             account.Edit = true;
                         }
-                        
+
                         account.SelectedInvestment = null;
                         foreach (var investment in account.Investments)
                         {
@@ -1032,7 +1027,7 @@
     private const string pagePath = "/portfolio-tracker";
     private const string folderName = pagePath + "/";
     private const string pageHeading = "Portfolio Tracker";
-    
+
     protected override async Task OnInitializedAsync()
     {
         steps = await Http.GetFromJsonAsync<Step[]>("data/portfolio-assets-steps.json");
@@ -1080,7 +1075,7 @@
 
     void addAccountThenEdit()
     {
-        var newAccount = new Account(appData.FamilyData!.PIN) { };
+        var newAccount = new Account() { };
         newAccount.Edit = true;
         newAccount.View = true;
         appData.FamilyData?.Accounts.Insert(0, newAccount);
@@ -1103,22 +1098,16 @@
     private async Task refreshPrices() {
         refreshButtonText = "Updating...";
         refreshButtonDisabled = true;
-        await appData.FamilyData!.RefreshPrices(Http);
-        await appData.FamilyData.UpdatePercentagesAsync();
-        await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
-        refreshButtonDisabled = false;
-        refreshButtonText = "🔃 Prices";
-        if (appData?.FamilyData?.TickersToUpdate?.Count > 0)
+        if (appData?.FamilyData != null)
         {
-            Navigation.NavigateTo("/portfolio-tracker/refresh-prices");
-        }
-    }
-    
-    private int? PINEntry { get; set; }
-    private void setPIN() {
-        if (appData.FamilyData is not null) {
-            if (PINEntry != null) {
-                appData.FamilyData.PIN = PINEntry;
+            await appData.FamilyData.RefreshPrices(Http);
+            await appData.FamilyData.UpdatePercentagesAsync();
+            await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
+            refreshButtonDisabled = false;
+            refreshButtonText = "🔃 Prices";
+            if (appData?.FamilyData?.TickersToUpdate?.Count > 0)
+            {
+                Navigation.NavigateTo("/portfolio-tracker/refresh-prices");
             }
         }
     }
@@ -1133,7 +1122,7 @@
                 total += investment.Value ?? 0.0;
                 if (investment.PercentChange != null)
                 {
-                    change += (investment.Price - investment.PreviousClose) * investment.SharesPIN;
+                    change += (investment.Price - investment.PreviousClose) * investment.Shares;
                 }
             }
 

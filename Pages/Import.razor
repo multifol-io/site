@@ -445,7 +445,7 @@
     {
         if (appData?.FamilyData is not null) {
             var files = e.GetMultipleFiles();
-            appData.ImportResult = await Importer.ImportDataFiles(files, Funds, appData.FamilyData.Accounts, appData.FamilyData.PIN);
+            appData.ImportResult = await Importer.ImportDataFiles(files, Funds, appData.FamilyData.Accounts);
             foreach (var account in appData.ImportResult.NewAccounts) 
             {
                 account.Import = true;

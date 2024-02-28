@@ -62,10 +62,6 @@
                             <button @onclick="@(e=>deleteProfile(e,profileName))">del</button>
                             <button @onclick="@(e=>copyToProfile(e,profileName))">copy to...</button>
                         }
-                        @if(profileName==appData.CurrentProfileName && profileName.ToUpper().EndsWith("-PIN"))
-                        {
-                            <button @onclick="@(e=>pinProtect(e))">PIN Protect...</button>
-                        }
                     }
                 </td>
             </tr>
@@ -156,16 +152,6 @@
         }
         
         newProfileName = "";
-    }
-
-    private async Task pinProtect(EventArgs e) {
-        if (appData?.FamilyData is not null) {
-            appData.FamilyData.PINProtected = true;
-            appData.FamilyData.PIN = 100;
-            if (appData.CurrentProfileName is not null) {
-                await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData); 
-            }
-        }
     }
 
     private async Task makeProfileActive(EventArgs e, string profileName) {

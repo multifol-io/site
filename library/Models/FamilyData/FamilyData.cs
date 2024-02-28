@@ -292,18 +292,7 @@ public class FamilyData : INotifyPropertyChanged
 
     public List<Account> Accounts { get; set; }
 
-    private int? _PIN;
     [JsonIgnore]
-    public int? PIN { 
-        get { return _PIN; }
-        set {
-            _PIN = value; 
-            foreach (var account in Accounts) {
-                account.PIN = _PIN;
-            }
-        }    
-    }
-
     public bool PINProtected { get; set; }
 
     [JsonIgnore]
@@ -341,14 +330,14 @@ public class FamilyData : INotifyPropertyChanged
             foreach (var key in _GroupedInvestments.Keys)
             {
                 var investment = _GroupedInvestments[key];
-                if (investment.Price != null && investment.SharesPIN != null)
+                if (investment.Price != null && investment.Shares != null)
                 {
                     investment.UpdateValue();
                 }
 
-                if (investment.SharesPIN == 0.0)
+                if (investment.Shares == 0.0)
                 {
-                    investment.SharesPIN = null;
+                    investment.Shares = null;
                 }
 
                 listInvestments.Add(investment);
@@ -399,25 +388,25 @@ public string estimatePortfolio()
             }
             else
             {
-                matchingInvestment = new Investment(PIN) { Name = investment.Name, AssetType = assetType == null ? investment.AssetType : assetType, Ticker = key, PercentChange = investment.PercentChange, LastUpdated = investment.LastUpdated, SharesPIN = null, Price = investment.GetPrice(assetType, investment.Price), PreviousClose = investment.GetPrice(assetType, investment.PreviousClose), ValuePIN = 0.0 };
+                matchingInvestment = new Investment() { Name = investment.Name, AssetType = assetType == null ? investment.AssetType : assetType, Ticker = key, PercentChange = investment.PercentChange, LastUpdated = investment.LastUpdated, Shares = null, Price = investment.GetPrice(assetType, investment.Price), PreviousClose = investment.GetPrice(assetType, investment.PreviousClose), Value = 0.0 };
                 _GroupedInvestments.Add(key, matchingInvestment);
             }
 
-            if (investment.SharesPIN != null)
+            if (investment.Shares != null)
             {
-                if (matchingInvestment.SharesPIN == null)
+                if (matchingInvestment.Shares == null)
                 {
-                    matchingInvestment.SharesPIN = investment.SharesPIN;
+                    matchingInvestment.Shares = investment.Shares;
                 }
                 else
                 {
-                    matchingInvestment.SharesPIN += investment.SharesPIN;
+                    matchingInvestment.Shares += investment.Shares;
                 }
             }
 
-            if (investment.ValuePIN != null)
+            if (investment.Value != null)
             {
-                matchingInvestment.ValuePIN += investment.ValuePIN;
+                matchingInvestment.Value += investment.Value;
             }
         }
 
@@ -485,7 +474,7 @@ public string estimatePortfolio()
                 double accountValue = 0.0;
                 foreach (var investment in account.Investments)
                 {
-                    accountValue += investment.ValuePIN ?? 0.0;
+                    accountValue += investment.Value ?? 0.0;
                 }
 
                 account.Value = accountValue;

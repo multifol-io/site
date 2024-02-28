@@ -73,17 +73,6 @@
                 }
             </a> profile
         </div>
-    } else if (appData.FamilyData != null && appData.FamilyData.PINProtected && appData.FamilyData.PIN == null) {
-        <div style=float:left>
-            <h4 style="max-width:450px">
-                @pageHeading <h6 style=display:inline>for @appData.CurrentProfileName profile</h6>
-            </h4>
-        </div>
-        <div style=clear:left><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault >(manage profiles)</a></div>
-
-        <p style=clear:left>Need PIN</p>
-        <input style=width:50px;text-align:right type=text @bind-Value=PINEntry @bind-Value:event=oninput />
-        <button @onclick=setPIN>Go</button>
     } else {
         if (appData?.FamilyData is not null) {
             var prevStep = steps[steps.Length - 1];
@@ -477,13 +466,6 @@
 
         refreshButtonText = "🔃 Prices";
     }
-    
-    private int? PINEntry { get; set; }
-    private void setPIN() {
-        if (PINEntry != null && appData?.FamilyData is  not null) {
-            appData.FamilyData.PIN = PINEntry;
-        }
-    }
 
     private (double? change, double? percentChange) portfolioChange() {
         double? change = 0.0;
@@ -494,7 +476,7 @@
                 total += investment.Value ?? 0.0;
                 if (investment.PercentChange != null)
                 {
-                    change += (investment.Price - investment.PreviousClose) * investment.SharesPIN;
+                    change += (investment.Price - investment.PreviousClose) * investment.Shares;
                 }
             }
 
