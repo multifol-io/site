@@ -22,7 +22,7 @@ namespace IRS {
             return irsData;
         }
 
-        public IAppData AppData { get; set; }
+        public IAppData? AppData { get; set; }
 
         public IRSData(RetirementData retirementDataY1, RetirementData retirementDataY2, TaxRateData taxRatesY1, TaxRateData taxRatesY2)
         {
