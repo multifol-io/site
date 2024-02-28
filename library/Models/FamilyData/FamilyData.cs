@@ -591,11 +591,35 @@ public class FamilyData : INotifyPropertyChanged
         PercentChange = changes.percentChange;
     }
 
+    private double? _Change;
     [JsonIgnore]
-    public double? Change { get; set; }
+    public double? Change
+    {
+        get
+        {
+            return _Change;
+        }
+        set
+        {
+            _Change = value;
+            OnPropertyChanged();
+        }
+    }
 
+    private double? _PercentChange;
     [JsonIgnore]
-    public double? PercentChange { get; set; }
+    public double? PercentChange
+    {
+        get
+        {
+            return _PercentChange;
+        }
+        set
+        {
+            _PercentChange = value;
+            OnPropertyChanged();
+        }
+    }
 
     private (double? change, double? percentChange) PortfolioChange()
     {
