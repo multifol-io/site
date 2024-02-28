@@ -14,7 +14,8 @@ public class FamilyData : INotifyPropertyChanged
     }
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public FamilyData(IAppData appData) {
+    public FamilyData(IAppData appData)
+    {
         AppData = appData;
         Year = DateTime.Now.Year;
 
@@ -23,7 +24,7 @@ public class FamilyData : INotifyPropertyChanged
         People = [];
         Questions = [];
         RetirementData = new();
-        
+
         People.Add(new Person() { Identifier = "person 1", FamilyData = this, PersonIndex = 0 });
         People.Add(new Person() { Identifier = "person 2", FamilyData = this, PersonIndex = 1 });
 
@@ -33,7 +34,8 @@ public class FamilyData : INotifyPropertyChanged
     // set back pointers in familydata
     public void SetBackPointers()
     {
-        for (int personIndex = 0; personIndex < this.People.Count; personIndex++) {
+        for (int personIndex = 0; personIndex < this.People.Count; personIndex++)
+        {
             var person = this.People[personIndex];
             person.PersonIndex = personIndex;
             person.SetBackPointers(this);
@@ -42,38 +44,45 @@ public class FamilyData : INotifyPropertyChanged
 
     [JsonIgnore]
     public double PercentTotal { get; set; }
-    
+
     [JsonIgnore]
-    public IAppData AppData { get; set;}    
+    public IAppData AppData { get; set; }
 
     public string? Title { get; set; }
     public RetirementData RetirementData { get; set; }
     public EmergencyFund EmergencyFund { get; set; } = new();
 
-    public bool DebtsComplete {
-        get {
+    public bool DebtsComplete
+    {
+        get
+        {
             return ((Debts.Count == 0 && DebtFree == TriState.True) || Debts.Count > 0);
         }
     }
-    
+
     public TriState DebtFree { get; set; }
     public List<Debt> Debts { get; set; }
-    
+
     private TaxFilingStatus _taxFilingStatus = TaxFilingStatus.ChoiceNeeded;
     [Required]
-    public TaxFilingStatus TaxFilingStatus { 
-        get {
+    public TaxFilingStatus TaxFilingStatus
+    {
+        get
+        {
             return _taxFilingStatus;
         }
-        set {
+        set
+        {
             _taxFilingStatus = value;
         }
     }
 
     public bool TaxFilingStatusLivingSeperately { get; set; }
 
-    public string TaxFilingString {
-        get {
+    public string TaxFilingString
+    {
+        get
+        {
             return TaxFilingStatus switch
             {
                 TaxFilingStatus.Single => "Single",
@@ -89,8 +98,10 @@ public class FamilyData : INotifyPropertyChanged
     public int? TaxableToInvest { get; set; }
 
 
-    public int? TotalIncome { 
-        get {
+    public int? TotalIncome
+    {
+        get
+        {
             int totalSalaries = 0;
             for (int i = 0; i < PersonCount; i++)
             {
@@ -102,13 +113,15 @@ public class FamilyData : INotifyPropertyChanged
                     totalSalaries += vestAmount.HasValue ? (int)(vestAmount.Value) : 0;
                 }
             }
-            
+
             return totalSalaries;
         }
     }
 
-    public int? PlannedSavings {
-        get {
+    public int? PlannedSavings
+    {
+        get
+        {
             int? annualExpenses = EmergencyFund.MonthlyExpenses * 12;
             int investFromTaxable = TaxableToInvest ?? 0;
 
@@ -118,37 +131,46 @@ public class FamilyData : INotifyPropertyChanged
 
     public string? FederalMarginalTaxBracket { get; set; }
     private int _Year;
-    public int Year { 
-        get {
+    public int Year
+    {
+        get
+        {
             return _Year;
         }
-        set {
+        set
+        {
             _Year = value;
         }
     }
 
     [JsonIgnore] // Transition to StateTaxRate on 7/28/2023 - https://github.com/bogle-tools/site/issues/208
-    public string? StateMarginalTaxBracket {
-        get {
+    public string? StateMarginalTaxBracket
+    {
+        get
+        {
             return StateTaxRate;
         }
-        set {
+        set
+        {
             StateTaxRate = value;
         }
     }
-    
+
     public string? StateTaxRate { get; set; }
-    
+
     public string? StateOfResidence { get; set; }
 
     public bool NotSureNeedHelpWithAssetAllocation { get; set; }
 
     private double? _Stocks;
-    public double? Stocks { 
-        get {
+    public double? Stocks
+    {
+        get
+        {
             return _Stocks;
         }
-        set {
+        set
+        {
             _Stocks = value;
             if (_Stocks != null && Bonds == null) { Bonds = 100.0 - _Stocks; }
             if (_Stocks != null || _Bonds != null) { AssetAllocationError = ((_Bonds + _Stocks) > 100.0); }
@@ -156,11 +178,14 @@ public class FamilyData : INotifyPropertyChanged
     }
 
     private double? _Bonds;
-    public double? Bonds { 
-        get {
+    public double? Bonds
+    {
+        get
+        {
             return _Bonds;
         }
-        set {
+        set
+        {
             _Bonds = value;
             if (_Bonds != null && Stocks == null) { Stocks = 100.0 - _Bonds; }
             if (_Stocks != null || _Bonds != null) { AssetAllocationError = ((_Bonds + _Stocks) > 100.0); }
@@ -178,9 +203,11 @@ public class FamilyData : INotifyPropertyChanged
     public double? CashBalance { get; set; }
     public double? OtherBalance { get; set; }
 
-    public double ActualTotalStockAllocation {
-        get {
-            return (ActualStockAllocation / 100.0)* (1.0-ActualInternationalStockAllocation / 100.0) * 100.0;
+    public double ActualTotalStockAllocation
+    {
+        get
+        {
+            return (ActualStockAllocation / 100.0) * (1.0 - ActualInternationalStockAllocation / 100.0) * 100.0;
         }
     }
 
@@ -204,7 +231,7 @@ public class FamilyData : INotifyPropertyChanged
         var stockTotal = (StockBalance ?? 0.0) + (InternationalStockBalance ?? 0.0);
         if (stockTotal > 0.0)
         {
-            internationalStockAllocation =  (InternationalStockBalance ?? 0.0) / stockTotal * 100.0;
+            internationalStockAllocation = (InternationalStockBalance ?? 0.0) / stockTotal * 100.0;
         }
 
         ActualStockAllocation = stockAllocation;
@@ -216,11 +243,14 @@ public class FamilyData : INotifyPropertyChanged
 
     private double _ActualStockAllocation;
     [JsonIgnore] // added in 2/2024...but want to stop now.
-    public double ActualStockAllocation {
-        get {
+    public double ActualStockAllocation
+    {
+        get
+        {
             return _ActualStockAllocation;
         }
-        set {
+        set
+        {
             _ActualStockAllocation = value;
             OnPropertyChanged();
         }
@@ -230,10 +260,12 @@ public class FamilyData : INotifyPropertyChanged
     [JsonIgnore] // added in 2/2024...but want to stop now.
     public double ActualBondAllocation
     {
-        get {
+        get
+        {
             return _ActualBondAllocation;
         }
-        set {
+        set
+        {
             _ActualBondAllocation = value;
             OnPropertyChanged();
         }
@@ -243,10 +275,12 @@ public class FamilyData : INotifyPropertyChanged
     [JsonIgnore] // added in 2/2024...but want to stop now.
     public double ActualInternationalStockAllocation
     {
-        get {
+        get
+        {
             return _ActualInternationalStockAllocation;
         }
-        set {
+        set
+        {
             _ActualInternationalStockAllocation = value;
             OnPropertyChanged();
         }
@@ -256,10 +290,12 @@ public class FamilyData : INotifyPropertyChanged
     [JsonIgnore] // added in 2/2024...but want to stop now.
     public double ActualCashAllocation
     {
-        get {
+        get
+        {
             return _ActualCashAllocation;
         }
-        set {
+        set
+        {
             _ActualCashAllocation = value;
             OnPropertyChanged();
         }
@@ -269,10 +305,12 @@ public class FamilyData : INotifyPropertyChanged
     [JsonIgnore] // added in 2/2024...but want to stop now.
     public double ActualOtherAllocation
     {
-        get {
+        get
+        {
             return _ActualOtherAllocation;
         }
-        set {
+        set
+        {
             _ActualOtherAllocation = value;
             OnPropertyChanged();
         }
@@ -285,11 +323,14 @@ public class FamilyData : INotifyPropertyChanged
     public List<Person> People { get; set; }
 
     private double _Value;
-    public double Value { 
-        get {
+    public double Value
+    {
+        get
+        {
             return _Value;
         }
-        set {
+        set
+        {
             _Value = value;
             OnPropertyChanged();
         }
@@ -303,32 +344,42 @@ public class FamilyData : INotifyPropertyChanged
     public bool PINProtected { get; set; }
 
     [JsonIgnore]
-    public List<Investment> GroupedInvestments { 
-        get {
-            Dictionary<string,Investment> _GroupedInvestments = [];
-            foreach (var account in Accounts) 
+    public List<Investment> GroupedInvestments
+    {
+        get
+        {
+            Dictionary<string, Investment> _GroupedInvestments = [];
+            foreach (var account in Accounts)
             {
                 foreach (var investment in account.Investments)
                 {
                     var key = string.IsNullOrEmpty(investment.Ticker) ? investment.Name ?? "missing ticker and name" : investment.Ticker;
-                    if (investment.AssetType == AssetTypes.StocksAndBonds_ETF || investment.AssetType == AssetTypes.StocksAndBonds_Fund) {
-                        if (investment.GetPercentage(AssetTypes.USStock) > 0.0) {
-                            GetGroup(_GroupedInvestments, investment, key+"-S", assetType:AssetTypes.USStock);
+                    if (investment.AssetType == AssetTypes.StocksAndBonds_ETF || investment.AssetType == AssetTypes.StocksAndBonds_Fund)
+                    {
+                        if (investment.GetPercentage(AssetTypes.USStock) > 0.0)
+                        {
+                            GetGroup(_GroupedInvestments, investment, key + "-S", assetType: AssetTypes.USStock);
                         }
-                        if (investment.GetPercentage(AssetTypes.InternationalStock) > 0.0) {
-                            GetGroup(_GroupedInvestments, investment, key+"-IS", assetType:AssetTypes.InternationalStock);
+                        if (investment.GetPercentage(AssetTypes.InternationalStock) > 0.0)
+                        {
+                            GetGroup(_GroupedInvestments, investment, key + "-IS", assetType: AssetTypes.InternationalStock);
                         }
-                        if (investment.GetPercentage(AssetTypes.Bond) > 0.0) {
-                            GetGroup(_GroupedInvestments, investment, key+"-B", assetType:AssetTypes.Bond);
+                        if (investment.GetPercentage(AssetTypes.Bond) > 0.0)
+                        {
+                            GetGroup(_GroupedInvestments, investment, key + "-B", assetType: AssetTypes.Bond);
                         }
-                        if (investment.GetPercentage(AssetTypes.InternationalBond) > 0.0) {
-                            GetGroup(_GroupedInvestments, investment, key+"-IB", assetType:AssetTypes.InternationalBond);
+                        if (investment.GetPercentage(AssetTypes.InternationalBond) > 0.0)
+                        {
+                            GetGroup(_GroupedInvestments, investment, key + "-IB", assetType: AssetTypes.InternationalBond);
                         }
-                        if (investment.GetPercentage(AssetTypes.Cash) > 0.0) {
-                            GetGroup(_GroupedInvestments, investment, key+"-C", assetType:AssetTypes.Cash);
+                        if (investment.GetPercentage(AssetTypes.Cash) > 0.0)
+                        {
+                            GetGroup(_GroupedInvestments, investment, key + "-C", assetType: AssetTypes.Cash);
                         }
-                    } else {
-                        var matchingInvestment = GetGroup(_GroupedInvestments, investment, key, assetType:null);
+                    }
+                    else
+                    {
+                        var matchingInvestment = GetGroup(_GroupedInvestments, investment, key, assetType: null);
                     }
                 }
             }
@@ -349,43 +400,69 @@ public class FamilyData : INotifyPropertyChanged
 
                 listInvestments.Add(investment);
             }
-            
-            return [.. listInvestments.OrderByDescending(i=>i.Value)];
+
+            return [.. listInvestments.OrderByDescending(i => i.Value)];
         }
     }
 
-public string EstimatePortfolio() 
+    public string EstimatePortfolio()
     {
-        if (Value >= 10000000) {
+        if (Value >= 10000000)
+        {
             return "8-figures";
-        } else if (Value >= 6666666) {
+        }
+        else if (Value >= 6666666)
+        {
             return "high 7-figures";
-        } else if (Value >= 3333333) {
+        }
+        else if (Value >= 3333333)
+        {
             return "mid 7-figures";
-        } else if (Value >= 1000000) {
+        }
+        else if (Value >= 1000000)
+        {
             return "low 7-figures";
-        } else if (Value >= 666666) {
+        }
+        else if (Value >= 666666)
+        {
             return "high 6-figures";
-        } else if (Value >= 333333) {
+        }
+        else if (Value >= 333333)
+        {
             return "mid 6-figures";
-        } else if (Value >= 100000) {
+        }
+        else if (Value >= 100000)
+        {
             return "low 6-figures";
-        } else if (Value >= 66666) {
+        }
+        else if (Value >= 66666)
+        {
             return "high 5-figures";
-        } else if (Value >= 33333) {
+        }
+        else if (Value >= 33333)
+        {
             return "mid 5-figures";
-        } else if (Value >= 10000) {
+        }
+        else if (Value >= 10000)
+        {
             return "low 5-figures";
-        } else if (Value >= 1000) {
+        }
+        else if (Value >= 1000)
+        {
             return "4-figures";
-        } else if (Value == 0) {
+        }
+        else if (Value == 0)
+        {
             return "-";
-        } else {
+        }
+        else
+        {
             return "less than $1,000";
         }
     }
 
-    private static Investment? GetGroup(Dictionary<string, Investment> _GroupedInvestments, Investment investment, string? key, AssetTypes? assetType) {
+    private static Investment? GetGroup(Dictionary<string, Investment> _GroupedInvestments, Investment investment, string? key, AssetTypes? assetType)
+    {
         Investment? matchingInvestment = null;
         if (key != null)
         {
@@ -423,47 +500,61 @@ public string EstimatePortfolio()
     public string? AdditionalBackground { get; set; }
     public List<string> Questions { get; set; }
 
-    private int? GetDebts(string? category) {
-            int? total = null;
-            foreach (var debt in Debts) {
-                if (debt.Category == category) {
-                    if (total == null) {
-                        total = debt.Total;
-                    } else {
-                        total += debt.Total;
-                    }
+    private int? GetDebts(string? category)
+    {
+        int? total = null;
+        foreach (var debt in Debts)
+        {
+            if (debt.Category == category)
+            {
+                if (total == null)
+                {
+                    total = debt.Total;
+                }
+                else
+                {
+                    total += debt.Total;
                 }
             }
+        }
 
-            return total;
+        return total;
     }
 
-    public int? HighDebts {
-        get {
+    public int? HighDebts
+    {
+        get
+        {
             return GetDebts("High");
         }
     }
 
-    public int? MediumDebts {
-        get {
+    public int? MediumDebts
+    {
+        get
+        {
             return GetDebts("Medium");
         }
     }
 
-    public int? LowDebts {
-        get {
+    public int? LowDebts
+    {
+        get
+        {
             return GetDebts("Low");
         }
     }
 
-    public int? UnknownDebts {
-        get {
+    public int? UnknownDebts
+    {
+        get
+        {
             return GetDebts(null);
         }
     }
 
     public async Task UpdatePercentagesAsync()
-    {        
+    {
         StockBalance = 0.0;
         InternationalStockBalance = 0.0;
         BondBalance = 0.0;
@@ -494,93 +585,141 @@ public string EstimatePortfolio()
         }
 
         UpdateAllocations();
+
+        var changes = PortfolioChange();
+        Change = changes.change;
+        PercentChange = changes.percentChange;
     }
 
-    public int YearIndex 
+    [JsonIgnore]
+    public double? Change { get; set; }
+
+    [JsonIgnore]
+    public double? PercentChange { get; set; }
+
+    private (double? change, double? percentChange) PortfolioChange()
     {
-        get {
+        double? change = 0.0;
+        double? total = 0.0;
+        foreach (var investment in this.GroupedInvestments)
+        {
+            total += investment.Value ?? 0.0;
+            if (investment.PercentChange != null)
+            {
+                change += (investment.Price - investment.PreviousClose) * investment.Shares;
+            }
+        }
+
+        var startOfDayTotal = total - change;
+        return change == 0.0 ? (null, null) : (change, change / startOfDayTotal * 100.0);
+    }
+
+    public int YearIndex
+    {
+        get
+        {
             return Year - 2023;
         }
     }
 
-    public int PersonCount {
-        get {
+    public int PersonCount
+    {
+        get
+        {
             return TaxFilingStatus switch
             {
                 TaxFilingStatus.Single or TaxFilingStatus.HeadOfHousehold or TaxFilingStatus.MarriedFilingSeperately => 1,
                 TaxFilingStatus.MarriedFilingJointly => 2,
                 _ => 0,
             };
-        } 
+        }
     }
 
-    public static FamilyData? LoadFromJson(IAppData appData, string json, JsonSerializerOptions options) {
+    public static FamilyData? LoadFromJson(IAppData appData, string json, JsonSerializerOptions options)
+    {
         var loadedData = JsonSerializer.Deserialize<FamilyData>(json, options);
-        if (loadedData != null) {
+        if (loadedData != null)
+        {
             loadedData.AppData = appData;
             loadedData.Year = 2024;
             loadedData.SetBackPointers();
-            if (loadedData.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart) {
+            if (loadedData.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart)
+            {
                 loadedData.TaxFilingStatus = TaxFilingStatus.MarriedFilingSeperately;
                 loadedData.TaxFilingStatusLivingSeperately = true;
             }
             return loadedData;
         }
-        else 
+        else
         {
             return null;
         }
     }
-    
-    public static async Task<FamilyData?> LoadFromJsonStream(IAppData appData, Stream jsonStream, JsonSerializerOptions options) {
+
+    public static async Task<FamilyData?> LoadFromJsonStream(IAppData appData, Stream jsonStream, JsonSerializerOptions options)
+    {
         var loadedData = await JsonSerializer.DeserializeAsync<FamilyData>(jsonStream, options);
-        if (loadedData != null && appData != null) {
+        if (loadedData != null && appData != null)
+        {
             loadedData.AppData = appData;
             loadedData.Year = 2023;
             loadedData.SetBackPointers();
-            if (loadedData.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart) {
+            if (loadedData.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart)
+            {
                 loadedData.TaxFilingStatus = TaxFilingStatus.MarriedFilingSeperately;
                 loadedData.TaxFilingStatusLivingSeperately = true;
             }
             return loadedData;
         }
-        else 
+        else
         {
             return null;
         }
     }
 
     [JsonIgnore]
-    public SortedDictionary<string,List<Investment>>? TickersToUpdate;
+    public SortedDictionary<string, List<Investment>>? TickersToUpdate;
 
-    public async Task RefreshPrices(HttpClient http) {
+    public async Task RefreshPrices(HttpClient http)
+    {
         TickersToUpdate = [];
 
         var now = DateTime.Now.Date;
         var previousMarketClose = PreviousMarketClose(now).ToLocalTime();
         var nextMarketClose = NextMarketClose(now).ToLocalTime();
-        var nextMarketOpen = new DateTime(nextMarketClose.Year,nextMarketClose.Month,nextMarketClose.Day,13,30,00).ToLocalTime();
+        var nextMarketOpen = new DateTime(nextMarketClose.Year, nextMarketClose.Month, nextMarketClose.Day, 13, 30, 00).ToLocalTime();
         var marketIsBeforeOpen = DateTime.Now < nextMarketOpen;
         bool marketIsOpen = DateTime.Now >= nextMarketOpen && DateTime.Now <= nextMarketClose;
         var marketIsAfterClose = DateTime.Now > nextMarketClose;
-        foreach (var account in this.Accounts) {
-            foreach (var investment in account.Investments) {
+        foreach (var account in this.Accounts)
+        {
+            foreach (var investment in account.Investments)
+            {
                 bool fetchQuote = false;
-                if (investment.IsStock || investment.IsETF) {
+                if (investment.IsStock || investment.IsETF)
+                {
                     fetchQuote = investment.LastUpdated == null || (marketIsBeforeOpen && investment.LastUpdated < previousMarketClose) || marketIsOpen || (marketIsAfterClose && investment.LastUpdated < nextMarketClose);
-                } else if (investment.IsFund) {
+                }
+                else if (investment.IsFund)
+                {
                     fetchQuote = investment.LastUpdated == null || investment.LastUpdated?.Date != previousMarketClose.Date;
-                } else if (investment.IsIBond) {
+                }
+                else if (investment.IsIBond)
+                {
                     await investment.CalculateIBondValue();
                 }
 
-                if (fetchQuote) {
+                if (fetchQuote)
+                {
                     var ticker = string.IsNullOrEmpty(investment.Ticker) ? investment.Name : investment.Ticker;
                     if (ticker != null)
                     {
-                        if (!TickersToUpdate.TryGetValue(ticker, out List<Investment>? value)) {
+                        if (!TickersToUpdate.TryGetValue(ticker, out List<Investment>? value))
+                        {
                             TickersToUpdate.Add(ticker, [investment]);
-                        } else {
+                        }
+                        else
+                        {
                             var investments = value;
                             investments.Add(investment);
                         }
@@ -589,15 +728,21 @@ public string EstimatePortfolio()
             }
         }
 
-        for(int p=0;p<this.PersonCount;p++) {
+        for (int p = 0; p < this.PersonCount; p++)
+        {
             var person = this.People[p];
-            foreach (var rsuGrant in person.RSUGrants) {
-                if (!string.IsNullOrEmpty(rsuGrant.Ticker)) {
+            foreach (var rsuGrant in person.RSUGrants)
+            {
+                if (!string.IsNullOrEmpty(rsuGrant.Ticker))
+                {
                     var ticker = rsuGrant.Ticker.ToUpper();
                     var grantInvestment = new Investment() { Ticker = ticker, GrantToUpdateQuote = rsuGrant };
-                    if (!TickersToUpdate.TryGetValue(ticker, out List<Investment>? value)) {
+                    if (!TickersToUpdate.TryGetValue(ticker, out List<Investment>? value))
+                    {
                         TickersToUpdate.Add(ticker, [grantInvestment]);
-                    } else {
+                    }
+                    else
+                    {
                         var investments = value;
                         investments.Add(grantInvestment);
                     }
@@ -609,9 +754,12 @@ public string EstimatePortfolio()
         {
             foreach (var quote in TickersToUpdate)
             {
-                try {
+                try
+                {
                     await FetchPriceAndUpdateInvestments(quote.Key, quote.Value, http);
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     Console.WriteLine(ex.GetType().Name + ": " + ex.Message + " " + ex.StackTrace);
                 }
             }
@@ -622,22 +770,24 @@ public string EstimatePortfolio()
 
     private async Task FetchPriceAndUpdateInvestments(string ticker, List<Investment> investments, HttpClient http)
     {
-        if (!string.IsNullOrEmpty(this.AppData.EODHistoricalDataApiKey)) {
+        if (!string.IsNullOrEmpty(this.AppData.EODHistoricalDataApiKey))
+        {
             var quoteDataJson = await http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={ticker}&apikey={this.AppData.EODHistoricalDataApiKey}");
             var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
-            if (quoteData != null && quoteData?.Close != null) {
+            if (quoteData != null && quoteData?.Close != null)
+            {
                 bool usePercent = quoteData.Volume >= 0;
-                UpdateInvestmentsPrice(investments, quoteData.Close, quoteData.PreviousClose, usePercent? quoteData.ChangeP : null, usePercent ? UnixTimeStampToDateTime(quoteData.Timestamp) : null);
+                UpdateInvestmentsPrice(investments, quoteData.Close, quoteData.PreviousClose, usePercent ? quoteData.ChangeP : null, usePercent ? UnixTimeStampToDateTime(quoteData.Timestamp) : null);
             }
         }
     }
 
-    public static void UpdateInvestmentsPrice(List<Investment> investments, double? price, double? previousClose, double? percentChange, DateTime? lastUpdated) 
+    public static void UpdateInvestmentsPrice(List<Investment> investments, double? price, double? previousClose, double? percentChange, DateTime? lastUpdated)
     {
         foreach (var investment in investments)
         {
             investment.Price = price;
-            investment.PreviousClose = previousClose; 
+            investment.PreviousClose = previousClose;
             investment.PercentChange = percentChange;
             investment.LastUpdated = lastUpdated;
 
@@ -645,49 +795,56 @@ public string EstimatePortfolio()
         }
     }
 
-    public static DateTime? UnixTimeStampToDateTime( int? unixTimeStamp )
+    public static DateTime? UnixTimeStampToDateTime(int? unixTimeStamp)
     {
         if (!unixTimeStamp.HasValue) return null;
         // Unix timestamp is seconds past epoch
         var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-        dateTime = dateTime.AddSeconds( unixTimeStamp ?? 0 ).ToLocalTime();
+        dateTime = dateTime.AddSeconds(unixTimeStamp ?? 0).ToLocalTime();
         return dateTime;
     }
 
-    public static DateTime PreviousMarketClose(DateTime dateTime) {
+    public static DateTime PreviousMarketClose(DateTime dateTime)
+    {
         return MarketClose(dateTime, -1);
     }
 
-    private static DateTime NextMarketClose(DateTime dateTime) {
+    private static DateTime NextMarketClose(DateTime dateTime)
+    {
         return MarketClose(dateTime, 1);
     }
-    
-    private static DateTime MarketClose(DateTime dateTime, int direction) {
+
+    private static DateTime MarketClose(DateTime dateTime, int direction)
+    {
         DateTime marketCloseDay;
-        if (direction == -1) {
+        if (direction == -1)
+        {
             marketCloseDay = dateTime.AddDays(direction);
-        } else {
+        }
+        else
+        {
             marketCloseDay = dateTime;
         }
 
-        switch (GetMarketDay(marketCloseDay)) {
+        switch (GetMarketDay(marketCloseDay))
+        {
             case MarketDay.Holiday:
             case MarketDay.WeekEnd:
                 return MarketClose(marketCloseDay.AddDays(direction), direction);
             case MarketDay.HalfDay:
-            {
-                var datetime = new DateTime(marketCloseDay.Year, marketCloseDay.Month, marketCloseDay.Day, 13, 0, 0);
-                var datetimeutc = TimeZoneInfo.ConvertTimeToUtc(datetime, GetEasternTimeZoneInfo());
-                var datetimelocal = TimeZoneInfo.ConvertTimeFromUtc(datetimeutc, TimeZoneInfo.Local);
-                return datetimelocal;
-            }
+                {
+                    var datetime = new DateTime(marketCloseDay.Year, marketCloseDay.Month, marketCloseDay.Day, 13, 0, 0);
+                    var datetimeutc = TimeZoneInfo.ConvertTimeToUtc(datetime, GetEasternTimeZoneInfo());
+                    var datetimelocal = TimeZoneInfo.ConvertTimeFromUtc(datetimeutc, TimeZoneInfo.Local);
+                    return datetimelocal;
+                }
             default:
-            {
-                var datetime = new DateTime(marketCloseDay.Year, marketCloseDay.Month, marketCloseDay.Day, 16, 0, 0);
-                var datetimeutc = TimeZoneInfo.ConvertTimeToUtc(datetime, GetEasternTimeZoneInfo());
-                var datetimelocal = TimeZoneInfo.ConvertTimeFromUtc(datetimeutc, TimeZoneInfo.Local);
-                return datetimelocal;
-            }
+                {
+                    var datetime = new DateTime(marketCloseDay.Year, marketCloseDay.Month, marketCloseDay.Day, 16, 0, 0);
+                    var datetimeutc = TimeZoneInfo.ConvertTimeToUtc(datetime, GetEasternTimeZoneInfo());
+                    var datetimelocal = TimeZoneInfo.ConvertTimeFromUtc(datetimeutc, TimeZoneInfo.Local);
+                    return datetimelocal;
+                }
         }
     }
 
@@ -700,7 +857,8 @@ public string EstimatePortfolio()
         return tz;
     }
 
-    enum MarketDay {
+    enum MarketDay
+    {
         MarketDay,
         Holiday,
         HalfDay,
@@ -739,18 +897,22 @@ public string EstimatePortfolio()
         new(2025, 12, 24),
     ];
 
-    private static MarketDay GetMarketDay(DateTime dateTime) {
-        switch (dateTime.DayOfWeek) {
-            case DayOfWeek.Saturday: 
+    private static MarketDay GetMarketDay(DateTime dateTime)
+    {
+        switch (dateTime.DayOfWeek)
+        {
+            case DayOfWeek.Saturday:
             case DayOfWeek.Sunday:
                 return MarketDay.WeekEnd;
             default:
                 var date = dateTime.Date;
-                if (holidays.Contains(date)) {
+                if (holidays.Contains(date))
+                {
                     return MarketDay.Holiday;
                 }
 
-                if (halfDays.Contains(date)) {
+                if (halfDays.Contains(date))
+                {
                     return MarketDay.HalfDay;
                 }
 

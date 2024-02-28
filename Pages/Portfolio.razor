@@ -519,11 +519,8 @@ else if (appData is not null && appData.FamilyData is not null)
                                                         </td>
                                                         <td style=text-align:right;padding-left:8px colspan=2>
                                                             <b>@(FormatUtilities.FormatMoney(appData.FamilyData.Value))</b>
-                                                            @{
-                                                                var (change2, percentChange2) = portfolioChange();
-                                                            }
-                                                            <br />change: <i>@((MarkupString)FormatUtilities.FormatMoney(change2, true))</i>
-                                                            <br />% change: <i>@((MarkupString)FormatUtilities.FormatPercent3WithColor(percentChange2))</i>
+                                                            <br />change: <i>@((MarkupString)FormatUtilities.FormatMoney(appData.FamilyData.Change, true))</i>
+                                                            <br />% change: <i>@((MarkupString)FormatUtilities.FormatPercent3WithColor(appData.FamilyData.PercentChange))</i>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -684,11 +681,8 @@ else if (appData is not null && appData.FamilyData is not null)
                                                         </td>
                                                         <td style=text-align:right;padding-left:8px colspan=2>
                                                             <b>@(FormatUtilities.FormatMoney(appData.FamilyData.Value))</b>
-                                                            @{
-                                                                var (change, percentChange) = portfolioChange();
-                                                            }
-                                                            <br />change: <i>@((MarkupString)FormatUtilities.FormatMoney(change, true))</i>
-                                                            <br />% change: <i>@((MarkupString)FormatUtilities.FormatPercent3WithColor(percentChange))</i>
+                                                            <br />change: <i>@((MarkupString)FormatUtilities.FormatMoney(appData.FamilyData.Change, true))</i>
+                                                            <br />% change: <i>@((MarkupString)FormatUtilities.FormatPercent3WithColor(appData.FamilyData.PercentChange))</i>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -783,11 +777,8 @@ else if (appData is not null && appData.FamilyData is not null)
                                                     </tr>
                                                     <tr>
                                                         <td colspan=2 style=text-align:right;padding-left:8px>
-                                                            @{
-                                                                var (change4, percentChange4) = portfolioChange();
-                                                            }
-                                                            change: <i>@((MarkupString)FormatUtilities.FormatMoney(change4, true))</i>
-                                                            <br />% change: <i>@((MarkupString)FormatUtilities.FormatPercent3WithColor(percentChange4))</i>
+                                                            change: <i>@((MarkupString)FormatUtilities.FormatMoney(appData.FamilyData.Change, true))</i>
+                                                            <br />% change: <i>@((MarkupString)FormatUtilities.FormatPercent3WithColor(appData.FamilyData.PercentChange))</i>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -941,11 +932,8 @@ else if (appData is not null && appData.FamilyData is not null)
                                                     </tr>
                                                     <tr>
                                                         <td colspan=4 style=text-align:right;padding-left:8px>
-                                                            @{
-                                                                var (change3, percentChange3) = portfolioChange();
-                                                            }
-                                                            change: <i>@((MarkupString)FormatUtilities.FormatMoney(change3, true))</i>
-                                                            <br />% change: <i>@((MarkupString)FormatUtilities.FormatPercent3WithColor(percentChange3))</i>
+                                                            change: <i>@((MarkupString)FormatUtilities.FormatMoney(appData.FamilyData.Change, true))</i>
+                                                            <br />% change: <i>@((MarkupString)FormatUtilities.FormatPercent3WithColor(appData.FamilyData.PercentChange))</i>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -1326,30 +1314,6 @@ else if (appData is not null && appData.FamilyData is not null)
             {
                 Navigation.NavigateTo("/portfolio-tracker/refresh-prices");
             }
-        }
-    }
-
-    private (double? change, double? percentChange) portfolioChange()
-    {
-        if (appData.FamilyData is not null)
-        {
-            double? change = 0.0;
-            double? total = 0.0;
-            foreach (var investment in appData.FamilyData.GroupedInvestments)
-            {
-                total += investment.Value ?? 0.0;
-                if (investment.PercentChange != null)
-                {
-                    change += (investment.Price - investment.PreviousClose) * investment.Shares;
-                }
-            }
-
-            var startOfDayTotal = total - change;
-            return change == 0.0 ? (null, null) : (change, change / startOfDayTotal * 100.0);
-        }
-        else
-        {
-            return (null, null);
         }
     }
 
