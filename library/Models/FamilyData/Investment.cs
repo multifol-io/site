@@ -362,8 +362,34 @@ public class Investment : INotifyPropertyChanged
     }
 
     public double? PreviousClose { get; set; }
-    public double? PercentChange { get; set; }
-    public DateTime? LastUpdated { get; set; }
+
+    private double? _PercentChange;
+    public double? PercentChange
+    {
+        get
+        {
+            return _PercentChange;
+        }
+        set
+        {
+            _PercentChange = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private DateTime? _LastUpdated;
+    public DateTime? LastUpdated
+    {
+        get
+        {
+            return _LastUpdated;
+        }
+        set
+        {
+            _LastUpdated = value;
+            OnPropertyChanged();
+        }
+    }
 
     [JsonIgnore]
     public double Percentage { get; set; }
