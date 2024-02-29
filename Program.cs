@@ -20,6 +20,7 @@ string? CurrentProfileName = null;
 string? EODHistoricalDataApiKey = null;
 if (lsa != null)
 {
+    builder.Services.AddScoped<IProfileUtility>(sp => new BrowserProfileUtility(lsa));
     CurrentProfileName = await lsa.GetValueAsync<string>("CurrentProfileName");
     EODHistoricalDataApiKey = await lsa.GetValueAsync<string>("EODHistoricalDataApiKey");
 }

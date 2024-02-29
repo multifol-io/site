@@ -3,14 +3,12 @@ using System.Text.Json.Serialization;
 
 namespace Models;
 
-public static class ProfileUtilities
+public class BrowserProfileUtility(LocalStorageAccessor localStorageAccessor) : IProfileUtility
 {
-    public static string Value { get; set; } = "";
-    public static string StoredJson { get; set; } = "";
+    private string StoredJson { get; set; } = "";
+    private LocalStorageAccessor LocalStorageAccessor { get; set; } = localStorageAccessor;
 
-    public static LocalStorageAccessor? LocalStorageAccessor { get; set; }
-
-    public static async Task Save(string? key, FamilyData? familyData)
+    public async Task Save(string? key, FamilyData? familyData)
     {
         var options = new JsonSerializerOptions() 
         {
@@ -30,7 +28,7 @@ public static class ProfileUtilities
         }
     }
 
-    public static async Task Save(string? key, string familyDataJson)
+    public async Task Save(string? key, string familyDataJson)
     {
         if (key is not null) {
             await LocalStorageAccessor!.SetValueAsync(key, familyDataJson);
@@ -38,13 +36,13 @@ public static class ProfileUtilities
     }
 
 
-    public static async Task<string> GetProfileData(string profileName)
+    public async Task<string> GetProfileData(string profileName)
     {
         var profileData = await LocalStorageAccessor!.GetValueAsync<string>(profileName);
         return profileData;
     }
 
-    public static async Task Load(IAppData appData)
+    public async Task Load(IAppData appData)
     {
         ArgumentNullException.ThrowIfNull(appData);
 
@@ -81,12 +79,12 @@ public static class ProfileUtilities
         }
     }
 
-    public static async Task ClearAllAsync()
+    public async Task ClearAllAsync()
     {
         await LocalStorageAccessor!.Clear();
     }
 
-    public static async Task<List<String>> GetProfileNames()
+    public async Task<List<String>> GetProfileNames()
     {
         var keys = new List<string>();
         var keysJsonElement = await LocalStorageAccessor!.GetKeys();

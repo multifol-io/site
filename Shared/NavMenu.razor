@@ -2,6 +2,7 @@
 @inject NavigationManager Navigation
 @inject IAppData appData
 @inject LocalStorageAccessor LocalStorageAccessor
+@inject IProfileUtility ProfileUtilities
 @using Models
 
 <div class="top-row ps-3 navbar navbar-dark">
@@ -86,8 +87,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ProfileUtilities.LocalStorageAccessor = LocalStorageAccessor;
-
         var profileNames = await ProfileUtilities.GetProfileNames();
 
         if (appData.CurrentProfileName != null && profileNames.Contains(appData.CurrentProfileName))
