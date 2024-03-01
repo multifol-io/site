@@ -3,6 +3,7 @@
 @page "/import-accounts-bh"
 @inject IAppData appData
 @inject NavigationManager Navigation
+@inject IProfileUtility ProfileUtilities
 @inject IList<Fund> Funds
 @inject HttpClient Http
 @using Models
@@ -475,7 +476,7 @@
             }
         }
     }
-    private void finishImport()
+    private async void finishImport()
     {
         if (appData?.ImportResult is not null && appData?.FamilyData is not null) {
             foreach (var updatedAccount in appData.ImportResult.UpdatedAccounts)
@@ -494,6 +495,9 @@
                     appData.FamilyData.Accounts.Add(newAccount);
                 }
             }
+            
+            await appData.FamilyData.UpdatePercentagesAsync();
+            await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
 
             appData.ImportResult = null;
             Navigation.NavigateTo("/portfolio-tracker");
