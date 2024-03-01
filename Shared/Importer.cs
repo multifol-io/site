@@ -360,7 +360,7 @@ public class Importer {
 
         // handle the separate PLAN section if this Vanguard account has a 401(k) plan in the CSV file.
         chunks = rowEnumerator.Current;
-        while (chunks.Length == 7)
+        while (chunks != null && chunks.Length == 7)
         {
             var planName = chunks[1];
             var investmentName = chunks[2];
