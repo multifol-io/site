@@ -23,6 +23,14 @@ public class Account : INotifyPropertyChanged
         }
     }
 
+    public string ShortTitle
+    {
+        get
+        {
+            return (Identifier != null ? Identifier + " " : "") + AccountType + (Note != null ? $" ({Note})" : "");
+        }
+    }
+
     [JsonIgnore]
     public Investment? SelectedInvestment { get; set; }
     [JsonIgnore]
