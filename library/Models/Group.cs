@@ -1,11 +1,4 @@
-﻿using DocumentFormat.OpenXml.Presentation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Models;
+﻿namespace Models;
 
 public class Group<T, U>(T groupInfo, List<U> items) : List<U>(items) where U : class
 {

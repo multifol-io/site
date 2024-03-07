@@ -24,6 +24,7 @@ public class FamilyData : INotifyPropertyChanged
         People = [];
         Questions = [];
         RetirementData = new();
+        EmergencyFund = new();
 
         People.Add(new Person() { Identifier = "person 1", FamilyData = this, PersonIndex = 0 });
         People.Add(new Person() { Identifier = "person 2", FamilyData = this, PersonIndex = 1 });
@@ -40,6 +41,8 @@ public class FamilyData : INotifyPropertyChanged
             person.PersonIndex = personIndex;
             person.SetBackPointers(this);
         }
+
+        EmergencyFund.SetBackPointer(this);
     }
 
     [JsonIgnore]
@@ -50,7 +53,7 @@ public class FamilyData : INotifyPropertyChanged
 
     public string? Title { get; set; }
     public RetirementData RetirementData { get; set; }
-    public EmergencyFund EmergencyFund { get; set; } = new();
+    public EmergencyFund EmergencyFund { get; set; }
 
     public bool DebtsComplete
     {
@@ -59,6 +62,8 @@ public class FamilyData : INotifyPropertyChanged
             return ((Debts.Count == 0 && DebtFree == TriState.True) || Debts.Count > 0);
         }
     }
+
+    public double? ValueInXUnits { get { return valueInXUnits; } set { valueInXUnits = value; OnPropertyChanged(); } }
 
     public TriState DebtFree { get; set; }
     public List<Debt> Debts { get; set; }
@@ -256,6 +261,16 @@ public class FamilyData : INotifyPropertyChanged
         }
     }
 
+    [JsonIgnore] // added in 2/2024...but want to stop now.
+    public double ActualFixedAssetsAllocation
+    {
+        get
+        {
+            return ActualBondAllocation + ActualCashAllocation;
+        }
+    }
+
+
     private double _ActualBondAllocation;
     [JsonIgnore] // added in 2/2024...but want to stop now.
     public double ActualBondAllocation
@@ -268,6 +283,7 @@ public class FamilyData : INotifyPropertyChanged
         {
             _ActualBondAllocation = value;
             OnPropertyChanged();
+            OnPropertyChanged("ActualFixedAssetsAllocation");
         }
     }
 
@@ -298,6 +314,7 @@ public class FamilyData : INotifyPropertyChanged
         {
             _ActualCashAllocation = value;
             OnPropertyChanged();
+            OnPropertyChanged("ActualFixedAssetsAllocation");
         }
     }
 
@@ -333,6 +350,7 @@ public class FamilyData : INotifyPropertyChanged
         {
             _Value = value;
             OnPropertyChanged();
+            UpdateValueInXUnits();
         }
     }
 
@@ -578,6 +596,8 @@ public class FamilyData : INotifyPropertyChanged
         }
         Value = totalValue;
 
+        UpdateValueInXUnits();
+
         foreach (var account in Accounts)
         {
             account.Percentage = account.Value / totalValue * 100;
@@ -703,6 +723,7 @@ public class FamilyData : INotifyPropertyChanged
 
     [JsonIgnore]
     public SortedDictionary<string, List<Investment>>? TickersToUpdate;
+    private double? valueInXUnits;
 
     public async Task RefreshPrices(HttpClient http)
     {
@@ -813,7 +834,14 @@ public class FamilyData : INotifyPropertyChanged
             investment.Price = price;
             investment.PreviousClose = previousClose;
             investment.PercentChange = percentChange;
-            investment.LastUpdated = lastUpdated;
+            if (lastUpdated.HasValue)
+            {
+                investment.LastUpdated = lastUpdated.Value.AddMinutes(15);
+            }
+            else
+            {
+                investment.LastUpdated = lastUpdated;
+            }
 
             investment.UpdateValue();
         }
@@ -942,5 +970,16 @@ public class FamilyData : INotifyPropertyChanged
 
                 return MarketDay.MarketDay;
         }
+    }
+
+    internal void UpdateValueInXUnits()
+    {
+        double? valueInXUnits = (double)(Value) / (double)(EmergencyFund.AnnualExpenses ?? 0.0);
+        if (valueInXUnits.HasValue && (double.IsNaN(valueInXUnits.Value) || double.IsInfinity(valueInXUnits.Value)))
+        {
+            valueInXUnits = null;
+        }
+
+        ValueInXUnits = valueInXUnits;
     }
 }

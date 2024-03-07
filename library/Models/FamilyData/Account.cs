@@ -286,6 +286,20 @@ public class Account : INotifyPropertyChanged
         }
     }
 
+    public int TaxTypeOrder
+    {
+        get
+        {
+            return TaxType2 switch
+            {
+                "Pre-Tax" => 1,
+                "Taxable" => 2,
+                "Post-Tax" => 3,
+                _ => 4
+            };
+        }
+    }
+
     public int PortfolioReviewOrder {
         get {
             var ownerCategory = (Owner + 1) * 7; // 7=Joint, 14=First Person, 21= Second Person

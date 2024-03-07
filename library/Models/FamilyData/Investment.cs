@@ -89,6 +89,11 @@ public class Investment : INotifyPropertyChanged
     }
 
     [JsonIgnore]
+    public string? AccountName { get; set; }
+
+    public bool IsAccountHeader { get { return AccountName != null; } }
+
+    [JsonIgnore]
     public bool IsAssetTypeUnknown
     {
         get {
