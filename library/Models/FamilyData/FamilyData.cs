@@ -53,6 +53,10 @@ public class FamilyData : INotifyPropertyChanged
 
     public string? Title { get; set; }
     public RetirementData RetirementData { get; set; }
+
+    private DateTime? lastUpdated;
+    public DateTime? LastUpdated { get { return lastUpdated; } set { lastUpdated = value; OnPropertyChanged(); } }
+
     public EmergencyFund EmergencyFund { get; set; }
 
     public bool DebtsComplete
@@ -823,6 +827,20 @@ public class FamilyData : INotifyPropertyChanged
             {
                 bool usePercent = quoteData.Volume >= 0;
                 UpdateInvestmentsPrice(investments, quoteData.Close, quoteData.PreviousClose, usePercent ? quoteData.ChangeP : null, usePercent ? UnixTimeStampToDateTime(quoteData.Timestamp) : null);
+
+                if (usePercent)
+                {
+                    var timeStamp = UnixTimeStampToDateTime(quoteData.Timestamp);
+                    if (timeStamp != null)
+                    {
+                        timeStamp = timeStamp.Value.AddMinutes(15);
+                    }
+
+                    if (LastUpdated == null || timeStamp > LastUpdated.Value)
+                    {
+                        LastUpdated = timeStamp;
+                    }
+                }
             }
         }
     }
