@@ -21,10 +21,3 @@ public class Group<T, U>(T groupInfo, List<U> items) : List<U>(items) where U : 
         return groups;
     }
 }
-
-public class HoldingGroupInfo(string investmentOrderCategory)
-{
-    public string InvestmentOrderCategory { get; private set; } = investmentOrderCategory;
-    public double? Value { get; set; }
-}
-

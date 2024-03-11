@@ -8,6 +8,7 @@ public interface IAppData {
     public string? LastPageUri {get; set;}
     public IRSData? IRSData {get; set;}
     public string? EODHistoricalDataApiKey { get; set;}
+    public bool ShowValues { get; set; }
     public int Year {get; set;} 
     public ImportResult? ImportResult { get; set; }
     public bool ApplyStockSizeRules { get; set; }
