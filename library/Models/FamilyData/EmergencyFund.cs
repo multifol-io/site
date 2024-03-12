@@ -33,6 +33,7 @@ public class EmergencyFund : INotifyPropertyChanged
             {
                 FamilyData.UpdateValueInXUnits();
                 FamilyData.UpdateChangeInXUnits();
+                FamilyData.UpdateXHasValue();
             }
         }
     }

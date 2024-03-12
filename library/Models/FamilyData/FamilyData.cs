@@ -68,6 +68,7 @@ public class FamilyData : INotifyPropertyChanged
     }
 
     public double? ValueInXUnits { get { return valueInXUnits; } set { valueInXUnits = value; OnPropertyChanged(); } }
+    public bool XHasValue { get { return xHasValue; } set { xHasValue = value; OnPropertyChanged(); } }
     public double? ChangeInXUnits { get { return changeInXUnits; } set { changeInXUnits = value; OnPropertyChanged(); } }
 
     public TriState DebtFree { get; set; }
@@ -730,6 +731,7 @@ public class FamilyData : INotifyPropertyChanged
     [JsonIgnore]
     public SortedDictionary<string, List<Investment>>? TickersToUpdate;
     private double? valueInXUnits;
+    private bool xHasValue;
     private double? changeInXUnits;
 
     public async Task RefreshPrices(HttpClient http)
@@ -1013,5 +1015,10 @@ public class FamilyData : INotifyPropertyChanged
         }
 
         ChangeInXUnits = changeInXUnits;
+    }
+
+    internal void UpdateXHasValue()
+    {
+        XHasValue = EmergencyFund.AnnualExpenses.HasValue && EmergencyFund.AnnualExpenses != 0.0;
     }
 }
