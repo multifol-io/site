@@ -1008,7 +1008,7 @@ public class FamilyData : INotifyPropertyChanged
 
     internal void UpdateChangeInXUnits()
     {
-        double? changeInXUnits = (double)(Change) / (double)(EmergencyFund.AnnualExpenses ?? 0.0);
+        double? changeInXUnits = (double?)(Change) / (double)(EmergencyFund.AnnualExpenses ?? 0.0);
         if (changeInXUnits.HasValue && (double.IsNaN(changeInXUnits.Value) || double.IsInfinity(changeInXUnits.Value)))
         {
             changeInXUnits = null;
