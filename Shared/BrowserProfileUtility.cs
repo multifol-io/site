@@ -74,7 +74,7 @@ public class BrowserProfileUtility(LocalStorageAccessor localStorageAccessor) : 
                 }
             }
 
-            await loadedFamilyData.UpdatePercentagesAsync();
+            await loadedFamilyData.UpdateStatsAsync();
             appData.FamilyData = loadedFamilyData;
         }
     }

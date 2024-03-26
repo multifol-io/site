@@ -496,7 +496,7 @@
                 }
             }
             
-            await appData.FamilyData.UpdatePercentagesAsync();
+            await appData.FamilyData.UpdateStatsAsync();
             await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
 
             appData.ImportResult = null;

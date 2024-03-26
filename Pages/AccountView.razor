@@ -797,7 +797,7 @@ else if (appData?.FamilyData == null)
         account.Edit = !account.Edit;
         if (!account.Edit)
         {
-            await appData.FamilyData!.UpdatePercentagesAsync();
+            await appData.FamilyData!.UpdateStatsAsync();
             await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         }
     }
@@ -890,7 +890,7 @@ else if (appData?.FamilyData == null)
             await selectedInvestment.CalculateIBondValue();
         }
 
-        await appData.FamilyData!.UpdatePercentagesAsync();
+        await appData.FamilyData!.UpdateStatsAsync();
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
     }
 
@@ -934,7 +934,7 @@ else if (appData?.FamilyData == null)
                 {
                     account.Investments.Remove(selectedInvestment);
                     account.SelectedInvestment = null;
-                    await appData.FamilyData.UpdatePercentagesAsync();
+                    await appData.FamilyData.UpdateStatsAsync();
                     await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
                 }
             }
@@ -1170,7 +1170,7 @@ else if (appData?.FamilyData == null)
         {
             var accountToDelete = appData.FamilyData.Accounts[accountIndex];
             appData.FamilyData.Accounts.Remove(accountToDelete);
-            await appData.FamilyData.UpdatePercentagesAsync();
+            await appData.FamilyData.UpdateStatsAsync();
             await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         }
     }
@@ -1203,7 +1203,7 @@ else if (appData?.FamilyData == null)
         refreshButtonText = "Updating...";
         refreshButtonDisabled = true;
         await appData.FamilyData!.RefreshPrices(Http);
-        await appData.FamilyData!.UpdatePercentagesAsync();
+        await appData.FamilyData!.UpdateStatsAsync();
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         refreshButtonText = "🔃 Prices";
         refreshButtonDisabled = false;
@@ -1262,7 +1262,7 @@ else if (appData?.FamilyData == null)
                 }
             }
 
-            await appData.FamilyData.UpdatePercentagesAsync();
+            await appData.FamilyData.UpdateStatsAsync();
             await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
         }
 

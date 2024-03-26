@@ -339,9 +339,31 @@ public class FamilyData : INotifyPropertyChanged
         }
     }
 
-    public double OverallER { get; set; }
-    public int InvestmentsMissingER { get; set; }
-    public double ExpensesTotal { get; set; }
+    private double accountCount;
+    private double brokerCount;
+    public double AccountCount { get { return accountCount; } set { accountCount = value; OnPropertyChanged(); } }
+    public double BrokerCount { get { return brokerCount; } set { brokerCount = value; OnPropertyChanged(); } }
+    
+    private double preTaxValue;
+    private double taxableValue;
+    private double postTaxValue;
+    public double PreTaxValue { get { return preTaxValue; } set { preTaxValue = value; OnPropertyChanged(); } }
+    public double TaxableValue { get { return taxableValue; } set { taxableValue = value; OnPropertyChanged(); } }
+    public double PostTaxValue { get { return postTaxValue; } set { postTaxValue = value; OnPropertyChanged(); } }
+
+    private double preTaxPercentage;
+    private double taxablePercentage;
+    private double postTaxPercentage;
+    public double PreTaxPercentage { get { return preTaxPercentage; } set { preTaxPercentage = value; OnPropertyChanged(); } }
+    public double TaxablePercentage { get { return taxablePercentage; } set { taxablePercentage = value; OnPropertyChanged(); } }
+    public double PostTaxPercentage { get { return postTaxPercentage; } set { postTaxPercentage = value; OnPropertyChanged(); } }
+
+    private double overallER;
+    private int investmentsMissingER;
+    private double expensesTotal;
+    public double OverallER { get { return overallER; } set { overallER = value; OnPropertyChanged(); } }
+    public int InvestmentsMissingER { get { return investmentsMissingER; } set { investmentsMissingER = value; OnPropertyChanged(); } }
+    public double ExpensesTotal { get { return expensesTotal; } set { expensesTotal = value; OnPropertyChanged(); } }
 
     public List<Person> People { get; set; }
 
@@ -577,17 +599,26 @@ public class FamilyData : INotifyPropertyChanged
         }
     }
 
-    public async Task UpdatePercentagesAsync()
+    public async Task UpdateStatsAsync()
     {
         StockBalance = 0.0;
         InternationalStockBalance = 0.0;
         BondBalance = 0.0;
         CashBalance = 0.0;
         OtherBalance = 0.0;
+        
         OverallER = 0.0;
         InvestmentsMissingER = 0;
         ExpensesTotal = 0;
 
+        PreTaxValue = 0.0;
+        TaxableValue = 0.0;
+        PostTaxValue = 0.0;
+
+        AccountCount = 0;
+        BrokerCount = 0;
+        var brokerList = new List<string>();
+        
         double totalValue = 0.0;
         foreach (var account in Accounts)
         {
@@ -599,8 +630,29 @@ public class FamilyData : INotifyPropertyChanged
 
             account.Value = accountValue;
             totalValue += accountValue;
+
+            switch (account.TaxType2)
+            {
+                case "Pre-Tax":
+                    PreTaxValue += accountValue; break;
+                case "Taxable":
+                    TaxableValue += accountValue; break;
+                case "Post-Tax":
+                    PostTaxValue += accountValue; break;
+            }
+
+            AccountCount++;
+            if (!string.IsNullOrEmpty(account.Custodian) && !brokerList.Contains(account.Custodian.ToLowerInvariant()))
+            {
+                brokerList.Add(account.Custodian.ToLowerInvariant());
+            }
         }
+
+        BrokerCount = brokerList.Count;
         Value = totalValue;
+        PreTaxPercentage = PreTaxValue / Value;
+        TaxablePercentage = TaxableValue / Value;
+        PostTaxPercentage = PostTaxValue / Value;
 
         UpdateValueInXUnits();
 

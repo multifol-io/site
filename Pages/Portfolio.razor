@@ -1307,7 +1307,7 @@ else if (appData is not null && appData.FamilyData is not null)
         if (appData?.FamilyData != null)
         {
             await appData.FamilyData.RefreshPrices(Http);
-            await appData.FamilyData.UpdatePercentagesAsync();
+            await appData.FamilyData.UpdateStatsAsync();
             await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
             refreshButtonDisabled = false;
             refreshButtonText = "🔃 Prices";

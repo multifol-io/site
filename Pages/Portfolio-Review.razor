@@ -1196,7 +1196,7 @@ else
         {
             appData.FamilyData.Accounts[accountIndex].Investments.RemoveAt(investmentIndex);
             Navigation.NavigateTo("/portfolio-review/reload");
-            await appData.FamilyData.UpdatePercentagesAsync();
+            await appData.FamilyData.UpdateStatsAsync();
         }
     }
 
@@ -1228,7 +1228,7 @@ else
         {
             appData.FamilyData.Accounts.RemoveAt(accountIndex);
             Navigation.NavigateTo("/portfolio-review/reload");
-            await appData.FamilyData.UpdatePercentagesAsync();
+            await appData.FamilyData.UpdateStatsAsync();
         }
     }
 

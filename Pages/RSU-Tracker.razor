@@ -458,7 +458,7 @@
     private async Task refreshPrices() {
         refreshButtonText = "Updating...";
         await appData.FamilyData!.RefreshPrices(Http);
-        await appData.FamilyData.UpdatePercentagesAsync();
+        await appData.FamilyData.UpdateStatsAsync();
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
 
         if (appData?.FamilyData?.TickersToUpdate?.Count > 0)

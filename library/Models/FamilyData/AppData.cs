@@ -14,7 +14,7 @@ public class AppData : IAppData, INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public FamilyData? FamilyData { get; set; }
-    public string? CurrentProfileName {get; set;}
+    public string? CurrentProfileName {get { return currentProfileName; } set { currentProfileName = value; OnPropertyChanged(); } }
     public string? LastPageUri {get; set;}
     public IRSData? IRSData {get; set;}
     public string? EODHistoricalDataApiKey { get; set;}
@@ -26,5 +26,6 @@ public class AppData : IAppData, INotifyPropertyChanged
     public bool ApplyTaxEfficientPlacementRules { get; set; }
     public bool AllowAfterTaxPercentage { get; set;}
 
+    private string? currentProfileName;
     private bool showValues;
 }
