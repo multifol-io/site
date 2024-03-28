@@ -795,8 +795,8 @@ public class FamilyData : INotifyPropertyChanged
         var nextMarketClose = NextMarketClose(now).ToLocalTime();
         var nextMarketOpen = new DateTime(nextMarketClose.Year, nextMarketClose.Month, nextMarketClose.Day, 13, 30, 00).ToLocalTime();
         var marketIsBeforeOpen = DateTime.Now < nextMarketOpen;
-        bool marketIsOpen = DateTime.Now >= nextMarketOpen && DateTime.Now <= nextMarketClose;
-        var marketIsAfterClose = DateTime.Now > nextMarketClose;
+        bool marketIsOpen = DateTime.Now >= nextMarketOpen && DateTime.Now <= nextMarketClose.AddMinutes(15);
+        var marketIsAfterClose = DateTime.Now > nextMarketClose.AddMinutes(15);
         foreach (var account in this.Accounts)
         {
             foreach (var investment in account.Investments)
@@ -804,7 +804,7 @@ public class FamilyData : INotifyPropertyChanged
                 bool fetchQuote = false;
                 if (investment.IsStock || investment.IsETF)
                 {
-                    fetchQuote = investment.LastUpdated == null || (marketIsBeforeOpen && investment.LastUpdated < previousMarketClose) || marketIsOpen || (marketIsAfterClose && investment.LastUpdated < nextMarketClose);
+                    fetchQuote = investment.LastUpdated == null || (marketIsBeforeOpen && investment.LastUpdated < previousMarketClose) || marketIsOpen || (marketIsAfterClose && investment.LastUpdated < nextMarketClose.AddMinutes(15));
                 }
                 else if (investment.IsFund)
                 {

@@ -317,6 +317,7 @@ public class Investment : INotifyPropertyChanged
         }
         set {
             _Shares = value;
+            OnPropertyChanged();
             UpdateValue();
         }
     }
