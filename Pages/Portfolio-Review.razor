@@ -1134,10 +1134,11 @@ else
 
     private async Task OnDataFilesImport(InputFileChangeEventArgs e)
     {
-        if (appData?.FamilyData is not null)
+        var namedStreams = BlazorUtilities.GetNamedStreamsFromBrowserFiles(e.GetMultipleFiles());
+
+        if (appData?.FamilyData is not null && namedStreams is not null)
         {
-            var files = e.GetMultipleFiles();
-            ImportResult = await Importer.ImportDataFiles(files, Funds, appData.FamilyData.Accounts);
+            ImportResult = await Importer.ImportDataFiles(namedStreams, Funds, appData.FamilyData.Accounts);
             foreach (var account in ImportResult.ImportedAccounts)
             {
                 account.Import = true;

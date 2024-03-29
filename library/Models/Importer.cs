@@ -1,47 +1,48 @@
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using Microsoft.AspNetCore.Components.Forms;
-using System.Collections;
-using System;
 
 namespace Models;
 
-public class Importer {
-    public static async Task<ImportResult> ImportDataFiles(IReadOnlyList<IBrowserFile> files, IList<Fund> funds, List<Account> existingAccounts)
+public class Importer
+{
+    public static async Task<ImportResult> ImportDataFiles(IEnumerable<NamedStream> namedStreams, IList<Fund> funds, List<Account> existingAccounts)
     {
         ImportResult result = new();
 
-        if (files != null)
+        ArgumentNullException.ThrowIfNull(namedStreams, nameof(namedStreams));
+
+        foreach (var namedStream in namedStreams)
         {
-            foreach (var file in files)
+            if (namedStream.Name.ToLower().EndsWith(".csv"))
             {
-                if (file.Name.ToLower().EndsWith(".csv"))
+                try
                 {
-                    try {
-                        var importedAccountsCSV = await Importer.ImportCSV(file, funds);
-                        result.ImportedAccounts.AddRange(importedAccountsCSV);
-                        result.DataFilesImported++;
-                    } catch (Exception e) {
-                        result.Errors.Add(new ImportError() { Exception = e });
-                    }
-                } else if (file.Name.ToLower().EndsWith(".xlsx")) {
-                    var buffer = new byte[file.Size];
-                    using var stream = file.OpenReadStream();
-                    try
-                    {
-                        var importedAccountsXLSX = await Importer.ImportXLSX(stream, funds);
-                        result.ImportedAccounts.AddRange(importedAccountsXLSX);
-                        result.DataFilesImported++;
-                    }
-                    catch (Exception e)
-                    {
-                        result.Errors.Add(new ImportError() { Exception = e });
-                    }
+                    var importedAccountsCSV = await Importer.ImportCSV(namedStream.Stream, funds);
+                    result.ImportedAccounts.AddRange(importedAccountsCSV);
+                    result.DataFilesImported++;
+                }
+                catch (Exception e)
+                {
+                    result.Errors.Add(new ImportError() { Exception = e });
+                }
+            }
+            else if (namedStream.Name.ToLower().EndsWith(".xlsx"))
+            {
+                using var stream = namedStream.Stream;
+                try
+                {
+                    var importedAccountsXLSX = await Importer.ImportXLSX(stream, funds);
+                    result.ImportedAccounts.AddRange(importedAccountsXLSX);
+                    result.DataFilesImported++;
+                }
+                catch (Exception e)
+                {
+                    result.Errors.Add(new ImportError() { Exception = e });
                 }
             }
         }
 
-        foreach (var importedAccount in result.ImportedAccounts) 
+        foreach (var importedAccount in result.ImportedAccounts)
         {
             bool foundMatch = false;
             foreach (var existingAccount in existingAccounts)
@@ -65,11 +66,11 @@ public class Importer {
 
         return result;
     }
-    
-    public static async Task<List<Account>> ImportCSV(IBrowserFile file, IList<Fund> funds)
+
+    public static async Task<List<Account>> ImportCSV(Stream stream, IList<Fund> funds)
     {
-        try {
-            var stream = file.OpenReadStream();
+        try
+        {
             using var reader = new CsvReader(stream);
             var RowEnumerator = reader.GetRowEnumerator().GetAsyncEnumerator();
             await RowEnumerator.MoveNextAsync();
@@ -119,24 +120,26 @@ public class Importer {
             {
                 throw new InvalidDataException("Importing this CSV file failed. We currently support importing CSV files from Ameriprise, eTrade, Fidelity, JPMorgan Chase, Merrill Edge, Schwab, or Vanguard");
             }
-        } 
-        catch (Exception e) {
-            if (e is InvalidDataException) 
+        }
+        catch (Exception e)
+        {
+            if (e is InvalidDataException)
             {
                 throw;
             }
-            else 
+            else
             {
                 throw new InvalidDataException("Importing this CSV file failed, even though we think it should have worked (we think it was from Ameriprise, eTrade, Fidelity, JPMorgan Chase, Merrill Edge, Schwab, or Vanguard).", e);
             }
         }
     }
 
-    private static async Task<List<Account>> ImportMerrillEdge(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds) {
-        Dictionary<string,Account> accountLookup = [];
+    private static async Task<List<Account>> ImportMerrillEdge(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds)
+    {
+        Dictionary<string, Account> accountLookup = [];
 
         List<Account> importedAccounts = [];
-        string[] chunks;        
+        string[] chunks;
         await rowEnumerator.MoveNextAsync();
         chunks = rowEnumerator.Current;
 
@@ -148,20 +151,22 @@ public class Importer {
             var symbol = FormatUtilities.TrimQuotes(chunks[2]);
             string? investmentName = FormatUtilities.TrimQuotes(chunks[4]);
             double shares = FormatUtilities.ParseDouble(chunks[8]);
-            double value = FormatUtilities.ParseDouble(chunks[10] ?? "0.0", allowCurrency:true);
-            double costBasis = value - FormatUtilities.ParseDouble(chunks[11] ?? "0.0", allowCurrency:true);
+            double value = FormatUtilities.ParseDouble(chunks[10] ?? "0.0", allowCurrency: true);
+            double costBasis = value - FormatUtilities.ParseDouble(chunks[11] ?? "0.0", allowCurrency: true);
 
             accountLookup.TryGetValue(accountNum, out Account? newAccount);
-            if (newAccount == null) {
-                newAccount = new() {
+            if (newAccount == null)
+            {
+                newAccount = new()
+                {
                     Custodian = "Merrill Edge",
                     Note = "*" + accountNum.Substring(accountNum.Length - 4) + " " + accountNickname + " " + accountRegistration
                 };
                 importedAccounts.Add(newAccount);
                 accountLookup.Add(accountNum, newAccount);
             }
-            
-            Investment newInvestment = new () { Funds = funds, Ticker = symbol, Name = (investmentName ?? null), Value = value, Shares = shares, CostBasis = costBasis };
+
+            Investment newInvestment = new() { Funds = funds, Ticker = symbol, Name = (investmentName ?? null), Value = value, Shares = shares, CostBasis = costBasis };
             newAccount?.Investments.Add(newInvestment);
 
             await rowEnumerator.MoveNextAsync();
@@ -171,13 +176,16 @@ public class Importer {
         return importedAccounts;
     }
 
-    private static async Task<List<Account>> ImportJPMorganChase(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds) {
+    private static async Task<List<Account>> ImportJPMorganChase(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds)
+    {
         List<Account> importedAccounts = [];
         await rowEnumerator.MoveNextAsync();
         string[] chunks = rowEnumerator.Current;
         Account? newAccount = null;
-        while (chunks != null && chunks.Length != 0) {
-            try {
+        while (chunks != null && chunks.Length != 0)
+        {
+            try
+            {
                 var symbol = chunks[4];
 
                 string? investmentName;
@@ -188,14 +196,15 @@ public class Importer {
                 double? expenseRatio = null;
 
                 investmentName = chunks[3];
-                value = FormatUtilities.ParseDouble(chunks[15], allowCurrency:true);
-                price = FormatUtilities.ParseDouble(chunks[9], allowCurrency:true);
+                value = FormatUtilities.ParseDouble(chunks[15], allowCurrency: true);
+                price = FormatUtilities.ParseDouble(chunks[9], allowCurrency: true);
                 shares = FormatUtilities.ParseDouble(chunks[6]);
-                costBasis = FormatUtilities.ParseDouble(chunks[22], allowCurrency:true);
+                costBasis = FormatUtilities.ParseDouble(chunks[22], allowCurrency: true);
 
                 if (newAccount == null)
                 {
-                    newAccount = new() {
+                    newAccount = new()
+                    {
                         Custodian = "JP Morgan Chase",
                     };
                     //TODO: there is no account name or number in this file, so importing a second time won't be great given current code.
@@ -203,20 +212,21 @@ public class Importer {
                     importedAccounts.Add(newAccount);
                 }
 
-                Investment newInvestment = new () { Funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares, CostBasis = costBasis };
+                Investment newInvestment = new() { Funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares, CostBasis = costBasis };
                 if (expenseRatio != null)
                 {
                     newInvestment.ExpenseRatio = expenseRatio;
                 }
 
                 newAccount?.Investments.Add(newInvestment);
-            } 
+            }
             catch (Exception e)
             {
                 string? line = null;
-                foreach (var chunk in chunks) {
-                    line += (line == null ? "," : "" )+ chunk.ToString();
-                } 
+                foreach (var chunk in chunks)
+                {
+                    line += (line == null ? "," : "") + chunk.ToString();
+                }
                 Console.WriteLine("skipped line due to error: " + line);
                 Console.WriteLine(e.GetType().Name + " " + e.Message + " " + e.StackTrace);
             }
@@ -226,9 +236,10 @@ public class Importer {
         }
 
         return importedAccounts;
-    } 
+    }
 
-    private static async Task<List<Account>> ImportFidelity(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds) {
+    private static async Task<List<Account>> ImportFidelity(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds)
+    {
         List<Account> importedAccounts = [];
         await rowEnumerator.MoveNextAsync();
         string[] chunks = rowEnumerator.Current;
@@ -236,8 +247,10 @@ public class Importer {
         // Line 0: Account Number,Account Name,Symbol,Description,Quantity,Last Price,Last Price Change,Current Value
         string lastAccountNumber = "";
         Account? newAccount = null;
-        while (chunks != null && chunks.Length != 0) {
-            try {
+        while (chunks != null && chunks.Length != 0)
+        {
+            try
+            {
                 var accountNumber = chunks[0];
                 var accountName = chunks[1];
                 var symbol = chunks[2];
@@ -252,19 +265,22 @@ public class Importer {
                 if (symbol == "Pending Activity")
                 {
                     investmentName = symbol;
-                    value = FormatUtilities.ParseDouble(chunks[6], allowCurrency:true);
+                    value = FormatUtilities.ParseDouble(chunks[6], allowCurrency: true);
                     symbol = "PENDING";
                     expenseRatio = 0.0;
-                } else {
+                }
+                else
+                {
                     investmentName = chunks[3];
-                    value = FormatUtilities.ParseDouble(chunks[7], allowCurrency:true);
-                    price = FormatUtilities.ParseDouble(chunks[5], allowCurrency:true);
+                    value = FormatUtilities.ParseDouble(chunks[7], allowCurrency: true);
+                    price = FormatUtilities.ParseDouble(chunks[5], allowCurrency: true);
                     shares = FormatUtilities.ParseDouble(chunks[4]);
-                    costBasis = FormatUtilities.ParseDouble(chunks[13], allowCurrency:true);
+                    costBasis = FormatUtilities.ParseDouble(chunks[13], allowCurrency: true);
                 }
 
                 // many tickers have "**" at end, signifying money market fund.
-                if (symbol.Length >= 2 && symbol.Substring(symbol.Length-2) == "**") { 
+                if (symbol.Length >= 2 && symbol.Substring(symbol.Length - 2) == "**")
+                {
                     symbol = symbol.Substring(0, symbol.Length - 2);
                     shares = value;
                     price = 1.0;
@@ -272,33 +288,36 @@ public class Importer {
 
                 if (lastAccountNumber != accountNumber)
                 {
-                    newAccount = new() {
+                    newAccount = new()
+                    {
                         Custodian = "Fidelity",
-                        Note = string.Concat("*", accountNumber.AsSpan(accountNumber.Length-4,4))
+                        Note = string.Concat("*", accountNumber.AsSpan(accountNumber.Length - 4, 4))
                     };
                     newAccount.GuessAccountType();
                     importedAccounts.Add(newAccount);
                     lastAccountNumber = accountNumber;
                 }
 
-                Investment newInvestment = new () { Funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares, CostBasis = costBasis };
+                Investment newInvestment = new() { Funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares, CostBasis = costBasis };
                 if (expenseRatio != null)
                 {
                     newInvestment.ExpenseRatio = expenseRatio;
                 }
 
-                if (newInvestment.Ticker == "PENDING" || newInvestment.Ticker == "FCASH") {
+                if (newInvestment.Ticker == "PENDING" || newInvestment.Ticker == "FCASH")
+                {
                     newInvestment.AssetType = AssetTypes.Cash;
                 }
 
                 newAccount?.Investments.Add(newInvestment);
-            } 
+            }
             catch (Exception e)
             {
                 string? line = null;
-                foreach (var chunk in chunks) {
-                    line += (line == null ? "," : "" )+ chunk.ToString();
-                } 
+                foreach (var chunk in chunks)
+                {
+                    line += (line == null ? "," : "") + chunk.ToString();
+                }
                 Console.WriteLine("skipped line due to error: " + line);
                 Console.WriteLine(e.GetType().Name + " " + e.Message + " " + e.StackTrace);
             }
@@ -308,53 +327,64 @@ public class Importer {
         }
 
         return importedAccounts;
-    } 
+    }
 
-    private static async Task<List<Account>> ImportVanguard(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds) {
+    private static async Task<List<Account>> ImportVanguard(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds)
+    {
         List<Account> importedAccounts = [];
-        string[] chunks;        
+        string[] chunks;
         // VANGUARD - blank lines seperates accounts. two blank lines end investment listing.
         // Line 0: Account Number,Investment Name,Symbol,Shares,Share Price,Total Value,
-        
+
         Account? newAccount = null;
-        while (await rowEnumerator.MoveNextAsync()) {
+        while (await rowEnumerator.MoveNextAsync())
+        {
             chunks = rowEnumerator.Current;
 
-            if (chunks.Length == 1) {
-                if (newAccount == null) {
+            if (chunks.Length == 1)
+            {
+                if (newAccount == null)
+                {
                     break;
-                } else {
+                }
+                else
+                {
                     newAccount = null;
                 }
-            } else if (chunks.Length > 1) {
+            }
+            else if (chunks.Length > 1)
+            {
                 var accountNumber = chunks[0];
                 var symbol = chunks[2];
                 var investmentName = chunks[1];
                 double shares = FormatUtilities.ParseDouble(chunks[3]);
-                double price = FormatUtilities.ParseDouble(chunks[4], allowCurrency:true);
-                double value = FormatUtilities.ParseDouble(chunks[5], allowCurrency:true);
+                double price = FormatUtilities.ParseDouble(chunks[4], allowCurrency: true);
+                double value = FormatUtilities.ParseDouble(chunks[5], allowCurrency: true);
                 // costBasis not available in CSV
-                                
-                if (newAccount == null) {
-                    newAccount = new() {
+
+                if (newAccount == null)
+                {
+                    newAccount = new()
+                    {
                         Custodian = "Vanguard",
-                        Note = string.Concat("*", accountNumber.AsSpan(accountNumber.Length-4,4))
+                        Note = string.Concat("*", accountNumber.AsSpan(accountNumber.Length - 4, 4))
                     };
                     importedAccounts.Add(newAccount);
                 }
 
-                Investment newInvestment = new () { Funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares };
+                Investment newInvestment = new() { Funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares };
                 newAccount?.Investments.Add(newInvestment);
             }
         }
 
         newAccount = null;
-        while (await rowEnumerator.MoveNextAsync()) {
+        while (await rowEnumerator.MoveNextAsync())
+        {
             chunks = rowEnumerator.Current;
             if (chunks.Length == 7)
             {
-                    await rowEnumerator.MoveNextAsync();
-                    break;
+                await rowEnumerator.MoveNextAsync();
+                break;
             }
         }
 
@@ -365,18 +395,20 @@ public class Importer {
             var planName = chunks[1];
             var investmentName = chunks[2];
             double shares = FormatUtilities.ParseDouble(chunks[3]);
-            double price = FormatUtilities.ParseDouble(chunks[4], allowCurrency:true);
-            double value = FormatUtilities.ParseDouble(chunks[5], allowCurrency:true);
-                            
-            if (newAccount == null) {
-                newAccount = new() {
+            double price = FormatUtilities.ParseDouble(chunks[4], allowCurrency: true);
+            double value = FormatUtilities.ParseDouble(chunks[5], allowCurrency: true);
+
+            if (newAccount == null)
+            {
+                newAccount = new()
+                {
                     Custodian = "Vanguard",
                     Note = planName
                 };
                 importedAccounts.Add(newAccount);
             }
 
-            Investment newInvestment = new () { Funds = funds, Name = investmentName, Price = price, Value = value, Shares = shares };
+            Investment newInvestment = new() { Funds = funds, Name = investmentName, Price = price, Value = value, Shares = shares };
             newAccount?.Investments.Add(newInvestment);
 
             await rowEnumerator.MoveNextAsync();
@@ -385,25 +417,31 @@ public class Importer {
 
         return importedAccounts;
     }
-                    
-    private static async Task<List<Account>> ImportVanguardOrig(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds) {
+
+    private static async Task<List<Account>> ImportVanguardOrig(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds)
+    {
         List<Account> importedAccounts = [];
-        string[] chunks;        
-                        
+        string[] chunks;
+
         // VANGUARD - orig mutual fund account style - two blank lines end investment listing.
         // Line 0: Fund Account Number,Fund Name,Price,Shares,Total Value,
-        Dictionary<string,Account> accountLookup = [];
+        Dictionary<string, Account> accountLookup = [];
 
         int consecutiveBlanks = 0;
-        while (await rowEnumerator.MoveNextAsync()) {
+        while (await rowEnumerator.MoveNextAsync())
+        {
             chunks = rowEnumerator.Current;
 
-            if (chunks.Length == 1) {
+            if (chunks.Length == 1)
+            {
                 consecutiveBlanks++;
-                if (consecutiveBlanks == 2) {
+                if (consecutiveBlanks == 2)
+                {
                     break;
                 }
-            } else {
+            }
+            else
+            {
                 consecutiveBlanks = 0;
                 var fundAndAccountNum = FormatUtilities.TrimQuotes(chunks[0]).Split('-');
                 var fundNumber = fundAndAccountNum[0];
@@ -412,7 +450,7 @@ public class Importer {
                 string? investmentName = null;
                 foreach (var fund in funds)
                 {
-                    if (fundNumber == fund.VanguardFundId) 
+                    if (fundNumber == fund.VanguardFundId)
                     {
                         symbol = fund.Ticker;
                         investmentName = fund.LongName;
@@ -421,21 +459,22 @@ public class Importer {
                 }
 
                 double shares = FormatUtilities.ParseDouble(chunks[3]);
-                double value = FormatUtilities.ParseDouble(chunks[4], allowCurrency:true);
+                double value = FormatUtilities.ParseDouble(chunks[4], allowCurrency: true);
                 // costBasis not available in CSV
 
                 accountLookup.TryGetValue(accountNum, out Account? newAccount);
                 if (newAccount == null)
                 {
-                    newAccount = new() {
+                    newAccount = new()
+                    {
                         Custodian = "Vanguard",
                         Note = string.Concat("*", accountNum.AsSpan(accountNum.Length - 4))
                     };
                     importedAccounts.Add(newAccount);
                     accountLookup.Add(accountNum, newAccount);
                 }
-                                        
-                Investment newInvestment = new () { Funds = funds, Ticker = symbol, Name = (investmentName ?? null) , Value = value, Shares = shares };
+
+                Investment newInvestment = new() { Funds = funds, Ticker = symbol, Name = (investmentName ?? null), Value = value, Shares = shares };
                 newAccount?.Investments.Add(newInvestment);
             }
         }
@@ -443,31 +482,35 @@ public class Importer {
         return importedAccounts;
     }
 
-    private static async Task<List<Account>> ImportETrade(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds) {
+    private static async Task<List<Account>> ImportETrade(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds)
+    {
         List<Account> importedAccounts = [];
-        string[] chunks;        
+        string[] chunks;
         await rowEnumerator.MoveNextAsync();// account header line
         await rowEnumerator.MoveNextAsync();// accountInfo
         chunks = rowEnumerator.Current;
-                    
-        Account newAccount = new() {
-                Custodian = "ETrade",
-                Note = FormatUtilities.TrimQuotes(chunks[0])
-            };
+
+        Account newAccount = new()
+        {
+            Custodian = "ETrade",
+            Note = FormatUtilities.TrimQuotes(chunks[0])
+        };
         importedAccounts.Add(newAccount);
 
         bool foundHeader = false;
-        while (!foundHeader && await rowEnumerator.MoveNextAsync()) {
+        while (!foundHeader && await rowEnumerator.MoveNextAsync())
+        {
             chunks = rowEnumerator.Current;
             if (chunks.Length == 10 && chunks[0] == "Symbol" && chunks[1] == "Last Price $")
             {
                 foundHeader = true;
             }
         }
-        
-        while (await rowEnumerator.MoveNextAsync()) {
+
+        while (await rowEnumerator.MoveNextAsync())
+        {
             chunks = rowEnumerator.Current;
-            
+
             AssetTypes? assetType = null;
             var symbol = chunks[0];
             string? investmentName = null;
@@ -475,20 +518,24 @@ public class Importer {
             if (chunks.Length > 1)
             {
                 double shares = FormatUtilities.ParseDouble(chunks[4]);
-                double value = FormatUtilities.ParseDouble(chunks[9], allowCurrency:true);
-                double price = FormatUtilities.ParseDouble(chunks[1], allowCurrency:true);
-                double costBasis = value - FormatUtilities.ParseDouble(chunks[7], allowCurrency:true);
+                double value = FormatUtilities.ParseDouble(chunks[9], allowCurrency: true);
+                double price = FormatUtilities.ParseDouble(chunks[1], allowCurrency: true);
+                double costBasis = value - FormatUtilities.ParseDouble(chunks[7], allowCurrency: true);
 
-                if (symbol == "CASH") {
+                if (symbol == "CASH")
+                {
                     shares = value;
                     assetType = AssetTypes.Cash_MoneyMarket;
                     price = 1.0;
-                } else if (symbol == "TOTAL") {
+                }
+                else if (symbol == "TOTAL")
+                {
                     break;
                 }
 
-                Investment newInvestment = new () { Funds = funds, Ticker = symbol, Price = price, Name = (investmentName ?? null), Value = value, Shares = shares, CostBasis = costBasis };
-                if (assetType != null) {
+                Investment newInvestment = new() { Funds = funds, Ticker = symbol, Price = price, Name = (investmentName ?? null), Value = value, Shares = shares, CostBasis = costBasis };
+                if (assetType != null)
+                {
                     newInvestment.AssetType = assetType;
                 }
                 newAccount?.Investments.Add(newInvestment);
@@ -498,7 +545,8 @@ public class Importer {
         return importedAccounts;
     }
 
-    private static async Task<List<Account>> ImportSchwab(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds) {
+    private static async Task<List<Account>> ImportSchwab(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds)
+    {
         List<Account> importedAccounts = [];
         string[] firstLineChunks = rowEnumerator.Current;
         bool singleAccountFormat = false;
@@ -506,7 +554,9 @@ public class Importer {
         {
             singleAccountFormat = true;
             // stay on this line
-        } else {
+        }
+        else
+        {
             await rowEnumerator.MoveNextAsync(); // goto empty line
             await rowEnumerator.MoveNextAsync(); // go to account name row
         }
@@ -521,7 +571,9 @@ public class Importer {
             {
                 var ellipsesIndex = chunks[0].IndexOf("...");
                 accNote = "*" + chunks[0].Substring(ellipsesIndex + 3, 3);
-            } else {
+            }
+            else
+            {
                 accNote = chunks[0];
             }
 
@@ -530,14 +582,16 @@ public class Importer {
                 await rowEnumerator.MoveNextAsync(); // goto empty line
             }
 
-            Account? newAccount = new() {
+            Account? newAccount = new()
+            {
                 Custodian = "Schwab",
                 Note = accNote
             };
             importedAccounts.Add(newAccount);
-            
+
             await rowEnumerator.MoveNextAsync(); // go to investment headers line
-            while (await rowEnumerator.MoveNextAsync()) { // go to investment line
+            while (await rowEnumerator.MoveNextAsync())
+            { // go to investment line
                 chunks = rowEnumerator.Current;
 
                 // SCHWAB - line with blank cells divides accounts
@@ -548,16 +602,17 @@ public class Importer {
                 // 0-n lines: investment info
                 // End of Account: "Cash & Cash Investments","--","--","--","--","--","$5.20","0%","$0.00","--","--","--","--","--","--","0.29%","Cash and Money Market"
                 // Totals of Account: "Account Total","--","--","--","--","--","$51,767.73","-1.77%","-$31.93","$547.79","33.1%","$181.34","--","--","--","--","--"
-                
+
                 var symbol = chunks[0];
-                if (symbol == "Account Total") {
+                if (symbol == "Account Total")
+                {
                     await rowEnumerator.MoveNextAsync();
                     break;
                 }
 
                 double shares = FormatUtilities.ParseDouble(chunks[2]);
-                double value = FormatUtilities.ParseDouble(chunks[6], allowCurrency:true);
-                double costBasis = FormatUtilities.ParseDouble(chunks[9], allowCurrency:true);
+                double value = FormatUtilities.ParseDouble(chunks[6], allowCurrency: true);
+                double costBasis = FormatUtilities.ParseDouble(chunks[9], allowCurrency: true);
                 AssetTypes? assetType = null;
 
                 string? investmentName;
@@ -574,8 +629,9 @@ public class Importer {
                         break;
                 }
 
-                Investment newInvestment = new () { Funds = funds, Ticker = symbol, Name = (investmentName ?? null), Value = value, Shares = shares, CostBasis = costBasis };
-                if (assetType != null) {
+                Investment newInvestment = new() { Funds = funds, Ticker = symbol, Name = (investmentName ?? null), Value = value, Shares = shares, CostBasis = costBasis };
+                if (assetType != null)
+                {
                     newInvestment.AssetType = assetType;
                 }
 
@@ -589,7 +645,8 @@ public class Importer {
     }
 
 
-    private static async Task<List<Account>> ImportTRowePrice(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds) {
+    private static async Task<List<Account>> ImportTRowePrice(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds)
+    {
         List<Account> importedAccounts = [];
         string[] chunks;
         string? lastAccountNumber = null;
@@ -599,38 +656,42 @@ public class Importer {
         // "Roth IRA","Total Equity Market Index Fund","POMIX","1111-1","Robert","4","$49.33","$0.52","$2","$2","1.07%","13.98%"
         // "Transfer On Death","Total Equity Market Index Fund","POMIX","2222-2","Robert","6","$49.33","$0.52","$3","$3","1.07%","7.19%"
         Account? newAccount = null;
-        while (await rowEnumerator.MoveNextAsync()) {
+        while (await rowEnumerator.MoveNextAsync())
+        {
             chunks = rowEnumerator.Current;
             var accountNumber = chunks[3];
             var symbol = chunks[2];
             var investmentName = chunks[1];
             double shares = FormatUtilities.ParseDouble(chunks[5]);
-            double price = FormatUtilities.ParseDouble(chunks[6], allowCurrency:true);
-            double value = FormatUtilities.ParseDouble(chunks[8], allowCurrency:true);
+            double price = FormatUtilities.ParseDouble(chunks[6], allowCurrency: true);
+            double value = FormatUtilities.ParseDouble(chunks[8], allowCurrency: true);
             // costBasis not available in CSV
-                            
-            if (lastAccountNumber != accountNumber) {
-                newAccount = new() {
+
+            if (lastAccountNumber != accountNumber)
+            {
+                newAccount = new()
+                {
                     Custodian = "T Rowe Price",
-                    Note = string.Concat("*", accountNumber.AsSpan(accountNumber.Length-4,4))
+                    Note = string.Concat("*", accountNumber.AsSpan(accountNumber.Length - 4, 4))
                 };
                 importedAccounts.Add(newAccount);
             }
 
-            Investment newInvestment = new () { Funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares };
+            Investment newInvestment = new() { Funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares };
             newAccount?.Investments.Add(newInvestment);
         }
 
         return importedAccounts;
     }
 
-    private static async Task<List<Account>> ImportAmeriprise(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds) {
+    private static async Task<List<Account>> ImportAmeriprise(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds)
+    {
         List<Account> importedAccounts = [];
-        string[] chunks;        
+        string[] chunks;
         await rowEnumerator.MoveNextAsync();
-                    
+
         // Ameriprise
-        Dictionary<string,Account> accountLookup = [];
+        Dictionary<string, Account> accountLookup = [];
         bool processing = false;
 
         int? accountNameCol = null;
@@ -640,7 +701,8 @@ public class Importer {
         int? quantityCol = null;
         int? symbolCol = null;
         int? descriptionCol = null;
-        while (await rowEnumerator.MoveNextAsync()) {
+        while (await rowEnumerator.MoveNextAsync())
+        {
             chunks = rowEnumerator.Current;
 
             if (!processing)
@@ -684,10 +746,13 @@ public class Importer {
                     i++;
                 }
 
-                if (count > 0) {
+                if (count > 0)
+                {
                     processing = true;
                 }
-            } else {
+            }
+            else
+            {
                 if (chunks[0].StartsWith("Total "))
                 {
                     processing = false;
@@ -700,7 +765,7 @@ public class Importer {
                 {
                     symbol = type;
                 }
-                else 
+                else
                 {
                     symbol = GetValue(chunks, symbolCol);
                 }
@@ -708,8 +773,9 @@ public class Importer {
                 var investmentName = GetValue(chunks, descriptionCol);
                 var accountDescription = GetValue(chunks, accountDescriptionCol)!;
                 var quantity = FormatUtilities.ParseDoubleOrNull(GetValue(chunks, quantityCol));
-                var value = FormatUtilities.ParseDoubleOrNull(GetValue(chunks, valueCol), allowCurrency:true);
-                if (symbol is not null && symbol.ToUpper() == "CASH") {
+                var value = FormatUtilities.ParseDoubleOrNull(GetValue(chunks, valueCol), allowCurrency: true);
+                if (symbol is not null && symbol.ToUpper() == "CASH")
+                {
                     symbol = null;
                     investmentName = "Cash";
                 }
@@ -720,19 +786,20 @@ public class Importer {
                     shortDescription = accountDescription.Substring(accountDescription.Length - 4);
                 }
 
-                StoreInvestment(accountLookup, importedAccounts, funds, "Ameriprise", value, shortDescription, symbol, investmentName, quantity, costBasis:null);
+                StoreInvestment(accountLookup, importedAccounts, funds, "Ameriprise", value, shortDescription, symbol, investmentName, quantity, costBasis: null);
             }
         }
 
         return importedAccounts;
     }
 
-    private static Account? StoreInvestment(Dictionary<string,Account> accountLookup, List<Account> importedAccounts, IList<Fund> funds, string custodian, double? value, string account, string? symbol, string? investmentName, double? shares, double? costBasis)
+    private static Account? StoreInvestment(Dictionary<string, Account> accountLookup, List<Account> importedAccounts, IList<Fund> funds, string custodian, double? value, string account, string? symbol, string? investmentName, double? shares, double? costBasis)
     {
         accountLookup.TryGetValue(account, out Account? newAccount);
         if (newAccount == null)
         {
-            newAccount = new() {
+            newAccount = new()
+            {
                 Custodian = custodian,
                 Note = "*" + account
             };
@@ -741,7 +808,7 @@ public class Importer {
             accountLookup.Add(account, newAccount);
         }
 
-        Investment newInvestment = new () { Funds = funds, Ticker = symbol, Name = investmentName, Value = value, Shares = shares, CostBasis = costBasis };
+        Investment newInvestment = new() { Funds = funds, Ticker = symbol, Name = investmentName, Value = value, Shares = shares, CostBasis = costBasis };
         newAccount?.Investments.Add(newInvestment);
 
         return newAccount;
@@ -752,7 +819,8 @@ public class Importer {
         return (columnIndex.HasValue ? FormatUtilities.TrimQuotes(chunks[columnIndex.Value]) : null);
     }
 
-    public static async Task<List<Account>> ImportXLSX(Stream stream, IList<Fund> funds) {
+    public static async Task<List<Account>> ImportXLSX(Stream stream, IList<Fund> funds)
+    {
         List<Account> importedAccounts = [];
 
         MemoryStream ms = new();
@@ -767,29 +835,33 @@ public class Importer {
             Sheet theSheet = wbPart.Workbook.Descendants<Sheet>().Where(s => s?.Name == "Holdings Ungrouped").FirstOrDefault() ?? throw new ArgumentException("sheetName");
             WorksheetPart wsPart = (WorksheetPart)wbPart.GetPartById(theSheet.Id!);
             // For shared strings, look up the value in the shared strings table.
-            var stringTable = 
+            var stringTable =
                 wbPart.GetPartsOfType<SharedStringTablePart>()
                 .FirstOrDefault() ?? throw new ArgumentException("stringTable");
 
             int row = 11;
             bool contentOver = false;
-            Dictionary<string,Account> accountLookup = [];
-            while (!contentOver) {
-                    string? accountName = GetValue(GetCell(wsPart, "A" + row.ToString()), stringTable);
-                    if (string.IsNullOrEmpty(accountName)) {
-                        contentOver = true;
-                        break;
-                    }
+            Dictionary<string, Account> accountLookup = [];
+            while (!contentOver)
+            {
+                string? accountName = GetValue(GetCell(wsPart, "A" + row.ToString()), stringTable);
+                if (string.IsNullOrEmpty(accountName))
+                {
+                    contentOver = true;
+                    break;
+                }
 
-                    string? investmentName = GetValue(GetCell(wsPart, "B" + row.ToString()), stringTable);
-                    string? symbol = GetValue(GetCell(wsPart, "D" + row.ToString()), stringTable);
-                    double shares = FormatUtilities.ParseDouble(GetCell(wsPart, "I" + row.ToString()).InnerText, allowCurrency:false);
-                    double value = FormatUtilities.ParseDouble(GetCell(wsPart, "J" + row.ToString()).InnerText, allowCurrency:true);
-                    double costBasis = FormatUtilities.ParseDouble(GetCell(wsPart, "N" + row.ToString()).InnerText, allowCurrency:true);
+                string? investmentName = GetValue(GetCell(wsPart, "B" + row.ToString()), stringTable);
+                string? symbol = GetValue(GetCell(wsPart, "D" + row.ToString()), stringTable);
+                double shares = FormatUtilities.ParseDouble(GetCell(wsPart, "I" + row.ToString()).InnerText, allowCurrency: false);
+                double value = FormatUtilities.ParseDouble(GetCell(wsPart, "J" + row.ToString()).InnerText, allowCurrency: true);
+                double costBasis = FormatUtilities.ParseDouble(GetCell(wsPart, "N" + row.ToString()).InnerText, allowCurrency: true);
 
                 accountLookup.TryGetValue(accountName, out Account? newAccount);
-                if (newAccount == null) {
-                    newAccount = new() {
+                if (newAccount == null)
+                {
+                    newAccount = new()
+                    {
                         Custodian = "Morgan Stanley",
                         Note = "*" + accountName
                     };
@@ -798,7 +870,7 @@ public class Importer {
                     importedAccounts.Add(newAccount);
                 }
 
-                Investment newInvestment = new () { Funds = funds, Ticker = symbol, Name = investmentName, Value = value, Shares = shares, CostBasis = costBasis };
+                Investment newInvestment = new() { Funds = funds, Ticker = symbol, Name = investmentName, Value = value, Shares = shares, CostBasis = costBasis };
                 newAccount?.Investments.Add(newInvestment);
                 row++;
             }
@@ -807,15 +879,20 @@ public class Importer {
         return importedAccounts;
     }
 
-    private static string? GetValue(Cell cell, SharedStringTablePart stringTable) {
-        try {
+    private static string? GetValue(Cell cell, SharedStringTablePart stringTable)
+    {
+        try
+        {
             return stringTable.SharedStringTable.ElementAt(int.Parse(cell.InnerText)).InnerText;
-        } catch (Exception) {
+        }
+        catch (Exception)
+        {
             return null;
         }
     }
-    
-    private static Cell GetCell(WorksheetPart wsPart, string cellReference) {
+
+    private static Cell GetCell(WorksheetPart wsPart, string cellReference)
+    {
         var worksheet = wsPart.Worksheet;
         var cell = worksheet.Descendants<Cell>().Where(c => c.CellReference?.Value == cellReference).FirstOrDefault();
         if (cell != null)
@@ -828,8 +905,10 @@ public class Importer {
         }
     }
 
-    static void DebugWriteChunks(string[] chunks) {
-        foreach (string chunk in chunks) {
+    static void DebugWriteChunks(string[] chunks)
+    {
+        foreach (string chunk in chunks)
+        {
             Console.Write("'" + chunk + "',");
         }
         Console.WriteLine();
