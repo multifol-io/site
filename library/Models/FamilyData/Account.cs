@@ -12,14 +12,24 @@ public class Account : INotifyPropertyChanged
     }
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public Account() {
-        Investments = [];
+    public Account()
+    {
+        Investments = new HostedCollection<Account, Investment>(this);
         AvailableFunds = [];
     }
+    public Account(FamilyData familyData) : this()
+    {
+        FamilyData = new WeakReference<FamilyData>(familyData);
+    }
 
-    public string Title {
-        get {
-            return (Identifier != null ? Identifier + " " : "") + AccountType + (!string.IsNullOrEmpty(Custodian) ? " at " + Custodian : "") + (Note != null ? $" ({Note})":"");
+    [JsonIgnore]
+    public WeakReference<FamilyData> FamilyData { get; set; }
+
+    public string Title
+    {
+        get
+        {
+            return (Identifier != null ? Identifier + " " : "") + AccountType + (!string.IsNullOrEmpty(Custodian) ? " at " + Custodian : "") + (Note != null ? $" ({Note})" : "");
         }
     }
 
@@ -38,12 +48,14 @@ public class Account : INotifyPropertyChanged
     public string? Identifier { get; set; }
     private string? _AccountType;
 
-    public Investment? SettlementInvestment {
-        get {
+    public Investment? SettlementInvestment
+    {
+        get
+        {
             foreach (var investment in this.Investments)
             {
-                if (investment.AssetType == AssetTypes.Cash_MoneyMarket 
-                    || investment.AssetType == AssetTypes.Cash_BankAccount 
+                if (investment.AssetType == AssetTypes.Cash_MoneyMarket
+                    || investment.AssetType == AssetTypes.Cash_BankAccount
                     || investment.AssetType == AssetTypes.Cash)
                 {
                     return investment;
@@ -54,9 +66,11 @@ public class Account : INotifyPropertyChanged
         }
     }
 
-    public string? AccountType {
+    public string? AccountType
+    {
         get { return _AccountType; }
-        set {
+        set
+        {
             // migrate old values on 7/22/2023
             _AccountType = value switch
             {
@@ -67,7 +81,8 @@ public class Account : INotifyPropertyChanged
                 "Solo 401k" => "Solo 401(k)",
                 _ => value,
             };
-            if (Identifier == "our" && TaxType != "Taxable" && TaxType != "Other") {
+            if (Identifier == "our" && TaxType != "Taxable" && TaxType != "Other")
+            {
                 Identifier = null;
             }
         }
@@ -75,14 +90,37 @@ public class Account : INotifyPropertyChanged
     public string? Custodian { get; set; }
     public string? Note { get; set; }
 
+    public async void UpdateValue()
+    {
+        double value = 0.0;
+        foreach (var investment in Investments)
+        {
+            value += investment.Value ?? 0.0;
+        }
+        
+        Value = value;
+        Investments.AreStatsDirty = false;
+    }
+
     private double _Value;
-    public double Value { 
-        get {
+    public double Value
+    {
+        get
+        {
+            if (Investments.AreStatsDirty)
+            {
+                UpdateValue();
+            }
+
             return _Value;
         }
-        set {
-            _Value = value;
-            OnPropertyChanged();
+        set
+        {
+            if (_Value != value)
+            {
+                _Value = value;
+                OnPropertyChanged();
+            }
         }
     }
 
@@ -93,10 +131,11 @@ public class Account : INotifyPropertyChanged
     [JsonIgnore]
     public double Percentage { get; set; }
 
-    public string FullName 
+    public string FullName
     {
-        get {
-            return (Identifier != null ? Identifier+ " " : "") + AccountType + (Custodian != null ? " at " + Custodian : "");
+        get
+        {
+            return (Identifier != null ? Identifier + " " : "") + AccountType + (Custodian != null ? " at " + Custodian : "");
         }
     }
 
@@ -113,7 +152,7 @@ public class Account : INotifyPropertyChanged
         return null;
     }
 
-    public List<Investment> Investments { get; set; }
+    public HostedCollection<Account, Investment> Investments { get; set; }
 
     public List<Investment> AvailableFunds { get; set; }
 
@@ -123,10 +162,12 @@ public class Account : INotifyPropertyChanged
     [JsonIgnore]
     public bool Import { get; set; }
 
-    public double? CalculateCostBasis() {
+    public double? CalculateCostBasis()
+    {
         double costBasis = 0.0;
         int investmentsMissingCostBasis = 0;
-        switch (TaxType) {
+        switch (TaxType)
+        {
             case "Taxable":
                 foreach (var investment in Investments)
                 {
@@ -151,20 +192,24 @@ public class Account : INotifyPropertyChanged
                 return costBasis;
         }
 
-        if (investmentsMissingCostBasis > 0) {
+        if (investmentsMissingCostBasis > 0)
+        {
             return null;
-        } else {
+        }
+        else
+        {
             return costBasis;
         }
     }
 
     public async Task UpdatePercentagesAsync(double totalValue, FamilyData familyData)
     {
-        await Task.Run(() => {
+        await Task.Run(() =>
+        {
             foreach (var investment in Investments)
             {
                 investment.Percentage = (investment.Value ?? 0) / totalValue * 100;
-                
+
                 UpdateInvestmentCategoryTotals(investment, familyData);
                 foreach (var transaction in investment.Transactions)
                 {
@@ -178,10 +223,13 @@ public class Account : INotifyPropertyChanged
                     }
                 }
 
-                if (investment.ExpenseRatio.HasValue && investment.Value.HasValue) {
+                if (investment.ExpenseRatio.HasValue && investment.Value.HasValue)
+                {
                     familyData.OverallER += investment.Percentage / 100.0 * investment.ExpenseRatio.Value;
                     familyData.ExpensesTotal += investment.Value.Value * investment.ExpenseRatio.Value / 100.0;
-                } else {
+                }
+                else
+                {
                     if (investment.IsETF || investment.IsFund)
                     {
                         familyData.InvestmentsMissingER++;
@@ -193,20 +241,21 @@ public class Account : INotifyPropertyChanged
 
     public static void UpdateInvestmentCategoryTotals(Investment investment, FamilyData familyData, double? overrideValue = null, bool useNegative = false)
     {
-        double? value = (investment.Value ?? 0.0) * (useNegative?-1:1);
+        double? value = (investment.Value ?? 0.0) * (useNegative ? -1 : 1);
         if (overrideValue != null)
         {
-            value = overrideValue * (useNegative?-1:1);
+            value = overrideValue * (useNegative ? -1 : 1);
         }
 
         if (investment.AssetType == null)
         {
             familyData.OtherBalance += value;
-        } 
+        }
         else
         {
-            switch (investment.AssetType) {
-                case AssetTypes.Stock: 
+            switch (investment.AssetType)
+            {
+                case AssetTypes.Stock:
                 case AssetTypes.USStock:
                 case AssetTypes.USStock_ETF:
                 case AssetTypes.USStock_Fund:
@@ -248,9 +297,10 @@ public class Account : INotifyPropertyChanged
         }
     }
 
-    public void GuessAccountType() 
+    public void GuessAccountType()
     {
-        if (Note is not null) {
+        if (Note is not null)
+        {
             if (Note.Contains("401K") || Note.Contains("401k"))
             {
                 AccountType = "401(k)";
@@ -262,8 +312,10 @@ public class Account : INotifyPropertyChanged
         }
     }
 
-    public string TaxType {
-        get {
+    public string TaxType
+    {
+        get
+        {
             return AccountType switch
             {
                 "401(k)" or "403(b)" or "457(b)" or "457(b) Governmental" or "SEP IRA" or "Solo 401(k)" or "SIMPLE IRA" => "Pre-Tax(work)",
@@ -280,8 +332,10 @@ public class Account : INotifyPropertyChanged
 
     public double? AfterTaxPercentage { get; set; }
 
-    public string TaxType2 { 
-        get {
+    public string TaxType2
+    {
+        get
+        {
             return TaxType.StartsWith("Pre-Tax") ? "Pre-Tax" : TaxType;
         }
     }
@@ -300,8 +354,10 @@ public class Account : INotifyPropertyChanged
         }
     }
 
-    public int PortfolioReviewOrder {
-        get {
+    public int PortfolioReviewOrder
+    {
+        get
+        {
             var ownerCategory = (Owner + 1) * 7; // 7=Joint, 14=First Person, 21= Second Person
             int order = AccountType switch
             {
@@ -313,7 +369,8 @@ public class Account : INotifyPropertyChanged
                 _ => 7 + ownerCategory,
             };
 
-            if (TaxType == "Pre-Tax(work)" && CurrentOrPrevious == "current") {
+            if (TaxType == "Pre-Tax(work)" && CurrentOrPrevious == "current")
+            {
                 order--;
             }
 
@@ -322,11 +379,14 @@ public class Account : INotifyPropertyChanged
     }
 
     [JsonIgnore] // on 2/9/2024 - moved from bool to string.
-    public bool CurrentEmployerRetirementFund {
-        get {
+    public bool CurrentEmployerRetirementFund
+    {
+        get
+        {
             return false;
         }
-        set {
+        set
+        {
             //transition value to new property.
             if (value)
             {
@@ -339,14 +399,20 @@ public class Account : INotifyPropertyChanged
         }
     }
 
-    public string CurrentEmployerString {
-        get {
+    public string CurrentEmployerString
+    {
+        get
+        {
             if (CurrentOrPrevious == "n/a" || CurrentOrPrevious == "") return "";
             else return CurrentOrPrevious;
         }
     }
 
     public string CurrentOrPrevious { get; set; } = "";
+
+    private bool isDirty;
+    [JsonIgnore]
+    public bool IsDirty { get { return isDirty; } private set { isDirty = value; OnPropertyChanged(); } }
 
     public static readonly List<string> CurrentOrPreviousOptions = ["current", "previous"];
 }

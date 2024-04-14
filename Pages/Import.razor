@@ -465,7 +465,7 @@ else
         if (bhContent is not null)
         {
             var lines = bhContent.Split('\n');
-            (var importedFamilyData, var links) = ImportPortfolioReview.ParsePortfolioReview(lines, appData, Funds);
+            (var importedFamilyData, var links) = ImportPortfolioReview.ParsePortfolioReview(lines, appData);
             if (importedFamilyData.Accounts.Count > 0)
             {
                 importResult.NewAccounts.AddRange(importedFamilyData.Accounts);
@@ -480,7 +480,7 @@ else
         ImportResult importResult = new();
         if (tdContent is not null)
         {
-            var newAccount = new Account() { Custodian = "Treasury Direct", AccountType = "Taxable" };
+            var newAccount = new Account(appData.FamilyData) { Custodian = "Treasury Direct", AccountType = "Taxable" };
             var chunks = tdContent.Split('\t');
             DateOnly? purchasedDate = null;
             double? costBasis = null;
@@ -537,7 +537,7 @@ else
 
         if (appData?.FamilyData is not null && namedStreams is not null)
         {
-            appData.ImportResult = await Importer.ImportDataFiles(namedStreams, Funds, appData.FamilyData.Accounts);
+            appData.ImportResult = await Importer.ImportDataFiles(namedStreams, appData.FamilyData);
             foreach (var account in appData.ImportResult.NewAccounts)
             {
                 account.Import = true;

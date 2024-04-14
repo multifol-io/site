@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -343,7 +344,7 @@ public class FamilyData : INotifyPropertyChanged
     private double brokerCount;
     public double AccountCount { get { return accountCount; } set { accountCount = value; OnPropertyChanged(); } }
     public double BrokerCount { get { return brokerCount; } set { brokerCount = value; OnPropertyChanged(); } }
-    
+
     private double preTaxValue;
     private double taxableValue;
     private double postTaxValue;
@@ -599,14 +600,19 @@ public class FamilyData : INotifyPropertyChanged
         }
     }
 
+    [JsonIgnore]
+    public bool BatchUpdating { get; set; }
+
     public async Task UpdateStatsAsync()
     {
+        if (BatchUpdating) return;
+
         StockBalance = 0.0;
         InternationalStockBalance = 0.0;
         BondBalance = 0.0;
         CashBalance = 0.0;
         OtherBalance = 0.0;
-        
+
         OverallER = 0.0;
         InvestmentsMissingER = 0;
         ExpensesTotal = 0;
@@ -618,17 +624,16 @@ public class FamilyData : INotifyPropertyChanged
         AccountCount = 0;
         BrokerCount = 0;
         var brokerList = new List<string>();
-        
+
         double totalValue = 0.0;
         foreach (var account in Accounts)
         {
-            double accountValue = 0.0;
-            foreach (var investment in account.Investments)
+            if (account.Investments.AreStatsDirty)
             {
-                accountValue += investment.Value ?? 0.0;
+                account.UpdateValue();
             }
 
-            account.Value = accountValue;
+            var accountValue = account.Value;
             totalValue += accountValue;
 
             switch (account.TaxType2)
@@ -666,7 +671,7 @@ public class FamilyData : INotifyPropertyChanged
 
         var changes = PortfolioChange();
         Change = changes.change;
-        UpdateChangeInXUnits(); 
+        UpdateChangeInXUnits();
         PercentChange = changes.percentChange;
     }
 
@@ -788,6 +793,7 @@ public class FamilyData : INotifyPropertyChanged
 
     public async Task RefreshPrices(HttpClient http)
     {
+        BatchUpdating = true;
         TickersToUpdate = [];
 
         var now = DateTime.Now.Date;
@@ -872,6 +878,8 @@ public class FamilyData : INotifyPropertyChanged
 
             TickersToUpdate.Clear();
         }
+
+        BatchUpdating = false;
     }
 
     private async Task FetchPriceAndUpdateInvestments(string ticker, List<Investment> investments, HttpClient http)
@@ -902,7 +910,7 @@ public class FamilyData : INotifyPropertyChanged
         }
     }
 
-    public static void UpdateInvestmentsPrice(List<Investment> investments, double? price, double? previousClose, double? percentChange, DateTime? lastUpdated)
+    public void UpdateInvestmentsPrice(List<Investment> investments, double? price, double? previousClose, double? percentChange, DateTime? lastUpdated)
     {
         foreach (var investment in investments)
         {
@@ -1072,5 +1080,24 @@ public class FamilyData : INotifyPropertyChanged
     internal void UpdateXHasValue()
     {
         XHasValue = EmergencyFund.AnnualExpenses.HasValue && EmergencyFund.AnnualExpenses != 0.0;
+    }
+
+    public async Task AttachInvestmentsToAccounts()
+    {
+        await Task.Run(() =>
+        {
+            var familyData = new WeakReference<FamilyData>(this);
+            foreach (var account in Accounts)
+            {
+                var host = new WeakReference<Account>(account);
+                account.Investments.Host = host;
+                account.FamilyData = familyData;
+                foreach (var investment in account.Investments)
+                {
+                    investment.Host = host;
+                    account.Investments.ListenForValueChange(investment);
+                }
+            }
+        });
     }
 }

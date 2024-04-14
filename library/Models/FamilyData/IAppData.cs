@@ -9,9 +9,13 @@ public interface IAppData {
     public IRSData? IRSData {get; set;}
     public string? EODHistoricalDataApiKey { get; set;}
     public bool ShowValues { get; set; }
-    public int Year {get; set;} 
+    public int Year {get; set;}
     public ImportResult? ImportResult { get; set; }
     public bool ApplyStockSizeRules { get; set; }
     public bool ApplyTaxEfficientPlacementRules { get; set; }
     public bool AllowAfterTaxPercentage { get; set;}
+    public List<Fund> Funds { get; }
+
+    public string? BaseAddress { get; }
+    public Task<List<Fund>> LoadFundsAsync();
 }

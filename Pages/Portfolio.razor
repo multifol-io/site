@@ -731,13 +731,13 @@ else if (appData is not null && appData.FamilyData is not null)
                                                     }
                                                     @{
                                                         var groupByCustodian = appData.FamilyData.Accounts
-                                                    .GroupBy(a => a.Custodian)
-                                                    .Select(g => new
-                                                    {
-                                                        Custodian = g.Key,
-                                                        Value = g.Sum(a => a.Value)
-                                                    })
-                                                    .OrderByDescending(g => g.Value);
+                                                        .GroupBy(a => a.Custodian)
+                                                        .Select(g => new
+                                                        {
+                                                            Custodian = g.Key,
+                                                            Value = g.Sum(a => a.Value)
+                                                        })
+                                                        .OrderByDescending(g => g.Value);
                                                     }
                                                     @foreach (var group in groupByCustodian)
                                                     {
@@ -798,14 +798,14 @@ else if (appData is not null && appData.FamilyData is not null)
                                                     }
                                                     @{
                                                         var groupByTaxType = appData.FamilyData.Accounts
-                                                    .GroupBy(a => a.TaxType2)
-                                                    .Select(g => new
-                                                    {
-                                                        TaxType = g.Key,
-                                                        Value = g.Sum(a => a.Value),
-                                                        CostBasis = g.Sum(a => a.CalculateCostBasis())
-                                                    })
-                                                    .OrderByDescending(g => g.Value);
+                                                        .GroupBy(a => a.TaxType2)
+                                                        .Select(g => new
+                                                        {
+                                                            TaxType = g.Key,
+                                                            Value = g.Sum(a => a.Value),
+                                                            CostBasis = g.Sum(a => a.CalculateCostBasis())
+                                                        })
+                                                        .OrderByDescending(g => g.Value);
                                                     }
                                                     @foreach (var group in groupByTaxType)
                                                     {
@@ -1048,12 +1048,20 @@ else if (appData is not null && appData.FamilyData is not null)
 @code {
     void updateFund(MouseEventArgs e, List<Investment> investments, DateTime lastUpdated)
     {
-        FamilyData.UpdateInvestmentsPrice(investments, investments[0].Price, null, null, lastUpdated);
+        var familyData = appData.FamilyData;
+        if (familyData != null)
+        {
+            familyData.UpdateInvestmentsPrice(investments, investments[0].Price, null, null, lastUpdated);
+        }
     }
 
     void updateNonFund(MouseEventArgs e, List<Investment> investments, DateTime lastUpdated)
     {
-        FamilyData.UpdateInvestmentsPrice(investments, investments[0].Price, null, null, lastUpdated);
+        var familyData = appData.FamilyData;
+        if (familyData != null)
+        {
+            familyData.UpdateInvestmentsPrice(investments, investments[0].Price, null, null, lastUpdated);
+        }
     }
 
     void selectInvestment(MouseEventArgs e, int accountIndex, int investmentIndex)
@@ -1279,11 +1287,15 @@ else if (appData is not null && appData.FamilyData is not null)
 
     void addAccountThenEdit()
     {
-        var newAccount = new Account() { };
-        newAccount.Edit = true;
-        newAccount.View = true;
-        appData.FamilyData?.Accounts.Insert(0, newAccount);
-        Navigation.NavigateTo("/portfolio-tracker/view/editor");
+        var familyData = appData.FamilyData;
+        if (familyData != null)
+        {
+            var newAccount = new Account(familyData) { };
+            newAccount.Edit = true;
+            newAccount.View = true;
+            familyData.Accounts.Insert(0, newAccount);
+            Navigation.NavigateTo("/portfolio-tracker/view/editor");
+        }
     }
 
     private async Task LoadPortfolioForTopic(string topicStr)

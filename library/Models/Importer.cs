@@ -5,7 +5,7 @@ namespace Models;
 
 public class Importer
 {
-    public static async Task<ImportResult> ImportDataFiles(IEnumerable<NamedStream> namedStreams, IList<Fund> funds, List<Account> existingAccounts)
+    public static async Task<ImportResult> ImportDataFiles(IEnumerable<NamedStream> namedStreams, FamilyData familyData)
     {
         ImportResult result = new();
 
@@ -17,7 +17,7 @@ public class Importer
             {
                 try
                 {
-                    var importedAccountsCSV = await Importer.ImportCSV(namedStream.Stream, funds);
+                    var importedAccountsCSV = await Importer.ImportCSV(namedStream.Stream, familyData);
                     result.ImportedAccounts.AddRange(importedAccountsCSV);
                     result.DataFilesImported++;
                 }
@@ -31,7 +31,7 @@ public class Importer
                 using var stream = namedStream.Stream;
                 try
                 {
-                    var importedAccountsXLSX = await Importer.ImportXLSX(stream, funds);
+                    var importedAccountsXLSX = await Importer.ImportXLSX(stream, familyData);
                     result.ImportedAccounts.AddRange(importedAccountsXLSX);
                     result.DataFilesImported++;
                 }
@@ -45,7 +45,7 @@ public class Importer
         foreach (var importedAccount in result.ImportedAccounts)
         {
             bool foundMatch = false;
-            foreach (var existingAccount in existingAccounts)
+            foreach (var existingAccount in familyData.Accounts)
             {
                 if (existingAccount.Note == importedAccount.Note && existingAccount.Custodian == importedAccount.Custodian)
                 {
@@ -67,7 +67,7 @@ public class Importer
         return result;
     }
 
-    public static async Task<List<Account>> ImportCSV(Stream stream, IList<Fund> funds)
+    public static async Task<List<Account>> ImportCSV(Stream stream, FamilyData familyData)
     {
         try
         {
@@ -82,39 +82,39 @@ public class Importer
             }
             if (headerChunksLen > 1 && headerChunks[0] == "COB Date" && headerChunks[1] == "Security #")
             {
-                return await ImportMerrillEdge(RowEnumerator, funds);
+                return await ImportMerrillEdge(RowEnumerator, familyData);
             }
             else if (headerChunksLen > 1 && headerChunks[0].StartsWith("Asset Class") && headerChunks[1] == "Asset Strategy")
             {
-                return await ImportJPMorganChase(RowEnumerator, funds);
+                return await ImportJPMorganChase(RowEnumerator, familyData);
             }
             else if (headerChunksLen > 1 && headerChunks[0].StartsWith("Account Number") && headerChunks[1] == "Account Name")
             {
-                return await ImportFidelity(RowEnumerator, funds);
+                return await ImportFidelity(RowEnumerator, familyData);
             }
             else if (headerChunksLen > 1 && headerChunks[0] == "Account Number" && headerChunks[1] == "Investment Name")
             {
-                return await ImportVanguard(RowEnumerator, funds);
+                return await ImportVanguard(RowEnumerator, familyData);
             }
             else if (headerChunksLen > 1 && headerChunks[0] == "Fund Account Number" && headerChunks[1] == "Fund Name")
             {
-                return await ImportVanguardOrig(RowEnumerator, funds);
+                return await ImportVanguardOrig(RowEnumerator, familyData);
             }
             else if (headerChunks[0].StartsWith("Account Summary"))
             { // sometimes headerChunksLen == 1, sometimes more.
-                return await ImportETrade(RowEnumerator, funds);
+                return await ImportETrade(RowEnumerator, familyData);
             }
             else if (headerChunks[0].StartsWith("Positions for "))
             {
-                return await ImportSchwab(RowEnumerator, funds);
+                return await ImportSchwab(RowEnumerator, familyData);
             }
             else if (headerChunksLen > 1 && headerChunks[0] == "Account Type" && headerChunks[1] == "Account Name" && headerChunks[2] == "Ticker")
             {
-                return await ImportTRowePrice(RowEnumerator, funds);
+                return await ImportTRowePrice(RowEnumerator, familyData);
             }
             else if (headerChunks[0] == "AMERIPRISE BROKERAGE")
             {
-                return await ImportAmeriprise(RowEnumerator, funds);
+                return await ImportAmeriprise(RowEnumerator, familyData);
             }
             else
             {
@@ -134,7 +134,7 @@ public class Importer
         }
     }
 
-    private static async Task<List<Account>> ImportMerrillEdge(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds)
+    private static async Task<List<Account>> ImportMerrillEdge(IAsyncEnumerator<string[]> rowEnumerator, FamilyData familyData)
     {
         Dictionary<string, Account> accountLookup = [];
 
@@ -157,7 +157,7 @@ public class Importer
             accountLookup.TryGetValue(accountNum, out Account? newAccount);
             if (newAccount == null)
             {
-                newAccount = new()
+                newAccount = new(familyData)
                 {
                     Custodian = "Merrill Edge",
                     Note = "*" + accountNum.Substring(accountNum.Length - 4) + " " + accountNickname + " " + accountRegistration
@@ -166,7 +166,7 @@ public class Importer
                 accountLookup.Add(accountNum, newAccount);
             }
 
-            Investment newInvestment = new() { Funds = funds, Ticker = symbol, Name = (investmentName ?? null), Value = value, Shares = shares, CostBasis = costBasis };
+            Investment newInvestment = new() { Funds = familyData.AppData.Funds, Ticker = symbol, Name = (investmentName ?? null), Value = value, Shares = shares, CostBasis = costBasis };
             newAccount?.Investments.Add(newInvestment);
 
             await rowEnumerator.MoveNextAsync();
@@ -176,7 +176,7 @@ public class Importer
         return importedAccounts;
     }
 
-    private static async Task<List<Account>> ImportJPMorganChase(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds)
+    private static async Task<List<Account>> ImportJPMorganChase(IAsyncEnumerator<string[]> rowEnumerator, FamilyData familyData)
     {
         List<Account> importedAccounts = [];
         await rowEnumerator.MoveNextAsync();
@@ -203,7 +203,7 @@ public class Importer
 
                 if (newAccount == null)
                 {
-                    newAccount = new()
+                    newAccount = new(familyData)
                     {
                         Custodian = "JP Morgan Chase",
                     };
@@ -212,7 +212,7 @@ public class Importer
                     importedAccounts.Add(newAccount);
                 }
 
-                Investment newInvestment = new() { Funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares, CostBasis = costBasis };
+                Investment newInvestment = new() { Funds = familyData.AppData.Funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares, CostBasis = costBasis };
                 if (expenseRatio != null)
                 {
                     newInvestment.ExpenseRatio = expenseRatio;
@@ -238,7 +238,7 @@ public class Importer
         return importedAccounts;
     }
 
-    private static async Task<List<Account>> ImportFidelity(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds)
+    private static async Task<List<Account>> ImportFidelity(IAsyncEnumerator<string[]> rowEnumerator, FamilyData familyData)
     {
         List<Account> importedAccounts = [];
         await rowEnumerator.MoveNextAsync();
@@ -288,7 +288,7 @@ public class Importer
 
                 if (lastAccountNumber != accountNumber)
                 {
-                    newAccount = new()
+                    newAccount = new(familyData)
                     {
                         Custodian = "Fidelity",
                         Note = string.Concat("*", accountNumber.AsSpan(accountNumber.Length - 4, 4))
@@ -298,7 +298,7 @@ public class Importer
                     lastAccountNumber = accountNumber;
                 }
 
-                Investment newInvestment = new() { Funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares, CostBasis = costBasis };
+                Investment newInvestment = new() { Funds = familyData.AppData.Funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares, CostBasis = costBasis };
                 if (expenseRatio != null)
                 {
                     newInvestment.ExpenseRatio = expenseRatio;
@@ -329,7 +329,7 @@ public class Importer
         return importedAccounts;
     }
 
-    private static async Task<List<Account>> ImportVanguard(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds)
+    private static async Task<List<Account>> ImportVanguard(IAsyncEnumerator<string[]> rowEnumerator, FamilyData familyData)
     {
         List<Account> importedAccounts = [];
         string[] chunks;
@@ -364,7 +364,7 @@ public class Importer
 
                 if (newAccount == null)
                 {
-                    newAccount = new()
+                    newAccount = new(familyData)
                     {
                         Custodian = "Vanguard",
                         Note = string.Concat("*", accountNumber.AsSpan(accountNumber.Length - 4, 4))
@@ -372,7 +372,7 @@ public class Importer
                     importedAccounts.Add(newAccount);
                 }
 
-                Investment newInvestment = new() { Funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares };
+                Investment newInvestment = new() { Funds = familyData.AppData.Funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares };
                 newAccount?.Investments.Add(newInvestment);
             }
         }
@@ -400,7 +400,7 @@ public class Importer
 
             if (newAccount == null)
             {
-                newAccount = new()
+                newAccount = new(familyData)
                 {
                     Custodian = "Vanguard",
                     Note = planName
@@ -408,7 +408,7 @@ public class Importer
                 importedAccounts.Add(newAccount);
             }
 
-            Investment newInvestment = new() { Funds = funds, Name = investmentName, Price = price, Value = value, Shares = shares };
+            Investment newInvestment = new() { Funds = familyData.AppData.Funds, Name = investmentName, Price = price, Value = value, Shares = shares };
             newAccount?.Investments.Add(newInvestment);
 
             await rowEnumerator.MoveNextAsync();
@@ -418,7 +418,7 @@ public class Importer
         return importedAccounts;
     }
 
-    private static async Task<List<Account>> ImportVanguardOrig(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds)
+    private static async Task<List<Account>> ImportVanguardOrig(IAsyncEnumerator<string[]> rowEnumerator, FamilyData familyData)
     {
         List<Account> importedAccounts = [];
         string[] chunks;
@@ -448,7 +448,7 @@ public class Importer
                 var accountNum = fundAndAccountNum[1];
                 string? symbol = null;
                 string? investmentName = null;
-                foreach (var fund in funds)
+                foreach (var fund in familyData.AppData.Funds)
                 {
                     if (fundNumber == fund.VanguardFundId)
                     {
@@ -465,7 +465,7 @@ public class Importer
                 accountLookup.TryGetValue(accountNum, out Account? newAccount);
                 if (newAccount == null)
                 {
-                    newAccount = new()
+                    newAccount = new(familyData)
                     {
                         Custodian = "Vanguard",
                         Note = string.Concat("*", accountNum.AsSpan(accountNum.Length - 4))
@@ -474,7 +474,7 @@ public class Importer
                     accountLookup.Add(accountNum, newAccount);
                 }
 
-                Investment newInvestment = new() { Funds = funds, Ticker = symbol, Name = (investmentName ?? null), Value = value, Shares = shares };
+                Investment newInvestment = new() { Funds = familyData.AppData.Funds, Ticker = symbol, Name = (investmentName ?? null), Value = value, Shares = shares };
                 newAccount?.Investments.Add(newInvestment);
             }
         }
@@ -482,7 +482,7 @@ public class Importer
         return importedAccounts;
     }
 
-    private static async Task<List<Account>> ImportETrade(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds)
+    private static async Task<List<Account>> ImportETrade(IAsyncEnumerator<string[]> rowEnumerator, FamilyData familyData)
     {
         List<Account> importedAccounts = [];
         string[] chunks;
@@ -490,7 +490,7 @@ public class Importer
         await rowEnumerator.MoveNextAsync();// accountInfo
         chunks = rowEnumerator.Current;
 
-        Account newAccount = new()
+        Account newAccount = new(familyData)
         {
             Custodian = "ETrade",
             Note = FormatUtilities.TrimQuotes(chunks[0])
@@ -533,7 +533,7 @@ public class Importer
                     break;
                 }
 
-                Investment newInvestment = new() { Funds = funds, Ticker = symbol, Price = price, Name = (investmentName ?? null), Value = value, Shares = shares, CostBasis = costBasis };
+                Investment newInvestment = new() { Funds = familyData.AppData.Funds, Ticker = symbol, Price = price, Name = (investmentName ?? null), Value = value, Shares = shares, CostBasis = costBasis };
                 if (assetType != null)
                 {
                     newInvestment.AssetType = assetType;
@@ -545,7 +545,7 @@ public class Importer
         return importedAccounts;
     }
 
-    private static async Task<List<Account>> ImportSchwab(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds)
+    private static async Task<List<Account>> ImportSchwab(IAsyncEnumerator<string[]> rowEnumerator, FamilyData familyData)
     {
         List<Account> importedAccounts = [];
         string[] firstLineChunks = rowEnumerator.Current;
@@ -582,7 +582,7 @@ public class Importer
                 await rowEnumerator.MoveNextAsync(); // goto empty line
             }
 
-            Account? newAccount = new()
+            Account? newAccount = new(familyData)
             {
                 Custodian = "Schwab",
                 Note = accNote
@@ -629,7 +629,7 @@ public class Importer
                         break;
                 }
 
-                Investment newInvestment = new() { Funds = funds, Ticker = symbol, Name = (investmentName ?? null), Value = value, Shares = shares, CostBasis = costBasis };
+                Investment newInvestment = new() { Funds = familyData.AppData.Funds, Ticker = symbol, Name = (investmentName ?? null), Value = value, Shares = shares, CostBasis = costBasis };
                 if (assetType != null)
                 {
                     newInvestment.AssetType = assetType;
@@ -645,7 +645,7 @@ public class Importer
     }
 
 
-    private static async Task<List<Account>> ImportTRowePrice(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds)
+    private static async Task<List<Account>> ImportTRowePrice(IAsyncEnumerator<string[]> rowEnumerator, FamilyData familyData)
     {
         List<Account> importedAccounts = [];
         string[] chunks;
@@ -669,7 +669,7 @@ public class Importer
 
             if (lastAccountNumber != accountNumber)
             {
-                newAccount = new()
+                newAccount = new(familyData)
                 {
                     Custodian = "T Rowe Price",
                     Note = string.Concat("*", accountNumber.AsSpan(accountNumber.Length - 4, 4))
@@ -677,14 +677,14 @@ public class Importer
                 importedAccounts.Add(newAccount);
             }
 
-            Investment newInvestment = new() { Funds = funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares };
+            Investment newInvestment = new() { Funds = familyData.AppData.Funds, Ticker = symbol, Name = investmentName, Price = price, Value = value, Shares = shares };
             newAccount?.Investments.Add(newInvestment);
         }
 
         return importedAccounts;
     }
 
-    private static async Task<List<Account>> ImportAmeriprise(IAsyncEnumerator<string[]> rowEnumerator, IList<Fund> funds)
+    private static async Task<List<Account>> ImportAmeriprise(IAsyncEnumerator<string[]> rowEnumerator, FamilyData familyData)
     {
         List<Account> importedAccounts = [];
         string[] chunks;
@@ -786,19 +786,19 @@ public class Importer
                     shortDescription = accountDescription.Substring(accountDescription.Length - 4);
                 }
 
-                StoreInvestment(accountLookup, importedAccounts, funds, "Ameriprise", value, shortDescription, symbol, investmentName, quantity, costBasis: null);
+                StoreInvestment(accountLookup, importedAccounts, familyData, "Ameriprise", value, shortDescription, symbol, investmentName, quantity, costBasis: null);
             }
         }
 
         return importedAccounts;
     }
 
-    private static Account? StoreInvestment(Dictionary<string, Account> accountLookup, List<Account> importedAccounts, IList<Fund> funds, string custodian, double? value, string account, string? symbol, string? investmentName, double? shares, double? costBasis)
+    private static Account? StoreInvestment(Dictionary<string, Account> accountLookup, List<Account> importedAccounts, FamilyData familyData, string custodian, double? value, string account, string? symbol, string? investmentName, double? shares, double? costBasis)
     {
         accountLookup.TryGetValue(account, out Account? newAccount);
         if (newAccount == null)
         {
-            newAccount = new()
+            newAccount = new(familyData)
             {
                 Custodian = custodian,
                 Note = "*" + account
@@ -808,7 +808,7 @@ public class Importer
             accountLookup.Add(account, newAccount);
         }
 
-        Investment newInvestment = new() { Funds = funds, Ticker = symbol, Name = investmentName, Value = value, Shares = shares, CostBasis = costBasis };
+        Investment newInvestment = new() { Funds = familyData.AppData.Funds, Ticker = symbol, Name = investmentName, Value = value, Shares = shares, CostBasis = costBasis };
         newAccount?.Investments.Add(newInvestment);
 
         return newAccount;
@@ -819,7 +819,7 @@ public class Importer
         return (columnIndex.HasValue ? FormatUtilities.TrimQuotes(chunks[columnIndex.Value]) : null);
     }
 
-    public static async Task<List<Account>> ImportXLSX(Stream stream, IList<Fund> funds)
+    public static async Task<List<Account>> ImportXLSX(Stream stream, FamilyData familyData)
     {
         List<Account> importedAccounts = [];
 
@@ -860,7 +860,7 @@ public class Importer
                 accountLookup.TryGetValue(accountName, out Account? newAccount);
                 if (newAccount == null)
                 {
-                    newAccount = new()
+                    newAccount = new(familyData)
                     {
                         Custodian = "Morgan Stanley",
                         Note = "*" + accountName
@@ -870,7 +870,7 @@ public class Importer
                     importedAccounts.Add(newAccount);
                 }
 
-                Investment newInvestment = new() { Funds = funds, Ticker = symbol, Name = investmentName, Value = value, Shares = shares, CostBasis = costBasis };
+                Investment newInvestment = new() { Funds = familyData.AppData.Funds, Ticker = symbol, Name = investmentName, Value = value, Shares = shares, CostBasis = costBasis };
                 newAccount?.Investments.Add(newInvestment);
                 row++;
             }

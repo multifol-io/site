@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Models;
 
-public class Investment : INotifyPropertyChanged
+public class Investment : IHostedBy<Account>, INotifyPropertyChanged
 {
     protected void OnPropertyChanged([CallerMemberName] string? name = null)
     {
@@ -330,9 +330,13 @@ public class Investment : INotifyPropertyChanged
         get {
             return _Value;
         }
-        set {
-            _Value = value;
-            OnPropertyChanged();
+        set
+        {
+            if (_Value != value)
+            {
+                _Value = value;
+                OnPropertyChanged();
+            }
         }
     }
 
@@ -402,6 +406,10 @@ public class Investment : INotifyPropertyChanged
 
     public static Dictionary<string,List<double>>? IBondRates { get; set; }
     
+    [JsonIgnore]
+    public WeakReference<Account>? Host { get; set; }
+    [JsonIgnore]
+    public bool IsDirty { get; set; }
     public static async Task LoadIBondRates() {
         if (IBondRates == null) {
             IBondRates = [];

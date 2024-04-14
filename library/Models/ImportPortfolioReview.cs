@@ -1,7 +1,7 @@
 namespace Models;
 
 public static class ImportPortfolioReview {
-     public static (FamilyData,List<Link>) ParsePortfolioReview(string[] lines, IAppData appData, IList<Fund> funds) {
+     public static (FamilyData,List<Link>) ParsePortfolioReview(string[] lines, IAppData appData) {
         double? portfolioSize = null;
         bool? assetParsing = null;
         bool afterAge = false;
@@ -246,7 +246,7 @@ public static class ImportPortfolioReview {
                 } else if (assetParsing.HasValue && assetParsing.Value && StartsWithNumber(tLine) && account != null) {
                     importedFamilyData.Title += "|4";
                     try {
-                        investment = ParseInvestmentLine(line, portfolioSize ?? 100.0, funds, importedFamilyData);
+                        investment = ParseInvestmentLine(line, portfolioSize ?? 100.0, appData.Funds, importedFamilyData);
                         account?.Investments.Add(investment);
                         assetParsing = true;
                     } catch (Exception ex) {
@@ -269,7 +269,7 @@ public static class ImportPortfolioReview {
                     {
                         try
                         {
-                            investment = ParseInvestmentLine(line, portfolioSize ?? 100.0, funds, importedFamilyData);
+                            investment = ParseInvestmentLine(line, portfolioSize ?? 100.0, appData.Funds, importedFamilyData);
                             account.Investments.Add(investment);
                             importedFamilyData.Accounts.Add(account);
                             assetParsing = true;
@@ -303,9 +303,9 @@ public static class ImportPortfolioReview {
         return (importedFamilyData, Links);
     }
 
-    private static Account ParseAccountLine(string line, FamilyData importedFamilyData) {
+    private static Account ParseAccountLine(string line, FamilyData importedFamilyData) { 
         importedFamilyData.Title += "  acc: " + line ;
-
+        
         Account? account;
         string? custodian = null;
         int atIndex = line.IndexOf(" at ");
@@ -328,7 +328,8 @@ public static class ImportPortfolioReview {
             custodian = line[atEndIndex..leftParenIndex].Trim();
             //TODO: parse prefix
         }
-        account = new Account() { Custodian = custodian, AccountType = accountType, Import = true };
+
+        account = new Account(importedFamilyData) { Custodian = custodian, AccountType = accountType, Import = true };
         return account;
     }
 

@@ -1149,7 +1149,7 @@ else if (appData?.FamilyData == null)
     {
         if (appData.FamilyData is not null)
         {
-            var newAccount = new Account();
+            var newAccount = new Account(appData.FamilyData);
             newAccount.View = true;
             newAccount.Edit = true;
             appData.FamilyData?.Accounts.Insert(0, newAccount);
@@ -1158,10 +1158,13 @@ else if (appData?.FamilyData == null)
 
     void addTreasuryDirectAccount()
     {
-        var newAccount = new Account() { Custodian = "Treasury Direct", AccountType = "Taxable" };
-        newAccount.View = true;
-        appData.FamilyData?.Accounts.Insert(0, newAccount);
-        newAccount.Investments.Add(new Investment() { Ticker = "IBOND", AssetType = AssetTypes.IBond, Name = "I Bonds", ExpenseRatio = 0.0 });
+        if (appData.FamilyData is not null)
+        {
+            var newAccount = new Account(appData.FamilyData) { Custodian = "Treasury Direct", AccountType = "Taxable" };
+            newAccount.View = true;
+            appData.FamilyData?.Accounts.Insert(0, newAccount);
+            newAccount.Investments.Add(new Investment() { Ticker = "IBOND", AssetType = AssetTypes.IBond, Name = "I Bonds", ExpenseRatio = 0.0 });
+        }
     }
 
     private async void deleteAccount(MouseEventArgs e, int accountIndex)

@@ -1138,7 +1138,7 @@ else
 
         if (appData?.FamilyData is not null && namedStreams is not null)
         {
-            ImportResult = await Importer.ImportDataFiles(namedStreams, Funds, appData.FamilyData.Accounts);
+            ImportResult = await Importer.ImportDataFiles(namedStreams, appData.FamilyData);
             foreach (var account in ImportResult.ImportedAccounts)
             {
                 account.Import = true;
@@ -1216,7 +1216,7 @@ else
     {
         if (appData?.FamilyData is not null)
         {
-            var newAccount = new Account();
+            var newAccount = new Account(appData.FamilyData);
             var newInvestment = new Investment() { Funds = Funds };
             newAccount.Investments.Add(newInvestment);
             appData.FamilyData?.Accounts.Add(newAccount);
