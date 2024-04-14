@@ -27,33 +27,17 @@ if (lsa != null)
 
 IRSData? irsData = await IRSData.Create(httpClient);
 if (irsData != null) {
-    var appData = new AppData() { IRSData = irsData };
+    var appData = new AppData(builder.HostEnvironment.BaseAddress) { IRSData = irsData };
     irsData.AppData = appData;
     appData.CurrentProfileName = CurrentProfileName;
     appData.EODHistoricalDataApiKey = EODHistoricalDataApiKey;
     builder.Services.AddSingleton<IRSData>(irsData);
     builder.Services.AddSingleton<IAppData>(appData);
-} else {
+    await appData.LoadFundsAsync();
+    builder.Services.AddSingleton<IList<Fund>>(appData.Funds);
+}
+else {
     throw new Exception("irsData is null");
 }
 
-var fundsUri = new Uri(builder.HostEnvironment.BaseAddress + "/data/funds.json");
-var fundsJson = await httpClient.GetAsync(fundsUri.AbsoluteUri);
-
-var stocksUri = new Uri(builder.HostEnvironment.BaseAddress + "/data/USStocks.json");
-var stocksJson = await httpClient.GetAsync(stocksUri.AbsoluteUri);
-
-JsonSerializerOptions options = new() {
-    Converters =
-        {
-            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-        }
-};
-
-var Funds = await JsonSerializer.DeserializeAsync<List<Fund>>(fundsJson.Content.ReadAsStream(), options);
-var Stocks = await JsonSerializer.DeserializeAsync<List<Fund>>(stocksJson.Content.ReadAsStream(), options);
-if (Funds is not null && Stocks is not null) {
-    Funds.AddRange(Stocks);
-    builder.Services.AddSingleton<IList<Fund>>(Funds);
-}
 await builder.Build().RunAsync();
