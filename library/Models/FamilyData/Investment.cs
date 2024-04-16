@@ -12,7 +12,8 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
     }
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public Investment() {
+    public Investment()
+    {
         Transactions = [];
     }
 
@@ -21,16 +22,19 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
 
     [JsonIgnore]
     public bool Selected { get; set; }
-    
+
     [JsonIgnore]
     public IList<Fund>? Funds { get; set; }
 
     private string? _Name;
-    public string? Name { 
-        get {
+    public string? Name
+    {
+        get
+        {
             return _Name;
         }
-        set {
+        set
+        {
             _Name = value;
         }
     }
@@ -44,28 +48,34 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
     public double? NextRate { get; set; }
     public bool AutoCompleted { get; set; }
     private string? _Ticker;
-    public string? Ticker {
-        get {
+    public string? Ticker
+    {
+        get
+        {
             return _Ticker;
         }
-        set {
+        set
+        {
             if (value == null) { _Ticker = value; return; }
             _Ticker = value?.ToUpperInvariant().Trim();
-            if (Funds != null) {
+            if (Funds != null)
+            {
                 bool found = false;
                 foreach (var fund in Funds)
                 {
                     if (_Ticker == fund.Ticker)
                     {
                         fund.AssetType ??= AssetTypes.USStock;
-                    
+
                         AutoComplete(fund);
                         found = true;
                         return;
                     }
                 }
-                if (!found) {
-                    if (AutoCompleted) {
+                if (!found)
+                {
+                    if (AutoCompleted)
+                    {
                         AutoComplete(null);
                     }
                 }
@@ -73,12 +83,14 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
         }
     }
 
-    public double? GetPrice(AssetTypes? assetType, double? price) {
+    public double? GetPrice(AssetTypes? assetType, double? price)
+    {
         if (assetType == null) { return price; }
-        else {
+        else
+        {
             return assetType switch
             {
-                AssetTypes.USStock or 
+                AssetTypes.USStock or
                 AssetTypes.InternationalStock or
                 AssetTypes.Bond or
                 AssetTypes.InternationalBond or
@@ -96,7 +108,8 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
     [JsonIgnore]
     public bool IsAssetTypeUnknown
     {
-        get {
+        get
+        {
             return AssetType == AssetTypes.Unknown;
         }
     }
@@ -104,7 +117,8 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
     [JsonIgnore]
     public bool IsBalancedFund
     {
-        get {
+        get
+        {
             return (AssetType == AssetTypes.StocksAndBonds_ETF || AssetType == AssetTypes.StocksAndBonds_Fund);
         }
     }
@@ -112,7 +126,8 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
     [JsonIgnore]
     public double TotalPercent
     {
-        get {
+        get
+        {
             return (USStockPercent ?? 0.0) + (InternationalStockPercent ?? 0.0) + (USBondsPercent ?? 0.0) + (InternationalBondsPercent ?? 0.0) + (CashPercent ?? 0.0);
         }
     }
@@ -120,7 +135,8 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
     [JsonIgnore]
     public bool DoesBalancedFundEqual100
     {
-        get {
+        get
+        {
             return Math.Round(TotalPercent, 1) > 99.5;
         }
     }
@@ -128,14 +144,17 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
     [JsonIgnore]
     public bool MissingCostBasis
     {
-        get {
+        get
+        {
             return CostBasis == null;
         }
     }
 
-    public double? GetPercentage(AssetTypes? assetType) {
+    public double? GetPercentage(AssetTypes? assetType)
+    {
         if (assetType == null) { return 100.0 / 100.0; }
-        else {
+        else
+        {
             return assetType switch
             {
                 AssetTypes.USStock => (USStockPercent ?? 0.0) / 100.0,
@@ -148,15 +167,17 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
         }
     }
 
-    private void AutoComplete(Fund? fund) {
-        if (fund == null) {
+    private void AutoComplete(Fund? fund)
+    {
+        if (fund == null)
+        {
             Name = null;
             ExpenseRatio = null;
             AssetType = AssetTypes.Unknown;
             VanguardFundId = null;
             AutoCompleted = false;
         }
-        else 
+        else
         {
             Name = fund.LongName;
             ExpenseRatio = fund.ExpenseRatio;
@@ -170,11 +191,13 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
             CashPercent = fund.CashAlloc;
         }
     }
-    public string? VanguardFundId { get; set;  }
+    public string? VanguardFundId { get; set; }
 
     [JsonIgnore]
-    public bool IsETF {
-        get {
+    public bool IsETF
+    {
+        get
+        {
             var assetType = AssetType ?? AssetTypes.Unknown;
             return assetType switch
             {
@@ -185,8 +208,10 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
     }
 
     [JsonIgnore]
-    public bool IsIBond {
-        get {
+    public bool IsIBond
+    {
+        get
+        {
             return AssetType switch
             {
                 AssetTypes.IBond => true,
@@ -196,8 +221,10 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
     }
 
     [JsonIgnore]
-    public bool IsStock {
-        get {
+    public bool IsStock
+    {
+        get
+        {
             return AssetType switch
             {
                 AssetTypes.USStock or AssetTypes.InternationalStock => true,
@@ -207,8 +234,10 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
     }
 
     [JsonIgnore]
-    public bool IsFund {
-        get {
+    public bool IsFund
+    {
+        get
+        {
             return AssetType switch
             {
                 AssetTypes.USStock_Fund or AssetTypes.InternationalStock_Fund or AssetTypes.Bond_Fund or AssetTypes.InternationalBond_Fund or AssetTypes.StocksAndBonds_Fund => true,
@@ -218,8 +247,10 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
     }
 
     [JsonIgnore]
-    public bool IsCash {
-        get {
+    public bool IsCash
+    {
+        get
+        {
             return AssetType switch
             {
                 AssetTypes.Cash or AssetTypes.Cash_BankAccount or AssetTypes.Cash_MoneyMarket => true,
@@ -230,11 +261,14 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
 
     [JsonIgnore]
     [JsonPropertyName("AssetType")]
-    private AssetTypes _TransitionAssetType; 
-    public string TransitionAssetType {
+    private AssetTypes _TransitionAssetType;
+    public string TransitionAssetType
+    {
         get { return _TransitionAssetType.ToString(); }
-        set { 
-            switch (value) {
+        set
+        {
+            switch (value)
+            {
                 case "Unknown": _TransitionAssetType = AssetTypes.Unknown; break;
                 case "Stock": // move to *USStock
                 case "USStock": _TransitionAssetType = AssetTypes.USStock; break;
@@ -265,18 +299,22 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
 
     private AssetTypes? _AssetType;
     [JsonPropertyName("AssetType2")]
-    public AssetTypes? AssetType {
+    public AssetTypes? AssetType
+    {
         get { return _AssetType; }
-        set {
+        set
+        {
             _AssetType = value;
         }
     }
 
-    public int InvestmentOrder {
-        get {
+    public int InvestmentOrder
+    {
+        get
+        {
             return (AssetType ?? AssetTypes.Unknown) switch
             {
-                AssetTypes.USStock or AssetTypes.USStock_ETF or AssetTypes.USStock_Fund or AssetTypes.Stock=> 1,
+                AssetTypes.USStock or AssetTypes.USStock_ETF or AssetTypes.USStock_Fund or AssetTypes.Stock => 1,
                 AssetTypes.InternationalStock or AssetTypes.InternationalStock_ETF or AssetTypes.InternationalStock_Fund => 2,
                 AssetTypes.Bond or AssetTypes.IBond or AssetTypes.Bond_ETF or AssetTypes.Bond_Fund or AssetTypes.InternationalBond or AssetTypes.InternationalBond_ETF or AssetTypes.InternationalBond_Fund => 3,
                 AssetTypes.StocksAndBonds_ETF or AssetTypes.StocksAndBonds_Fund => 4,
@@ -286,8 +324,10 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
         }
     }
 
-    public string InvestmentOrderCategory {
-        get {
+    public string InvestmentOrderCategory
+    {
+        get
+        {
             return InvestmentOrder switch
             {
                 1 => "US Stocks",
@@ -301,21 +341,27 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
     }
 
     private double? _ExpenseRatio;
-    public double? ExpenseRatio {
-        get {
+    public double? ExpenseRatio
+    {
+        get
+        {
             return _ExpenseRatio;
         }
-        set {
+        set
+        {
             _ExpenseRatio = value;
         }
-     }
+    }
 
     private double? _Shares;
-    public double? Shares {
-        get {
+    public double? Shares
+    {
+        get
+        {
             return _Shares;
         }
-        set {
+        set
+        {
             _Shares = value;
             OnPropertyChanged();
             UpdateValue();
@@ -326,8 +372,10 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
     public RSUGrant? GrantToUpdateQuote { get; set; }
 
     private double? _Value;
-    public double? Value {
-        get {
+    public double? Value
+    {
+        get
+        {
             return _Value;
         }
         set
@@ -343,13 +391,17 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
     public double? CostBasis { get; set; }
 
     private double? _Price;
-    public double? Price {
-        get {
+    public double? Price
+    {
+        get
+        {
             return _Price;
         }
-        set {
+        set
+        {
             _Price = value;
-            if (_Price != null && GrantToUpdateQuote != null) {
+            if (_Price != null && GrantToUpdateQuote != null)
+            {
                 GrantToUpdateQuote.LastPrice = Price;
             }
 
@@ -357,10 +409,13 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
- 
-    public void UpdateValue() {
-        if (Price != null && Shares != null) {
-            switch (AssetType ?? AssetTypes.Unknown) {
+
+    public void UpdateValue()
+    {
+        if (Price != null && Shares != null)
+        {
+            switch (AssetType ?? AssetTypes.Unknown)
+            {
                 case AssetTypes.Unknown:
                 case AssetTypes.Bond:
                     break;
@@ -404,74 +459,87 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
     [JsonIgnore]
     public double Percentage { get; set; }
 
-    public static Dictionary<string,List<double>>? IBondRates { get; set; }
-    
+    public static Dictionary<string, List<double>>? IBondRates { get; set; }
+
     [JsonIgnore]
     public WeakReference<Account>? Host { get; set; }
     [JsonIgnore]
     public bool IsDirty { get; set; }
-    public static async Task LoadIBondRates() {
-        if (IBondRates == null) {
-            IBondRates = [];
+    public static async Task LoadIBondRates()
+    {
+        if (IBondRates == null)
+        {
             var ibondsUri = new Uri("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/treasury-direct/i-bond-rate-chart.csv");
             var httpClient = new HttpClient();
-            var ibondsCsv = await httpClient.GetAsync(ibondsUri.AbsoluteUri);
-            var stream = await ibondsCsv.Content.ReadAsStreamAsync();
-            using var reader = new CsvReader(stream);
-            var RowEnumerator = reader.GetRowEnumerator().GetAsyncEnumerator();
-            await RowEnumerator.MoveNextAsync();
-            await RowEnumerator.MoveNextAsync();
-            while (await RowEnumerator.MoveNextAsync())
+            try
             {
-                string[] chunks = RowEnumerator.Current;
-                int chunkNum = 0;
-                string? date = null;
-                List<double> rates = [];
-                foreach (var chunk in chunks)
+                var ibondsCsv = await httpClient.GetAsync(ibondsUri.AbsoluteUri);
+                var stream = await ibondsCsv.Content.ReadAsStreamAsync();
+                using var reader = new CsvReader(stream);
+                var RowEnumerator = reader.GetRowEnumerator().GetAsyncEnumerator();
+                await RowEnumerator.MoveNextAsync();
+                await RowEnumerator.MoveNextAsync();
+                IBondRates = [];
+                while (await RowEnumerator.MoveNextAsync())
                 {
-                    switch (chunkNum) 
+                    string[] chunks = RowEnumerator.Current;
+                    int chunkNum = 0;
+                    string? date = null;
+                    List<double> rates = [];
+                    foreach (var chunk in chunks)
                     {
-                        case 0:
-                            date = chunk[..5];
-                            if (!char.IsDigit(date[0])) 
-                            {
-                                // lines at bottom of the csv file that don't start with a dates should be skipped.
-                                return;
-                            }
-                            break;
-                        case 1:
-                            var rate = DoubleFromPercentageString(chunk);
-                            rates.Add(rate);
-                            break;
-                        default:
-                            if (string.IsNullOrEmpty(chunk))
-                            {
-                                continue;
-                            }
-                            else 
-                            {
-                                var fixedRate = DoubleFromPercentageString(chunk);
-                                rates.Add(fixedRate);
-                            }
-                            break;
-                    }
-                    
-                    chunkNum++;
-                }
+                        switch (chunkNum)
+                        {
+                            case 0:
+                                date = chunk[..5];
+                                if (!char.IsDigit(date[0]))
+                                {
+                                    // lines at bottom of the csv file that don't start with a dates should be skipped.
+                                    return;
+                                }
+                                break;
+                            case 1:
+                                var rate = DoubleFromPercentageString(chunk);
+                                rates.Add(rate);
+                                break;
+                            default:
+                                if (string.IsNullOrEmpty(chunk))
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    var fixedRate = DoubleFromPercentageString(chunk);
+                                    rates.Add(fixedRate);
+                                }
+                                break;
+                        }
 
-                IBondRates[date!] = rates;
+                        chunkNum++;
+                    }
+
+                    IBondRates[date!] = rates;
+                }
+            }
+            catch (HttpRequestException)
+            {
+                // handles offline case
             }
         }
     }
 
-    static string GetRateDate(int month, int year) 
+    static string GetRateDate(int month, int year)
     {
-        if (month < 5) {
-            return "11/" + (year-1).ToString()[2..];
+        if (month < 5)
+        {
+            return "11/" + (year - 1).ToString()[2..];
         }
-        else if (month < 11) {
+        else if (month < 11)
+        {
             return "05/" + (year).ToString()[2..];
-        } else {
+        }
+        else
+        {
             return "11/" + (year).ToString()[2..];
         }
     }
@@ -508,7 +576,7 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
                     decimal value = CostBasis == null ? 0.0m : (decimal)CostBasis;
                     decimal bondQuantity = (value / 25.0m);
 
-                    if (bondQuantity != 0m) 
+                    if (bondQuantity != 0m)
                     {
                         double currentRate = 0.0;
                         var monthsLeft = GetTotalMonths(PurchaseDate.Value, DateTime.Now);
@@ -519,7 +587,7 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
                             //TODO: if (current), calculate currentValue and value
                             monthsToCompoundThisRound = monthsLeft >= 6 ? 6 : monthsLeft;
                             currentRate = rates[i];
-                            var price = Math.Round(value/bondQuantity*(decimal)Math.Pow((1.0+currentRate/2.0),((double)monthsToCompoundThisRound/6.0)),2, MidpointRounding.AwayFromZero);
+                            var price = Math.Round(value / bondQuantity * (decimal)Math.Pow((1.0 + currentRate / 2.0), ((double)monthsToCompoundThisRound / 6.0)), 2, MidpointRounding.AwayFromZero);
                             value = bondQuantity * price;
                             monthsLeft -= monthsToCompoundThisRound;
                             i--;
@@ -527,7 +595,7 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
 
                         InterestRate = rates[0];
                         CurrentRate = monthsToCompoundThisRound != 6 ? currentRate : rates[i];
-                        if (monthsToCompoundThisRound != 6 && i > 0) 
+                        if (monthsToCompoundThisRound != 6 && i > 0)
                         {
                             NextRate = rates[i];
                             var nextMonthStart = nowMonth + 6 - monthsToCompoundThisRound + 1;
@@ -538,11 +606,13 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
                                 nextYearStart++;
                             }
                             NextRateStart = new DateOnly(nextYearStart, nextMonthStart, 1);
-                        } else {
+                        }
+                        else
+                        {
                             NextRate = null;
                             NextRateStart = null;
                         }
-                        
+
                         if (PurchaseDate <= DateOnly.FromDateTime(DateTime.Now))
                         {
                             Value = (int)value;
@@ -551,7 +621,9 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
                         {
                             Value = null;
                         }
-                    } else {
+                    }
+                    else
+                    {
                         Value = null;
                     }
                 }
@@ -569,7 +641,9 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
         if (current)
         {
             return currentValue;
-        } else {
+        }
+        else
+        {
             return Value;
         }
     }
@@ -582,6 +656,6 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
 
     private static double DoubleFromPercentageString(string value)
     {
-        return double.Parse(value.Replace("%","")) / 100;
+        return double.Parse(value.Replace("%", "")) / 100;
     }
 }

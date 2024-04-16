@@ -1,3 +1,5 @@
+using DocumentFormat.OpenXml.Office2013.WebExtension;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
@@ -26,6 +28,7 @@ public class FamilyData : INotifyPropertyChanged
         Questions = [];
         RetirementData = new();
         EmergencyFund = new();
+        Snapshots = [];
 
         People.Add(new Person() { Identifier = "person 1", FamilyData = this, PersonIndex = 0 });
         People.Add(new Person() { Identifier = "person 2", FamilyData = this, PersonIndex = 1 });
@@ -45,6 +48,8 @@ public class FamilyData : INotifyPropertyChanged
 
         EmergencyFund.SetBackPointer(this);
     }
+
+    public ObservableCollection<Snapshot> Snapshots { get; set; }
 
     [JsonIgnore]
     public double PercentTotal { get; set; }
