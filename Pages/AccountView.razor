@@ -1121,7 +1121,7 @@ else if (appData?.FamilyData == null)
                 account.SelectedInvestment.Selected = false;
             }
 
-            account.SelectedInvestment = new Investment() { Funds = Funds, Selected = true, Ticker = "IBOND" };
+            account.SelectedInvestment = new Investment() { Funds = Funds, Selected = true, Ticker = "IBOND", AssetType = AssetTypes.IBond };
             account.Investments.Add(account.SelectedInvestment);
 
             account.SelectedInvestment.SelectedTransaction = new Transaction() { Type = "Edit" };
