@@ -210,6 +210,10 @@ public static class FormatUtilities
                         {
                             returnVal += "<a href='" + href[19..] + "'>" + text + "</a>";
                         }
+                        else if (href.StartsWith("https://multifol.io/"))
+                        {
+                            returnVal += "<a href='" + href[19..] + "'>" + text + "</a>";
+                        }
                         else if (href.StartsWith("https://"))
                         {
                             returnVal += "<a target=_blank href='" + href + "'>" + text + "</a>";
