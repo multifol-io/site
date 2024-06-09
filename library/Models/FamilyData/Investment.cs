@@ -600,11 +600,11 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
                             i--;
                         }
 
-                        InterestRate = rates[0];
-                        CurrentRate = monthsToCompoundThisRound != 6 ? currentRate : rates[i];
+                        InterestRate = rates[0] * 100.0;
+                        CurrentRate = monthsToCompoundThisRound != 6 ? currentRate * 100.0 : rates[i] * 100.0;
                         if (monthsToCompoundThisRound != 6 && i > 0)
                         {
-                            NextRate = rates[i];
+                            NextRate = rates[i] * 100.0;
                             var nextMonthStart = nowMonth + 6 - monthsToCompoundThisRound + 1;
                             var nextYearStart = nowYear;
                             if (nextMonthStart > 12)

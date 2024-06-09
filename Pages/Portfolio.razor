@@ -450,8 +450,8 @@ else if (appData is not null && appData.FamilyData is not null)
                                                                 </td>
                                                                 @if (investment.IsIBond)
                                                                 {
-                                                                    <td style=text-align:right>@FormatUtilities.FormatPercent3(investment.InterestRate * 100.0)</td>
-                                                                    <td style=text-align:right>@FormatUtilities.FormatPercent3(investment.CurrentRate * 100.0)</td>
+                                                                    <td style=text-align:right>@FormatUtilities.FormatPercent3(investment.InterestRate)</td>
+                                                                    <td style=text-align:right>@FormatUtilities.FormatPercent3(investment.CurrentRate)</td>
                                                                 }
                                                                 else
                                                                 {
@@ -470,7 +470,7 @@ else if (appData is not null && appData.FamilyData is not null)
                                                                         as of @FormatUtilities.FormatMonthPlus2DigitYear(@investment.NextRateStart):
                                                                     </td>
                                                                     <td style=text-align:right>
-                                                                        @FormatUtilities.FormatPercent3(investment.NextRate * 100.0)
+                                                                        @FormatUtilities.FormatPercent3(investment.NextRate)
                                                                     </td>
                                                                     <td></td>
                                                                 </tr>
