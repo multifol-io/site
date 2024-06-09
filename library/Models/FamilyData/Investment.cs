@@ -82,6 +82,13 @@ public class Investment : IHostedBy<Account>, INotifyPropertyChanged
             }
         }
     }
+    public string? TickerOutput
+    {
+        get
+        {
+            return Ticker + (this.IsIBond ? $" {FormatUtilities.FormatMonthPlus2DigitYear(this.PurchaseDate)}" : null);
+        }
+    }
 
     public double? GetPrice(AssetTypes? assetType, double? price)
     {
