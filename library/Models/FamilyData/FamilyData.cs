@@ -160,7 +160,7 @@ public class FamilyData : INotifyPropertyChanged
         }
     }
 
-    [JsonIgnore] // Transition to StateTaxRate on 7/28/2023 - https://github.com/bogle-tools/site/issues/208
+    [JsonIgnore] // Transition to StateTaxRate on 7/28/2023 - https://github.com/multifol-io/site/issues/208
     public string? StateMarginalTaxBracket
     {
         get

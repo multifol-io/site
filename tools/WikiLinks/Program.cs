@@ -205,7 +205,7 @@ static string? Escape(string? expr)
 async Task ProcessAllPages(WikiSite wikiSite) {    
     var debugStart = "";
     var debugEnd = debugStart;
-    Scan scanInfo = new("github.com/bogle-tools/site/tree/main/tools/WikiLinks",DateTime.Now);
+    Scan scanInfo = new("github.com/multifol-io/site/tree/main/tools/WikiLinks",DateTime.Now);
 
     var allPages = new AllPagesGenerator(wikiSite) 
         {
