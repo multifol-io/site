@@ -796,8 +796,9 @@ public class FamilyData : INotifyPropertyChanged
     private bool xHasValue;
     private double? changeInXUnits;
 
-    public async Task RefreshPrices(HttpClient http)
+    public async Task RefreshPrices(HttpClient http, string domain)
     {
+        Console.WriteLine("api domain: " + domain);
         BatchUpdating = true;
         TickersToUpdate = [];
 
@@ -873,7 +874,7 @@ public class FamilyData : INotifyPropertyChanged
             {
                 try
                 {
-                    await FetchPriceAndUpdateInvestments(quote.Key, quote.Value, http);
+                    await FetchPriceAndUpdateInvestments(quote.Key, quote.Value, domain, http);
                 }
                 catch (Exception ex)
                 {
@@ -887,11 +888,11 @@ public class FamilyData : INotifyPropertyChanged
         BatchUpdating = false;
     }
 
-    private async Task FetchPriceAndUpdateInvestments(string ticker, List<Investment> investments, HttpClient http)
+    private async Task FetchPriceAndUpdateInvestments(string ticker, List<Investment> investments, string domain, HttpClient http)
     {
         if (!string.IsNullOrEmpty(this.AppData.EODHistoricalDataApiKey))
         {
-            var quoteDataJson = await http.GetStreamAsync($"https://api.bogle.tools/api/getquotes?ticker={ticker}&apikey={this.AppData.EODHistoricalDataApiKey}");
+            var quoteDataJson = await http.GetStreamAsync($"https://api.{domain}/api/getquotes?ticker={ticker}&apikey={this.AppData.EODHistoricalDataApiKey}");
             var quoteData = await JsonSerializer.DeserializeAsync<QuoteData>(quoteDataJson);
             if (quoteData != null && quoteData?.Close != null)
             {

@@ -457,7 +457,8 @@
 
     private async Task refreshPrices() {
         refreshButtonText = "Updating...";
-        await appData.FamilyData!.RefreshPrices(Http);
+        string domain = (new Uri(Navigation.Uri).Host == "bogle.tools") ? "bogle.tools" : "multifol.io";
+        await appData.FamilyData!.RefreshPrices(Http, domain);
         await appData.FamilyData.UpdateStatsAsync();
         await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
 
