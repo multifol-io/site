@@ -9,7 +9,7 @@
 
 
   <ItemGroup>
-    <Compile Remove="api/**/*.cs;tools/**/*.cs;library/**/*.cs" />
+    <Compile Remove="api/**/*.cs;api.multifol.io/**/*.cs;tools/**/*.cs;library/**/*.cs" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all" />
     <ProjectReference Include="library\Folio.Library.csproj" />

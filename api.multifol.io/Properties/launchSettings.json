@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "api.multifol.io": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7065",
+      "launchBrowser": false
+    }
+  }
+}
