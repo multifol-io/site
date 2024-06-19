@@ -21,7 +21,7 @@ namespace api
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("SearchTicker processed a request.");
+            log.LogInformation("CopyData processed a request.");
 
             string copyCode = req.Query["copyCode"];
             string profileData = req.Query["profileData"];

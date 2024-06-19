@@ -1318,7 +1318,7 @@ else if (appData is not null && appData.FamilyData is not null)
         refreshButtonDisabled = true;
         if (appData?.FamilyData != null)
         {
-            string domain = (new Uri(Navigation.Uri).Host == "bogle.tools") ? "bogle.tools" : "multifol.io";
+            var domain = (new Uri(Navigation.Uri).Host == "bogle.tools") ? "bogle.tools" : "multifol.io";
             await appData.FamilyData.RefreshPrices(Http, domain);
             await appData.FamilyData.UpdateStatsAsync();
             await ProfileUtilities.Save(appData.CurrentProfileName, appData.FamilyData);
