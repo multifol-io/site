@@ -15,6 +15,7 @@ public class BrowserProfileUtility(LocalStorageAccessor localStorageAccessor) : 
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
             IgnoreReadOnlyProperties = true,
             WriteIndented = true,
+            NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals,
             Converters =
                 {
                     new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
@@ -54,6 +55,7 @@ public class BrowserProfileUtility(LocalStorageAccessor localStorageAccessor) : 
         StoredJson = await LocalStorageAccessor!.GetValueAsync<string>(appData.CurrentProfileName);
         var options = new JsonSerializerOptions() 
         {
+            NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals,
             Converters =
                 {
                     new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)

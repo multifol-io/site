@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "src", "src.csproj", "{28B10
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "api", "api\api.csproj", "{519B0E10-3FC1-4F2D-9A6D-EC465728C8E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "library", "library\25XLibrary.csproj", "{EA2E6D14-91D2-4580-8994-A414F18DDDFF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "library", "library\Folio.Library.csproj", "{EA2E6D14-91D2-4580-8994-A414F18DDDFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
