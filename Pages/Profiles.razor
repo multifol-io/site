@@ -221,7 +221,6 @@
         var profileData = await ProfileUtilities.GetProfileData(profileName);
         var jsonEncoding = "{ \"profileData\":'"+profileData+"'}";
         var myHttpContent = new MyHttpContent(jsonEncoding);
-        var domain = "multifol.io";
         var securityKeyResponse = await Http.PostAsync($"https://api.bogle.tools/api/migratedata", myHttpContent, CancellationToken.None);
         var copyToCode = await securityKeyResponse.Content.ReadAsStringAsync();
         log += $"\n{profileName} profile shared. Navigate any device to https://multifol.io/copyFrom/{copyToCode} within 5 minutes.\n";
