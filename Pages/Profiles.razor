@@ -63,6 +63,10 @@
                         {
                             <button @onclick="@(e=>deleteProfile(e,profileName))">del</button>
                             <button @onclick="@(e=>copyToProfile(e,profileName))">copy to...</button>
+                            @if (new Uri(Navigation.Uri).Host != "multifol.io") {
+                                <br/>
+                                <button @onclick="@(e=>migrateProfile(e,profileName))">migrate to multifol.io...</button>
+                            }
                         }
                     }
                 </td>
@@ -209,6 +213,18 @@
         var securityKeyResponse = await Http.PostAsync($"https://api.{domain}/api/copydata", myHttpContent, CancellationToken.None);
         var copyToCode = await securityKeyResponse.Content.ReadAsStringAsync();
         log += $"\n{profileName} profile shared. Navigate any device to https://{domain}/copyFrom/{copyToCode} within 5 minutes.\n";
+    }
+
+    private async Task migrateProfile(EventArgs e, string profileName)
+    {
+        //TODO: what if not saved? this will get from localstorage.
+        var profileData = await ProfileUtilities.GetProfileData(profileName);
+        var jsonEncoding = "{ \"profileData\":'"+profileData+"'}";
+        var myHttpContent = new MyHttpContent(jsonEncoding);
+        var domain = "multifol.io";
+        var securityKeyResponse = await Http.PostAsync($"https://api.bogle.tools/api/migratedata", myHttpContent, CancellationToken.None);
+        var copyToCode = await securityKeyResponse.Content.ReadAsStringAsync();
+        log += $"\n{profileName} profile shared. Navigate any device to https://multifol.io/copyFrom/{copyToCode} within 5 minutes.\n";
     }
 
     private async Task deleteProfile(EventArgs e, string profileName)
