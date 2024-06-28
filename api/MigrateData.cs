@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Collections.Generic;
 using System.Threading;
+using System.Reflection.Metadata;
 
 namespace api
 {
@@ -22,8 +23,6 @@ namespace api
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("MigrateData processed a request.");
-
             string copyCode = req.Query["copyCode"];
             string profileData = req.Query["profileData"];
 
@@ -40,7 +39,9 @@ namespace api
                 var jsonEncoding = "{ \"profileData\":'"+profileData+"'}";
                 var myHttpContent = new MyHttpContent(jsonEncoding);
                 var securityKeyResponse = await Http.PostAsync($"https://api.{domain}/api/copydata", myHttpContent, CancellationToken.None);
-                return new OkObjectResult(securityKeyResponse.Content);
+                var copyToCode = await securityKeyResponse.Content.ReadAsStringAsync();
+                log.LogInformation($"MigrateData returned {copyToCode}");
+                return new OkObjectResult(copyToCode);
             }
             else if (copyCode != null)
             {
@@ -50,9 +51,17 @@ namespace api
                 var jsonEncoding = "{ 'copyCode':'"+copyCode?.Trim()+"'}";
                 var myHttpContent = new MyHttpContent(jsonEncoding);
                 var familyDataResponse = await Http.PostAsync($"https://api.{domain}/api/copydata", myHttpContent, CancellationToken.None);
-                return new OkObjectResult(familyDataResponse.Content);
+                var familyData = await familyDataResponse.Content.ReadAsStringAsync();
+
+                string content = familyData;
+                int len = content.Length;
+                if (len > 5) { content = content.Substring(5); }
+            
+                log.LogInformation($"MigrateData returned {len} chars starting with '{content}'");
+                return new OkObjectResult(familyData);
             }
 
+            log.LogInformation($"MigrateData returned BadRequestObjectResult");
             return new BadRequestObjectResult(null);
         }
     }
