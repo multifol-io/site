@@ -14,6 +14,14 @@ MultiFol.io
 </div>
 <div style=clear:left;margin-left:1.5in><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault >(manage profiles)</a></div>
 
+@if (new Uri(Navigation.Uri).Host == "bogle.tools")
+{
+<p style='clear:left;border:1px solid black;padding:2px;'>
+    <b style=font-size:24pt>Time Critical:</b><br/>
+    This site is moving to <a href=https://multifol.io>https://multifol.io</a>. If you are using any of the features that keep a copy of the data locally, you should migrate your data and update any shortcuts you use to navigate to the site. See details: <a href="https://www.bogleheads.org/forum/viewtopic.php?t=434595">migration instructions</a>.
+</p>
+}
+
 <p style=clear:left>
     <a href='portfolio-tracker'>
         <span style="margin:3px;font-Size:24pt">📈</span>
