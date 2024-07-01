@@ -15,12 +15,22 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8SCP5YFBJ"></script>
     <script>
-      if(location.hostname !== "localhost" && !location.hostname.startsWith("agreeable-wave-0445aab10-")) {
+      var siteTag = null;
+
+      if(location.hostname === "bogle.tools") {
+        siteTag = 'G-P8SCP5YFBJ';
+      }
+      else if (location.hostname === "multifol.io")
+      {
+        siteTag = 'G-G2DBGS5RWK';
+      }
+
+      if (siteTag !== null) {
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
-        gtag('config', 'G-P8SCP5YFBJ');
+        gtag('config', siteTag);
       }
     </script>
     <script>
