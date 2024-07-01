@@ -13,24 +13,33 @@
     <link href="manifest.webmanifest" rel="manifest" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8SCP5YFBJ"></script>
     <script>
-      var siteTag = null;
+      var gtagId = null;
 
       if(location.hostname === "bogle.tools") {
-        siteTag = 'G-P8SCP5YFBJ';
+        gtagId = 'G-P8SCP5YFBJ';
       }
       else if (location.hostname === "multifol.io")
       {
-        siteTag = 'G-G2DBGS5RWK';
+        gtagId = 'G-G2DBGS5RWK';
       }
 
-      if (siteTag !== null) {
+      if (gtagId !== null) {
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
-        gtag('config', siteTag);
+        gtag('config', gtagId);
+      }
+
+      var gtagScriptExists = false;
+      if (!gtagScriptExists) {
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.async = true;
+        script.src = "//www.googletagmanager.com/gtag/js?id=" + gtagId;
+        document.getElementsByTagName("head")[0].appendChild(script);
+        gtagScriptExists = true;
       }
     </script>
     <script>
