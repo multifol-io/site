@@ -4,7 +4,14 @@
 @using Models
 
 <PageTitle>
+@if (new Uri(Navigation.Uri).Host == "bogle.tools")
+{
+bogle.tools (OBSOLETE)
+}
+else
+{
 MultiFol.io
+}
 </PageTitle>
 
 <div style=float:left>
