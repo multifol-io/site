@@ -3,16 +3,18 @@
 @inject NavigationManager Navigation
 @using Models
 
-<PageTitle>
 @if (new Uri(Navigation.Uri).Host == "bogle.tools")
 {
-bogle.tools (OBSOLETE)
+    <PageTitle>
+    bogle.tools (OBSOLETE)
+    </PageTitle>
 }
 else
 {
-MultiFol.io
+    <PageTitle>
+    MultiFol.io
+    </PageTitle>
 }
-</PageTitle>
 
 <div style=float:left>
     <h4 style="max-width:450px">
