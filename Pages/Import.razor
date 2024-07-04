@@ -60,6 +60,7 @@ else
                         <a href='/import/other'>other</a> | 
                         <a href='/import/RaymondJames'>Raymond&nbsp;James</a> | 
                         <a href='/import/TRowePrice'>T.&nbsp;Rowe&nbsp;Price</a></span><br/>
+                        <a href='/import/TIAA'>TIAA</a><br/>
                     </div>
 
             @switch (Custodian)
@@ -102,6 +103,26 @@ else
                                             <li>Choose Account Type for each new account</li>
                                         </ol>
                                     </p>
+                    break;
+                case "TIAA":
+                    <h3>Import from @Custodian:</h3>
+                    <p>
+                        <ol>
+                            <li>Login to <a target=_new href=https://tiaa.org>tiaa.org</a>↗️</li>
+                            <li>Click on "Accounts" and then choose the subgroup of accounts whose holdings you wish to download (e.g. "retirement")</li>
+                            <li>Click the "Investments" tab to download holdings for all accounts; otherwise choose the specific account whose holdings you wish to download and only then click the "Investments" tab</li>
+                            <li>At the top right of that tab find the link "Export data" and click on it</li>
+                            <li>Click the choice for ".csv" file as the type of file to export</li>
+                            <li>Click "Choose File" button, find and choose the "investments.csv" file in Downloads folder</li>
+                            <fieldset style=margin-left:20px>
+                                <InputFile multiple accept=".csv" OnChange="@((e) => OnDataFilesImport(e))" /><br/>
+                                <ul>
+                                    <li>CAUTION: only share personal info (like these files) to apps worthy of your trust! See our privacy details in our <a href=/help>Help/FAQ page</a></li>
+                                </ul>
+                            </fieldset><br/>
+                            <li>Choose Account Type for each new account</li>
+                        </ol>
+                    </p>
                     break;
                 case "TreasuryDirect":
                                     <h3>Import from @Custodian:</h3>

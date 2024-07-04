@@ -116,9 +116,13 @@ public class Importer
             {
                 return await ImportAmeriprise(RowEnumerator, familyData);
             }
+            else if (headerChunks[0].StartsWith("Data As of "))
+            {
+                return await ImportTIAA(RowEnumerator, familyData);
+            }
             else
             {
-                throw new InvalidDataException("Importing this CSV file failed. We currently support importing CSV files from Ameriprise, eTrade, Fidelity, JPMorgan Chase, Merrill Edge, Schwab, or Vanguard");
+                throw new InvalidDataException("Importing this CSV file failed. We currently support importing CSV files from Ameriprise, eTrade, Fidelity, JPMorgan Chase, Merrill Edge, Schwab, TIAA, or Vanguard");
             }
         }
         catch (Exception e)
@@ -129,7 +133,7 @@ public class Importer
             }
             else
             {
-                throw new InvalidDataException("Importing this CSV file failed, even though we think it should have worked (we think it was from Ameriprise, eTrade, Fidelity, JPMorgan Chase, Merrill Edge, Schwab, or Vanguard).", e);
+                throw new InvalidDataException("Importing this CSV file failed, even though we think it should have worked (we think it was from Ameriprise, eTrade, Fidelity, JPMorgan Chase, Merrill Edge, Schwab, TIAA, or Vanguard).", e);
             }
         }
     }
@@ -644,6 +648,75 @@ public class Importer
         return importedAccounts;
     }
 
+    private static async Task<List<Account>> ImportTIAA(IAsyncEnumerator<string[]> rowEnumerator, FamilyData familyData)
+    {
+        List<Account> importedAccounts = [];
+        string[] firstLineChunks = rowEnumerator.Current;
+        bool singleAccountFormat = false;
+
+        await rowEnumerator.MoveNextAsync(); // goto headers line
+        await rowEnumerator.MoveNextAsync(); // go to next line
+
+        bool stillProcessing = true;
+        Account? newAccount = null;
+
+        while (stillProcessing)
+        {
+            string[] chunks = rowEnumerator.Current;
+            Console.WriteLine($"{chunks.Length},{chunks[0]}");
+            if (chunks.Length <3 || newAccount == null)
+            {
+                newAccount = new(familyData)
+                {
+                    Custodian = "TIAA",
+                    Note = chunks[0],
+                };
+        
+                importedAccounts.Add(newAccount);
+
+                if (chunks.Length < 3)
+                {
+                    await rowEnumerator.MoveNextAsync(); // go to next line
+                    await rowEnumerator.MoveNextAsync(); // go to next line
+                    continue;
+                }
+            }
+
+            string? symbol = null;
+            string? name = null;
+            var nameAndSymbol = chunks[0];
+            if (nameAndSymbol == "All Investments" || nameAndSymbol.StartsWith("*Reflects the change"))
+            {
+                await rowEnumerator.MoveNextAsync();
+                break;
+            }
+            else
+            {
+                var indexOfParen = nameAndSymbol.IndexOf('(');
+                var indexOfClose = nameAndSymbol.IndexOf(")");
+                symbol = nameAndSymbol.Substring(indexOfParen + 1, indexOfClose - indexOfParen - 1);
+                name = nameAndSymbol.Substring(0,indexOfParen).Trim();
+            }
+
+            double shares = FormatUtilities.ParseDouble(chunks[3]);
+            double value = FormatUtilities.ParseDouble(chunks[1], allowCurrency: true);
+            AssetTypes? assetType = null;
+
+            string? investmentName = name;
+
+            Investment newInvestment = new() { Funds = familyData.AppData.Funds, Ticker = symbol, Name = (investmentName ?? null), Value = value, Shares = shares };
+            if (assetType != null)
+            {
+                newInvestment.AssetType = assetType;
+            }
+
+            newAccount.Investments.Add(newInvestment);
+
+            stillProcessing = await rowEnumerator.MoveNextAsync();
+        }
+
+        return importedAccounts;
+    }
 
     private static async Task<List<Account>> ImportTRowePrice(IAsyncEnumerator<string[]> rowEnumerator, FamilyData familyData)
     {
