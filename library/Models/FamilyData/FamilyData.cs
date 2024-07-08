@@ -796,7 +796,7 @@ public class FamilyData : INotifyPropertyChanged
     private bool xHasValue;
     private double? changeInXUnits;
 
-    public async Task RefreshPrices(HttpClient http, string domain)
+    public async Task RefreshPrices(HttpClient http, string domain = "multifol.io")
     {
         Console.WriteLine("api domain: " + domain);
         BatchUpdating = true;
