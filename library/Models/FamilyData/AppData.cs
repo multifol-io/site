@@ -8,7 +8,7 @@ namespace Models;
 
 public class AppData : IAppData, INotifyPropertyChanged
 {
-    public AppData(string baseAddress = "https://bogle.tools")
+    public AppData(string baseAddress = "https://multifol.io")
     {
         BaseAddress = baseAddress;
     }
