@@ -407,7 +407,7 @@ public class Importer
                 newAccount = new(familyData)
                 {
                     Custodian = "Vanguard",
-                    Note = planName
+                    Note = planName.Replace(" 401(K) PLAN", "")
                 };
                 importedAccounts.Add(newAccount);
             }
