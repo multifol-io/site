@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager Navigation
 
 <div class="page">
     <div class="sidebar">
@@ -9,8 +10,14 @@
         <article class="content px-4">
             <MyErrorBoundary @ref="boundary">
                 <ChildContent>
-                    <MigrationWarning />
-                    @Body
+                    @if (new Uri(Navigation.Uri).Host == "bogle.tools")
+                    {
+                        <MigrationWarning />
+                    }
+                    else
+                    {
+                        @Body
+                    }
                 </ChildContent>
                 <ErrorContent>
                     <div style="display: table; height: 400px; overflow: hidden;">
