@@ -23,64 +23,67 @@
     </div>
 </div>
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-1">
-            <NavLink class="nav-link" href="/portfolio-tracker">
-                <span style="font-Size:24pt">📈</span>&nbsp;Portfolio Tracker
-            </NavLink>
-        </div>
+@if (new Uri(Navigation.Uri).Host != "bogle.tools")
+{
+    <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+        <nav class="flex-column">
+            <div class="nav-item px-1">
+                <NavLink class="nav-link" href="/portfolio-tracker">
+                    <span style="font-Size:24pt">📈</span>&nbsp;Portfolio Tracker
+                </NavLink>
+            </div>
 
-        <div class="nav-item px-1">
-            <NavLink class="nav-link" href="/savings-planner">
-                <span style="font-Size:24pt">💰</span>&nbsp;Savings Planner
-            </NavLink>
-        </div>
+            <div class="nav-item px-1">
+                <NavLink class="nav-link" href="/savings-planner">
+                    <span style="font-Size:24pt">💰</span>&nbsp;Savings Planner
+                </NavLink>
+            </div>
 
-        <hr style=color:white />
+            <hr style=color:white />
 
-        <div class="nav-item px-1">
-            <NavLink class="nav-link" href="/portfolio-tracker/view/editor" style="font-size:10pt">
-                <span style="font-Size:24pt">✏️</span>&nbsp;Edit Accounts / Holdings
-            </NavLink>
-        </div>
-        <div class="nav-item px-1">
-            <NavLink class="nav-link" href="/import">
-                <span style="font-Size:24pt">⬆️</span>&nbsp;Import Center
-            </NavLink>
-        </div>
+            <div class="nav-item px-1">
+                <NavLink class="nav-link" href="/portfolio-tracker/view/editor" style="font-size:10pt">
+                    <span style="font-Size:24pt">✏️</span>&nbsp;Edit Accounts / Holdings
+                </NavLink>
+            </div>
+            <div class="nav-item px-1">
+                <NavLink class="nav-link" href="/import">
+                    <span style="font-Size:24pt">⬆️</span>&nbsp;Import Center
+                </NavLink>
+            </div>
 
-        <div class="nav-item px-1">
-            <NavLink class="nav-link" href="/profiles">
-                <span style="font-Size:14pt">🧑‍🦳🧑‍🦰👵</span>&nbsp;Multiple Portfolios
-            </NavLink>
-        </div>
+            <div class="nav-item px-1">
+                <NavLink class="nav-link" href="/profiles">
+                    <span style="font-Size:14pt">🧑‍🦳🧑‍🦰👵</span>&nbsp;Multiple Portfolios
+                </NavLink>
+            </div>
 
-        <div class="nav-item px-1">
-            <NavLink class="nav-link" href="/help">
-                <span style="font-Size:24pt">🔭</span>&nbsp;Help/FAQ
-            </NavLink>
-        </div>
-        
-        <hr style=color:white />
+            <div class="nav-item px-1">
+                <NavLink class="nav-link" href="/help">
+                    <span style="font-Size:24pt">🔭</span>&nbsp;Help/FAQ
+                </NavLink>
+            </div>
+            
+            <hr style=color:white />
 
-        <div class="nav-item px-1">
-            <NavLink class="nav-link" href="/portfolio-review">
-                <span style="font-Size:24pt">🧐</span>&nbsp;Portfolio Review
-            </NavLink>
-        </div>
-        <div class="nav-item px-1">
-            <NavLink class="nav-link" href="/rsu-tracker">
-                <span style="font-Size:24pt">🔮</span>&nbsp;RSU Tracker
-            </NavLink>
-        </div>
-        <br/>
-        <div class="nav-item px-1" style="font-style:italic;font-Size:10pt;color:white;text-align:center">
-            "Take charge of your savings!"
-        </div>
-    </nav>
+            <div class="nav-item px-1">
+                <NavLink class="nav-link" href="/portfolio-review">
+                    <span style="font-Size:24pt">🧐</span>&nbsp;Portfolio Review
+                </NavLink>
+            </div>
+            <div class="nav-item px-1">
+                <NavLink class="nav-link" href="/rsu-tracker">
+                    <span style="font-Size:24pt">🔮</span>&nbsp;RSU Tracker
+                </NavLink>
+            </div>
+            <br/>
+            <div class="nav-item px-1" style="font-style:italic;font-Size:10pt;color:white;text-align:center">
+                "Take charge of your savings!"
+            </div>
+        </nav>
 
-</div>
+    </div>
+}
 
 @code {
     private bool collapseNavMenu = true;
