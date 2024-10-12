@@ -712,7 +712,7 @@ else
                                     <p><b>Person @personIndex:</b> </p>
 
                                     <EditForm Model="person" style=margin-left:25px>
-                                        <label>Age:</label> <input style=width:60px type=number min=0 max=125 @bind-Value=person.Age @bind-Value:event=oninput /> (on this year's birthday)<br />
+                                        <label>Age:</label> <input style=width:60px type=number min=0 max=125 @bind-Value=person.Age @bind-Value:event=oninput /> (on {@appData.FamilyData.Year}'s birthday)<br />
 
                                         @if (person?.FamilyData?.PersonCount > 1)
                                         {
