@@ -5,14 +5,17 @@ namespace IRS
 {
     public class IRSData(RetirementData retirementDataY1, RetirementData retirementDataY2, TaxRateData taxRatesY1, TaxRateData taxRatesY2)
     {
+        private static int FIRST_YEAR = 2024; 
+        private static int SECOND_YEAR = FIRST_YEAR + 1;
+
         public async static Task<IRSData?> Create(HttpClient httpClient) 
         {
             IRSData? irsData = null;
 
-            var retirementYear1 = await httpClient.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/irs/irs.retirement.2023.json");
-            var retirementYear2 = await httpClient.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/irs/irs.retirement.2024.json");
-            var taxRatesYear1 = await httpClient.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/irs/irs.tax-rates.2023.json");
-            var taxRatesYear2 = await httpClient.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/irs/irs.tax-rates.2024.json");
+            var retirementYear1 = await httpClient.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/irs/irs.retirement."+FIRST_YEAR.ToString()+".json");
+            var retirementYear2 = await httpClient.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/irs/irs.retirement."+SECOND_YEAR.ToString()+".json");
+            var taxRatesYear1 = await httpClient.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/irs/irs.tax-rates."+FIRST_YEAR.ToString()+".json");
+            var taxRatesYear2 = await httpClient.GetStreamAsync("https://raw.githubusercontent.com/bogle-tools/financial-variables/main/data/usa/irs/irs.tax-rates."+SECOND_YEAR.ToString()+".json");
             RetirementData? retirementDataY1 = await JsonSerializer.DeserializeAsync<IRS.RetirementData>(retirementYear1);
             RetirementData? retirementDataY2 = await JsonSerializer.DeserializeAsync<IRS.RetirementData>(retirementYear2);
             TaxRateData? taxRatesY1 = await JsonSerializer.DeserializeAsync<IRS.TaxRateData>(taxRatesYear1);
@@ -29,7 +32,7 @@ namespace IRS
         public int YearIndex 
         {
             get {
-                return AppData!.FamilyData!.Year - 2023;
+                return AppData!.FamilyData!.Year - FIRST_YEAR;
             }
         }
 

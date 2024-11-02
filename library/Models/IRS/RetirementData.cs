@@ -7,6 +7,9 @@ namespace IRS
     {
         public int ContributionLimit { get; set; }
         public int CatchUpContributionLimit { get; set; }
+        public int ContributionLimitB { get; set; }
+        public int CatchUpAgeBStart { get; set; }
+        public int CatchUpAgeBEnd { get; set; }
     }
 
     public class ContributionLimit

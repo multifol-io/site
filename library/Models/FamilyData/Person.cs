@@ -75,6 +75,10 @@ public class Person {
             return Age >= 55;
         }
     }
+    public bool CatchUpAgeRangeB(int start, int end)
+    {
+        return Age >= start && Age <= end;
+    }
 
     public Person? Spouse { 
         get {
