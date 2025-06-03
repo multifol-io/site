@@ -1,0 +1,97 @@
+@page "/export"
+@inject IAppData appData
+@inject NavigationManager Navigation
+@inject IProfileUtility ProfileUtilities
+@inject IList<Fund> Funds
+@inject HttpClient Http
+@using Models
+
+<PageTitle>@pageHeading</PageTitle>
+
+<div style=float:left>
+    <h4 style="max-width:450px">
+        @pageHeading <h6 style=display:inline>for @appData.CurrentProfileName profile</h6>
+    </h4>
+</div>
+<div style=clear:left;margin-left:1.5in><a href=/profiles @onclick=navWithBackStack @onclick:preventDefault >(manage profiles)</a></div>
+
+<div style=clear:left>
+    <br/>
+    <br/>
+    <b>Feature Under design...</b><br/>
+    <span style="foreground:black">export portfolio to Excel, Sheets, or CSV</span>
+
+   <!--
+   <button @onclick=@exportCSV title=Export style=min-width:80px; @bind-disabled:event=onchange >Export as CSV</button>
+   -->
+   <br/>
+   <br/>
+   See Bogleheads.org <a href="https://www.bogleheads.org/forum/viewtopic.php?p=8396870#p8396870">forum post about this export feature</a>
+                                                            
+</div>
+
+@code {
+    private async Task exportCSV()
+    {
+        if (appData?.FamilyData != null)
+        {
+           // await ProfileUtilities.ExportCSV(appData.CurrentProfileName, appData.FamilyData);
+        }
+    }
+    private async Task OnDataFilesImport(InputFileChangeEventArgs e)
+    {
+        var namedStreams = BlazorUtilities.GetNamedStreamsFromBrowserFiles(e.GetMultipleFiles());
+
+        if (appData?.FamilyData is not null && namedStreams is not null)
+        {
+            appData.ImportResult = await Importer.ImportDataFiles(namedStreams, appData.FamilyData);
+            foreach (var account in appData.ImportResult.NewAccounts)
+            {
+                account.Import = true;
+            }
+
+            if (appData.ImportResult.UpdatedAccounts.Count == 0)
+            {
+                appData.ImportResult.ImportNewAccounts = true;
+            }
+
+            if (appData.ImportResult.NewAccounts.Count == 0)
+            {
+                appData.ImportResult.ImportUpdatedAccounts = true;
+            }
+
+            foreach (var updatedAccount in appData.ImportResult.UpdatedAccounts)
+            {
+                if (updatedAccount.Import && updatedAccount.ReplaceAccount != null)
+                {
+                    foreach (var updatedInvestment in updatedAccount.Investments)
+                    {
+                        foreach (var existingInvestment in updatedAccount.ReplaceAccount.Investments)
+                        {
+                            if (existingInvestment.Ticker == updatedInvestment.Ticker)
+                            {
+                                updatedInvestment.CostBasis = existingInvestment.CostBasis;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private void navWithBackStack()
+    {
+        appData.LastPageUri = Navigation.Uri;
+        Navigation.NavigateTo("/profiles");
+    }
+
+    protected override void OnInitialized()
+    {
+        pageHeading = "Export Center";
+        base.OnInitialized();
+    }
+
+    private bool showError { get; set; }
+    private string? pageHeading;
+    private bool csvImport = false;
+}
