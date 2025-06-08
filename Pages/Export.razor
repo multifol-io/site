@@ -1,5 +1,5 @@
 @page "/export"
-@inject IAppData appData
+@inject IAppData? appData
 @inject NavigationManager Navigation
 @inject IProfileUtility ProfileUtilities
 @inject IList<Fund> Funds
@@ -27,7 +27,88 @@
    <br/>
    <br/>
    See Bogleheads.org <a href="https://www.bogleheads.org/forum/viewtopic.php?p=8396870#p8396870">forum post about this export feature</a>
-                                                            
+   <br/>
+   <br/>
+
+    <div>
+            @if (appData.FamilyData.Accounts.Count > 0)
+            {
+                <div>Broker,Account,TaxType,Type,Owner,Ticker,Shares,Price,Value,Investment,ExpenseRatio,InvestmentCategory,closeYest,AnnualFees</div>
+            }
+            @{var rowCount = 1;}
+            @foreach (var account in appData.FamilyData.Accounts)
+            {
+                bool isTreasuryDirect = account.Custodian?.ToLowerInvariant() == "treasury direct" || account.Custodian?.ToLowerInvariant() == "treasurydirect";
+                foreach (var investment in account.Investments)
+                {
+                    rowCount++;
+                    @* if (investment.Ticker == "IBOND" && !ibondHeaderShown)
+                    {
+                        ibondHeaderShown = true;
+                        <tr style=vertical-align:bottom>
+                            <td style=padding-left:8px>Holding</td>
+                            <td style=padding-left:8px;text-align:center>'Fixed'<br />Rate</td>
+                            <td style=padding-left:8px;text-align:center>Current<br />Rate</td>
+                            <td style=padding-left:8px;text-align:center>Balance</td>
+                        </tr>
+                    } *@
+                    <div>
+                        @account.Custodian,
+                        @account.Note,
+                        @account.TaxType2,
+                        @(account.AccountType == "Taxable" ? "Brokerage" : @account.AccountType),
+                        @account.Owner,
+                        @(investment.Ticker != null ? investment.Ticker : investment.Name),
+                        @(investment.Ticker == "IBOND" ? @investment.Value / 25 : @investment.Shares),
+                        @(investment.InvestmentOrderCategory == "Cash" ? "1.0" : 
+                           (@investment.Ticker == "IBOND" ? "25" : "=googlefinance(f"+@rowCount+")")),
+                        @("=g"+@rowCount+"*h"+@rowCount),
+                        @investment.Name,
+                        @investment.ExpenseRatio,
+                        @investment.InvestmentOrderCategory,
+                        @(investment.InvestmentOrderCategory == "Cash" ? "1.0" : 
+                           investment.Ticker == "IBOND" ? "25" : "\"=googlefinance(f"+@rowCount+",\"\"closeyest\"\")\""
+                           ),
+                        @("=K"+@rowCount+"*I"+@rowCount+"/100")
+                    
+                    </div>
+                        @* <td>
+                            @if (investment.IsIBond)
+                            {
+                                <span>&nbsp;</span>
+
+                                @FormatUtilities.FormatMonthPlus2DigitYear(investment.PurchaseDate)
+                            }
+                        </td>
+                        @if (investment.IsIBond)
+                        {
+                            <td style=text-align:right>@FormatUtilities.FormatPercent3(investment.InterestRate)</td>
+                            <td style=text-align:right>@FormatUtilities.FormatPercent3(investment.CurrentRate)</td>
+                        }
+                        else
+                        {
+                            <td style=text-align:right;padding-left:8px>@FormatUtilities.FormatDoubleTwoDecimal(investment.Shares)</td>
+                            <td style=text-align:right;padding-left:8px>@FormatUtilities.FormatMoney(investment.Price)</td>
+                        }
+
+                        <td style=text-align:right;padding-left:8px>
+                            @FormatUtilities.FormatMoney(investment.Value, decimalPlaces: 0)
+                        </td> *@
+                    @* if (investment.IsIBond && investment.NextRate.HasValue)
+                    {
+                        <tr style=background-color:@bgColor >
+                            <td colspan=2 style=text-align:right>
+                                as of @FormatUtilities.FormatMonthPlus2DigitYear(@investment.NextRateStart):
+                            </td>
+                            <td style=text-align:right>
+                                @FormatUtilities.FormatPercent3(investment.NextRate)
+                            </td>
+                            <td></td>
+                        </tr>
+                    } *@
+                }
+            }
+    </div>                                                      
 </div>
 
 @code {
