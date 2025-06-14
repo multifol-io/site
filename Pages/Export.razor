@@ -33,7 +33,7 @@
     <div>
             @if (appData.FamilyData.Accounts.Count > 0)
             {
-                <div>Broker,Account,TaxType,Type,Owner,Ticker,Shares,Price,Value,Investment,ExpenseRatio,InvestmentCategory,closeYest,AnnualFees,FullAccountName</div>
+                <div>Broker,Account,TaxType,Type,Owner,Ticker,Shares,Price,Value,Investment,ExpenseRatio,InvestmentCategory,closeYest,AnnualFees,AccountOwnerAndType</div>
             }
             @{var rowCount = 1;}
             @foreach (var account in appData.FamilyData.Accounts.OrderBy(a => a.Custodian).ThenByDescending(a => a.Value))
