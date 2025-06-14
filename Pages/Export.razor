@@ -54,7 +54,10 @@
                     } *@
                     <div>
                         @account.Custodian,
-                        @account.Note,
+                        @(account.Note == null || account.Note == "" ?
+                            account.Identifier :
+                            account.Note
+                            ),
                         @account.TaxType2,
                         @(account.AccountType == "Taxable" ? "Brokerage" : @account.AccountType),
                         @account.Identifier,
@@ -70,10 +73,7 @@
                            investment.Ticker == "IBOND" ? "25" : "\"=googlefinance(f"+@rowCount+",\"\"closeyest\"\")\""
                            ),
                         @("=K"+@rowCount+"*I"+@rowCount+"/100"),
-                        @(account.Identifier != "" ? 
-                            ("\"=CONCATENATE(E"+@rowCount+",\"\" \"\",D"+@rowCount+",\"\" at \"\",A"+@rowCount+",\"\" (\"\",B"+@rowCount+",\"\")\"\")\"")
-                           :(                         "\"=CONCATENATE(D"+@rowCount+",\"\" at \"\",A"+@rowCount+",\"\" (\"\",B"+@rowCount+",\"\")\"\")\"")
-                           )
+                        @("\"=CONCATENATE(E"+@rowCount+",IF(E"+@rowCount+"<>\"\"\"\",\"\" \"\",\"\"\"\"),D"+@rowCount+")\"")
                     
                     </div>
                         @* <td>
