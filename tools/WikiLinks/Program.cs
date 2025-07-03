@@ -9,8 +9,6 @@ using MwParserFromScratch;
 using MwParserFromScratch.Nodes;
 
 string linkJsonLocation = @"c:\linkJson";
-string wikiApiUrl = "https://bogleheads.org/w/api.php";
-string wikiBaseUrl = "https://bogleheads.org/wiki/";
 
 int amountOfItems = 2000; // todo: don't hardcode this
 HttpClient httpClient = new() { Timeout = TimeSpan.FromSeconds(15) };
@@ -20,9 +18,12 @@ WikitextParser parser = new WikitextParser();
 bool showSuccesses = false; //if set to true, will list all pages (even if they have no external links), and all external links, even if they are OK.
 bool forceFetch = false;
 bool outputCSV = false;
+string wikiBaseUrl = "https://bogleheads.org/wiki/";
+string wikiApiUrl = "https://bogleheads.org/w/api.php";
 
 var client = new WikiClient();
-var wikiSite = new WikiSite(client, wikiApiUrl);
+SiteOptions options = new() { AccountAssertion = AccountAssertionBehavior.AssertBot, ApiEndpoint = wikiApiUrl };
+var wikiSite = new WikiSite(client, options);
 await wikiSite.Initialization;
 
 await ProcessAllPages(wikiSite);
