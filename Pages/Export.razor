@@ -19,21 +19,44 @@
 <div style=clear:left>
     <br/>
     <br/>
-    <b>Feature Under design...</b><br/>
-    <span style="foreground:black">export portfolio to Excel, Sheets, or CSV</span>
+    <span style="foreground:black">To export portfolio to Google Sheets spreadsheet:</span><br/>
 
-   <!--
-   <button @onclick=@exportCSV title=Export style=min-width:80px; @bind-disabled:event=onchange >Export as CSV</button>
-   -->
+
+    <div>
+        1. Load your portfolio info into this site. By hand entering the data in <a href=/portfolio-tracker>Portfolio Tracker</a>, or use the <a href=/import>Import Center</a> to import several CSV files from your brokerages.
+    </div>
+    <div>
+        2. Open Google Sheets spreadsheet to host data from CSV file, and help visualize it:
+        <a target=_new href="https://docs.google.com/spreadsheets/d/1tOFfjaYKBCBgNRNJkHQstC2rEffFd0hmKdrbIkhQgB0/edit?gid=1171143215#gid=1171143215">Multifolio Template</a>
+    </div>                      
+    <div>
+        3. In order to be able to personalize the data in the sheet, you need to create a copy of your own. In google sheets, File -> Make a copy. Save in "my drive" or similar location. Name the sheet "My Multifolio" or "&lt;MyInitials&gt; Multifolio", or the name of your chosing.
+    </div>                                
+    <div>
+        4. <button @onclick="DownloadCsv">Download CSV</button>
+    </div>
+    <div>
+        5. In your new sheet, go to "data" tab. To pick correct import location, click on cell A9 which reads "Broker".
+    </div>
+    <div>
+        6. File -> Import -> Upload. Choose the CSV file that you downloaded in step 4.
+    </div>
+    <div>
+        7. "Import file" dialog choices: change Import Location to: Replace data at selected cell.
+    </div>
+    <div>
+        8. View the different tabs, which show the newly imported data in different ways.
+    </div>
+    <div>
+        9. On the summary tab, there are a few "TODOs" at the bottom to begin to personalize your multifolio sheet.
+    </div>
+
+
    <br/>
    <br/>
    See Bogleheads.org <a href="https://www.bogleheads.org/forum/viewtopic.php?p=8396870#p8396870">forum post about this export feature</a>
    <br/>
    <br/>
-
-    <div>
-        <button @onclick="DownloadCsv">Download CSV</button>
-    </div>                                                      
 </div>
 
 @code {
