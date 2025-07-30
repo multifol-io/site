@@ -5,6 +5,7 @@
 @inject IList<Fund> Funds
 @inject HttpClient Http
 @using Models
+@using System.Text
 
 <PageTitle>@pageHeading</PageTitle>
 
@@ -31,91 +32,66 @@
    <br/>
 
     <div>
-            @if (appData.FamilyData.Accounts.Count > 0)
-            {
-                <div>Broker,Account,TaxType,Type,Owner,Ticker,Shares,Price,Value,Investment,ExpenseRatio,InvestmentCategory,closeYest,AnnualFees,AccountOwnerAndType</div>
-            }
-            @{var rowCount = 1;}
-            @foreach (var account in appData.FamilyData.Accounts.OrderBy(a => a.Custodian).ThenByDescending(a => a.Value))
+        <button @onclick="DownloadCsv">Download CSV</button>
+    </div>                                                      
+</div>
+
+@code {
+    private async Task DownloadCsv()
+    {
+        string? csvContent = GenerateCsv();  // Generate CSV content
+
+        if (csvContent != null)
+        {
+            // Call JavaScript function to download CSV
+            await JS.InvokeVoidAsync("downloadFile", appData?.FamilyData?.AppData.CurrentProfileName + " multifolio.csv", csvContent);
+        }
+    }
+    private string? GenerateCsv()
+    {
+        if (appData?.FamilyData?.Accounts.Count > 0)
+        {
+            var csv = new StringBuilder();
+            csv.AppendLine("Broker,Account,TaxType,Type,Owner,Ticker,Shares,Price,Value,Investment,ExpenseRatio,InvestmentCategory,closeYest,AnnualFees,AccountOwnerAndType");
+            var rowCount = 1;
+            foreach (var account in appData.FamilyData.Accounts.OrderBy(a => a.Custodian).ThenByDescending(a => a.Value))
             {
                 bool isTreasuryDirect = account.Custodian?.ToLowerInvariant() == "treasury direct" || account.Custodian?.ToLowerInvariant() == "treasurydirect";
                 foreach (var investment in account.Investments.OrderByDescending(a => a.Value))
                 {
                     rowCount++;
-                    @* if (investment.Ticker == "IBOND" && !ibondHeaderShown)
-                    {
-                        ibondHeaderShown = true;
-                        <tr style=vertical-align:bottom>
-                            <td style=padding-left:8px>Holding</td>
-                            <td style=padding-left:8px;text-align:center>'Fixed'<br />Rate</td>
-                            <td style=padding-left:8px;text-align:center>Current<br />Rate</td>
-                            <td style=padding-left:8px;text-align:center>Balance</td>
-                        </tr>
-                    } *@
-                    <div>
-                        @account.Custodian,
-                        @(account.Note == null || account.Note == "" ?
+                    csv.AppendLine(
+                        account.Custodian + "," +
+                        (account.Note == null || account.Note == "" ?
                             account.Identifier :
                             account.Note
-                            ),
-                        @account.TaxType2,
-                        @(account.AccountType == "Taxable" ? "Brokerage" : @account.AccountType),
-                        @account.Identifier,
-                        @(investment.Ticker != null ? investment.Ticker : investment.Name),
-                        @(investment.Ticker == "IBOND" ? @investment.Value / 25 : @investment.Shares),
-                        @(investment.InvestmentOrderCategory == "Cash" ? "1.0" : 
-                           (@investment.Ticker == "IBOND" ? "25" : "=googlefinance(f"+@rowCount+")")),
-                        @("=g"+@rowCount+"*h"+@rowCount),
-                        @investment.Name,
-                        @investment.ExpenseRatio,
-                        @investment.InvestmentOrderCategory,
-                        @(investment.InvestmentOrderCategory == "Cash" ? "1.0" : 
-                           investment.Ticker == "IBOND" ? "25" : "\"=googlefinance(f"+@rowCount+",\"\"closeyest\"\")\""
-                           ),
-                        @("=K"+@rowCount+"*I"+@rowCount+"/100"),
-                        @("\"=CONCATENATE(E"+@rowCount+",IF(E"+@rowCount+"<>\"\"\"\",\"\" \"\",\"\"\"\"),D"+@rowCount+")\"")
-                    
-                    </div>
-                        @* <td>
-                            @if (investment.IsIBond)
-                            {
-                                <span>&nbsp;</span>
-
-                                @FormatUtilities.FormatMonthPlus2DigitYear(investment.PurchaseDate)
-                            }
-                        </td>
-                        @if (investment.IsIBond)
-                        {
-                            <td style=text-align:right>@FormatUtilities.FormatPercent3(investment.InterestRate)</td>
-                            <td style=text-align:right>@FormatUtilities.FormatPercent3(investment.CurrentRate)</td>
-                        }
-                        else
-                        {
-                            <td style=text-align:right;padding-left:8px>@FormatUtilities.FormatDoubleTwoDecimal(investment.Shares)</td>
-                            <td style=text-align:right;padding-left:8px>@FormatUtilities.FormatMoney(investment.Price)</td>
-                        }
-
-                        <td style=text-align:right;padding-left:8px>
-                            @FormatUtilities.FormatMoney(investment.Value, decimalPlaces: 0)
-                        </td> *@
-                    @* if (investment.IsIBond && investment.NextRate.HasValue)
-                    {
-                        <tr style=background-color:@bgColor >
-                            <td colspan=2 style=text-align:right>
-                                as of @FormatUtilities.FormatMonthPlus2DigitYear(@investment.NextRateStart):
-                            </td>
-                            <td style=text-align:right>
-                                @FormatUtilities.FormatPercent3(investment.NextRate)
-                            </td>
-                            <td></td>
-                        </tr>
-                    } *@
+                        ) + "," +
+                        account.TaxType2 + "," +
+                        (account.AccountType == "Taxable" ? "Brokerage" : @account.AccountType)+ "," +
+                        account.Identifier+ "," +
+                        (investment.Ticker != null ? investment.Ticker : investment.Name)+ "," +
+                        (investment.Ticker == "IBOND" ? @investment.Value / 25 : @investment.Shares)+ "," +
+                        (investment.InvestmentOrderCategory == "Cash" ? "1.0" : 
+                            (investment.Ticker == "IBOND" ? "25" : "=googlefinance(f"+@rowCount+")")) + "," +
+                        ("=g"+@rowCount+"*h"+@rowCount)+ "," +
+                        investment.Name+ "," +
+                        investment.ExpenseRatio+ "," +
+                        investment.InvestmentOrderCategory+ "," +
+                        (investment.InvestmentOrderCategory == "Cash" ? "1.0" : 
+                            investment.Ticker == "IBOND" ? "25" : "\"=googlefinance(f"+@rowCount+",\"\"closeyest\"\")\""
+                            )+ "," +
+                        ("=K"+@rowCount+"*I"+@rowCount+"/100")+ "," +
+                        ("\"=CONCATENATE(E"+@rowCount+",IF(E"+@rowCount+"<>\"\"\"\",\"\" \"\",\"\"\"\"),D"+@rowCount+")\"")
+                    );
                 }
             }
-    </div>                                                      
-</div>
 
-@code {
+            return csv.ToString();
+        }
+
+        return null;
+    }
+
     private async Task exportCSV()
     {
         if (appData?.FamilyData != null)
@@ -179,4 +155,7 @@
     private bool showError { get; set; }
     private string? pageHeading;
     private bool csvImport = false;
+
+    [Inject]
+    private IJSRuntime JS { get; set; }
 }
