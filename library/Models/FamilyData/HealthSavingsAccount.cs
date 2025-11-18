@@ -45,7 +45,7 @@ public class HealthSavingsAccount {
 
     public bool EligibleForHSACatchUpOnly {
         get {
-            return (!EligibleForHSA && Person!.FiftyFiveOrOver && Person.OtherPerson != null && Person.OtherPerson.HealthSavingsAccount.EligibleForHSA);
+            return (Person!.FiftyFiveOrOver && Person.OtherPerson != null && Person.OtherPerson.HealthSavingsAccount.EligibleForHSA);
         }
     }
 
