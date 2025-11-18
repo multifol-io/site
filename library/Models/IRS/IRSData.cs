@@ -5,7 +5,7 @@ namespace IRS
 {
     public class IRSData(RetirementData retirementDataY1, RetirementData retirementDataY2, TaxRateData taxRatesY1, TaxRateData taxRatesY2)
     {
-        private static int FIRST_YEAR = 2024; 
+        private static int FIRST_YEAR = 2025; 
         private static int SECOND_YEAR = FIRST_YEAR + 1;
 
         public async static Task<IRSData?> Create(HttpClient httpClient) 

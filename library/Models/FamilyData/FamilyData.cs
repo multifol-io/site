@@ -754,7 +754,7 @@ public class FamilyData : INotifyPropertyChanged
         if (loadedData != null)
         {
             loadedData.AppData = appData;
-            loadedData.Year = 2024;
+            loadedData.Year = 2025;
             loadedData.SetBackPointers();
             if (loadedData.TaxFilingStatus == TaxFilingStatus.MarriedFilingSeperatelyAndLivingApart)
             {
@@ -1006,17 +1006,10 @@ public class FamilyData : INotifyPropertyChanged
         WeekEnd
     }
 
+    // holidays and halfDays retrieved from:
+    // - https://www.nyse.com/markets/hours-calendars
+
     static readonly DateTime[] holidays = [
-        new(2024, 1, 1),
-        new(2024, 1 , 15),
-        new(2024, 2, 19),
-        new(2024, 3, 29),
-        new(2024, 5, 27),
-        new(2024, 6, 19),
-        new(2024, 7, 4),
-        new(2024, 9, 2),
-        new(2024, 11, 28),
-        new(2024, 12, 25),
         new(2025, 1, 1),
         new(2025, 1 , 20),
         new(2025, 2, 17),
@@ -1027,15 +1020,36 @@ public class FamilyData : INotifyPropertyChanged
         new(2025, 9, 1),
         new(2025, 11, 27),
         new(2025, 12, 25),
+        new(2026, 1, 1),
+        new(2026, 1 ,19),
+        new(2026, 2, 16),
+        new(2026, 4, 3),
+        new(2026, 5, 25),
+        new(2026, 6, 19),
+        new(2026, 7, 3),
+        new(2026, 9, 7),
+        new(2026, 11, 26),
+        new(2026, 12, 25),
+        new(2027, 1, 1),
+        new(2027, 1 ,18),
+        new(2027, 2, 15),
+        new(2027, 3, 26),
+        new(2027, 5, 31),
+        new(2027, 6, 18),
+        new(2027, 7, 5),
+        new(2027, 9, 6),
+        new(2027, 11, 25),
+        new(2027, 12, 24),
     ];
 
     static readonly DateTime[] halfDays = [
-        new(2024, 7, 3),
-        new(2024, 11, 27),
-        new(2024, 12, 24),
         new(2025, 7, 3),
         new(2025, 11, 26),
         new(2025, 12, 24),
+        new(2026, 11, 27),
+        new(2026, 12, 24),
+        new(2027, 11, 26),
+        new(2027, 12, 24),
     ];
 
     private static MarketDay GetMarketDay(DateTime dateTime)
