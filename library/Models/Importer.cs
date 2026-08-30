@@ -88,7 +88,7 @@ public class Importer
             {
                 return await ImportJPMorganChase(RowEnumerator, familyData);
             }
-            else if (headerChunksLen > 1 && headerChunks[0].StartsWith("Account Number") && headerChunks[1] == "Account Name")
+            else if (headerChunksLen > 1 && headerChunks[0].ToLowerInvariant().StartsWith("account number") && headerChunks[1].ToLowerInvariant() == "account name")
             {
                 return await ImportFidelity(RowEnumerator, familyData);
             }
@@ -248,7 +248,7 @@ public class Importer
         await rowEnumerator.MoveNextAsync();
         string[] chunks = rowEnumerator.Current;
         // FIDELITY - blank line ends investment listings or ",,,,,,,,,,,,,,,"
-        // Line 0: Account Number,Account Name,Symbol,Description,Quantity,Last Price,Last Price Change,Current Value
+        // Line 0: Account number,Account name,Symbol,Description,Quantity,Last price,Last price change,Current value, ...
         string lastAccountNumber = "";
         Account? newAccount = null;
         while (chunks != null && chunks.Length != 0)
